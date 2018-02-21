@@ -1,0 +1,151 @@
+---------------------------------------------------------------------------
+MAIN SCREEN
+---------------------------------------------------------------------------
+0-9                                  [PoP1] Shortcuts for various tiles.
+d                                    Start the level in DOSBox/ZSNES/SDLPoP.
+e                                    Go to the events screen.
+f (and Alt + Enter/Return/Space)     Toggle fullscreen mode.
+h                                    Flip the room horizontally.
+i                                    Toggle tile information.
+m                                    [PoP1 for DOS] Open the Map screen.
+q (and Escape)                       Quit the application.
+r                                    Go to the room links screen.
+s                                    Save the level.
+t                                    [PoP1] Switch between environments.
+v                                    Flip the room vertically.
+x                                    [PoP1 for DOS] Go to the SDLPoP screen.
+z                                    Change the interface size.
+Enter (and Return and Space)         Go to the tiles screen.
+Left arrow                           Go to the tile to the left.
+Right arrow                          Go to the tile to the right.
+Up arrow                             Go to a higher tile.
+Down arrow                           Go to a lower tile.
+Shift + Left arrow                   Go to the room to the left.
+Shift + Right arrow                  Go to the room to the right.
+Shift + Up arrow                     Go to a higher room.
+Shift + Down arrow                   Go to a lower room.
+Shift + left mouse button            Re-use the last used tile.
+Shift + scroll wheel                 Scroll horizontally.
+- (and _)                            Go to the previous level.
++ (and =)                            Go to the next level.
+/ (and ?)                            Clear the entire room.
+\ (and |)                            Randomize the entire level.
+'                                    Re-use the last used tile.
+"                                    Sprinkle the level with dec.
+F1                                   Go to the help screen.
+F2                                   [PoP1] Go to the executable screen.
+Ctrl+c                               Copy the room.
+Ctrl+v                               Paste the room.
+Ctrl+p                               [PoP1 for SNES] Print template data.
+Ctrl + left mouse button             [PoP1 for DOS] Go to the SDLPoP screen.
+
+---------------------------------------------------------------------------
+ROOM LINKS SCREEN
+---------------------------------------------------------------------------
+d                                    Start the level in DOSBox/ZSNES/SDLPoP.
+e                                    Go to the events screen.
+m                                    [PoP1 for DOS] Open the Map screen.
+q (and Escape)                       Go to the main screen.
+r                                    Modify broken room links.
+s                                    Save the level.
+[                                    Select the previous room.
+]                                    Select the next room.
+Enter (and Return and Space)         Change the room location.
+Left arrow                           Move the cross to the left.
+Right arrow                          Move the cross to the right.
+Up arrow                             Move the cross up.
+Down arrow                           Move the cross down.
+- (and _)                            Go to the previous level.
++ (and =)                            Go to the next level.
+
+[BROKEN ROOM LINKS SCREEN]
+Enter (and Return and Space)         Increase adjacent room nr.
+Backspace                            Decrease adjacent room nr.
+Arrow keys                           Select adjacent room.
+
+---------------------------------------------------------------------------
+EVENTS SCREEN
+---------------------------------------------------------------------------
+d                                    Start the level in DOSBox/ZSNES/SDLPoP.
+m                                    [PoP1 for DOS] Open the Map screen.
+n                                    [PoP1] Check the box under N.
+q (and Escape)                       Go to the main screen.
+r                                    Go to the room links screen.
+s                                    Save the level.
+y                                    [PoP1] Check the box under Y.
+[                                    Select the previous room.
+]                                    Select the next room.
+Left arrow                           Select door to the left.
+Right arrow                          Select door to the right.
+Up arrow                             Select a higher door.
+Down arrow                           Select a lower door.
+Shift + Left arrow                   Decrease event number by 1.
+Shift + Right arrow                  Increase event number by 1.
+Ctrl + Left arrow                    Decrease event number by 10.
+Ctrl + Right arrow                   Increase event number by 10.
+- (and _)                            Go to the previous level.
++ (and =)                            Go to the next level.
+
+---------------------------------------------------------------------------
+TILES SCREEN
+---------------------------------------------------------------------------
+a*                                   [PoP2 caverns/temple] Change wall.
+b*                                   [PoP2 caverns] Change bottom.
+b*                                   [PoP2 ruins/temple] Change background.
+b*                                   [PoP1 for SNES] Change background.
+c*                                   [PoP2 ruins] Change crack.
+c*                                   [PoP1 for SNES] Change prince colors.
+f*                                   [PoP2] Change frame.
+f*                                   [PoP1 for SNES] Stuck tile: harmful.
+g                                    [PoP2] Change guards.
+j                                    [PoP2] Change jumps.
+l                                    [PoP1 for SNES] Stuck tile: harmless.
+m                                    [PoP2] Change music.
+n                                    [PoP1 for SNES] Stuck tile: no.
+o                                    Open custom tiles editor.
+p                                    [PoP2] Change % open.
+q (and Escape and c*)                Go to the main screen.
+r*                                   [PoP2 ruins] Change wall.
+r*                                   [PoP1 for SNES] Room templates.
+s*                                   [PoP2 caverns] Change stalactite.
+s*                                   [PoP2 ruins] Change symbol.
+Enter (and Return and Space)         Use the selected tile.
+Shift + Enter (and Return and Space) Fill entire room with tile.
+Ctrl + Enter (and Return and Space)  Fill entire level with tile.
+Left arrow                           Go to the tile to the left.
+Right arrow                          Go to the tile to the right.
+Up arrow                             Go to a higher tile.
+Down arrow                           Go to a lower tile.
+(left) Shift + Left arrow            Decrease event/teleport number by 1.
+(left) Shift + Right arrow           Increase event/teleport number by 1.
+(left) Ctrl + Left arrow             Decrease event/teleport number by 10.
+(left) Ctrl + Right arrow            Increase event/teleport number by 10.
+(right) Shift + Left arrow           [PoP2, PoP1 for SNES] Decrease % by 1.
+(right) Shift + Right arrow          [PoP2, PoP1 for SNES] Increase % by 1.
+(right) Ctrl + Left arrow            [PoP2, PoP1 for SNES] Decrease % by 10.
+(right) Ctrl + Right arrow           [PoP2, PoP1 for SNES] Increase % by 10.
+0-9*, a*, b*                         [PoP1 for DOS] Set the guard skill.
+1-4*                                 [PoP2] Set jumps.
+Shift + [                            [PoP1 for SNES] Dec. guard skill by 1.
+Shift + ]                            [PoP1 for SNES] Inc. guard skill by 1.
+Ctrl + [                             [PoP1 for SNES] Dec. guard skill by 10.
+Ctrl + ]                             [PoP1 for SNES] Inc. guard skill by 10.
+
+[CUSTOM TILES SCREEN]
+f                                    [PoP1 for SNES] Attributes: floor.
+n                                    [PoP1/2 for DOS] Change foreg. modifier.
+q (and Escape and c)                 Back to the tiles screen.
+s                                    [PoP1 for SNES] Attributes: space.
+x                                    [PoP1 for DOS] Go to the SDLPoP screen.
+y                                    [PoP1/2 for DOS] Change foreg. modifier.
+w                                    [PoP1 for SNES] Attributes: wall.
+Enter (and Return and Space)         Use the custom tile.
+Left arrow*                          [PoP1/2 for DOS] Decrease foreground code.
+Right arrow*                         [PoP1/2 for DOS] Increase foreground code.
+Left arrow*                          [PoP1 for SNES] Decrease object.
+Right arrow*                         [PoP1 for SNES] Increase object.
+Shift + Left arrow                   Decrease modifier by 1.
+Shift + Right arrow                  Increase modifier by 1.
+Ctrl + Left arrow                    Decrease modifier by 10.
+Ctrl + Right arrow                   Increase modifier by 10.
+0-3                                  [PoP1/2 for DOS] Change foreg. random.

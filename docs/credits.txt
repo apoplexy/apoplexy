@@ -1,0 +1,14 @@
+# ====================
+# People who have contributed to apoplexy.
+# Sorted by last name.
+# The fields are: name (N), GitHub username (G),
+# email (E), contributions (C), and country (A).
+# See also the "THANKS" section in README.txt.
+# ====================
+
+N: Norbert de Jonge
+G: EndeavourAccuracy
+E: mail@norbertdejonge.nl
+C: Original developer. Sole author of all versions u/i v3.2.
+C: Maintainer.
+A: The Netherlands

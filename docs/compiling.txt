@@ -1,0 +1,167 @@
+===[GNU/Linux]=================================================================
+
+Prerequisites:
+- libsdl2-dev, libsdl2-image-dev and libsdl2-ttf-dev
+- libcurl4-openssl-dev
+- libzip-dev
+
+$ make
+
+===[Windows]===================================================================
+
+The following instructions are to compile 32-bit.
+
+1) Set up Dev-C++:
+
+1.1 Download
+
+http://sourceforge.net/projects/orwelldevcpp/files/Setup%20Releases/
+or
+http://downloads.sourceforge.net/project/orwelldevcpp/Setup%20Releases/
+  Dev-Cpp%205.11%20TDM-GCC%204.9.2%20Setup.exe
+
+1.2 Install
+
+Simply run the executable.
+
+2) Install SDL2's MinGW libraries:
+
+2.1 Download
+
+http://libsdl.org/release/
+  SDL2-devel-2.0.7-mingw.tar.gz
+http://libsdl.org/projects/SDL_ttf/release/
+  SDL2_ttf-devel-2.0.14-mingw.tar.gz
+http://libsdl.org/projects/SDL_image/release/
+  SDL2_image-devel-2.0.2-mingw.tar.gz
+
+2.2 Install
+
+Unpack the packages.
+
+For all three packages, copy the i686-w64-mingw32/ directories into the Dev-Cpp/MinGW64/ directory. Make sure to use the zlib1.dll from SDL2_image (and NOT from SDL2_ttf).
+
+GNU/Linux users who use Wine can find this directory at:
+~/.wine/drive_c/Program Files (x86)/Dev-Cpp/MinGW64/
+
+Copy the Dev-Cpp/MinGW64/i686-w64-mingw32/bin/*.dll files to the apoplexy directory.
+(You do not need libjpeg-9.dll, libtiff-5.dll and libwebp-7.dll.)
+
+3) Install cURL's MinGW library:
+
+3.1 Download
+
+https://curl.haxx.se/gknw.net/rm/7.39.0/dist-w32/curl-7.39.0-devel-mingw32.zip
+
+3.2 Install
+
+Unpack the package.
+
+Copy its bin/, include/ and lib/ directories into
+Dev-Cpp/MinGW64/i686-w64-mingw32/
+(Do not overwrite files.)
+
+From
+Dev-Cpp/MinGW64/i686-w64-mingw32/bin/
+copy its
+- libcurl.dll
+- libidn-11.dll
+- libeay32.dll
+- ssleay32.dll
+files to the apoplexy directory.
+
+4) Install libzip's MinGW library:
+
+4.1 Download
+
+https://kojipkgs.fedoraproject.org//packages/mingw-libzip/1.1.3/1.fc25/noarch/mingw32-libzip-1.1.3-1.fc25.noarch.rpm
+
+(If you use a newer version, libzip-5.dll will complain about a missing libbz2-1.dll file.)
+
+4.2 Install
+
+Use 7-Zip to unpack the RPM file.
+On GNU/Linux, that is:
+$ 7z x mingw32-libzip-1.1.3-1.fc25.noarch.rpm
+$ cpio -idv < mingw32-libzip-1.1.3-1.fc25.noarch.cpio
+
+Copy its files from
+usr/i686-w64-mingw32/sys-root/mingw/
+to
+Dev-Cpp/MinGW64/i686-w64-mingw32/
+
+You may need to copy
+Dev-Cpp/MinGW64/i686-w64-mingw32/lib/libzip/include/zipconf.h
+over
+Dev-Cpp/MinGW64/i686-w64-mingw32/include/zipconf.h
+
+From
+Dev-Cpp/MinGW64/i686-w64-mingw32/bin/
+copy its
+- libzip-4.dll
+file to the apoplexy directory.
+
+5) Add additional DLL files
+
+Download (and install)
+https://download.gimp.org/mirror/pub/gimp/v2.8/windows/gimp-2.8.22-setup.exe
+and copy its
+- 32/bin/libgcc_s_sjlj-1.dll
+- 32/bin/libwinpthread-1.dll
+files to the apoplexy directory.
+
+6) Compile
+
+Start Dev-C++.
+
+Go to: File->New->Project...
+Basic->Console Application
+C Project
+Name: apoplexy
+Save apoplexy.dev to src/.
+
+Go to: Project->Remove From Project...
+Select main.c and press Delete.
+
+Project->Add To Project...
+apoplexy.c
+
+Go to: Project->Project Options...->Output
+Set "Executable output directory:" to apoplexy's top-level directory.
+
+Go to: Project->Project Options...->Compiler
+Set "Base compiler set:" to "TDM-GCC 4.9.2 32-bit Release".
+(Discard customizations if necessary.)
+
+Go to: Project->Project Options...->Parameters
+In the C compiler field, add:
+-m32 -O2 -Wno-unused-result -std=c99 -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -D_REENTRANT -lm -lcurl -lzip
+In the Linker field, add:
+-l"mingw32"
+-l"SDL2main"
+-l"SDL2.dll"
+-l"SDL2_image.dll"
+-l"SDL2_ttf.dll"
+-l"curldll"
+-l"zip.dll"
+
+Go to: Project->Project Options...->Directories
+Select the tab: Include Directories
+Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\include\SDL2
+Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\include
+Select the tab: Library Directories
+Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\lib
+
+Go to: Tools->Compiler Options...->Directories
+Select the tab: Binaries
+Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\bin
+Select the tab: Libraries
+Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\lib
+
+Go to: Project->Project Options...->General
+Browse and add: png/various/apoplexy_icon.ico
+
+Select: Execute->Compile (or press F9).
+
+GNU/Linux users who use Wine may run into the error "err:d3d:resource_init Out of adapter memory" while loading for SNES editing. To fix this problem, run:
+$ winetricks videomemorysize=1024

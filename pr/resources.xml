@@ -1,0 +1,2385 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE resources SYSTEM "http://www.princed.org/standards/xml/resources/std1.dtd">
+<!--
+    Princed V3 - Prince of Persia Level Editor for PC Version
+    Copyright (C) 2003-2005 Princed Development Team
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    The authors of this program may be contacted at http://forum.princed.org
+-->
+
+<!--
+resources.xml: Princed Resources : Resource tree
+
+ Copyright 2003, 2004, 2005 Princed Development Team
+  Created: 03 Nov 2003
+
+  Authors: Steven Fayers (ecco3@users.sourceforge.net)
+           Enrique Calot (ecalot@users.sourceforge.net)
+  Version: 0.6 (2003-Nov-03)
+
+  Modified by: Enrique Calot (ecalot@users.sourceforge.net)
+  Version: 0.7.4 (2004-Feb-21)
+  Version: 0.7.5 (2004-Feb-24)
+  Version: 0.7.6 (2004-Feb-26)
+  Version: 0.7.7 (2004-Feb-28)
+  Version: 0.8.1 (2004-Mar-11)
+  Version: 0.8.2 (2005-Mar-26)
+  Version: 1.0.0 (2005-Jun-04)
+
+  Modified by: David from Princed
+  Version: (2012-Sep-02)
+
+ Note:
+  DO NOT remove this copyright notice
+-->
+
+<resources version="1.0">
+ <folder index="pop1" name="binary" file="title.dat" path="title">
+  <folder path="texts" type="image" colors="2">
+   <item value="42" path="in the absence.bmp">Text in the absence (42)</item>
+   <item value="43" path="marry jaffar.bmp">Text marry jaffar (43)</item>
+   <item value="44" path="the tyrant.bmp">Text the tyrant (44)</item>
+   <item value="45" path="credits.bmp">Text credits (45)</item>
+  </folder>
+  <folder type="image" path="main titles"> 
+   <item value="40" path="text background.pal" type="palette-pop1-4bits">Unknown Resource number 40</item>
+   <item value="41" path="text background.bmp" palette="40">Unknown Resource number 41</item>
+   <item value="50" path="titles.pal" type="palette-pop1-4bits">Unknown Resource number 50</item>
+   <folder palette="50">
+    <item value="51" path="main background.bmp">Image main background (51)</item>
+    <item value="52" path="presents.bmp">Image presents (52)</item>
+    <item value="53" path="author.bmp">Image author (53)</item>
+    <item value="54" path="game name.bmp">Image game name (54)</item>
+    <item value="55" path="copyright.bmp">Image copyright (55)</item>
+   </folder>
+  </folder>
+ </folder>
+
+ <folder type="image" index="pop1" name="vga dungeon enviornment" file="vdungeon.dat" path="vdungeon" palette="200">
+  <folder type="palette-pop1-4bits" name="palette" path="palette">
+   <item value="200" path="dungeon.pal">Dungeon Palette</item> 
+   <item type="palette-pop1-4bits" value="360" path="walls.pal">unloadable</item> 
+  </folder>
+  <folder name="big pillar" path="bigpillar">
+   <item value="1286" path="big pillar left lower.bmp">dungeon background</item> 
+   <item value="1287" path="big pillar right lower.bmp">dungeon background</item> 
+   <item value="1288" path="big pillar lower02.bmp">dungeon background</item> 
+   <item value="1289" path="big pillar right upper.bmp">dungeon background</item> 
+   <item value="1290" path="big pillar right upper top.bmp">dungeon background</item> 
+   <item value="1291" path="big pillar left upper.bmp">dungeon background</item> 
+  </folder>
+  <folder name="chopper" path="chopper">
+   <item value="1301" path="chopper frame03.bmp">chopper</item> 
+   <item value="1302" path="chopper frame04.bmp">chopper</item> 
+   <item value="1303" path="frame02 bottom.bmp">chopper</item> 
+   <item value="1304" path="frame01 bottom.bmp">chopper</item> 
+   <item value="1305" path="frame05 bottom.bmp">chopper</item> 
+   <item value="1306" path="behind pillar frame03.bmp">chopper</item> 
+   <item value="1307" path="behind pillar frame04.bmp">chopper</item> 
+   <item value="1308" path="behind pillar frame02.bmp">chopper</item> 
+   <item value="1309" path="behind pillar frame01.bmp">chopper</item> 
+   <item value="1310" path="behind pillar frame05.bmp">chopper</item> 
+   <item value="1311" path="frame02 top.bmp">chopper</item> 
+   <item value="1312" path="frame01 top.bmp">chopper</item> 
+   <item value="1313" path="frame05 top.bmp">chopper</item> 
+   <folder name="blood" path="blood" colors="2">
+   <item value="1314" path="res1314.bmp">200</item>
+   <item value="1315" path="res1315.bmp">200</item>
+   <item value="1316" path="res1316.bmp">200</item>
+   <item value="1317" path="res1317.bmp">200</item>
+   <item value="1318" path="res1318.bmp">200</item>
+   <item value="1319" path="res1319.bmp">200</item>
+   <item value="1320" path="res1320.bmp">200</item>
+   <item value="1321" path="res1321.bmp">200</item>
+   <item value="1322" path="res1322.bmp">200</item>
+   <item value="1323" path="res1323.bmp">200</item>
+   </folder>
+  </folder>
+  <folder name="spikes" path="spikes">
+   <item value="1328" path="frame01 left.bmp">spikes</item> 
+   <item value="1329" path="frame02 left.bmp">spikes</item> 
+   <item value="1330" path="frame03 left.bmp">spikes</item> 
+   <item value="1331" path="frame04 left.bmp">spikes</item> 
+   <item value="1332" path="frame05 left.bmp">spikes</item> 
+   <item value="1334" path="frame01 right.bmp">spikes</item> 
+   <item value="1335" path="frame02 right.bmp">spikes</item> 
+   <item value="1336" path="frame03 right.bmp">spikes</item> 
+   <item value="1337" path="frame04 right.bmp">spikes</item> 
+   <item value="1338" path="frame05 right.bmp">spikes</item> 
+   <item value="1339" path="frame01.bmp">spikes</item> 
+   <item value="1340" path="frame02.bmp">spikes</item> 
+   <item value="1341" path="frame03.bmp">spikes</item> 
+   <item value="1342" path="frame04.bmp">spikes</item> 
+   <item value="1343" path="frame05.bmp">spikes</item> 
+  </folder>
+  <folder name="level door" path="level door">
+   <item value="233" path="door bottom.bmp">level door</item> 
+   <item value="234" path="door top.bmp">level door</item> 
+   <item value="237" path="frame lower left.bmp">level door</item> 
+   <item value="238" path="frame upper left.bmp">level door</item> 
+   <item value="239" path="frame lower right.bmp">level door</item> 
+   <item value="240" path="frame upper right.bmp">level door</item> 
+   <item value="299" path="floor.bmp">level door</item> 
+   <item value="344" path="stairs.bmp">level door</item> 
+  </folder>  
+  <folder name="door" path="door">
+   <item value="246" path="door frame left.bmp">door</item> 
+   <item value="247" path="door frame right.bmp">door</item> 
+   <item value="248" path="door frame right top.bmp">door</item> 
+   <item value="249" path="door frame left pole.bmp">door</item> 
+   <item value="250" path="res00250.bmp">door</item> 
+   <item value="251" path="res00251.bmp">door</item> 
+   <item value="252" path="res00252.bmp">door</item> 
+   <item value="253" path="res00253.bmp">door</item> 
+   <item value="254" path="res00254.bmp">door</item> 
+   <item value="255" path="res00255.bmp">door</item> 
+   <item value="256" path="res00256.bmp">door</item> 
+   <item value="257" path="res00257.bmp">door</item> 
+   <item value="258" path="res00258.bmp">door</item> 
+   <item value="259" path="res00259.bmp">door</item> 
+   <item value="260" path="res00260.bmp">door</item> 
+   <item value="261" path="res00261.bmp">door</item> 
+   <item value="262" path="res00262.bmp">door</item> 
+   <item value="263" path="res00263.bmp">door</item> 
+   <item value="264" path="res00264.bmp">door</item> 
+   <item value="265" path="res00265.bmp">door</item> 
+   <item value="266" path="res00266.bmp">door</item> 
+   <item value="267" path="res00267.bmp">door</item> 
+   <item value="285" path="res00285.bmp">door</item> 
+   <item value="268" path="res268.bmp" colors="2">200</item>
+  </folder>
+  <folder name="pillar" path="pillar">
+   <item value="292" path="pillar left.bmp">dungeon background</item> 
+   <item value="293" path="pillar right main.bmp">dungeon background</item> 
+   <item value="294" path="pillar right top.bmp">dungeon background</item> 
+   <item value="295" path="pillar.bmp">dungeon background</item> 
+  </folder>
+  <folder name="floor panels" path="floor panels">
+   <item value="297" path="broken left.bmp">floor panel</item> 
+   <item value="300" path="broken left02.bmp">floor panel</item> 
+   <item value="298" path="broken right.bmp">floor panel</item> 
+   <item value="1327" path="spikes left.bmp">floor panel</item> 
+   <item value="1333" path="spikes right.bmp">floor panel</item> 
+   <item value="1230" path="skeleton left.bmp">floor panel</item> 
+   <item value="1231" path="skeleton right.bmp">floor panel</item> 
+   <item value="241" path="normal left.bmp">floor panel</item> 
+   <item value="242" path="normal right.bmp">floor panel</item> 
+   <item value="243" path="normal base.bmp">floor panel</item> 
+   <item value="269" path="loose left01.bmp">floor panel</item> 
+   <item value="270" path="loose left02.bmp">floor panel</item> 
+   <item value="271" path="loose right01.bmp">floor panel</item> 
+   <item value="272" path="loose right02.bmp">floor panel</item> 
+   <item value="273" path="loose base01.bmp">floor panel</item> 
+   <item value="274" path="loose base02.bmp">floor panel</item> 
+   <item value="235" path="closer right pressed.bmp">floor panel</item> 
+   <item value="296" path="closer base unpressed.bmp">floor panel</item>
+   <item value="236" path="closer base pressed.bmp">floor panel</item> 
+   <item value="347" path="opener left unpressed.bmp">floor panel</item> 
+   <item value="348" path="opener left unpressed02.bmp">floor panel</item> 
+   <item value="349" path="opener base unpressed.bmp">floor panel</item> 
+   <item value="350" path="normal_closer01.bmp">floor panel</item> 
+   <item value="351" path="normal_closer02.bmp">floor panel</item> 
+   <item value="232" path="normal_closer03.bmp">floor panel</item>   
+  </folder>
+  <folder name="background" path="background">
+   <item value="324" path="bricks03.bmp">dungeon background</item> 
+   <item value="325" path="bricks04.bmp">dungeon background</item> 
+   <item value="326" path="window.bmp">dungeon background</item> 
+   <item value="244" path="bricks01.bmp">dungeon background</item> 
+   <item value="245" path="bricks02.bmp">dungeon background</item> 
+   <item value="346" path="torch.bmp">dungeon background</item> 
+  </folder>
+  <folder name="walls" path="walls" palette="360">
+   <item value="361" path="face stack main.bmp">dungeon wall</item> 
+   <item value="362" path="face stack top.bmp">dungeon wall</item> 
+   <item value="363" path="centre stack base.bmp">dungeon wall</item> 
+   <item value="364" path="centre stack main.bmp">dungeon wall</item> 
+   <item value="365" path="right stack base.bmp">dungeon wall</item> 
+   <item value="366" path="right stack main.bmp">dungeon wall</item> 
+   <item value="367" path="single stack base.bmp">dungeon wall</item> 
+   <item value="368" path="single stack main.bmp">dungeon wall</item> 
+   <item value="369" path="left stack base.bmp">dungeon wall</item> 
+   <item value="370" path="left stack main.bmp">dungeon wall</item> 
+   <item value="371" path="divider01.bmp">dungeon wall</item> 
+   <item value="372" path="divider02.bmp">dungeon wall</item> 
+   <item value="373" path="random block.bmp">dungeon wall</item> 
+   <item value="374" path="mark01.bmp">dungeon wall</item> 
+   <item value="375" path="mark02.bmp">dungeon wall</item> 
+   <item value="376" path="mark03.bmp">dungeon wall</item> 
+   <item value="377" path="mark04.bmp">dungeon wall</item> 
+  </folder>
+  <folder name="binary" path="binary">
+   <item value="201" path="res201.bin" type="binary">200</item>
+   <item value="202" path="res202.bin" type="binary">200</item>
+   <item value="203" path="res203.bin" type="binary">200</item>
+   <item value="204" path="res204.bin" type="binary">200</item>
+   <item value="205" path="res205.bin" type="binary">200</item>
+   <item value="206" path="res206.bin" type="binary">200</item>
+   <item value="207" path="res207.bin" type="binary">200</item>
+   <item value="208" path="res208.bin" type="binary">200</item>
+   <item value="209" path="res209.bin" type="binary">200</item>
+   <item value="210" path="res210.bin" type="binary">200</item>
+   <item value="211" path="res211.bin" type="binary">200</item>
+   <item value="212" path="res212.bin" type="binary">200</item>
+   <item value="213" path="res213.bin" type="binary">200</item>
+   <item value="214" path="res214.bin" type="binary">200</item>
+   <item value="215" path="res215.bin" type="binary">200</item>
+   <item value="216" path="res216.bin" type="binary">200</item>
+   <item value="217" path="res217.bin" type="binary">200</item>
+   <item value="218" path="res218.bin" type="binary">200</item>
+   <item value="219" path="res219.bin" type="binary">200</item>
+   <item value="220" path="res220.bin" type="binary">200</item>
+   <item value="221" path="res221.bin" type="binary">200</item>
+   <item value="222" path="res222.bin" type="binary">200</item>
+   <item value="223" path="res223.bin" type="binary">200</item>
+   <item value="224" path="res224.bin" type="binary">200</item>
+   <item value="225" path="res225.bin" type="binary">200</item>
+   <item value="226" path="res226.bin" type="binary">200</item>
+   <item value="227" path="res227.bin" type="binary">200</item>
+   <item value="228" path="res228.bin" type="binary">200</item>
+   <item value="229" path="res229.bin" type="binary">200</item>
+   <item value="230" path="res230.bin" type="binary">200</item>
+   <item value="231" path="res231.bin" type="binary">200</item>
+   <item value="275" path="res275.bin" type="binary">200</item>
+   <item value="276" path="res276.bin" type="binary">200</item>
+   <item value="277" path="res277.bin" type="binary">200</item>
+   <item value="278" path="res278.bin" type="binary">200</item>
+   <item value="279" path="res279.bin" type="binary">200</item>
+   <item value="280" path="res280.bin" type="binary">200</item>
+   <item value="281" path="res281.bin" type="binary">200</item>
+   <item value="282" path="res282.bin" type="binary">200</item>
+   <item value="283" path="res283.bin" type="binary">200</item>
+   <item value="284" path="res284.bin" type="binary">200</item>
+   <item value="286" path="res286.bin" type="binary">200</item>
+   <item value="287" path="res287.bin" type="binary">200</item>
+   <item value="288" path="res288.bin" type="binary">200</item>
+   <item value="289" path="res289.bin" type="binary">200</item>
+   <item value="290" path="res290.bin" type="binary">200</item>
+   <item value="291" path="res291.bin" type="binary">200</item>
+   <item value="301" path="res301.bin" type="binary">200</item>
+   <item value="302" path="res302.bin" type="binary">200</item>
+   <item value="303" path="res303.bin" type="binary">200</item>
+   <item value="304" path="res304.bin" type="binary">200</item>
+   <item value="305" path="res305.bin" type="binary">200</item>
+   <item value="306" path="res306.bin" type="binary">200</item>
+   <item value="307" path="res307.bin" type="binary">200</item>
+   <item value="308" path="res308.bin" type="binary">200</item>
+   <item value="309" path="res309.bin" type="binary">200</item>
+   <item value="310" path="res310.bin" type="binary">200</item>
+   <item value="311" path="res311.bin" type="binary">200</item>
+   <item value="312" path="res312.bin" type="binary">200</item>
+   <item value="313" path="res313.bin" type="binary">200</item>
+   <item value="314" path="res314.bin" type="binary">200</item>
+   <item value="315" path="res315.bin" type="binary">200</item>
+   <item value="316" path="res316.bin" type="binary">200</item>
+   <item value="317" path="res317.bin" type="binary">200</item>
+   <item value="318" path="res318.bin" type="binary">200</item>
+   <item value="319" path="res319.bin" type="binary">200</item>
+   <item value="320" path="res320.bin" type="binary">200</item>
+   <item value="321" path="res321.bin" type="binary">200</item>
+   <item value="322" path="res322.bin" type="binary">200</item>
+   <item value="323" path="res323.bin" type="binary">200</item>
+   <item value="327" path="res327.bin" type="binary">200</item>
+   <item value="328" path="res328.bin" type="binary">200</item>
+   <item value="329" path="res329.bin" type="binary">200</item>
+   <item value="330" path="res330.bin" type="binary">200</item>
+   <item value="331" path="res331.bin" type="binary">200</item>
+   <item value="332" path="res332.bin" type="binary">200</item>
+   <item value="333" path="res333.bin" type="binary">200</item>
+   <item value="334" path="res334.bin" type="binary">200</item>
+   <item value="335" path="res335.bin" type="binary">200</item>
+   <item value="336" path="res336.bin" type="binary">200</item>
+   <item value="337" path="res337.bin" type="binary">200</item>
+   <item value="338" path="res338.bin" type="binary">200</item>
+   <item value="339" path="res339.bin" type="binary">200</item>
+   <item value="340" path="res340.bin" type="binary">200</item>
+   <item value="341" path="res341.bin" type="binary">200</item>
+   <item value="342" path="res342.bin" type="binary">200</item>
+   <item value="343" path="res343.bin" type="binary">200</item>
+   <item value="345" path="res345.bin" type="binary">200</item>
+  </folder>
+  
+ </folder>
+
+ <folder type="image" index="pop1" name="vga palace enviornment" file="vpalace.dat" path="vpalace" palette="200">
+  <folder path="palettes" name="palettes" type="palette-pop1-4bits">
+   <item value="200" path="palace.pal">Main palace palette</item>
+   <item value="360" path="wall.pal">Wall palette for res 361</item>
+  </folder>
+   
+  <folder name="carpets" path="carpets">
+   <item value="1280" path="style01.bmp">palace objects</item>
+   <item value="1281" path="style01 top.bmp">palace objects</item>
+   <item value="1282" path="style02.bmp">palace objects</item>
+   <item value="1283" path="style02 top.bmp">palace objects</item>
+  </folder>
+ 
+  <folder name="arch" path="arch">
+   <item value="1201" path="down part.bmp">palace objects</item>
+   <item value="1202" path="down part base.bmp">palace objects</item>
+   <item value="1203" path="up part small.bmp">palace objects</item>
+   <item value="1204" path="up part big left.bmp">palace objects</item>
+   <item value="1205" path="up part big right.bmp">palace objects</item>
+   <item value="1206" path="up part with pole.bmp">palace objects</item>
+   <item value="1209" path="other.bmp">palace objects</item>
+   <item value="1278" path="up part with carpet wall.bmp">palace objects</item>
+  </folder>
+
+  <folder name="balcony" path="balcony">
+   <item value="1210" path="lower left.bmp">palace objects</item>
+   <item value="1211" path="upper left.bmp">palace objects</item>
+   <item value="1212" path="lower right.bmp">palace objects</item>
+   <item value="1213" path="upper right.bmp">palace objects</item>
+  </folder>
+
+  <folder name="mirror" path="mirror">
+   <item value="1275" path="mirror and floor.bmp">palace objects</item>
+   <item value="1277" path="mirror.bmp">palace objects</item>
+  </folder>
+
+  <folder name="pillar" path="pillar">
+   <item value="292" path="pillar left.bmp">palace background</item> 
+   <item value="293" path="pillar right main.bmp">palace background</item> 
+   <item value="294" path="pillar right top.bmp">palace background</item> 
+   <item value="295" path="pillar.bmp">palace background</item> 
+  </folder>
+
+  <folder name="walls" path="walls" palette="360">
+   <item value="361" path="face stack main.bmp">palace wall</item> 
+   <item value="362" path="face stack top.bmp">palace wall</item> 
+   <item value="363" path="centre stack base.bmp">palace wall</item> 
+   <item value="364" path="centre stack main.bmp">palace wall</item> 
+   <item value="365" path="right stack base.bmp">palace wall</item> 
+   <item value="375" path="mark02.bmp">palace wall</item> 
+   <item value="376" path="mark03.bmp">palace wall</item> 
+   <item value="377" path="mark04.bmp">palace wall</item> 
+   <folder name="patterns" path="patterns" colors="2">
+   <item value="366" path="res366.bmp">Unknown Resource number 366</item>
+   <item value="367" path="res367.bmp">Unknown Resource number 367</item>
+   <item value="368" path="res368.bmp">Unknown Resource number 368</item>
+   <item value="369" path="res369.bmp">Unknown Resource number 369</item>
+   <item value="370" path="res370.bmp">Unknown Resource number 370</item>
+   <item value="371" path="res371.bmp">Unknown Resource number 371</item>
+   <item value="372" path="res372.bmp">Unknown Resource number 372</item>
+   <item value="373" path="res373.bmp">Unknown Resource number 373</item>
+   <item value="374" path="res374.bmp">Unknown Resource number 374</item>
+   </folder>
+  </folder>
+  
+   <folder name="floor panels" path="floor panels">
+   <item value="236" path="closer base.bmp" type="image">(null)</item>
+   <item value="297" path="broken left.bmp">floor panel</item> 
+   <item value="300" path="broken left02.bmp">floor panel</item> 
+   <item value="298" path="broken right.bmp">floor panel</item> 
+   <item value="1327" path="spikes left.bmp">floor panel</item> 
+   <item value="1333" path="spikes right.bmp">floor panel</item> 
+   <item value="241" path="normal left.bmp">floor panel</item> 
+   <item value="242" path="normal right.bmp">floor panel</item> 
+   <item value="243" path="normal base.bmp">floor panel</item> 
+   <item value="269" path="loose left01.bmp">floor panel</item> 
+   <item value="270" path="loose left02.bmp">floor panel</item> 
+   <item value="271" path="loose right01.bmp">floor panel</item> 
+   <item value="272" path="loose right02.bmp">floor panel</item> 
+   <item value="273" path="loose base01.bmp">floor panel</item> 
+   <item value="274" path="loose base02.bmp">floor panel</item> 
+   <item value="296" path="closer base unpressed.bmp">floor panel</item>
+   <item value="347" path="opener left unpressed.bmp">floor panel</item> 
+   <item value="235" path="opener left unpressed02.bmp">floor panel</item> 
+   <item value="349" path="opener base unpressed.bmp">floor panel</item> 
+   <item value="350" path="normal_closer01.bmp">floor panel</item> 
+   <item value="351" path="normal_closer02.bmp">floor panel</item> 
+   <item value="232" path="normal_closer03.bmp">floor panel</item>   
+  </folder>
+
+  <folder name="background" path="background">
+   <item value="324" path="bricks03.bmp">palace background</item> 
+   <item value="325" path="bricks04.bmp">palace background</item> 
+   <item value="326" path="window.bmp">palace background</item> 
+   <item value="244" path="bricks01.bmp">palace background</item> 
+   <item value="245" path="bricks02.bmp">palace background</item> 
+   <item value="346" path="torch.bmp">palace background</item> 
+   <item value="284" path="other01.bmp">palace background</item>
+   <item value="345" path="other02.bmp">palace background</item>
+  </folder>
+
+  <folder name="big pillar" path="big pillar">
+   <item value="1286" path="big pillar left lower.bmp">palace background</item> 
+   <item value="1287" path="big pillar right lower.bmp">palace background</item> 
+   <item value="1288" path="big pillar lower02.bmp">palace background</item> 
+   <item value="1289" path="big pillar right upper.bmp">palace background</item> 
+   <item value="1290" path="big pillar right upper top.bmp">palace background</item> 
+   <item value="1291" path="big pillar left upper.bmp">palace background</item> 
+  </folder>
+
+  <folder name="door" path="door">
+   <item value="246" path="door frame left.bmp">door</item> 
+   <item value="247" path="door frame right.bmp">door</item> 
+   <item value="248" path="door frame right top.bmp">door</item> 
+   <item value="249" path="door frame left pole.bmp">door</item> 
+   <item value="250" path="res00250.bmp">door</item> 
+   <item value="251" path="res00251.bmp">door</item> 
+   <item value="252" path="res00252.bmp">door</item> 
+   <item value="253" path="res00253.bmp">door</item> 
+   <item value="254" path="res00254.bmp">door</item> 
+   <item value="255" path="res00255.bmp">door</item> 
+   <item value="256" path="res00256.bmp">door</item> 
+   <item value="257" path="res00257.bmp">door</item> 
+   <item value="258" path="res00258.bmp">door</item> 
+   <item value="259" path="res00259.bmp">door</item> 
+   <item value="260" path="res00260.bmp">door</item> 
+   <item value="261" path="res00261.bmp">door</item> 
+   <item value="262" path="res00262.bmp">door</item> 
+   <item value="263" path="res00263.bmp">door</item> 
+   <item value="264" path="res00264.bmp">door</item> 
+   <item value="265" path="res00265.bmp">door</item> 
+   <item value="266" path="res00266.bmp">door</item> 
+   <item value="267" path="res00267.bmp">door</item> 
+   <item value="285" path="res00285.bmp">door</item> 
+   <item value="268" path="res268.bmp" colors="2">(null)</item>
+  </folder>
+
+  <folder name="level door" path="level door">
+   <item value="233" path="door bottom.bmp">level door</item> 
+   <item value="234" path="door top.bmp">level door</item> 
+   <item value="237" path="frame lower left.bmp">level door</item> 
+   <item value="238" path="frame upper left.bmp">level door</item> 
+   <item value="239" path="frame lower right.bmp">level door</item> 
+   <item value="240" path="frame upper right.bmp">level door</item> 
+   <item value="299" path="floor.bmp">level door</item> 
+   <item value="344" path="stairs.bmp">level door</item> 
+  </folder>  
+
+  <folder name="spikes" path="spikes">
+   <item value="1328" path="frame01 left.bmp">spikes</item> 
+   <item value="1329" path="frame02 left.bmp">spikes</item> 
+   <item value="1330" path="frame03 left.bmp">spikes</item> 
+   <item value="1331" path="frame04 left.bmp">spikes</item> 
+   <item value="1332" path="frame05 left.bmp">spikes</item> 
+   <item value="1334" path="frame01 right.bmp">spikes</item> 
+   <item value="1335" path="frame02 right.bmp">spikes</item> 
+   <item value="1336" path="frame03 right.bmp">spikes</item> 
+   <item value="1337" path="frame04 right.bmp">spikes</item> 
+   <item value="1338" path="frame05 right.bmp">spikes</item> 
+   <item value="1339" path="frame01.bmp">spikes</item> 
+   <item value="1340" path="frame02.bmp">spikes</item> 
+   <item value="1341" path="frame03.bmp">spikes</item> 
+   <item value="1342" path="frame04.bmp">spikes</item> 
+   <item value="1343" path="frame05.bmp">spikes</item> 
+  </folder>
+ 
+  <folder name="chopper" path="chopper">
+   <item value="1301" path="chopper frame03.bmp">chopper</item> 
+   <item value="1302" path="chopper frame04.bmp">chopper</item> 
+   <item value="1303" path="chopper frame02.bmp">chopper</item> 
+   <item value="1304" path="chopper frame01.bmp">chopper</item> 
+   <item value="1305" path="chopper frame05.bmp">chopper</item> 
+   <item value="1306" path="behind pillar frame03.bmp">chopper</item> 
+   <item value="1307" path="behind pillar frame04.bmp">chopper</item> 
+   <item value="1308" path="behind pillar frame02.bmp">chopper</item> 
+   <item value="1309" path="behind pillar frame01.bmp">chopper</item> 
+   <item value="1310" path="behind pillar frame05.bmp">chopper</item> 
+   <item value="1311" path="frame02 top.bmp">chopper</item> 
+   <item value="1312" path="frame01 top.bmp">chopper</item> 
+   <item value="1313" path="frame05 top.bmp">chopper</item> 
+   <folder name="blood" path="blood" colors="2">
+   <item value="1314" path="res1314.bmp">(null)</item>
+   <item value="1315" path="res1315.bmp">(null)</item>
+   <item value="1316" path="res1316.bmp">(null)</item>
+   <item value="1317" path="res1317.bmp">(null)</item>
+   <item value="1318" path="res1318.bmp">(null)</item>
+   <item value="1319" path="res1319.bmp">(null)</item>
+   <item value="1320" path="res1320.bmp">(null)</item>
+   <item value="1321" path="res1321.bmp">(null)</item>
+   <item value="1322" path="res1322.bmp">(null)</item>
+   <item value="1323" path="res1323.bmp">(null)</item>
+   </folder>
+  </folder>
+
+  <folder name="binary" path="binary" type="binary">
+   <item value="1207" path="res1207.bin">(null)</item>
+   <item value="1208" path="res1208.bin">(null)</item>
+   <item value="1276" path="res1276.bin">(null)</item>
+   <item value="1279" path="res1279.bin">(null)</item>
+   <item value="201" path="res201.bin">(null)</item>
+   <item value="202" path="res202.bin">(null)</item>
+   <item value="203" path="res203.bin">(null)</item>
+   <item value="204" path="res204.bin">(null)</item>
+   <item value="205" path="res205.bin">(null)</item>
+   <item value="206" path="res206.bin">(null)</item>
+   <item value="207" path="res207.bin">(null)</item>
+   <item value="208" path="res208.bin">(null)</item>
+   <item value="209" path="res209.bin">(null)</item>
+   <item value="210" path="res210.bin">(null)</item>
+   <item value="211" path="res211.bin">(null)</item>
+   <item value="212" path="res212.bin">(null)</item>
+   <item value="213" path="res213.bin">(null)</item>
+   <item value="214" path="res214.bin">(null)</item>
+   <item value="215" path="res215.bin">(null)</item>
+   <item value="216" path="res216.bin">(null)</item>
+   <item value="217" path="res217.bin">(null)</item>
+   <item value="218" path="res218.bin">(null)</item>
+   <item value="219" path="res219.bin">(null)</item>
+   <item value="220" path="res220.bin">(null)</item>
+   <item value="221" path="res221.bin">(null)</item>
+   <item value="222" path="res222.bin">(null)</item>
+   <item value="223" path="res223.bin">(null)</item>
+   <item value="224" path="res224.bin">(null)</item>
+   <item value="225" path="res225.bin">(null)</item>
+   <item value="226" path="res226.bin">(null)</item>
+   <item value="227" path="res227.bin">(null)</item>
+   <item value="228" path="res228.bin">(null)</item>
+   <item value="229" path="res229.bin">(null)</item>
+   <item value="230" path="res230.bin">(null)</item>
+   <item value="231" path="res231.bin">(null)</item>
+   <item value="275" path="res275.bin">(null)</item>
+   <item value="276" path="res276.bin">(null)</item>
+   <item value="277" path="res277.bin">(null)</item>
+   <item value="278" path="res278.bin">(null)</item>
+   <item value="279" path="res279.bin">(null)</item>
+   <item value="280" path="res280.bin">(null)</item>
+   <item value="281" path="res281.bin">(null)</item>
+   <item value="282" path="res282.bin">(null)</item>
+   <item value="283" path="res283.bin">(null)</item>
+   <item value="286" path="res286.bin">(null)</item>
+   <item value="287" path="res287.bin">(null)</item>
+   <item value="288" path="res288.bin">(null)</item>
+   <item value="289" path="res289.bin">(null)</item>
+   <item value="290" path="res290.bin">(null)</item>
+   <item value="291" path="res291.bin">(null)</item>
+   <item value="301" path="res301.bin">(null)</item>
+   <item value="302" path="res302.bin">(null)</item>
+   <item value="303" path="res303.bin">(null)</item>
+   <item value="304" path="res304.bin">(null)</item>
+   <item value="305" path="res305.bin">(null)</item>
+   <item value="306" path="res306.bin">(null)</item>
+   <item value="307" path="res307.bin">(null)</item>
+   <item value="308" path="res308.bin">(null)</item>
+   <item value="309" path="res309.bin">(null)</item>
+   <item value="310" path="res310.bin">(null)</item>
+   <item value="311" path="res311.bin">(null)</item>
+   <item value="312" path="res312.bin">(null)</item>
+   <item value="313" path="res313.bin">(null)</item>
+   <item value="314" path="res314.bin">(null)</item>
+   <item value="315" path="res315.bin">(null)</item>
+   <item value="316" path="res316.bin">(null)</item>
+   <item value="317" path="res317.bin">(null)</item>
+   <item value="318" path="res318.bin">(null)</item>
+   <item value="319" path="res319.bin">(null)</item>
+   <item value="320" path="res320.bin">(null)</item>
+   <item value="321" path="res321.bin">(null)</item>
+   <item value="322" path="res322.bin">(null)</item>
+   <item value="323" path="res323.bin">(null)</item>
+   <item value="327" path="res327.bin">(null)</item>
+   <item value="328" path="res328.bin">(null)</item>
+   <item value="329" path="res329.bin">(null)</item>
+   <item value="330" path="res330.bin">(null)</item>
+   <item value="331" path="res331.bin">(null)</item>
+   <item value="332" path="res332.bin">(null)</item>
+   <item value="333" path="res333.bin">(null)</item>
+   <item value="334" path="res334.bin">(null)</item>
+   <item value="335" path="res335.bin">(null)</item>
+   <item value="336" path="res336.bin">(null)</item>
+   <item value="337" path="res337.bin">(null)</item>
+   <item value="338" path="res338.bin">(null)</item>
+   <item value="339" path="res339.bin">(null)</item>
+   <item value="340" path="res340.bin">(null)</item>
+   <item value="341" path="res341.bin">(null)</item>
+   <item value="342" path="res342.bin">(null)</item>
+   <item value="343" path="res343.bin">(null)</item>
+   <item value="348" path="res348.bin">(null)</item>
+  </folder>
+ </folder>
+
+ <folder index="pop1" name="binary" file="pv.dat" path="pv" palette="800" type="image">
+  <folder path="jaffar" palette="850">
+   <item value="850" path="palette.pal" type="palette-pop1-4bits">Unknown Resource number 850</item>
+   <folder path="walking">
+    <item value="851" path="frame01.bmp">Image frame01 (851)</item>
+    <item value="852" path="frame02.bmp">Image frame02 (852)</item>
+    <item value="853" path="frame03.bmp">Image frame03 (853)</item>
+    <item value="854" path="frame04.bmp">Image frame04 (854)</item>
+    <item value="855" path="frame05.bmp">Image frame05 (855)</item>
+    <item value="856" path="frame06.bmp">Image frame06 (856)</item>
+    <item value="857" path="frame07.bmp">Image frame07 (857)</item>
+    <item value="858" path="frame08.bmp">Image frame08 (858)</item>
+    <item value="859" path="frame09.bmp">Image frame09 (859)</item>
+    <item value="860" path="frame10.bmp">Image frame10 (860)</item>
+    <item value="861" path="frame11.bmp">Image frame11 (861)</item>
+    <item value="862" path="frame12.bmp">Image frame12 (862)</item>
+    <item value="863" path="frame13.bmp">Image frame13 (863)</item>
+    <item value="864" path="frame14.bmp">Image frame14 (864)</item>
+    <item value="865" path="frame15.bmp">Image frame15 (865)</item>
+    <item value="866" path="frame16.bmp">Image frame16 (866)</item>
+    <item value="867" path="frame17.bmp">Image frame17 (867)</item>
+    <item value="868" path="frame18.bmp">Image frame18 (868)</item>
+    <item value="869" path="frame19.bmp">Image frame19 (869)</item>
+   </folder>
+   <folder path="conjuring">
+    <item value="870" path="frame20.bmp">Image frame20 (870)</item>
+    <item value="871" path="frame21.bmp">Image frame21 (871)</item>
+    <item value="872" path="frame22.bmp">Image frame22 (872)</item>
+    <item value="873" path="frame23.bmp">Image frame23 (873)</item>
+    <item value="874" path="frame24.bmp">Image frame24 (874)</item>
+    <item value="875" path="frame25.bmp">Image frame25 (875)</item>
+    <item value="876" path="frame26.bmp">Image frame26 (876)</item>
+    <item value="877" path="frame27.bmp">Image frame27 (877)</item>
+    <item value="878" path="frame28.bmp">Image frame28 (878)</item>
+    <item value="879" path="frame29.bmp">Image frame29 (879)</item>
+    <item value="880" path="frame30.bmp">Image frame30 (880)</item>
+    <item value="881" path="frame31.bmp">Image frame31 (881)</item>
+    <item value="882" path="frame32.bmp">Image frame32 (882)</item>
+    <item value="883" path="frame33.bmp">Image frame33 (883)</item>
+    <item value="884" path="frame34.bmp">Image frame34 (884)</item>
+    <item value="885" path="frame35.bmp">Image frame35 (885)</item>
+    <item value="886" path="frame36.bmp">Image frame36 (886)</item>
+    <item value="887" path="frame37.bmp">Image frame37 (887)</item>
+    <item value="888" path="frame38.bmp">Image frame38 (888)</item>
+   </folder>
+  </folder>
+  
+  <folder path="princess" palette="900">
+   <item value="900" path="palette.pal" type="palette-pop1-4bits">Unknown Resource number 900</item>
+   <item value="901" path="resting.bmp">Image resting (901)</item>
+   <item value="902" path="colour.bmp">Image colour (902)</item>
+   <folder path="in story" palette="800">
+    <item value="800" path="palette.pal" type="palette-pop1-4bits">Unknown Resource number 800</item>
+    <item value="801" path="frame01.bmp">Image frame01 (801)</item>
+    <item value="802" path="frame02.bmp">Image frame02 (802)</item>
+    <item value="803" path="frame03.bmp">Image frame03 (803)</item>
+    <item value="804" path="frame04.bmp">Image frame04 (804)</item>
+    <item value="805" path="frame05.bmp">Image frame05 (805)</item>
+    <item value="806" path="frame06.bmp">Image frame06 (806)</item>
+    <item value="807" path="frame07.bmp">Image frame07 (807)</item>
+    <item value="808" path="frame08.bmp">Image frame08 (808)</item>
+    <item value="809" path="frame09.bmp">Image frame09 (809)</item>
+    <item value="810" path="frame10.bmp">Image frame10 (810)</item>
+    <item value="811" path="frame11.bmp">Image frame11 (811)</item>
+    <item value="812" path="frame12.bmp">Image frame12 (812)</item>
+    <item value="813" path="frame13.bmp">Image frame13 (813)</item>
+    <item value="814" path="frame14.bmp">Image frame14 (814)</item>
+    <item value="815" path="frame15.bmp">Image frame15 (815)</item>
+    <item value="816" path="frame16.bmp">Image frame16 (816)</item>
+    <item value="817" path="frame17.bmp">Image frame17 (817)</item>
+   </folder>
+   <folder path="winning">
+    <item value="903" path="frame01.bmp">Image frame01 (903)</item>
+    <item value="904" path="frame02.bmp">Image frame02 (904)</item>
+    <item value="905" path="frame03.bmp">Image frame03 (905)</item>
+    <item value="906" path="frame04.bmp">Image frame04 (906)</item>
+    <item value="907" path="frame05.bmp">Image frame05 (907)</item>
+    <item value="908" path="frame06.bmp">Image frame06 (908)</item>
+    <item value="909" path="frame07.bmp">Image frame07 (909)</item>
+    <item value="910" path="frame08.bmp">Image frame08 (910)</item>
+    <item value="911" path="frame09.bmp">Image frame09 (911)</item>
+    <item value="912" path="frame10.bmp">Image frame10 (912)</item>
+    <item value="913" path="frame11.bmp">Image frame11 (913)</item>
+    <item value="914" path="frame12.bmp">Image frame12 (914)</item>
+    <item value="915" path="frame13.bmp">Image frame13 (915)</item>
+    <item value="916" path="frame14.bmp">Image frame14 (916)</item>
+   </folder>
+   <folder path="with mouse">
+    <item value="917" path="frame01.bmp">Image frame01 (917)</item>
+    <item value="918" path="frame02.bmp">Image frame02 (918)</item>
+    <item value="919" path="frame03.bmp">Image frame03 (919)</item>
+    <item value="920" path="frame04.bmp">Image frame04 (920)</item>
+    <item value="921" path="frame05.bmp">Image frame05 (921)</item>
+    <item value="922" path="frame06.bmp">Image frame06 (922)</item>
+    <item value="923" path="frame07.bmp">Image frame07 (923)</item>
+    <item value="924" path="frame08.bmp">Image frame08 (924)</item>
+    <item value="925" path="frame09.bmp">Image frame09 (925)</item>
+    <item value="926" path="frame10.bmp">Image frame10 (926)</item>
+    <item value="927" path="frame11.bmp">Image frame11 (927)</item>
+    <item value="928" path="frame12.bmp">Image frame12 (928)</item>
+    <item value="929" path="frame13.bmp">Image frame13 (929)</item>
+    <item value="930" path="frame14.bmp">Image frame14 (930)</item>
+   </folder>
+  </folder>
+  
+  <folder path="objects" palette="950">
+   <item value="950" path="room and clock.pal" type="palette-pop1-4bits">Unknown Resource number 950</item>
+   <item value="951" path="room.bmp">Image room (951)</item>
+   <item value="952" path="room pillar.bmp">Image room pillar (952)</item>
+   <item value="953" path="clock01.bmp">Image clock01 (953)</item>
+   <item value="954" path="clock02.bmp">Image clock02 (954)</item>
+   <item value="955" path="clock03.bmp">Image clock03 (955)</item>
+   <item value="956" path="clock04.bmp">Image clock04 (956)</item>
+   <item value="957" path="clock05.bmp">Image clock05 (957)</item>
+   <item value="958" path="clock06.bmp">Image clock06 (958)</item>
+   <item value="959" path="clock07.bmp">Image clock07 (959)</item>
+   <item value="960" path="clocksand01.bmp">Image clocksand01 (960)</item>
+   <item value="961" path="clocksand02.bmp">Image clocksand02 (961)</item>
+   <item value="962" path="clocksand03.bmp">Image clocksand03 (962)</item>
+   <item value="980" path="room bed.pal" type="palette-pop1-4bits">Unknown Resource number 980</item>
+   <item value="981" path="room bed.bmp" palette="980" type="image">Unknown Resource number 981</item>
+  </folder>
+ </folder>
+
+ <folder index="pop1" name="binary" file="prince.dat" path="prince" palette="150">
+  <item value="150" path="main.pal" type="palette-pop1-4bits">Unknown Resource number 150</item>
+
+  <folder name="fire animation" path="fire" type="image" palette="150">
+   <item value="151" path="frame1.bmp">Image frame1 (151)</item>
+   <item value="152" path="frame2.bmp">Image frame2 (152)</item>
+   <item value="153" path="frame3.bmp">Image frame3 (153)</item>
+   <item value="154" path="frame4.bmp">Image frame4 (154)</item>
+   <item value="155" path="frame5.bmp">Image frame5 (155)</item>
+   <item value="156" path="frame6.bmp">Image frame6 (156)</item>
+   <item value="157" path="frame7.bmp">Image frame7 (157)</item>
+   <item value="158" path="frame8.bmp">Image frame8 (158)</item>
+   <item value="159" path="frame9.bmp">Image frame9 (159)</item>
+  </folder>
+
+  <folder name="binary stuff" path="binary">
+   <item value="1" path="midi info 1.bin" type="binary">Unknown Resource number 1</item>
+   <item value="2" path="pcs info 2.bin" type="binary">Unknown Resource number 2</item>
+   <item value="10" path="guard palettes.pal" type="palette-pop2-320cols">Unknown Resource number 10</item>  
+   <item value="20" path="level color variations.pal" type="palette-pop2-320cols" /><!-- PoP 1.3 and 1.4 -->
+  </folder>
+
+  <folder name="potions" path="potions">
+   <folder name="base" path="base" type="image" palette="150">  
+    <item value="162" path="small dungeon.bmp" type="image">Unknown Resource number 162</item>
+    <item value="163" path="big dungeon.bmp" type="image">Unknown Resource number 163</item>
+    <item value="164" path="small palace.bmp" type="image">Unknown Resource number 164</item>
+    <item value="165" path="big palace.bmp" type="image">Unknown Resource number 165</item>
+   </folder>
+
+   <folder name="bubble animation" path="bubble animation" type="image" colors="2">
+    <item value="166" path="frame01.bmp">Image frame01 (166)</item>
+    <item value="167" path="frame02.bmp">Image frame02 (167)</item>
+    <item value="168" path="frame03.bmp">Image frame03 (168)</item>
+    <item value="169" path="frame04.bmp">Image frame04 (169)</item>
+    <item value="170" path="frame05.bmp">Image frame05 (170)</item>
+    <item value="171" path="frame06.bmp">Image frame06 (171)</item>
+    <item value="172" path="frame07.bmp">Image frame07 (172)</item>
+    <item value="173" path="frameextra.bmp">Image frame08 (173)</item>
+   </folder>
+  </folder>
+  
+  <folder name="sword" path="sword">  
+   <folder name="in the floor" path="in the floor" type="image" palette="150">  
+    <item value="160" path="normal.bmp">Image normal (160)</item>
+    <item value="161" path="bright.bmp">Image bright (161)</item>
+   </folder>
+ 
+   <folder name="fighting" path="fighting" type="image" palette="700">
+    <item value="700" path="sword.pal" type="palette-pop1-4bits">Unknown Resource number 700</item>
+    <item value="701" path="sword01.bmp">Image sword01 (701)</item>
+    <item value="702" path="sword02.bmp">Image sword02 (702)</item>
+    <item value="703" path="sword03.bmp">Image sword03 (703)</item>
+    <item value="704" path="sword04.bmp">Image sword04 (704)</item>
+    <item value="705" path="sword05.bmp">Image sword05 (705)</item>
+    <item value="706" path="sword06.bmp">Image sword06 (706)</item>
+    <item value="707" path="sword07.bmp">Image sword07 (707)</item>
+    <item value="708" path="sword08.bmp">Image sword08 (708)</item>
+    <item value="709" path="sword09.bmp">Image sword09 (709)</item>
+    <item value="710" path="sword10.bmp">Image sword10 (710)</item>
+    <item value="711" path="sword11.bmp">Image sword11 (711)</item>
+    <item value="712" path="sword12.bmp">Image sword12 (712)</item>
+    <item value="713" path="sword13.bmp">Image sword13 (713)</item>
+    <item value="714" path="sword14.bmp">Image sword14 (714)</item>
+    <item value="715" path="sword15.bmp">Image sword15 (715)</item>
+    <item value="716" path="sword16.bmp">Image sword16 (716)</item>
+    <item value="717" path="sword17.bmp">Image sword17 (717)</item>
+    <item value="718" path="sword18.bmp">Image sword18 (718)</item>
+    <item value="719" path="sword19.bmp">Image sword19 (719)</item>
+    <item value="720" path="sword20.bmp">Image sword20 (720)</item>
+    <item value="721" path="sword21.bmp">Image sword21 (721)</item>
+    <item value="722" path="sword22.bmp">Image sword22 (722)</item>
+    <item value="723" path="sword23.bmp">Image sword23 (723)</item>
+    <item value="724" path="sword24.bmp">Image sword24 (724)</item>
+    <item value="725" path="sword25.bmp">Image sword25 (725)</item>
+    <item value="726" path="sword26.bmp">Image sword26 (726)</item>
+    <item value="727" path="sword27.bmp">Image sword27 (727)</item>
+    <item value="728" path="sword28.bmp">Image sword28 (728)</item>
+    <item value="729" path="sword29.bmp">Image sword29 (729)</item>
+    <item value="730" path="sword30.bmp">Image sword30 (730)</item>
+    <item value="731" path="sword31.bmp">Image sword31 (731)</item>
+    <item value="732" path="sword32.bmp">Image sword32 (732)</item>
+    <item value="733" path="sword33.bmp">Image sword33 (733)</item>
+    <item value="734" path="sword34.bmp">Image sword34 (734)</item>
+   </folder>
+  </folder>
+ </folder>
+
+
+ <folder index="pop1" name="binary" file="kid.dat" path="kid" palette="400" type="image">
+  <item value="400" path="kid.pal" type="palette-pop1-4bits">Resource number 400</item>
+  <folder path="running">
+   <item value="401" path="frame01.bmp">Image frame01 (401)</item>
+   <item value="402" path="frame02.bmp">Image frame02 (402)</item>
+   <item value="403" path="frame03.bmp">Image frame03 (403)</item>
+   <item value="404" path="frame04.bmp">Image frame04 (404)</item>
+   <item value="405" path="frame05.bmp">Image frame05 (405)</item>
+   <item value="406" path="frame06.bmp">Image frame06 (406)</item>
+   <item value="407" path="frame07.bmp">Image frame07 (407)</item>
+   <item value="408" path="frame08.bmp">Image frame08 (408)</item>
+   <item value="409" path="frame09.bmp">Image frame09 (409)</item>
+   <item value="410" path="frame10.bmp">Image frame10 (410)</item>
+   <item value="411" path="frame11.bmp">Image frame11 (411)</item>
+   <item value="412" path="frame12.bmp">Image frame12 (412)</item>
+   <item value="413" path="frame13.bmp">Image frame13 (413)</item>
+   <item value="414" path="frame14.bmp">Image frame14 (414)</item>
+  </folder>
+  <item value="415" path="normal.bmp">Image normal (415)</item>
+  <folder path="simple jump">
+   <item value="416" path="frame01.bmp">Image frame01 (416)</item>
+   <item value="417" path="frame02.bmp">Image frame02 (417)</item>
+   <item value="418" path="frame03.bmp">Image frame03 (418)</item>
+   <item value="419" path="frame04.bmp">Image frame04 (419)</item>
+   <item value="420" path="frame05.bmp">Image frame05 (420)</item>
+   <item value="421" path="frame06.bmp">Image frame06 (421)</item>
+   <item value="422" path="frame07.bmp">Image frame07 (422)</item>
+   <item value="423" path="frame08.bmp">Image frame08 (423)</item>
+   <item value="424" path="frame09.bmp">Image frame09 (424)</item>
+   <item value="425" path="frame10.bmp">Image frame10 (425)</item>
+   <item value="426" path="frame11.bmp">Image frame11 (426)</item>
+   <item value="427" path="frame12.bmp">Image frame12 (427)</item>
+   <item value="428" path="frame13.bmp">Image frame13 (428)</item>
+   <item value="429" path="frame14.bmp">Image frame14 (429)</item>
+   <item value="430" path="frame15.bmp">Image frame15 (430)</item>
+   <item value="431" path="frame16.bmp">Image frame16 (431)</item>
+   <item value="432" path="frame17.bmp">Image frame17 (432)</item>
+   <item value="433" path="frame18.bmp">Image frame18 (433)</item>
+  </folder> 
+  <folder path="running jump">
+   <item value="434" path="frame01.bmp">Image frame01 (434)</item>
+   <item value="435" path="frame02.bmp">Image frame02 (435)</item>
+   <item value="436" path="frame03.bmp">Image frame03 (436)</item>
+   <item value="437" path="frame04.bmp">Image frame04 (437)</item>
+   <item value="438" path="frame05.bmp">Image frame05 (438)</item>
+   <item value="439" path="frame06.bmp">Image frame06 (439)</item>
+   <item value="440" path="frame07.bmp">Image frame07 (440)</item>
+   <item value="441" path="frame08.bmp">Image frame08 (441)</item>
+   <item value="442" path="frame09.bmp">Image frame09 (442)</item>
+   <item value="443" path="frame10.bmp">Image frame10 (443)</item>
+   <item value="444" path="frame11.bmp">Image frame11 (444)</item>
+  </folder>
+  <folder path="turning">
+   <item value="445" path="frame01.bmp">Image frame01 (445)</item>
+   <item value="446" path="frame02.bmp">Image frame02 (446)</item>
+   <item value="447" path="frame03.bmp">Image frame03 (447)</item>
+   <item value="448" path="frame04.bmp">Image frame04 (448)</item>
+   <item value="449" path="frame05.bmp">Image frame05 (449)</item>
+   <item value="450" path="frame06.bmp">Image frame06 (450)</item>
+   <item value="451" path="frame07.bmp">Image frame07 (451)</item>
+   <item value="452" path="frame08.bmp">Image frame08 (452)</item>
+  </folder>
+  <folder path="stairs">
+   <item value="453" path="frame01.bmp">Image frame01 (453)</item>
+   <item value="454" path="frame02.bmp">Image frame02 (454)</item>
+   <item value="455" path="frame03.bmp">Image frame03 (455)</item>
+   <item value="456" path="frame04.bmp">Image frame04 (456)</item>
+   <item value="457" path="frame05.bmp">Image frame05 (457)</item>
+   <item value="458" path="frame06.bmp">Image frame06 (458)</item>
+   <item value="459" path="frame07.bmp">Image frame07 (459)</item>
+   <item value="460" path="frame08.bmp">Image frame08 (460)</item>
+   <item value="461" path="frame09.bmp">Image frame09 (461)</item>
+   <item value="462" path="frame10.bmp">Image frame10 (462)</item>
+   <item value="463" path="frame11.bmp">Image frame11 (463)</item>
+   <item value="464" path="frame12.bmp">Image frame12 (464)</item>
+  </folder>
+  <folder path="turn running">
+   <item value="465" path="frame01.bmp">Image frame01 (465)</item>
+   <item value="466" path="frame02.bmp">Image frame02 (466)</item>
+   <item value="467" path="frame03.bmp">Image frame03 (467)</item>
+   <item value="468" path="frame04.bmp">Image frame04 (468)</item>
+   <item value="469" path="frame05.bmp">Image frame05 (469)</item>
+   <item value="470" path="frame06.bmp">Image frame06 (470)</item>
+   <item value="471" path="frame07.bmp">Image frame07 (471)</item>
+   <item value="472" path="frame08.bmp">Image frame08 (472)</item>
+   <item value="473" path="frame09.bmp">Image frame09 (473)</item>
+   <item value="474" path="frame10.bmp">Image frame10 (474)</item>
+   <item value="475" path="frame11.bmp">Image frame11 (475)</item>
+   <item value="476" path="frame12.bmp">Image frame12 (476)</item>
+   <item value="477" path="frame13.bmp">Image frame13 (477)</item>
+  </folder>
+  <folder path="deaths">
+   <item value="478" path="chopped.bmp">Image chopped (478)</item>
+   <item value="479" path="spiked.bmp">Image spiked (479)</item>
+   <item value="480" path="dead.bmp">Image dead (480)</item>
+  </folder>
+  <folder path="scaling">
+   <item value="481" path="frame01.bmp">Image frame01 (481)</item>
+   <item value="482" path="frame02.bmp">Image frame02 (482)</item>
+   <item value="483" path="frame03.bmp">Image frame03 (483)</item>
+   <item value="484" path="frame04.bmp">Image frame04 (484)</item>
+   <item value="485" path="frame05.bmp">Image frame05 (485)</item>
+   <item value="486" path="frame06.bmp">Image frame06 (486)</item>
+   <item value="487" path="frame07.bmp">Image frame07 (487)</item>
+   <item value="488" path="frame08.bmp">Image frame08 (488)</item>
+   <item value="489" path="frame09.bmp">Image frame09 (489)</item>
+   <item value="490" path="frame10.bmp">Image frame10 (490)</item>
+   <item value="491" path="frame11.bmp">Image frame11 (491)</item>
+   <item value="492" path="frame12.bmp">Image frame12 (492)</item>
+   <item value="493" path="frame13.bmp">Image frame13 (493)</item>
+   <item value="494" path="frame14.bmp">Image frame14 (494)</item>
+   <item value="495" path="frame15.bmp">Image frame15 (495)</item>
+   <item value="496" path="frame16.bmp">Image frame16 (496)</item>
+   <item value="497" path="frame17.bmp">Image frame17 (497)</item>
+   <item value="498" path="frame18.bmp">Image frame18 (498)</item>
+   <item value="499" path="frame19.bmp">Image frame19 (499)</item>
+  </folder>
+  <folder path="hanging and falling">
+   <item value="500" path="frame00.bmp">Image frame00 (500)</item>
+   <item value="501" path="frame01.bmp">Image frame01 (501)</item>
+   <item value="502" path="frame02.bmp">Image frame02 (502)</item>
+   <item value="503" path="frame03.bmp">Image frame03 (503)</item>
+   <item value="504" path="frame04.bmp">Image frame04 (504)</item>
+   <item value="505" path="frame05.bmp">Image frame05 (505)</item>
+   <item value="506" path="frame06.bmp">Image frame06 (506)</item>
+   <item value="507" path="frame07.bmp">Image frame07 (507)</item>
+   <item value="508" path="frame08.bmp">Image frame08 (508)</item>
+   <item value="509" path="frame09.bmp">Image frame09 (509)</item>
+   <item value="510" path="frame10.bmp">Image frame10 (510)</item>
+   <item value="511" path="frame11.bmp">Image frame11 (511)</item>
+   <item value="512" path="frame12.bmp">Image frame12 (512)</item>
+   <item value="513" path="frame13.bmp">Image frame13 (513)</item>
+   <item value="514" path="frame14.bmp">Image frame14 (514)</item>
+   <item value="515" path="frame15.bmp">Image frame15 (515)</item>
+   <item value="516" path="frame16.bmp">Image frame16 (516)</item>
+   <item value="517" path="frame17.bmp">Image frame17 (517)</item>
+  </folder>  
+  <folder path="couching">
+   <item value="518" path="frame01.bmp">Image frame01 (518)</item>
+   <item value="519" path="frame02.bmp">Image frame02 (519)</item>
+   <item value="520" path="frame03.bmp">Image frame03 (520)</item>
+   <item value="521" path="frame04.bmp">Image frame04 (521)</item>
+   <item value="522" path="frame05.bmp">Image frame05 (522)</item>
+   <item value="523" path="frame06.bmp">Image frame06 (523)</item>
+   <item value="524" path="frame07.bmp">Image frame07 (524)</item>
+   <item value="525" path="frame08.bmp">Image frame08 (525)</item>
+   <item value="526" path="frame09.bmp">Image frame09 (526)</item>
+   <item value="527" path="frame10.bmp">Image frame10 (527)</item>
+   <item value="528" path="frame11.bmp">Image frame11 (528)</item>
+   <item value="529" path="frame12.bmp">Image frame12 (529)</item>
+   <item value="530" path="frame13.bmp">Image frame13 (530)</item>
+  </folder>
+  <folder path="mouse">
+   <item value="531" path="frame01.bmp">Image frame01 (531)</item>
+   <item value="532" path="frame02.bmp">Image frame02 (532)</item>
+   <item value="533" path="frame03.bmp">Image frame03 (533)</item>
+  </folder>
+  <folder path="walking a step">
+   <item value="534" path="frame01.bmp">Image frame01 (534)</item>
+   <item value="535" path="frame02.bmp">Image frame02 (535)</item>
+   <item value="536" path="frame03.bmp">Image frame03 (536)</item>
+   <item value="537" path="frame04.bmp">Image frame04 (537)</item>
+   <item value="538" path="frame05.bmp">Image frame05 (538)</item>
+   <item value="539" path="frame06.bmp">Image frame06 (539)</item>
+   <item value="540" path="frame07.bmp">Image frame07 (540)</item>
+   <item value="541" path="frame08.bmp">Image frame08 (541)</item>
+   <item value="542" path="frame09.bmp">Image frame09 (542)</item>
+   <item value="543" path="frame10.bmp">Image frame10 (543)</item>
+   <item value="544" path="frame11.bmp">Image frame11 (544)</item>
+   <item value="545" path="frame12.bmp">Image frame12 (545)</item>
+  </folder>
+  <folder path="clipping">
+   <item value="546" path="frame01.bmp">Image frame01 (546)</item>
+   <item value="547" path="frame02.bmp">Image frame02 (547)</item>
+   <item value="548" path="frame03.bmp">Image frame03 (548)</item>
+   <item value="549" path="frame04.bmp">Image frame04 (549)</item>
+   <item value="550" path="frame05.bmp">Image frame05 (550)</item>
+   <item value="551" path="frame06.bmp">Image frame06 (551)</item>
+   <item value="552" path="frame07.bmp">Image frame07 (552)</item>
+   <item value="553" path="frame08.bmp">Image frame08 (553)</item>
+   <item value="554" path="frame09.bmp">Image frame09 (554)</item>
+   <item value="555" path="frame10.bmp">Image frame10 (555)</item>
+   <item value="556" path="frame11.bmp">Image frame11 (556)</item>
+   <item value="557" path="frame12.bmp">Image frame12 (557)</item>
+   <item value="558" path="frame13.bmp">Image frame13 (558)</item>
+   <item value="559" path="frame14.bmp">Image frame14 (559)</item>
+   <item value="560" path="frame15.bmp">Image frame15 (560)</item>
+  </folder>
+  <folder path="got sword">
+   <item value="561" path="frame01.bmp">Image frame01 (561)</item>
+   <item value="562" path="frame02.bmp">Image frame02 (562)</item>
+   <item value="563" path="frame03.bmp">Image frame03 (563)</item>
+   <item value="564" path="frame04.bmp">Image frame04 (564)</item>
+   <item value="565" path="frame05.bmp">Image frame05 (565)</item>
+   <item value="566" path="frame06.bmp">Image frame06 (566)</item>
+   <item value="567" path="frame07.bmp">Image frame07 (567)</item>
+   <item value="568" path="frame08.bmp">Image frame08 (568)</item>
+  </folder>
+  <folder path="putting down sword">
+   <item value="569" path="frame01.bmp">Image frame01 (569)</item>
+   <item value="570" path="frame02.bmp">Image frame02 (570)</item>
+   <item value="571" path="frame03.bmp">Image frame03 (571)</item>
+   <item value="572" path="frame04.bmp">Image frame04 (572)</item>
+   <item value="573" path="frame05.bmp">Image frame05 (573)</item>
+   <item value="574" path="frame06.bmp">Image frame06 (574)</item>
+  </folder>
+  <folder path="sword attacking">
+   <item value="575" path="frame01.bmp">Image frame01 (575)</item>
+   <item value="576" path="frame02.bmp">Image frame02 (576)</item>
+   <item value="577" path="frame03.bmp">Image frame03 (577)</item>
+   <item value="578" path="frame04.bmp">Image frame04 (578)</item>
+   <item value="579" path="frame05.bmp">Image frame05 (579)</item>
+   <item value="580" path="frame06.bmp">Image frame06 (580)</item>
+   <item value="581" path="frame07.bmp">Image frame07 (581)</item>
+   <item value="582" path="frame08.bmp">Image frame08 (582)</item>
+   <item value="583" path="frame09.bmp">Image frame09 (583)</item>
+   <item value="584" path="frame10.bmp">Image frame10 (584)</item>
+   <item value="585" path="frame11.bmp">Image frame11 (585)</item>
+   <item value="586" path="frame12.bmp">Image frame12 (586)</item>
+   <item value="587" path="frame13.bmp">Image frame13 (587)</item>
+   <item value="588" path="frame14.bmp">Image frame14 (588)</item>
+   <item value="589" path="frame15.bmp">Image frame15 (589)</item>
+   <item value="590" path="frame16.bmp">Image frame16 (590)</item>
+   <item value="591" path="frame17.bmp">Image frame17 (591)</item>
+   <item value="592" path="frame18.bmp">Image frame18 (592)</item>
+  </folder>
+  <folder path="drinking">
+   <item value="593" path="frame01.bmp">Image frame01 (593)</item>
+   <item value="594" path="frame02.bmp">Image frame02 (594)</item>
+   <item value="595" path="frame03.bmp">Image frame03 (595)</item>
+   <item value="596" path="frame04.bmp">Image frame04 (596)</item>
+   <item value="597" path="frame05.bmp">Image frame05 (597)</item>
+   <item value="598" path="frame06.bmp">Image frame06 (598)</item>
+   <item value="599" path="frame07.bmp">Image frame07 (599)</item>
+   <item value="600" path="frame08.bmp">Image frame08 (600)</item>
+   <item value="601" path="frame09.bmp">Image frame09 (601)</item>
+   <item value="602" path="frame10.bmp">Image frame10 (602)</item>
+   <item value="603" path="frame11.bmp">Image frame11 (603)</item>
+   <item value="604" path="frame12.bmp">Image frame12 (604)</item>
+   <item value="605" path="frame13.bmp">Image frame13 (605)</item>
+   <item value="606" path="frame14.bmp">Image frame14 (606)</item>
+   <item value="607" path="frame15.bmp">Image frame15 (607)</item>
+  </folder>
+  <folder path="taking sword out">
+   <item value="608" path="frame01.bmp">Image frame01 (608)</item>
+   <item value="609" path="frame02.bmp">Image frame02 (609)</item>
+   <item value="610" path="frame03.bmp">Image frame03 (610)</item>
+   <item value="611" path="frame04.bmp">Image frame04 (611)</item>
+  </folder>
+  <folder path="dieing">
+   <item value="612" path="frame01.bmp">Image frame01 (612)</item>
+   <item value="613" path="frame02.bmp">Image frame02 (613)</item>
+   <item value="614" path="frame03.bmp">Image frame03 (614)</item>
+   <item value="615" path="frame04.bmp">Image frame04 (615)</item>
+   <item value="616" path="frame05.bmp">Image frame05 (616)</item>
+  </folder>
+  <folder path="objects">
+   <item value="617" path="full live.bmp">Image full live (617)</item>
+   <item value="618" path="empty live.bmp">Image empty live (618)</item>
+   <item value="619" path="splash.bmp">Image splash (619)</item>
+  </folder>
+ </folder>
+
+ <folder index="pop1" name="midi sound" file="midisnd1.dat" path="midisnd1" type="midi">
+  <item value="10024" path="death not in fight.mid">Unknown Resource number 10024</item>
+  <item value="10025" path="presentation.mid">Unknown Resource number 10025</item>
+  <item value="10026" path="arrived to princess.mid">Unknown Resource number 10026</item>
+  <item value="10027" path="cutscene 2, 4, 6, 12.mid">Unknown Resource number 10027</item>
+  <item value="10028" path="death in fight.mid">Unknown Resource number 10028</item>
+  <item value="10029" path="meet Jaffar.mid">Unknown Resource number 10029</item>
+  <item value="10030" path="potion big.mid">Unknown Resource number 10030</item>
+  <item value="10032" path="end level with shadow, killed by shadow.mid">Unknown Resource number 10032</item>
+  <item value="10033" path="potion small.mid">Unknown Resource number 10033</item>
+  <item value="10035" path="cutscene 8, 9.mid">Unknown Resource number 10035</item>
+  <item value="10036" path="time over.mid">Unknown Resource number 10036</item>
+  <item value="10037" path="guard death, get sword.mid">Unknown Resource number 10037</item>
+  <item value="10039" path="low weight.mid">Unknown Resource number 10039</item>
+  <item value="10040" path="cutscene 12 short time left.mid">Unknown Resource number 10040</item>
+  <item value="10041" path="story5 Marry Jaffar, end level.mid">Unknown Resource number 10041</item>
+  <item value="10043" path="Jaffar death.mid">Unknown Resource number 10043</item>
+ </folder>
+
+ <folder index="pop1" name="midi sound 2" file="midisnd2.dat" path="midisnd2" type="midi">
+  <item value="10050" path="story2 princess waiting.mid">Unknown Resource number 10050</item>
+  <item value="10052" path="story4 Jaffar leaves.mid">Unknown Resource number 10052</item>
+  <item value="10053" path="story3 Jaffar comes.mid">Unknown Resource number 10053</item>
+  <item value="10054" path="main theme.mid">Unknown Resource number 10054</item>
+  <item value="10055" path="story1 In the absence.mid">Unknown Resource number 10055</item>
+  <item value="10056" path="winning theme.mid">Unknown Resource number 10056</item>
+ </folder>
+
+ <folder index="pop1" name="digital sound" file="digisnd1.dat" path="digisnd1" type="wave">
+  <item value="10000" path="landing hard.wav">crash with the flood</item>
+  <item value="10002" path="tile crashing.wav">Unknown Resource number 10002</item>
+  <item value="10003" path="button pressed.wav">Unknown Resource number 10003</item>
+  <item value="10004" path="gate closing.wav">Unknown Resource number 10004</item>
+  <item value="10005" path="gate opening.wav">Unknown Resource number 10005</item>
+  <item value="10006" path="gate closing fast.wav">Unknown Resource number 10006</item>
+  <item value="10007" path="gate stop.wav">Unknown Resource number 10007</item>
+  <item value="10008" path="touching a wall.wav">Unknown Resource number 10008</item>
+  <item value="10009" path="grab.wav">Unknown Resource number 10009</item>
+  <item value="10010" path="sword vs sword.wav">Unknown Resource number 10010</item>
+  <item value="10011" path="sword moving.wav">Unknown Resource number 10011</item>
+  <item value="10012" path="guard hurt.wav">Unknown Resource number 10012</item>
+  <item value="10013" path="kid hurt.wav">Unknown Resource number 10013</item>
+  <item value="10016" path="landing medium.wav">Unknown Resource number 10016</item>
+  <item value="10017" path="landing soft.wav">Unknown Resource number 10017</item>
+  <item value="10019" path="taking out the sword.wav">Unknown Resource number 10019</item>
+  <item value="10020" path="tile moving 1.wav">Unknown Resource number 10020</item>
+  <item value="10021" path="tile moving 2.wav">Unknown Resource number 10021</item>
+  <item value="10022" path="tile moving 3.wav">Unknown Resource number 10022</item>
+  <item value="10023" path="footstep.wav">Unknown Resource number 10023</item>
+ </folder>
+ <folder index="pop1" name="binary" file="digisnd2.dat" path="digisnd2" type="wave">
+  <item value="10044" path="skel alive.wav">Unknown Resource number 10044</item>
+  <item value="10045" path="mirror.wav">Unknown Resource number 10045</item>
+  <item value="10046" path="something chopped.wav">Unknown Resource number 10046</item>
+  <item value="10047" path="chopper.wav">Unknown Resource number 10047</item>
+  <item value="10048" path="something spiked.wav">Unknown Resource number 10048</item>
+  <item value="10049" path="spikes.wav">Unknown Resource number 10049</item>
+  <item value="10051" path="princess door.wav">Unknown Resource number 10051</item>
+ </folder>
+ <folder index="pop1" name="binary" file="digisnd3.dat" path="digisnd3" type="wave">
+  <item value="10001" path="falling.wav">Unknown Resource number 10001</item>
+  <item value="10014" path="level door closing.wav">Unknown Resource number 10014</item>
+  <item value="10015" path="level door opening.wav">Unknown Resource number 10015</item>
+  <item value="10018" path="drinking.wav">Unknown Resource number 10018</item>
+ </folder>
+
+ <!-- not processed -->
+ <folder index="pop1" name="binary" file="ibm_snd1.dat" path="ibm_snd1" type="pcspeaker">
+  <item value="10000" path="snd00.pcs">Unknown Resource number 10000</item>
+  <item value="10001" path="snd01.bin" type="binary">Unknown Resource number 10001</item>
+  <item value="10002" path="snd02.pcs">Unknown Resource number 10002</item>
+  <item value="10003" path="snd03.pcs">Unknown Resource number 10003</item>
+  <item value="10004" path="snd04.pcs">Unknown Resource number 10004</item>
+  <item value="10005" path="snd05.pcs">Unknown Resource number 10005</item>
+  <item value="10006" path="snd06.pcs">Unknown Resource number 10006</item>
+  <item value="10007" path="snd07.pcs">Unknown Resource number 10007</item>
+  <item value="10008" path="snd08.pcs">Unknown Resource number 10008</item>
+  <item value="10009" path="snd09.pcs">Unknown Resource number 10009</item>
+  <item value="10010" path="snd10.pcs">Unknown Resource number 10010</item>
+  <item value="10011" path="snd11.bin" type="binary">Unknown Resource number 10011</item>
+  <item value="10012" path="snd12.pcs">Unknown Resource number 10012</item>
+  <item value="10013" path="snd13.pcs">Unknown Resource number 10013</item>
+  <item value="10014" path="snd14.pcs">Unknown Resource number 10014</item>
+  <item value="10015" path="snd15.bin" type="binary">Unknown Resource number 10015</item>
+  <item value="10016" path="snd16.pcs">Unknown Resource number 10016</item>
+  <item value="10017" path="snd17.pcs">Unknown Resource number 10017</item>
+  <item value="10018" path="snd18.pcs">Unknown Resource number 10018</item>
+  <item value="10019" path="snd19.bin" type="binary">Unknown Resource number 10019</item>
+  <item value="10020" path="snd20.bin" type="binary">Unknown Resource number 10020</item>
+  <item value="10021" path="snd21.bin" type="binary">Unknown Resource number 10021</item>
+  <item value="10022" path="snd22.bin" type="binary">Unknown Resource number 10022</item>
+  <item value="10023" path="snd23.pcs">Unknown Resource number 10023</item>
+  <item value="10024" path="snd24.pcs">Unknown Resource number 10024</item>
+  <item value="10025" path="snd25.pcs">Unknown Resource number 10025</item>
+  <item value="10026" path="snd26.pcs">Unknown Resource number 10026</item>
+  <item value="10027" path="snd27.pcs">Unknown Resource number 10027</item>
+  <item value="10028" path="snd28.pcs">Unknown Resource number 10028</item>
+  <item value="10029" path="snd29.pcs">Unknown Resource number 10029</item>
+  <item value="10030" path="snd30.pcs">Unknown Resource number 10030</item>
+  <item value="10031" path="snd31.bin" type="binary">Unknown Resource number 10031</item>
+  <item value="10032" path="snd32.pcs">Unknown Resource number 10032</item>
+  <item value="10033" path="snd33.pcs">Unknown Resource number 10033</item>
+  <item value="10034" path="snd34.bin" type="binary">Unknown Resource number 10034</item>
+  <item value="10035" path="snd35.pcs">Unknown Resource number 10035</item>
+  <item value="10036" path="snd36.pcs">Unknown Resource number 10036</item>
+  <item value="10037" path="snd37.pcs">Unknown Resource number 10037</item>
+  <item value="10038" path="snd38.pcs">Unknown Resource number 10038</item>
+  <item value="10039" path="snd39.pcs">Unknown Resource number 10039</item>
+  <item value="10040" path="snd40.pcs">Unknown Resource number 10040</item>
+  <item value="10041" path="snd41.pcs">Unknown Resource number 10041</item>
+  <item value="10042" path="snd42.bin" type="binary">Unknown Resource number 10042</item>
+  <item value="10043" path="snd43.pcs">Unknown Resource number 10043</item>
+ </folder>
+ <folder index="pop1" name="binary" file="ibm_snd2.dat" path="ibm_snd2" type="pcspeaker">
+  <item value="10044" path="snd44.pcs">Unknown Resource number 10044</item>
+  <item value="10045" path="snd45.pcs">Unknown Resource number 10045</item>
+  <item value="10046" path="snd46.pcs">Unknown Resource number 10046</item>
+  <item value="10047" path="snd47.pcs">Unknown Resource number 10047</item>
+  <item value="10048" path="snd48.pcs">Unknown Resource number 10048</item>
+  <item value="10049" path="snd49.pcs">Unknown Resource number 10049</item>
+  <item value="10050" path="snd50.pcs">Unknown Resource number 10050</item>
+  <item value="10051" path="snd51.pcs">Unknown Resource number 10051</item>
+  <item value="10052" path="snd52.pcs">Unknown Resource number 10052</item>
+  <item value="10053" path="snd53.pcs">Unknown Resource number 10053</item>
+  <item value="10054" path="snd54.pcs">Unknown Resource number 10054</item>
+  <item value="10055" path="snd55.pcs">Unknown Resource number 10055</item>
+  <item value="10056" path="snd56.pcs">Unknown Resource number 10056</item>
+ </folder>
+
+ <!-- guards -->
+
+ <folder index="pop1" name="binary" file="skel.dat" path="skel" palette="750">
+  <item value="750" path="res750.pal" type="palette-pop1-4bits">Unknown Resource number 750</item>
+  <item value="751" path="res751.bin" type="binary">Unknown Resource number 751</item>
+  <item value="752" path="res752.bin" type="binary">Unknown Resource number 752</item>
+  <item value="753" path="res753.bmp" type="image">Unknown Resource number 753</item>
+  <item value="754" path="res754.bmp" type="image">Unknown Resource number 754</item>
+  <item value="755" path="res755.bmp" type="image">Unknown Resource number 755</item>
+  <item value="756" path="res756.bmp" type="image">Unknown Resource number 756</item>
+  <item value="757" path="res757.bmp" type="image">Unknown Resource number 757</item>
+  <item value="758" path="res758.bmp" type="image">Unknown Resource number 758</item>
+  <item value="759" path="res759.bmp" type="image">Unknown Resource number 759</item>
+  <item value="760" path="res760.bmp" type="image">Unknown Resource number 760</item>
+  <item value="761" path="res761.bmp" type="image">Unknown Resource number 761</item>
+  <item value="762" path="res762.bmp" type="image">Unknown Resource number 762</item>
+  <item value="763" path="res763.bmp" type="image">Unknown Resource number 763</item>
+  <item value="764" path="res764.bmp" type="image">Unknown Resource number 764</item>
+  <item value="765" path="res765.bmp" type="image">Unknown Resource number 765</item>
+  <item value="766" path="res766.bmp" type="image">Unknown Resource number 766</item>
+  <item value="767" path="res767.bmp" type="image">Unknown Resource number 767</item>
+  <item value="768" path="res768.bmp" type="image">Unknown Resource number 768</item>
+  <item value="769" path="res769.bmp" type="image">Unknown Resource number 769</item>
+  <item value="770" path="res770.bmp" type="image">Unknown Resource number 770</item>
+  <item value="771" path="res771.bmp" type="image">Unknown Resource number 771</item>
+  <item value="772" path="res772.bmp" type="image">Unknown Resource number 772</item>
+  <item value="773" path="res773.bmp" type="image">Unknown Resource number 773</item>
+  <item value="774" path="res774.bmp" type="image">Unknown Resource number 774</item>
+  <item value="775" path="res775.bmp" type="image">Unknown Resource number 775</item>
+  <item value="776" path="res776.bin" type="binary">Unknown Resource number 776</item>
+  <item value="777" path="spiked.bmp" type="image">Unknown Resource number 777</item>
+  <item value="778" path="chopped.bmp" type="image">Unknown Resource number 778</item>
+ </folder>
+
+ <folder index="pop1" name="binary" file="vizier.dat" path="vizier" palette="750">
+  <item value="750" path="res750.pal" type="palette-pop1-4bits">Unknown Resource number 750</item>
+  <item value="751" path="hit points.bmp" type="image">Unknown Resource number 751</item>
+  <item value="752" path="splash.bmp" type="image">Unknown Resource number 752</item>
+  <item value="753" path="res753.bmp" type="image">Unknown Resource number 753</item>
+  <item value="754" path="res754.bmp" type="image">Unknown Resource number 754</item>
+  <item value="755" path="res755.bmp" type="image">Unknown Resource number 755</item>
+  <item value="756" path="res756.bmp" type="image">Unknown Resource number 756</item>
+  <item value="757" path="res757.bmp" type="image">Unknown Resource number 757</item>
+  <item value="758" path="res758.bmp" type="image">Unknown Resource number 758</item>
+  <item value="759" path="res759.bmp" type="image">Unknown Resource number 759</item>
+  <item value="760" path="res760.bmp" type="image">Unknown Resource number 760</item>
+  <item value="761" path="res761.bmp" type="image">Unknown Resource number 761</item>
+  <item value="762" path="res762.bmp" type="image">Unknown Resource number 762</item>
+  <item value="763" path="res763.bmp" type="image">Unknown Resource number 763</item>
+  <item value="764" path="res764.bmp" type="image">Unknown Resource number 764</item>
+  <item value="765" path="res765.bmp" type="image">Unknown Resource number 765</item>
+  <item value="766" path="res766.bmp" type="image">Unknown Resource number 766</item>
+  <item value="767" path="res767.bmp" type="image">Unknown Resource number 767</item>
+  <item value="768" path="res768.bmp" type="image">Unknown Resource number 768</item>
+  <item value="769" path="res769.bmp" type="image">Unknown Resource number 769</item>
+  <item value="770" path="res770.bmp" type="image">Unknown Resource number 770</item>
+  <item value="771" path="res771.bmp" type="image">Unknown Resource number 771</item>
+  <item value="772" path="res772.bmp" type="image">Unknown Resource number 772</item>
+  <item value="773" path="res773.bmp" type="image">Unknown Resource number 773</item>
+  <item value="774" path="res774.bmp" type="image">Unknown Resource number 774</item>
+  <item value="775" path="res775.bmp" type="image">Unknown Resource number 775</item>
+  <item value="776" path="res776.bin" type="binary">Unknown Resource number 776</item>
+  <item value="777" path="spiked.bmp" type="image">Unknown Resource number 777</item>
+  <item value="778" path="chopped.bmp" type="image">Unknown Resource number 778</item>
+  <item value="779" path="res779.bmp" type="image">Unknown Resource number 779</item>
+  <item value="780" path="res780.bmp" type="image">Unknown Resource number 780</item>
+  <item value="781" path="res781.bmp" type="image">Unknown Resource number 781</item>
+  <item value="782" path="res782.bmp" type="image">Unknown Resource number 782</item>
+  <item value="783" path="res783.bmp" type="image">Unknown Resource number 783</item>
+  <item value="784" path="res784.bmp" type="image">Unknown Resource number 784</item>
+ </folder>
+
+ <folder index="pop1" name="binary" file="shadow.dat" path="shadow" palette="750">
+  <item value="750" path="res750.pal" type="palette-pop1-4bits">Unknown Resource number 750</item>
+  <item value="751" path="hit points.bmp" type="image">Unknown Resource number 751</item>
+  <item value="752" path="splash.bmp" type="image">Unknown Resource number 752</item>
+  <item value="753" path="res753.bmp" type="image">Unknown Resource number 753</item>
+  <item value="754" path="res754.bmp" type="image">Unknown Resource number 754</item>
+  <item value="755" path="res755.bmp" type="image">Unknown Resource number 755</item>
+  <item value="756" path="res756.bmp" type="image">Unknown Resource number 756</item>
+  <item value="757" path="res757.bmp" type="image">Unknown Resource number 757</item>
+  <item value="758" path="res758.bmp" type="image">Unknown Resource number 758</item>
+  <item value="759" path="res759.bmp" type="image">Unknown Resource number 759</item>
+  <item value="760" path="res760.bmp" type="image">Unknown Resource number 760</item>
+  <item value="761" path="res761.bmp" type="image">Unknown Resource number 761</item>
+  <item value="762" path="res762.bmp" type="image">Unknown Resource number 762</item>
+  <item value="763" path="res763.bmp" type="image">Unknown Resource number 763</item>
+  <item value="764" path="res764.bmp" type="image">Unknown Resource number 764</item>
+  <item value="765" path="res765.bmp" type="image">Unknown Resource number 765</item>
+  <item value="766" path="res766.bmp" type="image">Unknown Resource number 766</item>
+  <item value="767" path="res767.bmp" type="image">Unknown Resource number 767</item>
+  <item value="768" path="res768.bin" type="binary">Unknown Resource number 768</item>
+  <item value="769" path="res769.bmp" type="image">Unknown Resource number 769</item>
+  <item value="770" path="res770.bmp" type="image">Unknown Resource number 770</item>
+  <item value="771" path="res771.bmp" type="image">Unknown Resource number 771</item>
+  <item value="772" path="res772.bmp" type="image">Unknown Resource number 772</item>
+  <item value="773" path="res773.bmp" type="image">Unknown Resource number 773</item>
+  <item value="774" path="res774.bmp" type="image">Unknown Resource number 774</item>
+  <item value="775" path="res775.bmp" type="image">Unknown Resource number 775</item>
+  <item value="776" path="res776.bmp" type="image">Unknown Resource number 776</item>
+  <item value="777" path="res777.bin" type="binary">Unknown Resource number 777</item>
+  <item value="778" path="res778.bin" type="binary">Unknown Resource number 778</item>
+  <item value="779" path="res779.bin" type="binary">Unknown Resource number 779</item>
+  <item value="780" path="res780.bin" type="binary">Unknown Resource number 780</item>
+  <item value="781" path="res781.bin" type="binary">Unknown Resource number 781</item>
+  <item value="782" path="res782.bin" type="binary">Unknown Resource number 782</item>
+ </folder>
+
+ <folder index="pop1" name="binary" file="fat.dat" path="fat" palette="750">
+  <item value="750" path="res750.pal" type="palette-pop1-4bits">Unknown Resource number 750</item>
+  <item value="751" path="hit points.bmp" type="image">Unknown Resource number 751</item>
+  <item value="752" path="splash.bmp" type="image">Unknown Resource number 752</item>
+  <item value="753" path="res753.bmp" type="image">Unknown Resource number 753</item>
+  <item value="754" path="res754.bmp" type="image">Unknown Resource number 754</item>
+  <item value="755" path="res755.bmp" type="image">Unknown Resource number 755</item>
+  <item value="756" path="res756.bmp" type="image">Unknown Resource number 756</item>
+  <item value="757" path="res757.bmp" type="image">Unknown Resource number 757</item>
+  <item value="758" path="res758.bmp" type="image">Unknown Resource number 758</item>
+  <item value="759" path="res759.bmp" type="image">Unknown Resource number 759</item>
+  <item value="760" path="res760.bmp" type="image">Unknown Resource number 760</item>
+  <item value="761" path="res761.bmp" type="image">Unknown Resource number 761</item>
+  <item value="762" path="res762.bmp" type="image">Unknown Resource number 762</item>
+  <item value="763" path="res763.bmp" type="image">Unknown Resource number 763</item>
+  <item value="764" path="res764.bmp" type="image">Unknown Resource number 764</item>
+  <item value="765" path="res765.bmp" type="image">Unknown Resource number 765</item>
+  <item value="766" path="res766.bmp" type="image">Unknown Resource number 766</item>
+  <item value="767" path="res767.bmp" type="image">Unknown Resource number 767</item>
+  <item value="768" path="res768.bmp" type="image">Unknown Resource number 768</item>
+  <item value="769" path="res769.bmp" type="image">Unknown Resource number 769</item>
+  <item value="770" path="res770.bmp" type="image">Unknown Resource number 770</item>
+  <item value="771" path="res771.bmp" type="image">Unknown Resource number 771</item>
+  <item value="772" path="res772.bmp" type="image">Unknown Resource number 772</item>
+  <item value="773" path="res773.bmp" type="image">Unknown Resource number 773</item>
+  <item value="774" path="res774.bmp" type="image">Unknown Resource number 774</item>
+  <item value="775" path="res775.bmp" type="image">Unknown Resource number 775</item>
+  <item value="776" path="res776.bin" type="binary">Unknown Resource number 776</item>
+  <item value="777" path="spiked.bmp" type="image">Unknown Resource number 777</item>
+  <item value="778" path="res778.bin" type="binary">Unknown Resource number 778</item>
+  <item value="779" path="res779.bmp" type="image">Unknown Resource number 779</item>
+  <item value="780" path="res780.bmp" type="image">Unknown Resource number 780</item>
+  <item value="781" path="res781.bmp" type="image">Unknown Resource number 781</item>
+  <item value="782" path="res782.bmp" type="image">Unknown Resource number 782</item>
+  <item value="783" path="res783.bmp" type="image">Unknown Resource number 783</item>
+  <item value="784" path="res784.bmp" type="image">Unknown Resource number 784</item>
+ </folder>
+ <folder index="pop1" name="binary" file="guard.dat" path="guards" palette="0">
+  <item value="751" path="hit points.bmp" type="image">Unknown Resource number 751</item>
+  <item value="752" path="splash.bmp" type="image">Unknown Resource number 752</item>
+  <item value="753" path="res753.bmp" type="image">Unknown Resource number 753</item>
+  <item value="754" path="res754.bmp" type="image">Unknown Resource number 754</item>
+  <item value="755" path="res755.bmp" type="image">Unknown Resource number 755</item>
+  <item value="756" path="res756.bmp" type="image">Unknown Resource number 756</item>
+  <item value="757" path="res757.bmp" type="image">Unknown Resource number 757</item>
+  <item value="758" path="res758.bmp" type="image">Unknown Resource number 758</item>
+  <item value="759" path="res759.bmp" type="image">Unknown Resource number 759</item>
+  <item value="760" path="res760.bmp" type="image">Unknown Resource number 760</item>
+  <item value="761" path="res761.bmp" type="image">Unknown Resource number 761</item>
+  <item value="762" path="res762.bmp" type="image">Unknown Resource number 762</item>
+  <item value="763" path="res763.bmp" type="image">Unknown Resource number 763</item>
+  <item value="764" path="res764.bmp" type="image">Unknown Resource number 764</item>
+  <item value="765" path="res765.bmp" type="image">Unknown Resource number 765</item>
+  <item value="766" path="res766.bmp" type="image">Unknown Resource number 766</item>
+  <item value="767" path="res767.bmp" type="image">Unknown Resource number 767</item>
+  <item value="768" path="res768.bmp" type="image">Unknown Resource number 768</item>
+  <item value="769" path="res769.bmp" type="image">Unknown Resource number 769</item>
+  <item value="770" path="res770.bmp" type="image">Unknown Resource number 770</item>
+  <item value="771" path="res771.bmp" type="image">Unknown Resource number 771</item>
+  <item value="772" path="res772.bmp" type="image">Unknown Resource number 772</item>
+  <item value="773" path="res773.bmp" type="image">Unknown Resource number 773</item>
+  <item value="774" path="res774.bmp" type="image">Unknown Resource number 774</item>
+  <item value="775" path="res775.bmp" type="image">Unknown Resource number 775</item>
+  <item value="776" path="res776.bin" type="binary">Unknown Resource number 776</item>
+  <item value="777" path="spiked.bmp" type="image">Unknown Resource number 777</item>
+  <item value="778" path="chopped.bmp" type="image">Unknown Resource number 778</item>
+  <item value="779" path="res779.bmp" type="image">Unknown Resource number 779</item>
+  <item value="780" path="res780.bmp" type="image">Unknown Resource number 780</item>
+  <item value="781" path="res781.bmp" type="image">Unknown Resource number 781</item>
+  <item value="782" path="res782.bmp" type="image">Unknown Resource number 782</item>
+  <item value="783" path="res783.bmp" type="image">Unknown Resource number 783</item>
+  <item value="784" path="res784.bmp" type="image">Unknown Resource number 784</item>
+ </folder>
+ <folder index="pop1" name="binary" file="guard1.dat" path="guards" palette="750">
+  <item value="750" path="palette1.pal" type="palette-pop1-4bits">Unknown Resource number 750</item>
+ </folder>
+ <folder index="pop1" name="binary" file="guard2.dat" path="guards" palette="750">
+  <item value="750" path="palette2.pal" type="palette-pop1-4bits">Unknown Resource number 750</item>
+ </folder>
+
+ <folder index="pop1" name="binary" file="levels.dat" type="level" path="levels">
+  <item value="2000" number="0" path="demo.plv">Demo level</item>
+  <item value="2001" number="1" path="level1.plv">Level 1</item>
+  <item value="2002" number="2" path="level2.plv">Level 2</item>
+  <item value="2003" number="3" path="level3.plv">Level 3</item>
+  <item value="2004" number="4" path="level4.plv">Level 4</item>
+  <item value="2005" number="5" path="level5.plv">Level 5</item>
+  <item value="2006" number="6" path="level6.plv">Level 6</item>
+  <item value="2007" number="7" path="level7.plv">Level 7</item>
+  <item value="2008" number="8" path="level8.plv">Level 8</item>
+  <item value="2009" number="9" path="level9.plv">Level 9</item>
+  <item value="2010" number="10" path="level10.plv">Level 10</item>
+  <item value="2011" number="11" path="level11.plv">Level 11</item>
+  <item value="2012" number="12" path="level12a.plv">Level 12a</item>
+  <item value="2013" number="13" path="level12b.plv">Level 12b</item>
+  <item value="2014" number="14" path="princess.plv">Princess level</item>
+  <item value="2015" number="15" path="potions.plv">Potions level</item>
+ </folder>
+
+<!-- CGA and EGA by David -->
+
+	<folder path="CDUNGEON" file="CDUNGEON.DAT" palette="0" paletteindex="" index="pop1">
+		<item path="res00200.bin" type="binary" value="200" />
+		<item path="res00201.bin" type="binary" value="201" />
+		<item path="res00202.bin" type="binary" value="202" />
+		<item path="res00203.bin" type="binary" value="203" />
+		<item path="res00204.bin" type="binary" value="204" />
+		<item path="res00205.bin" type="binary" value="205" />
+		<item path="res00206.bin" type="binary" value="206" />
+		<item path="res00207.bin" type="binary" value="207" />
+		<item path="res00208.bin" type="binary" value="208" />
+		<item path="res00209.bin" type="binary" value="209" />
+		<item path="res00210.bin" type="binary" value="210" />
+		<item path="res00211.bin" type="binary" value="211" />
+		<item path="res00212.bin" type="binary" value="212" />
+		<item path="res00213.bin" type="binary" value="213" />
+		<item path="res00214.bin" type="binary" value="214" />
+		<item path="res00215.bin" type="binary" value="215" />
+		<item path="res00216.bin" type="binary" value="216" />
+		<item path="res00217.bin" type="binary" value="217" />
+		<item path="res00218.bin" type="binary" value="218" />
+		<item path="res00219.bin" type="binary" value="219" />
+		<item path="res00220.bin" type="binary" value="220" />
+		<item path="res00221.bin" type="binary" value="221" />
+		<item path="res00222.bin" type="binary" value="222" />
+		<item path="res00223.bin" type="binary" value="223" />
+		<item path="res00224.bin" type="binary" value="224" />
+		<item path="res00225.bin" type="binary" value="225" />
+		<item path="res00226.bin" type="binary" value="226" />
+		<item path="res00227.bin" type="binary" value="227" />
+		<item path="res00228.bin" type="binary" value="228" />
+		<item path="res00229.bin" type="binary" value="229" />
+		<item path="res00230.bin" type="binary" value="230" />
+		<item path="res00231.bin" type="binary" value="231" />
+		<item path="res00232.bmp" type="image" value="232" />
+		<item path="res00233.bmp" type="image" value="233" />
+		<item path="res00234.bmp" type="image" value="234" />
+		<item path="res00235.bmp" type="image" value="235" />
+		<item path="res00236.bmp" type="image" value="236" />
+		<item path="res00237.bmp" type="image" value="237" />
+		<item path="res00238.bmp" type="image" value="238" />
+		<item path="res00239.bmp" type="image" value="239" />
+		<item path="res00240.bmp" type="image" value="240" />
+		<item path="res00241.bmp" type="image" value="241" />
+		<item path="res00242.bmp" type="image" value="242" />
+		<item path="res00243.bmp" type="image" value="243" />
+		<item path="res00244.bmp" type="image" value="244" />
+		<item path="res00245.bmp" type="image" value="245" />
+		<item path="res00246.bmp" type="image" value="246" />
+		<item path="res00247.bmp" type="image" value="247" />
+		<item path="res00248.bmp" type="image" value="248" />
+		<item path="res00249.bmp" type="image" value="249" />
+		<item path="res00250.bmp" type="image" value="250" />
+		<item path="res00251.bmp" type="image" value="251" />
+		<item path="res00252.bmp" type="image" value="252" />
+		<item path="res00253.bmp" type="image" value="253" />
+		<item path="res00254.bmp" type="image" value="254" />
+		<item path="res00255.bmp" type="image" value="255" />
+		<item path="res00256.bmp" type="image" value="256" />
+		<item path="res00257.bmp" type="image" value="257" />
+		<item path="res00258.bmp" type="image" value="258" />
+		<item path="res00259.bmp" type="image" value="259" />
+		<item path="res00260.bmp" type="image" value="260" />
+		<item path="res00261.bmp" type="image" value="261" />
+		<item path="res00262.bmp" type="image" value="262" />
+		<item path="res00263.bmp" type="image" value="263" />
+		<item path="res00264.bmp" type="image" value="264" />
+		<item path="res00265.bmp" type="image" value="265" />
+		<item path="res00266.bmp" type="image" value="266" />
+		<item path="res00267.bmp" type="image" value="267" />
+		<item path="res00268.bmp" type="image" value="268" colors="2" />
+		<item path="res00269.bmp" type="image" value="269" />
+		<item path="res00270.bmp" type="image" value="270" />
+		<item path="res00271.bmp" type="image" value="271" />
+		<item path="res00272.bmp" type="image" value="272" />
+		<item path="res00273.bmp" type="image" value="273" />
+		<item path="res00274.bmp" type="image" value="274" />
+		<item path="res00275.bin" type="binary" value="275" />
+		<item path="res00276.bin" type="binary" value="276" />
+		<item path="res00277.bin" type="binary" value="277" />
+		<item path="res00278.bin" type="binary" value="278" />
+		<item path="res00279.bin" type="binary" value="279" />
+		<item path="res00280.bin" type="binary" value="280" />
+		<item path="res00281.bin" type="binary" value="281" />
+		<item path="res00282.bin" type="binary" value="282" />
+		<item path="res00283.bin" type="binary" value="283" />
+		<item path="res00284.bin" type="binary" value="284" />
+		<item path="res00285.bmp" type="image" value="285" />
+		<item path="res00286.bin" type="binary" value="286" />
+		<item path="res00287.bin" type="binary" value="287" />
+		<item path="res00288.bin" type="binary" value="288" />
+		<item path="res00289.bin" type="binary" value="289" />
+		<item path="res00290.bin" type="binary" value="290" />
+		<item path="res00291.bin" type="binary" value="291" />
+		<item path="res00292.bmp" type="image" value="292" />
+		<item path="res00293.bmp" type="image" value="293" />
+		<item path="res00294.bmp" type="image" value="294" />
+		<item path="res00295.bmp" type="image" value="295" />
+		<item path="res00296.bmp" type="image" value="296" />
+		<item path="res00297.bmp" type="image" value="297" />
+		<item path="res00298.bmp" type="image" value="298" />
+		<item path="res00299.bmp" type="image" value="299" />
+		<item path="res00300.bmp" type="image" value="300" />
+		<item path="res00301.bin" type="binary" value="301" />
+		<item path="res00302.bin" type="binary" value="302" />
+		<item path="res00303.bin" type="binary" value="303" />
+		<item path="res00304.bin" type="binary" value="304" />
+		<item path="res00305.bin" type="binary" value="305" />
+		<item path="res00306.bin" type="binary" value="306" />
+		<item path="res00307.bin" type="binary" value="307" />
+		<item path="res00308.bin" type="binary" value="308" />
+		<item path="res00309.bin" type="binary" value="309" />
+		<item path="res00310.bin" type="binary" value="310" />
+		<item path="res00311.bin" type="binary" value="311" />
+		<item path="res00312.bin" type="binary" value="312" />
+		<item path="res00313.bin" type="binary" value="313" />
+		<item path="res00314.bin" type="binary" value="314" />
+		<item path="res00315.bin" type="binary" value="315" />
+		<item path="res00316.bin" type="binary" value="316" />
+		<item path="res00317.bin" type="binary" value="317" />
+		<item path="res00318.bin" type="binary" value="318" />
+		<item path="res00319.bin" type="binary" value="319" />
+		<item path="res00320.bin" type="binary" value="320" />
+		<item path="res00321.bin" type="binary" value="321" />
+		<item path="res00322.bin" type="binary" value="322" />
+		<item path="res00323.bin" type="binary" value="323" />
+		<item path="res00324.bmp" type="image" value="324" />
+		<item path="res00325.bmp" type="image" value="325" />
+		<item path="res00326.bmp" type="image" value="326" />
+		<item path="res00327.bin" type="binary" value="327" />
+		<item path="res00328.bin" type="binary" value="328" />
+		<item path="res00329.bin" type="binary" value="329" />
+		<item path="res00330.bin" type="binary" value="330" />
+		<item path="res00331.bin" type="binary" value="331" />
+		<item path="res00332.bin" type="binary" value="332" />
+		<item path="res00333.bin" type="binary" value="333" />
+		<item path="res00334.bin" type="binary" value="334" />
+		<item path="res00335.bin" type="binary" value="335" />
+		<item path="res00336.bin" type="binary" value="336" />
+		<item path="res00337.bin" type="binary" value="337" />
+		<item path="res00338.bin" type="binary" value="338" />
+		<item path="res00339.bin" type="binary" value="339" />
+		<item path="res00340.bin" type="binary" value="340" />
+		<item path="res00341.bin" type="binary" value="341" />
+		<item path="res00342.bin" type="binary" value="342" />
+		<item path="res00343.bin" type="binary" value="343" />
+		<item path="res00344.bmp" type="image" value="344" />
+		<item path="res00345.bin" type="binary" value="345" />
+		<item path="res00346.bmp" type="image" value="346" />
+		<item path="res00347.bmp" type="image" value="347" />
+		<item path="res00348.bmp" type="image" value="348" />
+		<item path="res00349.bmp" type="image" value="349" />
+		<item path="res00350.bmp" type="image" value="350" />
+		<item path="res00351.bmp" type="image" value="351" />
+		<item path="res00360.bin" type="binary" value="360" />
+		<item path="res00361.bmp" type="image" value="361" />
+		<item path="res00362.bmp" type="image" value="362" />
+		<item path="res00363.bmp" type="image" value="363" />
+		<item path="res00364.bmp" type="image" value="364" />
+		<item path="res01230.bmp" type="image" value="1230" />
+		<item path="res01231.bmp" type="image" value="1231" />
+		<item path="res01286.bmp" type="image" value="1286" />
+		<item path="res01287.bmp" type="image" value="1287" />
+		<item path="res01288.bmp" type="image" value="1288" />
+		<item path="res01289.bmp" type="image" value="1289" />
+		<item path="res01290.bmp" type="image" value="1290" />
+		<item path="res01291.bmp" type="image" value="1291" />
+		<item path="res01301.bmp" type="image" value="1301" />
+		<item path="res01302.bmp" type="image" value="1302" />
+		<item path="res01303.bmp" type="image" value="1303" />
+		<item path="res01304.bmp" type="image" value="1304" />
+		<item path="res01305.bmp" type="image" value="1305" />
+		<item path="res01306.bmp" type="image" value="1306" />
+		<item path="res01307.bmp" type="image" value="1307" />
+		<item path="res01308.bmp" type="image" value="1308" />
+		<item path="res01309.bmp" type="image" value="1309" />
+		<item path="res01310.bmp" type="image" value="1310" />
+		<item path="res01311.bmp" type="image" value="1311" />
+		<item path="res01312.bmp" type="image" value="1312" />
+		<item path="res01313.bmp" type="image" value="1313" />
+   <folder colors="2">
+		<item path="res01314.bmp" type="image" value="1314" />
+		<item path="res01315.bmp" type="image" value="1315" />
+		<item path="res01316.bmp" type="image" value="1316" />
+		<item path="res01317.bmp" type="image" value="1317" />
+		<item path="res01318.bmp" type="image" value="1318" />
+		<item path="res01319.bmp" type="image" value="1319" />
+		<item path="res01320.bmp" type="image" value="1320" />
+		<item path="res01321.bmp" type="image" value="1321" />
+		<item path="res01322.bmp" type="image" value="1322" />
+		<item path="res01323.bmp" type="image" value="1323" />
+   </folder>
+		<item path="res01327.bmp" type="image" value="1327" />
+		<item path="res01328.bmp" type="image" value="1328" />
+		<item path="res01329.bmp" type="image" value="1329" />
+		<item path="res01330.bmp" type="image" value="1330" />
+		<item path="res01331.bmp" type="image" value="1331" />
+		<item path="res01332.bmp" type="image" value="1332" />
+		<item path="res01333.bmp" type="image" value="1333" />
+		<item path="res01334.bmp" type="image" value="1334" />
+		<item path="res01335.bmp" type="image" value="1335" />
+		<item path="res01336.bmp" type="image" value="1336" />
+		<item path="res01337.bmp" type="image" value="1337" />
+		<item path="res01338.bmp" type="image" value="1338" />
+		<item path="res01339.bmp" type="image" value="1339" />
+		<item path="res01340.bmp" type="image" value="1340" />
+		<item path="res01341.bmp" type="image" value="1341" />
+		<item path="res01342.bmp" type="image" value="1342" />
+		<item path="res01343.bmp" type="image" value="1343" />
+	</folder>
+
+	<folder path="CPALACE" file="CPALACE.DAT" palette="0" paletteindex="" index="pop1">
+		<item path="res00200.bin" type="binary" value="200" />
+		<item path="res00201.bin" type="binary" value="201" />
+		<item path="res00202.bin" type="binary" value="202" />
+		<item path="res00203.bin" type="binary" value="203" />
+		<item path="res00204.bin" type="binary" value="204" />
+		<item path="res00205.bin" type="binary" value="205" />
+		<item path="res00206.bin" type="binary" value="206" />
+		<item path="res00207.bin" type="binary" value="207" />
+		<item path="res00208.bin" type="binary" value="208" />
+		<item path="res00209.bin" type="binary" value="209" />
+		<item path="res00210.bin" type="binary" value="210" />
+		<item path="res00211.bin" type="binary" value="211" />
+		<item path="res00212.bin" type="binary" value="212" />
+		<item path="res00213.bin" type="binary" value="213" />
+		<item path="res00214.bin" type="binary" value="214" />
+		<item path="res00215.bin" type="binary" value="215" />
+		<item path="res00216.bin" type="binary" value="216" />
+		<item path="res00217.bin" type="binary" value="217" />
+		<item path="res00218.bin" type="binary" value="218" />
+		<item path="res00219.bin" type="binary" value="219" />
+		<item path="res00220.bin" type="binary" value="220" />
+		<item path="res00221.bin" type="binary" value="221" />
+		<item path="res00222.bin" type="binary" value="222" />
+		<item path="res00223.bin" type="binary" value="223" />
+		<item path="res00224.bin" type="binary" value="224" />
+		<item path="res00225.bin" type="binary" value="225" />
+		<item path="res00226.bin" type="binary" value="226" />
+		<item path="res00227.bin" type="binary" value="227" />
+		<item path="res00228.bin" type="binary" value="228" />
+		<item path="res00229.bin" type="binary" value="229" />
+		<item path="res00230.bin" type="binary" value="230" />
+		<item path="res00231.bin" type="binary" value="231" />
+		<item path="res00232.bmp" type="image" value="232" />
+		<item path="res00233.bmp" type="image" value="233" />
+		<item path="res00234.bmp" type="image" value="234" />
+		<item path="res00235.bmp" type="image" value="235" />
+		<item path="res00236.bmp" type="image" value="236" />
+		<item path="res00237.bmp" type="image" value="237" />
+		<item path="res00238.bmp" type="image" value="238" />
+		<item path="res00239.bmp" type="image" value="239" />
+		<item path="res00240.bmp" type="image" value="240" />
+		<item path="res00241.bmp" type="image" value="241" />
+		<item path="res00242.bmp" type="image" value="242" />
+		<item path="res00243.bmp" type="image" value="243" />
+		<item path="res00244.bmp" type="image" value="244" />
+		<item path="res00245.bmp" type="image" value="245" />
+		<item path="res00246.bmp" type="image" value="246" />
+		<item path="res00247.bmp" type="image" value="247" />
+		<item path="res00248.bmp" type="image" value="248" />
+		<item path="res00249.bmp" type="image" value="249" />
+		<item path="res00250.bmp" type="image" value="250" />
+		<item path="res00251.bmp" type="image" value="251" />
+		<item path="res00252.bmp" type="image" value="252" />
+		<item path="res00253.bmp" type="image" value="253" />
+		<item path="res00254.bmp" type="image" value="254" />
+		<item path="res00255.bmp" type="image" value="255" />
+		<item path="res00256.bmp" type="image" value="256" />
+		<item path="res00257.bmp" type="image" value="257" />
+		<item path="res00258.bmp" type="image" value="258" />
+		<item path="res00259.bmp" type="image" value="259" />
+		<item path="res00260.bmp" type="image" value="260" />
+		<item path="res00261.bmp" type="image" value="261" />
+		<item path="res00262.bmp" type="image" value="262" />
+		<item path="res00263.bmp" type="image" value="263" />
+		<item path="res00264.bmp" type="image" value="264" />
+		<item path="res00265.bmp" type="image" value="265" />
+		<item path="res00266.bmp" type="image" value="266" />
+		<item path="res00267.bmp" type="image" value="267" />
+		<item path="res00268.bmp" type="image" value="268" colors="2" />
+		<item path="res00269.bmp" type="image" value="269" />
+		<item path="res00270.bmp" type="image" value="270" />
+		<item path="res00271.bmp" type="image" value="271" />
+		<item path="res00272.bmp" type="image" value="272" />
+		<item path="res00273.bmp" type="image" value="273" />
+		<item path="res00274.bmp" type="image" value="274" />
+		<item path="res00275.bin" type="binary" value="275" />
+		<item path="res00276.bin" type="binary" value="276" />
+		<item path="res00277.bin" type="binary" value="277" />
+		<item path="res00278.bin" type="binary" value="278" />
+		<item path="res00279.bin" type="binary" value="279" />
+		<item path="res00280.bin" type="binary" value="280" />
+		<item path="res00281.bin" type="binary" value="281" />
+		<item path="res00282.bin" type="binary" value="282" />
+		<item path="res00283.bin" type="binary" value="283" />
+		<item path="res00284.bmp" type="image" value="284" />
+		<item path="res00285.bmp" type="image" value="285" />
+		<item path="res00286.bin" type="binary" value="286" />
+		<item path="res00287.bin" type="binary" value="287" />
+		<item path="res00288.bin" type="binary" value="288" />
+		<item path="res00289.bin" type="binary" value="289" />
+		<item path="res00290.bin" type="binary" value="290" />
+		<item path="res00291.bin" type="binary" value="291" />
+		<item path="res00292.bmp" type="image" value="292" />
+		<item path="res00293.bmp" type="image" value="293" />
+		<item path="res00294.bmp" type="image" value="294" />
+		<item path="res00295.bmp" type="image" value="295" />
+		<item path="res00296.bmp" type="image" value="296" />
+		<item path="res00297.bmp" type="image" value="297" />
+		<item path="res00298.bmp" type="image" value="298" />
+		<item path="res00299.bmp" type="image" value="299" />
+		<item path="res00300.bmp" type="image" value="300" />
+		<item path="res00301.bin" type="binary" value="301" />
+		<item path="res00302.bin" type="binary" value="302" />
+		<item path="res00303.bin" type="binary" value="303" />
+		<item path="res00304.bin" type="binary" value="304" />
+		<item path="res00305.bin" type="binary" value="305" />
+		<item path="res00306.bin" type="binary" value="306" />
+		<item path="res00307.bin" type="binary" value="307" />
+		<item path="res00308.bin" type="binary" value="308" />
+		<item path="res00309.bin" type="binary" value="309" />
+		<item path="res00310.bin" type="binary" value="310" />
+		<item path="res00311.bin" type="binary" value="311" />
+		<item path="res00312.bin" type="binary" value="312" />
+		<item path="res00313.bin" type="binary" value="313" />
+		<item path="res00314.bin" type="binary" value="314" />
+		<item path="res00315.bin" type="binary" value="315" />
+		<item path="res00316.bin" type="binary" value="316" />
+		<item path="res00317.bin" type="binary" value="317" />
+		<item path="res00318.bin" type="binary" value="318" />
+		<item path="res00319.bin" type="binary" value="319" />
+		<item path="res00320.bin" type="binary" value="320" />
+		<item path="res00321.bin" type="binary" value="321" />
+		<item path="res00322.bin" type="binary" value="322" />
+		<item path="res00323.bin" type="binary" value="323" />
+		<item path="res00324.bmp" type="image" value="324" />
+		<item path="res00325.bmp" type="image" value="325" />
+		<item path="res00326.bmp" type="image" value="326" />
+		<item path="res00327.bin" type="binary" value="327" />
+		<item path="res00328.bin" type="binary" value="328" />
+		<item path="res00329.bin" type="binary" value="329" />
+		<item path="res00330.bin" type="binary" value="330" />
+		<item path="res00331.bin" type="binary" value="331" />
+		<item path="res00332.bin" type="binary" value="332" />
+		<item path="res00333.bin" type="binary" value="333" />
+		<item path="res00334.bin" type="binary" value="334" />
+		<item path="res00335.bin" type="binary" value="335" />
+		<item path="res00336.bin" type="binary" value="336" />
+		<item path="res00337.bin" type="binary" value="337" />
+		<item path="res00338.bin" type="binary" value="338" />
+		<item path="res00339.bin" type="binary" value="339" />
+		<item path="res00340.bin" type="binary" value="340" />
+		<item path="res00341.bin" type="binary" value="341" />
+		<item path="res00342.bin" type="binary" value="342" />
+		<item path="res00343.bin" type="binary" value="343" />
+		<item path="res00344.bmp" type="image" value="344" />
+		<item path="res00345.bmp" type="image" value="345" />
+		<item path="res00346.bmp" type="image" value="346" />
+		<item path="res00347.bmp" type="image" value="347" />
+		<item path="res00348.bin" type="binary" value="348" />
+		<item path="res00349.bmp" type="image" value="349" />
+		<item path="res00350.bmp" type="image" value="350" />
+		<item path="res00351.bmp" type="image" value="351" />
+		<item path="res00360.bin" type="binary" value="360" />
+		<item path="res00361.bmp" type="image" value="361" />
+		<item path="res00362.bmp" type="image" value="362" />
+		<item path="res00363.bmp" type="image" value="363" />
+		<item path="res00364.bmp" type="image" value="364" />
+		<item path="res01201.bmp" type="image" value="1201" />
+		<item path="res01202.bmp" type="image" value="1202" />
+		<item path="res01203.bmp" type="image" value="1203" />
+		<item path="res01204.bmp" type="image" value="1204" />
+		<item path="res01205.bmp" type="image" value="1205" />
+		<item path="res01206.bmp" type="image" value="1206" />
+		<item path="res01207.bin" type="binary" value="1207" />
+		<item path="res01208.bin" type="binary" value="1208" />
+		<item path="res01209.bmp" type="image" value="1209" />
+		<item path="res01210.bmp" type="image" value="1210" />
+		<item path="res01211.bmp" type="image" value="1211" />
+		<item path="res01212.bmp" type="image" value="1212" />
+		<item path="res01213.bmp" type="image" value="1213" />
+		<item path="res01275.bmp" type="image" value="1275" />
+		<item path="res01276.bin" type="binary" value="1276" />
+		<item path="res01277.bmp" type="image" value="1277" />
+		<item path="res01278.bmp" type="image" value="1278" />
+		<item path="res01279.bin" type="binary" value="1279" />
+		<item path="res01280.bmp" type="image" value="1280" />
+		<item path="res01281.bmp" type="image" value="1281" />
+		<item path="res01282.bmp" type="image" value="1282" />
+		<item path="res01283.bmp" type="image" value="1283" />
+		<item path="res01286.bmp" type="image" value="1286" />
+		<item path="res01287.bmp" type="image" value="1287" />
+		<item path="res01288.bmp" type="image" value="1288" />
+		<item path="res01289.bmp" type="image" value="1289" />
+		<item path="res01290.bmp" type="image" value="1290" />
+		<item path="res01291.bmp" type="image" value="1291" />
+		<item path="res01301.bmp" type="image" value="1301" />
+		<item path="res01302.bmp" type="image" value="1302" />
+		<item path="res01303.bmp" type="image" value="1303" />
+		<item path="res01304.bmp" type="image" value="1304" />
+		<item path="res01305.bmp" type="image" value="1305" />
+		<item path="res01306.bmp" type="image" value="1306" />
+		<item path="res01307.bmp" type="image" value="1307" />
+		<item path="res01308.bmp" type="image" value="1308" />
+		<item path="res01309.bmp" type="image" value="1309" />
+		<item path="res01310.bmp" type="image" value="1310" />
+		<item path="res01311.bmp" type="image" value="1311" />
+		<item path="res01312.bmp" type="image" value="1312" />
+		<item path="res01313.bmp" type="image" value="1313" />
+   <folder colors="2">
+		<item path="res01314.bmp" type="image" value="1314" />
+		<item path="res01315.bmp" type="image" value="1315" />
+		<item path="res01316.bmp" type="image" value="1316" />
+		<item path="res01317.bmp" type="image" value="1317" />
+		<item path="res01318.bmp" type="image" value="1318" />
+		<item path="res01319.bmp" type="image" value="1319" />
+		<item path="res01320.bmp" type="image" value="1320" />
+		<item path="res01321.bmp" type="image" value="1321" />
+		<item path="res01322.bmp" type="image" value="1322" />
+		<item path="res01323.bmp" type="image" value="1323" />
+   </folder>
+		<item path="res01327.bmp" type="image" value="1327" />
+		<item path="res01328.bmp" type="image" value="1328" />
+		<item path="res01329.bmp" type="image" value="1329" />
+		<item path="res01330.bmp" type="image" value="1330" />
+		<item path="res01331.bmp" type="image" value="1331" />
+		<item path="res01332.bmp" type="image" value="1332" />
+		<item path="res01333.bmp" type="image" value="1333" />
+		<item path="res01334.bmp" type="image" value="1334" />
+		<item path="res01335.bmp" type="image" value="1335" />
+		<item path="res01336.bmp" type="image" value="1336" />
+		<item path="res01337.bmp" type="image" value="1337" />
+		<item path="res01338.bmp" type="image" value="1338" />
+		<item path="res01339.bmp" type="image" value="1339" />
+		<item path="res01340.bmp" type="image" value="1340" />
+		<item path="res01341.bmp" type="image" value="1341" />
+		<item path="res01342.bmp" type="image" value="1342" />
+		<item path="res01343.bmp" type="image" value="1343" />
+	</folder>
+
+	<folder path="EDUNGEON" file="EDUNGEON.DAT" palette="0" paletteindex="" index="pop1">
+		<item path="res00200.bin" type="binary" value="200" />
+		<item path="res00201.bin" type="binary" value="201" />
+		<item path="res00202.bin" type="binary" value="202" />
+		<item path="res00203.bin" type="binary" value="203" />
+		<item path="res00204.bin" type="binary" value="204" />
+		<item path="res00205.bin" type="binary" value="205" />
+		<item path="res00206.bin" type="binary" value="206" />
+		<item path="res00207.bin" type="binary" value="207" />
+		<item path="res00208.bin" type="binary" value="208" />
+		<item path="res00209.bin" type="binary" value="209" />
+		<item path="res00210.bin" type="binary" value="210" />
+		<item path="res00211.bin" type="binary" value="211" />
+		<item path="res00212.bin" type="binary" value="212" />
+		<item path="res00213.bin" type="binary" value="213" />
+		<item path="res00214.bin" type="binary" value="214" />
+		<item path="res00215.bin" type="binary" value="215" />
+		<item path="res00216.bin" type="binary" value="216" />
+		<item path="res00217.bin" type="binary" value="217" />
+		<item path="res00218.bin" type="binary" value="218" />
+		<item path="res00219.bin" type="binary" value="219" />
+		<item path="res00220.bin" type="binary" value="220" />
+		<item path="res00221.bin" type="binary" value="221" />
+		<item path="res00222.bin" type="binary" value="222" />
+		<item path="res00223.bin" type="binary" value="223" />
+		<item path="res00224.bin" type="binary" value="224" />
+		<item path="res00225.bin" type="binary" value="225" />
+		<item path="res00226.bin" type="binary" value="226" />
+		<item path="res00227.bin" type="binary" value="227" />
+		<item path="res00228.bin" type="binary" value="228" />
+		<item path="res00229.bin" type="binary" value="229" />
+		<item path="res00230.bin" type="binary" value="230" />
+		<item path="res00231.bin" type="binary" value="231" />
+		<item path="res00232.bmp" type="image" value="232" />
+		<item path="res00233.bmp" type="image" value="233" />
+		<item path="res00234.bmp" type="image" value="234" />
+		<item path="res00235.bmp" type="image" value="235" />
+		<item path="res00236.bmp" type="image" value="236" />
+		<item path="res00237.bmp" type="image" value="237" />
+		<item path="res00238.bmp" type="image" value="238" />
+		<item path="res00239.bmp" type="image" value="239" />
+		<item path="res00240.bmp" type="image" value="240" />
+		<item path="res00241.bmp" type="image" value="241" />
+		<item path="res00242.bmp" type="image" value="242" />
+		<item path="res00243.bmp" type="image" value="243" />
+		<item path="res00244.bmp" type="image" value="244" />
+		<item path="res00245.bmp" type="image" value="245" />
+		<item path="res00246.bmp" type="image" value="246" />
+		<item path="res00247.bmp" type="image" value="247" />
+		<item path="res00248.bmp" type="image" value="248" />
+		<item path="res00249.bmp" type="image" value="249" />
+		<item path="res00250.bmp" type="image" value="250" />
+		<item path="res00251.bmp" type="image" value="251" />
+		<item path="res00252.bmp" type="image" value="252" />
+		<item path="res00253.bmp" type="image" value="253" />
+		<item path="res00254.bmp" type="image" value="254" />
+		<item path="res00255.bmp" type="image" value="255" />
+		<item path="res00256.bmp" type="image" value="256" />
+		<item path="res00257.bmp" type="image" value="257" />
+		<item path="res00258.bmp" type="image" value="258" />
+		<item path="res00259.bmp" type="image" value="259" />
+		<item path="res00260.bmp" type="image" value="260" />
+		<item path="res00261.bmp" type="image" value="261" />
+		<item path="res00262.bmp" type="image" value="262" />
+		<item path="res00263.bmp" type="image" value="263" />
+		<item path="res00264.bmp" type="image" value="264" />
+		<item path="res00265.bmp" type="image" value="265" />
+		<item path="res00266.bmp" type="image" value="266" />
+		<item path="res00267.bmp" type="image" value="267" />
+		<item path="res00268.bmp" type="image" value="268" colors="2" />
+		<item path="res00269.bmp" type="image" value="269" />
+		<item path="res00270.bmp" type="image" value="270" />
+		<item path="res00271.bmp" type="image" value="271" />
+		<item path="res00272.bmp" type="image" value="272" />
+		<item path="res00273.bmp" type="image" value="273" />
+		<item path="res00274.bmp" type="image" value="274" />
+		<item path="res00275.bin" type="binary" value="275" />
+		<item path="res00276.bin" type="binary" value="276" />
+		<item path="res00277.bin" type="binary" value="277" />
+		<item path="res00278.bin" type="binary" value="278" />
+		<item path="res00279.bin" type="binary" value="279" />
+		<item path="res00280.bin" type="binary" value="280" />
+		<item path="res00281.bin" type="binary" value="281" />
+		<item path="res00282.bin" type="binary" value="282" />
+		<item path="res00283.bin" type="binary" value="283" />
+		<item path="res00284.bin" type="binary" value="284" />
+		<item path="res00285.bmp" type="image" value="285" />
+		<item path="res00286.bin" type="binary" value="286" />
+		<item path="res00287.bin" type="binary" value="287" />
+		<item path="res00288.bin" type="binary" value="288" />
+		<item path="res00289.bin" type="binary" value="289" />
+		<item path="res00290.bin" type="binary" value="290" />
+		<item path="res00291.bin" type="binary" value="291" />
+		<item path="res00292.bmp" type="image" value="292" />
+		<item path="res00293.bmp" type="image" value="293" />
+		<item path="res00294.bmp" type="image" value="294" />
+		<item path="res00295.bmp" type="image" value="295" />
+		<item path="res00296.bmp" type="image" value="296" />
+		<item path="res00297.bmp" type="image" value="297" />
+		<item path="res00298.bmp" type="image" value="298" />
+		<item path="res00299.bmp" type="image" value="299" />
+		<item path="res00300.bmp" type="image" value="300" />
+		<item path="res00301.bin" type="binary" value="301" />
+		<item path="res00302.bin" type="binary" value="302" />
+		<item path="res00303.bin" type="binary" value="303" />
+		<item path="res00304.bin" type="binary" value="304" />
+		<item path="res00305.bin" type="binary" value="305" />
+		<item path="res00306.bin" type="binary" value="306" />
+		<item path="res00307.bin" type="binary" value="307" />
+		<item path="res00308.bin" type="binary" value="308" />
+		<item path="res00309.bin" type="binary" value="309" />
+		<item path="res00310.bin" type="binary" value="310" />
+		<item path="res00311.bin" type="binary" value="311" />
+		<item path="res00312.bin" type="binary" value="312" />
+		<item path="res00313.bin" type="binary" value="313" />
+		<item path="res00314.bin" type="binary" value="314" />
+		<item path="res00315.bin" type="binary" value="315" />
+		<item path="res00316.bin" type="binary" value="316" />
+		<item path="res00317.bin" type="binary" value="317" />
+		<item path="res00318.bin" type="binary" value="318" />
+		<item path="res00319.bin" type="binary" value="319" />
+		<item path="res00320.bin" type="binary" value="320" />
+		<item path="res00321.bin" type="binary" value="321" />
+		<item path="res00322.bin" type="binary" value="322" />
+		<item path="res00323.bin" type="binary" value="323" />
+		<item path="res00324.bmp" type="image" value="324" />
+		<item path="res00325.bmp" type="image" value="325" />
+		<item path="res00326.bmp" type="image" value="326" />
+		<item path="res00327.bin" type="binary" value="327" />
+		<item path="res00328.bin" type="binary" value="328" />
+		<item path="res00329.bin" type="binary" value="329" />
+		<item path="res00330.bin" type="binary" value="330" />
+		<item path="res00331.bin" type="binary" value="331" />
+		<item path="res00332.bin" type="binary" value="332" />
+		<item path="res00333.bin" type="binary" value="333" />
+		<item path="res00334.bin" type="binary" value="334" />
+		<item path="res00335.bin" type="binary" value="335" />
+		<item path="res00336.bin" type="binary" value="336" />
+		<item path="res00337.bin" type="binary" value="337" />
+		<item path="res00338.bin" type="binary" value="338" />
+		<item path="res00339.bin" type="binary" value="339" />
+		<item path="res00340.bin" type="binary" value="340" />
+		<item path="res00341.bin" type="binary" value="341" />
+		<item path="res00342.bin" type="binary" value="342" />
+		<item path="res00343.bin" type="binary" value="343" />
+		<item path="res00344.bmp" type="image" value="344" />
+		<item path="res00345.bin" type="binary" value="345" />
+		<item path="res00346.bmp" type="image" value="346" />
+		<item path="res00347.bmp" type="image" value="347" />
+		<item path="res00348.bmp" type="image" value="348" />
+		<item path="res00349.bmp" type="image" value="349" />
+		<item path="res00350.bmp" type="image" value="350" />
+		<item path="res00351.bmp" type="image" value="351" />
+		<item path="res00360.bin" type="binary" value="360" />
+		<item path="res00361.bmp" type="image" value="361" />
+		<item path="res00362.bmp" type="image" value="362" />
+		<item path="res00363.bmp" type="image" value="363" />
+		<item path="res00364.bmp" type="image" value="364" />
+		<item path="res00365.bmp" type="image" value="365" />
+		<item path="res00366.bmp" type="image" value="366" />
+		<item path="res00367.bmp" type="image" value="367" />
+		<item path="res00368.bmp" type="image" value="368" />
+		<item path="res00369.bmp" type="image" value="369" />
+		<item path="res00370.bmp" type="image" value="370" />
+		<item path="res00371.bmp" type="image" value="371" />
+		<item path="res00372.bmp" type="image" value="372" />
+		<item path="res00373.bmp" type="image" value="373" />
+		<item path="res00374.bmp" type="image" value="374" />
+		<item path="res00375.bmp" type="image" value="375" />
+		<item path="res00376.bmp" type="image" value="376" />
+		<item path="res00377.bmp" type="image" value="377" />
+		<item path="res01230.bmp" type="image" value="1230" />
+		<item path="res01231.bmp" type="image" value="1231" />
+		<item path="res01286.bmp" type="image" value="1286" />
+		<item path="res01287.bmp" type="image" value="1287" />
+		<item path="res01288.bmp" type="image" value="1288" />
+		<item path="res01289.bmp" type="image" value="1289" />
+		<item path="res01290.bmp" type="image" value="1290" />
+		<item path="res01291.bmp" type="image" value="1291" />
+		<item path="res01301.bmp" type="image" value="1301" />
+		<item path="res01302.bmp" type="image" value="1302" />
+		<item path="res01303.bmp" type="image" value="1303" />
+		<item path="res01304.bmp" type="image" value="1304" />
+		<item path="res01305.bmp" type="image" value="1305" />
+		<item path="res01306.bmp" type="image" value="1306" />
+		<item path="res01307.bmp" type="image" value="1307" />
+		<item path="res01308.bmp" type="image" value="1308" />
+		<item path="res01309.bmp" type="image" value="1309" />
+		<item path="res01310.bmp" type="image" value="1310" />
+		<item path="res01311.bmp" type="image" value="1311" />
+		<item path="res01312.bmp" type="image" value="1312" />
+		<item path="res01313.bmp" type="image" value="1313" />
+   <folder colors="2">
+		<item path="res01314.bmp" type="image" value="1314" />
+		<item path="res01315.bmp" type="image" value="1315" />
+		<item path="res01316.bmp" type="image" value="1316" />
+		<item path="res01317.bmp" type="image" value="1317" />
+		<item path="res01318.bmp" type="image" value="1318" />
+		<item path="res01319.bmp" type="image" value="1319" />
+		<item path="res01320.bmp" type="image" value="1320" />
+		<item path="res01321.bmp" type="image" value="1321" />
+		<item path="res01322.bmp" type="image" value="1322" />
+		<item path="res01323.bmp" type="image" value="1323" />
+   </folder>
+		<item path="res01327.bmp" type="image" value="1327" />
+		<item path="res01328.bmp" type="image" value="1328" />
+		<item path="res01329.bmp" type="image" value="1329" />
+		<item path="res01330.bmp" type="image" value="1330" />
+		<item path="res01331.bmp" type="image" value="1331" />
+		<item path="res01332.bmp" type="image" value="1332" />
+		<item path="res01333.bmp" type="image" value="1333" />
+		<item path="res01334.bmp" type="image" value="1334" />
+		<item path="res01335.bmp" type="image" value="1335" />
+		<item path="res01336.bmp" type="image" value="1336" />
+		<item path="res01337.bmp" type="image" value="1337" />
+		<item path="res01338.bmp" type="image" value="1338" />
+		<item path="res01339.bmp" type="image" value="1339" />
+		<item path="res01340.bmp" type="image" value="1340" />
+		<item path="res01341.bmp" type="image" value="1341" />
+		<item path="res01342.bmp" type="image" value="1342" />
+		<item path="res01343.bmp" type="image" value="1343" />
+	</folder>
+
+	<folder path="EPALACE" file="EPALACE.DAT" palette="0" paletteindex="" index="pop1">
+		<item path="res00200.bin" type="binary" value="200" />
+		<item path="res00201.bin" type="binary" value="201" />
+		<item path="res00202.bin" type="binary" value="202" />
+		<item path="res00203.bin" type="binary" value="203" />
+		<item path="res00204.bin" type="binary" value="204" />
+		<item path="res00205.bin" type="binary" value="205" />
+		<item path="res00206.bin" type="binary" value="206" />
+		<item path="res00207.bin" type="binary" value="207" />
+		<item path="res00208.bin" type="binary" value="208" />
+		<item path="res00209.bin" type="binary" value="209" />
+		<item path="res00210.bin" type="binary" value="210" />
+		<item path="res00211.bin" type="binary" value="211" />
+		<item path="res00212.bin" type="binary" value="212" />
+		<item path="res00213.bin" type="binary" value="213" />
+		<item path="res00214.bin" type="binary" value="214" />
+		<item path="res00215.bin" type="binary" value="215" />
+		<item path="res00216.bin" type="binary" value="216" />
+		<item path="res00217.bin" type="binary" value="217" />
+		<item path="res00218.bin" type="binary" value="218" />
+		<item path="res00219.bin" type="binary" value="219" />
+		<item path="res00220.bin" type="binary" value="220" />
+		<item path="res00221.bin" type="binary" value="221" />
+		<item path="res00222.bin" type="binary" value="222" />
+		<item path="res00223.bin" type="binary" value="223" />
+		<item path="res00224.bin" type="binary" value="224" />
+		<item path="res00225.bin" type="binary" value="225" />
+		<item path="res00226.bin" type="binary" value="226" />
+		<item path="res00227.bin" type="binary" value="227" />
+		<item path="res00228.bin" type="binary" value="228" />
+		<item path="res00229.bin" type="binary" value="229" />
+		<item path="res00230.bin" type="binary" value="230" />
+		<item path="res00231.bin" type="binary" value="231" />
+		<item path="res00232.bmp" type="image" value="232" />
+		<item path="res00233.bmp" type="image" value="233" />
+		<item path="res00234.bmp" type="image" value="234" />
+		<item path="res00235.bmp" type="image" value="235" />
+		<item path="res00236.bmp" type="image" value="236" />
+		<item path="res00237.bmp" type="image" value="237" />
+		<item path="res00238.bmp" type="image" value="238" />
+		<item path="res00239.bmp" type="image" value="239" />
+		<item path="res00240.bmp" type="image" value="240" />
+		<item path="res00241.bmp" type="image" value="241" />
+		<item path="res00242.bmp" type="image" value="242" />
+		<item path="res00243.bmp" type="image" value="243" />
+		<item path="res00244.bmp" type="image" value="244" />
+		<item path="res00245.bmp" type="image" value="245" />
+		<item path="res00246.bmp" type="image" value="246" />
+		<item path="res00247.bmp" type="image" value="247" />
+		<item path="res00248.bmp" type="image" value="248" />
+		<item path="res00249.bmp" type="image" value="249" />
+		<item path="res00250.bmp" type="image" value="250" />
+		<item path="res00251.bmp" type="image" value="251" />
+		<item path="res00252.bmp" type="image" value="252" />
+		<item path="res00253.bmp" type="image" value="253" />
+		<item path="res00254.bmp" type="image" value="254" />
+		<item path="res00255.bmp" type="image" value="255" />
+		<item path="res00256.bmp" type="image" value="256" />
+		<item path="res00257.bmp" type="image" value="257" />
+		<item path="res00258.bmp" type="image" value="258" />
+		<item path="res00259.bmp" type="image" value="259" />
+		<item path="res00260.bmp" type="image" value="260" />
+		<item path="res00261.bmp" type="image" value="261" />
+		<item path="res00262.bmp" type="image" value="262" />
+		<item path="res00263.bmp" type="image" value="263" />
+		<item path="res00264.bmp" type="image" value="264" />
+		<item path="res00265.bmp" type="image" value="265" />
+		<item path="res00266.bmp" type="image" value="266" />
+		<item path="res00267.bmp" type="image" value="267" />
+		<item path="res00268.bmp" type="image" value="268" colors="2" />
+		<item path="res00269.bmp" type="image" value="269" />
+		<item path="res00270.bmp" type="image" value="270" />
+		<item path="res00271.bmp" type="image" value="271" />
+		<item path="res00272.bmp" type="image" value="272" />
+		<item path="res00273.bmp" type="image" value="273" />
+		<item path="res00274.bmp" type="image" value="274" />
+		<item path="res00275.bin" type="binary" value="275" />
+		<item path="res00276.bin" type="binary" value="276" />
+		<item path="res00277.bin" type="binary" value="277" />
+		<item path="res00278.bin" type="binary" value="278" />
+		<item path="res00279.bin" type="binary" value="279" />
+		<item path="res00280.bin" type="binary" value="280" />
+		<item path="res00281.bin" type="binary" value="281" />
+		<item path="res00282.bin" type="binary" value="282" />
+		<item path="res00283.bin" type="binary" value="283" />
+		<item path="res00284.bmp" type="image" value="284" />
+		<item path="res00285.bmp" type="image" value="285" />
+		<item path="res00286.bin" type="binary" value="286" />
+		<item path="res00287.bin" type="binary" value="287" />
+		<item path="res00288.bin" type="binary" value="288" />
+		<item path="res00289.bin" type="binary" value="289" />
+		<item path="res00290.bin" type="binary" value="290" />
+		<item path="res00291.bin" type="binary" value="291" />
+		<item path="res00292.bmp" type="image" value="292" />
+		<item path="res00293.bmp" type="image" value="293" />
+		<item path="res00294.bmp" type="image" value="294" />
+		<item path="res00295.bmp" type="image" value="295" />
+		<item path="res00296.bmp" type="image" value="296" />
+		<item path="res00297.bmp" type="image" value="297" />
+		<item path="res00298.bmp" type="image" value="298" />
+		<item path="res00299.bmp" type="image" value="299" />
+		<item path="res00300.bmp" type="image" value="300" />
+		<item path="res00301.bin" type="binary" value="301" />
+		<item path="res00302.bin" type="binary" value="302" />
+		<item path="res00303.bin" type="binary" value="303" />
+		<item path="res00304.bin" type="binary" value="304" />
+		<item path="res00305.bin" type="binary" value="305" />
+		<item path="res00306.bin" type="binary" value="306" />
+		<item path="res00307.bin" type="binary" value="307" />
+		<item path="res00308.bin" type="binary" value="308" />
+		<item path="res00309.bin" type="binary" value="309" />
+		<item path="res00310.bin" type="binary" value="310" />
+		<item path="res00311.bin" type="binary" value="311" />
+		<item path="res00312.bin" type="binary" value="312" />
+		<item path="res00313.bin" type="binary" value="313" />
+		<item path="res00314.bin" type="binary" value="314" />
+		<item path="res00315.bin" type="binary" value="315" />
+		<item path="res00316.bin" type="binary" value="316" />
+		<item path="res00317.bin" type="binary" value="317" />
+		<item path="res00318.bin" type="binary" value="318" />
+		<item path="res00319.bin" type="binary" value="319" />
+		<item path="res00320.bin" type="binary" value="320" />
+		<item path="res00321.bin" type="binary" value="321" />
+		<item path="res00322.bin" type="binary" value="322" />
+		<item path="res00323.bin" type="binary" value="323" />
+		<item path="res00324.bmp" type="image" value="324" />
+		<item path="res00325.bmp" type="image" value="325" />
+		<item path="res00326.bmp" type="image" value="326" />
+		<item path="res00327.bin" type="binary" value="327" />
+		<item path="res00328.bin" type="binary" value="328" />
+		<item path="res00329.bin" type="binary" value="329" />
+		<item path="res00330.bin" type="binary" value="330" />
+		<item path="res00331.bin" type="binary" value="331" />
+		<item path="res00332.bin" type="binary" value="332" />
+		<item path="res00333.bin" type="binary" value="333" />
+		<item path="res00334.bin" type="binary" value="334" />
+		<item path="res00335.bin" type="binary" value="335" />
+		<item path="res00336.bin" type="binary" value="336" />
+		<item path="res00337.bin" type="binary" value="337" />
+		<item path="res00338.bin" type="binary" value="338" />
+		<item path="res00339.bin" type="binary" value="339" />
+		<item path="res00340.bin" type="binary" value="340" />
+		<item path="res00341.bin" type="binary" value="341" />
+		<item path="res00342.bin" type="binary" value="342" />
+		<item path="res00343.bin" type="binary" value="343" />
+		<item path="res00344.bmp" type="image" value="344" />
+		<item path="res00345.bmp" type="image" value="345" />
+		<item path="res00346.bmp" type="image" value="346" />
+		<item path="res00347.bmp" type="image" value="347" />
+		<item path="res00348.bin" type="binary" value="348" />
+		<item path="res00349.bmp" type="image" value="349" />
+		<item path="res00350.bmp" type="image" value="350" />
+		<item path="res00351.bmp" type="image" value="351" />
+		<item path="res00360.bin" type="binary" value="360" />
+		<item path="res00361.bmp" type="image" value="361" />
+		<item path="res00362.bmp" type="image" value="362" />
+		<item path="res00363.bmp" type="image" value="363" />
+		<item path="res00364.bmp" type="image" value="364" />
+		<item path="res00365.bmp" type="image" value="365" />
+		<item path="res00366.bmp" type="image" value="366" />
+		<item path="res00367.bmp" type="image" value="367" />
+		<item path="res00368.bmp" type="image" value="368" />
+		<item path="res00369.bmp" type="image" value="369" />
+		<item path="res00370.bmp" type="image" value="370" />
+		<item path="res00371.bmp" type="image" value="371" />
+		<item path="res00372.bmp" type="image" value="372" />
+		<item path="res00373.bmp" type="image" value="373" />
+		<item path="res01201.bmp" type="image" value="1201" />
+		<item path="res01202.bmp" type="image" value="1202" />
+		<item path="res01203.bmp" type="image" value="1203" />
+		<item path="res01204.bmp" type="image" value="1204" />
+		<item path="res01205.bmp" type="image" value="1205" />
+		<item path="res01206.bmp" type="image" value="1206" />
+		<item path="res01207.bin" type="binary" value="1207" />
+		<item path="res01208.bin" type="binary" value="1208" />
+		<item path="res01209.bmp" type="image" value="1209" />
+		<item path="res01210.bmp" type="image" value="1210" />
+		<item path="res01211.bmp" type="image" value="1211" />
+		<item path="res01212.bmp" type="image" value="1212" />
+		<item path="res01213.bmp" type="image" value="1213" />
+		<item path="res01275.bmp" type="image" value="1275" />
+		<item path="res01276.bin" type="binary" value="1276" />
+		<item path="res01277.bmp" type="image" value="1277" />
+		<item path="res01278.bmp" type="image" value="1278" />
+		<item path="res01279.bin" type="binary" value="1279" />
+		<item path="res01280.bmp" type="image" value="1280" />
+		<item path="res01281.bmp" type="image" value="1281" />
+		<item path="res01282.bmp" type="image" value="1282" />
+		<item path="res01283.bmp" type="image" value="1283" />
+		<item path="res01286.bmp" type="image" value="1286" />
+		<item path="res01287.bmp" type="image" value="1287" />
+		<item path="res01288.bmp" type="image" value="1288" />
+		<item path="res01289.bmp" type="image" value="1289" />
+		<item path="res01290.bmp" type="image" value="1290" />
+		<item path="res01291.bmp" type="image" value="1291" />
+		<item path="res01301.bmp" type="image" value="1301" />
+		<item path="res01302.bmp" type="image" value="1302" />
+		<item path="res01303.bmp" type="image" value="1303" />
+		<item path="res01304.bmp" type="image" value="1304" />
+		<item path="res01305.bmp" type="image" value="1305" />
+		<item path="res01306.bmp" type="image" value="1306" />
+		<item path="res01307.bmp" type="image" value="1307" />
+		<item path="res01308.bmp" type="image" value="1308" />
+		<item path="res01309.bmp" type="image" value="1309" />
+		<item path="res01310.bmp" type="image" value="1310" />
+		<item path="res01311.bmp" type="image" value="1311" />
+		<item path="res01312.bmp" type="image" value="1312" />
+		<item path="res01313.bmp" type="image" value="1313" />
+   <folder colors="2">
+		<item path="res01314.bmp" type="image" value="1314" />
+		<item path="res01315.bmp" type="image" value="1315" />
+		<item path="res01316.bmp" type="image" value="1316" />
+		<item path="res01317.bmp" type="image" value="1317" />
+		<item path="res01318.bmp" type="image" value="1318" />
+		<item path="res01319.bmp" type="image" value="1319" />
+		<item path="res01320.bmp" type="image" value="1320" />
+		<item path="res01321.bmp" type="image" value="1321" />
+		<item path="res01322.bmp" type="image" value="1322" />
+		<item path="res01323.bmp" type="image" value="1323" />
+   </folder>
+		<item path="res01327.bmp" type="image" value="1327" />
+		<item path="res01328.bmp" type="image" value="1328" />
+		<item path="res01329.bmp" type="image" value="1329" />
+		<item path="res01330.bmp" type="image" value="1330" />
+		<item path="res01331.bmp" type="image" value="1331" />
+		<item path="res01332.bmp" type="image" value="1332" />
+		<item path="res01333.bmp" type="image" value="1333" />
+		<item path="res01334.bmp" type="image" value="1334" />
+		<item path="res01335.bmp" type="image" value="1335" />
+		<item path="res01336.bmp" type="image" value="1336" />
+		<item path="res01337.bmp" type="image" value="1337" />
+		<item path="res01338.bmp" type="image" value="1338" />
+		<item path="res01339.bmp" type="image" value="1339" />
+		<item path="res01340.bmp" type="image" value="1340" />
+		<item path="res01341.bmp" type="image" value="1341" />
+		<item path="res01342.bmp" type="image" value="1342" />
+		<item path="res01343.bmp" type="image" value="1343" />
+	</folder>
+
+<!-- PoP2 resources are in pop2.xml -->
+
+</resources>
+
+<!--
+File Format:
+
+Attributes:
+ resources:
+  o version: the version of the file (mandatory)
+ folder:
+  o type (inheritable): one of the list below
+    * autodetect (default)
+    * level
+    * image
+    * wave
+    * midi
+    * binary
+    * palette
+    * pcspeaker
+    * information
+    Note:
+     - See PR readme for details on item types
+  o palette (inheritable): 
+    * number: the palette ID associated to the images in this folder if applicable
+    * "monochrome": this means the image has a black and white monochrome palette
+    Notes:
+     - the palette attribute will be ignored in resources other than images.
+     - if the number value is not a valid palette, the image will be extracted in other
+       palette from the file or a random generated palette.
+	o paletteindex (inheritable): the name of the index the palette has to be looked into
+	  Note:
+		 - If not speficied current item index value will be used
+  o name or title (not inheritable): the name of the folder
+  o desc (not inheritable): a description
+  o path (partially inheritable): a path where the folder is extracted to.
+    Contained items will inherit this path. There must be only one path per item.
+    If missing PR will use unknown/(filename)/(type desc)(item id).(type extension)
+  o file (inheritable): the file where the item is located
+ item:
+  o value: the item ID (mandatory)
+  o index (inheritable): the index name (mandatory but may be inherited from a folder)
+  o order (inheritable): after the value and index, the order varies to make an item
+    unique (defaults to 0)
+  o flags (inheritable): some pop2 file format flags (mandatory for pop2 files)
+  o file: see folder file (mandatory but may be inherited from a folder).
+  o type: see folder type. May be inherited, omissions means autodetect.
+  o palette: see folder palette. Mandatory for image types but may be inherited,
+    when omited a default palette will be used. This attribute is ignored in other items
+  o paletteindex: see folder paletteindex. Mandatory for image types but may be inherited.
+  o paletteorder: in case two palettes with the same index and value appears, this option
+    lets you choose the right one. Defaults to 0.
+  o desc: a description (mostly used by PR to add in the .plv files)
+  o name or title: the name of the item (mostly used by PR to add in the .plv files)
+  o path: the name of the file it will be extracted
+  o number or levelnumber: an additional resource or level number
+
+Distributed versions if this file are read only and MUST have the GPL header,
+if you want to help please contact us in www.princed.org. Find DTDs in the
+princed home page.
+ 
+-->
+

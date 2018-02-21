@@ -1,0 +1,18 @@
+# May be created by apoplexy, PR et al. during operation.
+unknown/*
+levels/*
+levels2/*
+/upack.bat
+xml/*
+
+# Executables.
+/apoplexy
+/apoplexy.exe
+
+# Created by IDE's, in particular Dev-C++.
+/src/apoplexy.dev
+/src/apoplexy.ico
+/src/apoplexy.layout
+/src/apoplexy.o
+/src/*private*
+/src/Makefile.win

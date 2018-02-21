@@ -1,0 +1,15 @@
+	Documentation for:
+		UPACKEXE.EXE  version 1.00 (c) 1989 Fabrice Bellard
+
+	This program permits unpacking an EXE file packed with the Microsoft
+	EXEPACK, so it can be compressed with LZEXE.  Otherwise, LZEXE can't
+	do as good a job because EXEPACK's compression of the relocation
+	table make it inacessible.
+
+	How to use UPACKEXE:
+	-------------------
+
+	syntax:   UPACKEXE filename
+
+	The original file's extent is changed to .OLD.  The new file is
+	called UPACKEXE.TMP and is renamed after treated with LZEXE.

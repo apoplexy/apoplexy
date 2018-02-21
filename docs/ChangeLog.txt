@@ -1,0 +1,151 @@
+# ====================
+# Changes are grouped by: added (+), changed (*), then removed (-).
+# Heading format:
+# - for releases: "v<version> (<month> <day>, <year>) - <maintainer>"
+# - for upcoming: "Next release"
+# ====================
+
+v3.2 (February 21, 2018) - Norbert de Jonge
+--------------------
++ If one or more games are not present, instead of merely showing clickable web links to allow the user to manually add the games, buttons can now be clicked to auto-download the games.
+* Fixed a dest.x/y bug in ShowImageBasic().
+* Moved the Windows port back to 32-bit.
+* Various small changes to allow this to become a multi-developer project.[3]
+* Added the project to GitHub, at https://github.com/apoplexy/apoplexy.
+[3] Moved the code to src/, new domain (apoplexy.org) and website, new icon/logo, additional project files (compiling.txt, coding-style.txt, credits.txt).
+
+v3.1 (February 7, 2018) - Norbert de Jonge
+--------------------
+Back from 'retirement' to implement two frequently requested features.
++ When editing PoP1 for DOS, a separate Map window can now be opened ("m"), that displays a movable and zoomable abstract representation of the entire level, which highlights related tiles when hovering over buttons, gates, exits left, loose tiles, etc.
++ PoP1 for DOS guard details can now be modified via the EXE screen (F2). This makes it easy to, for example, use guards with different amounts of hit points in the same level.
+* Minor bug fixes.
+
+v3.0 (February 4, 2016) - Norbert de Jonge
+--------------------
+This is the - or at least my - final version of apoplexy. It's time to move on. I enjoyed working on the program and I've learned a lot through the years. This program is free software (libre, also gratis), so feel free to redistribute and/or modify it without my permission.
+
+v3.0 RC3 (January 15, 2016) - Norbert de Jonge
+--------------------
+* Updated SDLPoP support to v1.16.
+* SNES playtesting now also skips the main menu.
+* Slightly changed the Compress() function.
+* The Windows port is now also 64-bit.
+- Removed the "AMD64 32-bit" SDLPoP text.
+
+v3.0 RC2 (December 21, 2015) - Norbert de Jonge
+--------------------
++ Added support for SDLPoP (v1.16b4).
+* Fixed two minor bugs (teleport marker, sprite zooming).
+
+v3.0 RC1 (December 13, 2015) - Norbert de Jonge
+--------------------
++ The program can now also edit PoP1 for SNES levels!
+* Minor bug fixes.
+This is a code complete release candidate. Version 3.0 will be released on February 4th, 2016. If you run into any bugs or defects with this release candidate, please report them before February.
+
+v2.7 (August 21, 2015) - Norbert de Jonge
+--------------------
++ Now auto-enables all PoP1 resources, if necessary (and possible).
++ For PoP1, the "0"-"9" keys are now shortcuts for various tiles.
++ The "i" key now toggles tile information.
+* Improved several of the PoP1 spike images.
+* Cleaned up the code a bit (e.g. simplified PreLoadSet()).
+* Less #define's are used for the calculation of tile offsets.
+* Changed various iEditPoP if/else statements to switches.
+
+v2.6b (September 17, 2014) - Norbert de Jonge
+--------------------
++ Expanded the screen where PoP1's PRINCE.EXE can be changed.[2]
+* Better handling of PoP2 (static and dynamic) guards with unexpected values.
+[2] Users can now also change whether the prince has his sword (default, never, always), where the prince wins (level, room), and the environments and enemy resources used for each level.
+
+v2.5.1 (September 13, 2014) - Norbert de Jonge
+--------------------
+* Changed PoP2's "spawn if guard(s) alive" to "prince row".
+
+v2.5 (August 11, 2014) - Norbert de Jonge
+--------------------
++ Added (optional, togglable) fullscreen support.
++ Added a screen where PoP1's PRINCE.EXE can be changed.
+* Fixed a minor event-related bug.
+
+v2.4 (August 1, 2014) - Norbert de Jonge
+--------------------
++ Levels can now also be imported from XML.
+* Swapped the guard directions in the XML output.
+
+v2.3.1 (July 30, 2014) - Norbert de Jonge
+--------------------
+* Fixed the XML output format (empty-element tags).
+
+v2.3 (July 6, 2014) - Norbert de Jonge
+--------------------
++ Added (Xbox) game controller support.
+* Fixed two minor bugs (PoP1 guard selection typo, black rectangle scaling).
+* Included executable now 64-bit.
+
+v2.2b (June 1, 2014) - Norbert de Jonge
+--------------------
+* Workaround for SDL bug #2274.
+* Freeing message surfaces to prevent memory usage increase.
+* When zoomed, properly displays large ruins and temple backgrounds.
+* Fixed a mouse with interface buttons interaction problem.
+
+v2.1b (February 1, 2014) - Norbert de Jonge
+--------------------
+* Migrated from SDL 1.2 to 2.0.
++ Added several additional gcc warning options in the Makefile.
++ The cursor now changes on the loading screen and when hovering over web links.
+* Improved the code quite a bit after receiving new gcc warnings (see above) and after using cppcheck and clang for the first time.
+
+v2.0 (December 28, 2013) - Norbert de Jonge
+--------------------
++ The program can now also edit Prince of Persia 2 levels!
++ Some tiles in the editor are now animated.
++ Better loading screen, including animations.
++ Now displays a warning when hovering over marked tiles.
+* Moved the images to various subdirectories.
+
+v1.9b (September 20, 2013) - Norbert de Jonge
+--------------------
++ Added a screen that can be used to place custom tiles.
++ It's now possible to double the interface size.
++ Users can now copy and paste rooms, and flip rooms (horizontally and vertically).
++ Levels can now also be exported to XML.
++ The events screen now displays the target tile.
++ It's now possible to sprinkle levels with random decorations.
++ Added a simple help screen.
++ Added two extra guard levels.
++ A LEVELS.BAK file is now being created before saving a level.
++ The application can now immediately display any level on startup.
++ It's now possible to switch between dungeon and palace environments.
+* Several aesthetic and interaction improvements.[1]
+* Clearing a room now also removes the guard.
+* It's now easier to re-use the last used tile.
+* The scroll wheel can now also be used for horizontal scrolling.
+* Immediately playtesting specific levels now also works with non-default cheat codes.
+* Randomize no longer uses - now marked - distorting tiles.
+* It's now easier to decrease room numbers on the broken room links screen.
+* Fixed the image of one of the palace tiles.
+[1] Displays the room under the current room. If there is no room to the left, displays a wall. Better response to the selection of persons. Key repeat on. Less unnecessary screen updates.
+
+v1.2b (July 16, 2012) - Norbert de Jonge
+--------------------
++ Added a screen that can be used to (deliberately) create, change and fix so-called broken room links.
+* Fixed a minor bug that sometimes caused unintentional changes to events.
+
+v1.1 (January 30, 2011) - Norbert de Jonge
+--------------------
++ All actions can now also be performed with the keyboard. The keyboard shortcuts are listed in docs/keys.txt, and they're also shown when running the application. In order to ensure consistency, the "h/j/u/n keys" are not used on the main screen.
++ On the room links screen, a room that is being moved is now marked with red stripes.
++ Added seven additional interface sound effects.
++ The application now warns the user about unsaved changes.
+* Changed popup.wav (3.7MB to 6kB) in order to decrease the total size of the package.
+* There's now always a tile selected, to allow for faster switching between mouse and keyboard.
+* Cleaned up the code a bit, mostly by adding more functions.
+* The Princed Resources editor has been moved into the pr/ directory.
+
+v1.0b (April 3, 2008) - Norbert de Jonge
+--------------------
++ Initial release.

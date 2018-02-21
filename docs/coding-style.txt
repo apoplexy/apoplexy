@@ -1,0 +1,24 @@
+Do not worry too much about the coding style. Just write code. We can help you by reformatting it where necessary. Questions about our coding style may be emailed to info@apoplexy.org, or discussed at [ http://forum.princed.org/viewforum.php?f=112 ].
+
+All contributions MUST be GPL3+ compatible. Contributions are GPL3+ licensed unless explicitly stated otherwise. If you contribute, you MUST add yourself to credits.txt; you may omit all but your name (N) and contributions (C).
+
+Hard tabs MUST be used for (left-side) indentation, spaces for (mid-line) alignment. If the tab stop is set to 2, lines MUST NOT exceed column 79, unless this significantly increases readability on a 80-character terminal. Avoid leaving whitespace or tabs at the end of lines. Letter casing, use of spaces and (opening and closing) braces should be clear by looking at existing code.
+
+Comments MUST be formatted as either /*** ... ***/ or
+/* ...
+ * ... (etc.)
+ */
+
+The names of variables MUST: a) relay their purpose (what they represent), and b) be prefixed by their data type. For example, iGuardType, is an integer that holds a guard type.
+
+Avoid multiple statements/assignments on a single line. For example, do NOT use a=b[c++]. Also avoid shorthand comparisons. For example, do NOT use a?b:c or if(!a).
+
+When displaying images, wherever possible, use ShowImageBasic(); avoid ShowImage().
+
+The user MUST be able to perform all actions with both the mouse and the keyboard. See keys.txt. The program also has (Xbox 360) gamepad support, but allowing actions by gamepad is optional.
+
+Feel free to use PrIfDe() to give the user additional information. (If they choose to start with -d or --debug.)
+
+Make sure to test with a zoomed main window ("z"). And remember, this program can edit three games; depending on where in the code you are working, you may need to check against iEditPoP.
+
+The six fonts used are: Akzidenz Grotesk CE, Andagii, Nimbus Sans L Bold Condensed, Sans, Terminus, and URW Gothic L Semi-Bold.

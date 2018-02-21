@@ -1,0 +1,4090 @@
+<!DOCTYPE resources SYSTEM "http://www.princed.org/standards/xml/resources/std1.dtd">
+<?xml version="1.0" ?>
+
+<!--
+pop2.xml: Princed Resources : PoP2 Resource tree
+
+ Copyright 2012 Princed Development Team
+
+  Created by: David from Princed
+  Version: (2012-Sep-02)
+
+ Note:
+  DO NOT remove this copyright notice
+-->
+
+<!-- PoP1 resources and format info are in resources.xml -->
+
+<resources version="build-1">
+
+	<folder path="BIRD" file="BIRD.DAT" palette="750" paletteindex="svga palette">
+		<item path="fram00750.bin" type="binary" value="750" index="frame" flags="0x0" />
+		<item path="palc00750.bin" type="binary" value="750" index="cga palette" flags="0x0" />
+		<item path="pals00750.pal" type="palette-pop2-320cols" value="750" index="svga palette" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image">
+		<item path="shap00751.bmp" value="751" />
+		<item path="shap00752.bmp" value="752" />
+		<item path="shap00753.bmp" value="753" />
+		<item path="shap00754.bmp" value="754" />
+		<item path="shap00755.bmp" value="755" />
+		<item path="shap00756.bmp" value="756" />
+		<item path="shap00757.bmp" value="757" />
+		<item path="shap00758.bmp" value="758" />
+		<item path="shap00759.bmp" value="759" />
+		<item path="shap00760.bmp" value="760" />
+		<item path="shap00761.bmp" value="761" />
+		<item path="shap00762.bmp" value="762" />
+		<item path="shap00763.bmp" value="763" />
+		<item path="shap00764.bmp" value="764" />
+		<item path="shap00765.bmp" value="765" />
+		<item path="shap00766.bmp" value="766" />
+		<item path="shap00767.bmp" value="767" />
+		<item path="shap00768.bmp" value="768" />
+		<item path="shap00769.bmp" value="769" />
+		<item path="shap00770.bmp" value="770" />
+		<item path="shap00771.bmp" value="771" />
+		<item path="shap00772.bmp" value="772" />
+		<item path="shap00773.bmp" value="773" />
+		<item path="shap00774.bmp" value="774" />
+		<item path="shap00775.bmp" value="775" />
+		<item path="shap00776.bmp" value="776" />
+		<item path="shap00777.bmp" value="777" />
+		<item path="shap00778.bmp" value="778" />
+		<item path="shap00779.bmp" value="779" />
+		<item path="shap00780.bmp" value="780" />
+		<item path="shap00781.bmp" value="781" />
+		<item path="shap00782.bmp" value="782" />
+		<item path="shap00783.bmp" value="783" />
+		<item path="shap00784.bmp" value="784" />
+		<item path="shap00785.bmp" value="785" />
+		<item path="shap00786.bmp" value="786" />
+		<item path="shap00787.bmp" value="787" />
+		<item path="shap00788.bmp" value="788" />
+		<item path="shap00789.bmp" value="789" />
+		<item path="shap00790.bmp" value="790" />
+		<item path="shap00791.bin" type="binary" value="791" />
+		<item path="shap00792.bin" type="binary" value="792" />
+		<item path="shap00793.bin" type="binary" value="793" />
+		<item path="shap00794.bin" type="binary" value="794" />
+		<item path="shap00795.bin" type="binary" value="795" />
+		<item path="shap00796.bin" type="binary" value="796" />
+		<item path="shap00797.bin" type="binary" value="797" />
+		<item path="shap00798.bin" type="binary" value="798" />
+		<item path="shap00799.bin" type="binary" value="799" />
+		<item path="shap00800.bin" type="binary" value="800" />
+		<item path="shap00801.bin" type="binary" value="801" />
+		<item path="shap00802.bin" type="binary" value="802" />
+		<item path="shap00803.bin" type="binary" value="803" />
+		<item path="shap00804.bin" type="binary" value="804" />
+		<item path="shap00805.bin" type="binary" value="805" />
+		<item path="shap00806.bin" type="binary" value="806" />
+		<item path="shap00807.bin" type="binary" value="807" />
+		<item path="shap00808.bin" type="binary" value="808" />
+		<item path="shap00809.bin" type="binary" value="809" />
+		<item path="shap00810.bin" type="binary" value="810" />
+		<item path="shap00811.bin" type="binary" value="811" />
+		<item path="shap00812.bin" type="binary" value="812" />
+		<item path="shap00813.bin" type="binary" value="813" />
+		<item path="shap00814.bin" type="binary" value="814" />
+		<item path="shap00815.bin" type="binary" value="815" />
+		<item path="shap00816.bin" type="binary" value="816" />
+		<item path="shap00817.bin" type="binary" value="817" />
+		<item path="shap00818.bin" type="binary" value="818" />
+		<item path="shap00819.bin" type="binary" value="819" />
+		<item path="shap00820.bin" type="binary" value="820" />
+		<item path="shap00821.bin" type="binary" value="821" />
+		<item path="shap00822.bin" type="binary" value="822" />
+		<item path="shap00823.bin" type="binary" value="823" />
+		<item path="shap00824.bin" type="binary" value="824" />
+		<item path="shap00825.bin" type="binary" value="825" />
+		<item path="shap00826.bin" type="binary" value="826" />
+		<item path="shap00827.bin" type="binary" value="827" />
+		<item path="shap00828.bin" type="binary" value="828" />
+		<item path="shap00829.bin" type="binary" value="829" />
+		<item path="shap00830.bin" type="binary" value="830" />
+		<item path="shap00831.bin" type="binary" value="831" />
+		<item path="shap00832.bin" type="binary" value="832" />
+		<item path="shap00833.bin" type="binary" value="833" />
+		<item path="shap00834.bin" type="binary" value="834" />
+		<item path="shap00835.bin" type="binary" value="835" />
+		<item path="shap00836.bin" type="binary" value="836" />
+		<item path="shap00837.bin" type="binary" value="837" />
+		<item path="shap00838.bin" type="binary" value="838" />
+		<item path="shap00839.bin" type="binary" value="839" />
+		<item path="shap00840.bin" type="binary" value="840" />
+		<item path="shap00841.bin" type="binary" value="841" />
+		<item path="shap00842.bin" type="binary" value="842" />
+		<item path="shap00843.bin" type="binary" value="843" />
+		<item path="shap00844.bin" type="binary" value="844" />
+		<item path="shap00845.bin" type="binary" value="845" />
+		<item path="shap00846.bin" type="binary" value="846" />
+		<item path="shap00847.bin" type="binary" value="847" />
+		<item path="shap00848.bin" type="binary" value="848" />
+		<item path="shap00849.bin" type="binary" value="849" />
+		<item path="shap00891.bmp" value="891" />
+		<item path="shap00892.bmp" value="892" />
+		<item path="shap00893.bmp" value="893" />
+		<item path="shap00894.bmp" value="894" />
+		<item path="shap00895.bmp" value="895" />
+		<item path="shap00896.bmp" value="896" />
+		<item path="shap00897.bmp" value="897" />
+		<item path="shap00898.bmp" value="898" />
+		<item path="shap00899.bmp" value="899" />
+		<item path="shap00900.bmp" value="900" />
+		<item path="shap00901.bmp" value="901" />
+		<item path="shap00902.bmp" value="902" />
+		<item path="shap00903.bmp" value="903" />
+		<item path="shap00904.bmp" value="904" />
+		<item path="shap00905.bmp" value="905" />
+		<item path="shap00906.bmp" value="906" />
+		<item path="shap00907.bmp" value="907" />
+		<item path="shap00908.bmp" value="908" />
+		<item path="shap00909.bmp" value="909" />
+		<item path="shap00910.bmp" value="910" />
+		<item path="shap00911.bmp" value="911" />
+		<item path="shap00912.bmp" value="912" />
+		<item path="shap00913.bmp" value="913" />
+		<item path="shap00914.bmp" value="914" />
+		<item path="shap00915.bmp" value="915" />
+		<item path="shap00916.bmp" value="916" />
+		<item path="shap00917.bmp" value="917" />
+		<item path="shap00918.bmp" value="918" />
+		<item path="shap00919.bmp" value="919" />
+		<item path="shap00920.bmp" value="920" />
+		<item path="shap00921.bmp" value="921" />
+		<item path="shap00922.bmp" value="922" />
+		<item path="shap00923.bmp" value="923" />
+		<item path="shap00924.bmp" value="924" />
+		<item path="shap00925.bmp" value="925" />
+		<item path="shap00926.bmp" value="926" />
+		<item path="shap00927.bmp" value="927" />
+		<item path="shap00928.bmp" value="928" />
+		<item path="shap00929.bmp" value="929" />
+		<item path="shap00930.bmp" value="930" />
+		<item path="shap00931.bmp" value="931" />
+		<item path="shap00932.bmp" value="932" />
+		<item path="shap00933.bmp" value="933" />
+		<item path="shap00934.bmp" value="934" />
+		<item path="shap00935.bmp" value="935" />
+		<item path="shap00936.bmp" value="936" />
+		<item path="shap00937.bmp" value="937" />
+		<item path="shap00938.bmp" value="938" />
+		<item path="shap00939.bmp" value="939" />
+		<item path="shap00940.bmp" value="940" />
+		<item path="shap00941.bmp" value="941" />
+		<item path="shap00942.bmp" value="942" />
+		<item path="shap00943.bmp" value="943" />
+		<item path="shap00944.bmp" value="944" />
+		<item path="shap00945.bmp" value="945" />
+		<item path="shap00946.bmp" value="946" />
+		<item path="shap00947.bmp" value="947" />
+		<item path="shap00948.bmp" value="948" />
+		<item path="shap00949.bmp" value="949" />
+</folder>
+		<item path="shpl00750.bin" type="binary" value="750" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="CAVERNS" file="CAVERNS.DAT" palette="3500" paletteindex="svga palette">
+		<item path="cust04050.bin" type="binary" value="4050" index="custom" flags="0x0" />
+		<item path="cust04225.bin" type="binary" value="4225" index="custom" flags="0x0" />
+		<item path="palc03500.bin" type="binary" value="3500" index="cga palette" flags="0x0" />
+		<item path="palc25303.bin" type="binary" value="25303" index="cga palette" flags="0x0" />
+		<item path="pals03500.pal" type="palette-pop2-320cols" value="3500" index="svga palette" flags="0x0" />
+		<item path="pals25303.pal" type="palette-pop2-320cols" value="25303" index="svga palette" flags="0x0" />
+		<item path="piec03500.bin" type="binary" value="3500" index="piece" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image-full">
+		<item path="shap03501.bmp" value="3501" />
+		<item path="shap03502.bmp" value="3502" />
+		<item path="shap03503.bmp" value="3503" />
+		<item path="shap03504.bmp" value="3504" />
+		<item path="shap03505.bmp" value="3505" />
+		<item path="shap03506.bmp" value="3506" />
+		<item path="shap03507.bin" type="binary" value="3507" />
+		<item path="shap03508.bmp" value="3508" />
+		<item path="shap03509.bmp" value="3509" />
+		<item path="shap03510.bmp" value="3510" />
+		<item path="shap03511.bmp" value="3511" />
+		<item path="shap03512.bmp" value="3512" />
+		<item path="shap03513.bmp" value="3513" />
+		<item path="shap03514.bmp" value="3514" />
+		<item path="shap03515.bin" type="binary" value="3515" />
+		<item path="shap03516.bmp" value="3516" />
+		<item path="shap03517.bmp" value="3517" />
+		<item path="shap03518.bmp" value="3518" />
+		<item path="shap03519.bmp" value="3519" />
+		<item path="shap03520.bmp" value="3520" />
+		<item path="shap03521.bmp" value="3521" />
+		<item path="shap03522.bmp" value="3522" />
+		<item path="shap03523.bmp" value="3523" />
+		<item path="shap03524.bmp" value="3524" />
+		<item path="shap03525.bmp" value="3525" />
+		<item path="shap03526.bmp" value="3526" />
+		<item path="shap03527.bmp" value="3527" />
+		<item path="shap03528.bin" type="binary" value="3528" />
+		<item path="shap03529.bmp" value="3529" />
+		<item path="shap03530.bmp" value="3530" />
+		<item path="shap03531.bmp" value="3531" />
+		<item path="shap03532.bmp" value="3532" />
+		<item path="shap03533.bmp" value="3533" />
+		<item path="shap03534.bmp" value="3534" />
+		<item path="shap03535.bmp" value="3535" />
+		<item path="shap03536.bmp" value="3536" />
+		<item path="shap03537.bmp" value="3537" />
+		<item path="shap03538.bmp" value="3538" />
+		<item path="shap03539.bmp" value="3539" />
+		<item path="shap03540.bin" type="binary" value="3540" />
+		<item path="shap03541.bmp" value="3541" />
+		<item path="shap03542.bmp" value="3542" />
+		<item path="shap03543.bmp" value="3543" />
+		<item path="shap03544.bmp" value="3544" />
+		<item path="shap03545.bmp" value="3545" />
+		<item path="shap03546.bin" type="binary" value="3546" />
+		<item path="shap03547.bmp" value="3547" />
+		<item path="shap03548.bmp" value="3548" />
+		<item path="shap03549.bmp" value="3549" />
+		<item path="shap03550.bmp" value="3550" />
+		<item path="shap03551.bin" type="binary" value="3551" />
+		<item path="shap03552.bmp" value="3552" />
+		<item path="shap03553.bmp" value="3553" />
+		<item path="shap03554.bmp" value="3554" />
+		<item path="shap03555.bmp" value="3555" />
+		<item path="shap03556.bmp" value="3556" />
+		<item path="shap03557.bmp" value="3557" />
+		<item path="shap03558.bmp" value="3558" />
+		<item path="shap03559.bmp" value="3559" />
+		<item path="shap03560.bmp" value="3560" />
+		<item path="shap03561.bmp" value="3561" />
+		<item path="shap03562.bmp" value="3562" />
+		<item path="shap03563.bmp" value="3563" />
+		<item path="shap03564.bmp" value="3564" />
+		<item path="shap03565.bmp" value="3565" />
+		<item path="shap03566.bmp" value="3566" />
+		<item path="shap03567.bmp" value="3567" />
+		<item path="shap03568.bmp" value="3568" />
+		<item path="shap03569.bmp" value="3569" />
+		<item path="shap03570.bmp" value="3570" />
+		<item path="shap03571.bmp" value="3571" />
+		<item path="shap03572.bmp" value="3572" />
+		<item path="shap03573.bmp" value="3573" />
+		<item path="shap03574.bmp" value="3574" />
+		<item path="shap03575.bmp" value="3575" />
+		<item path="shap03576.bmp" value="3576" />
+		<item path="shap03577.bmp" value="3577" />
+		<item path="shap03578.bmp" value="3578" />
+		<item path="shap03579.bmp" value="3579" />
+		<item path="shap03580.bmp" value="3580" />
+		<item path="shap03581.bmp" value="3581" />
+		<item path="shap03582.bmp" value="3582" />
+		<item path="shap03583.bmp" value="3583" />
+		<item path="shap03584.bmp" value="3584" />
+		<item path="shap03585.bmp" value="3585" />
+		<item path="shap03586.bmp" value="3586" />
+		<item path="shap03587.bmp" value="3587" />
+		<item path="shap03588.bmp" value="3588" />
+		<item path="shap03589.bmp" value="3589" />
+		<item path="shap03590.bmp" value="3590" />
+		<item path="shap03591.bmp" value="3591" />
+		<item path="shap03592.bmp" value="3592" />
+		<item path="shap03593.bmp" value="3593" />
+		<item path="shap03594.bmp" value="3594" />
+		<item path="shap03595.bmp" value="3595" />
+		<item path="shap03596.bmp" value="3596" />
+		<item path="shap03597.bmp" value="3597" />
+		<item path="shap03598.bmp" value="3598" />
+		<item path="shap03599.bin" type="binary" value="3599" />
+		<item path="shap03600.bin" type="binary" value="3600" />
+		<item path="shap03601.bin" type="binary" value="3601" />
+		<item path="shap03602.bin" type="binary" value="3602" />
+		<item path="shap03603.bin" type="binary" value="3603" />
+		<item path="shap03604.bin" type="binary" value="3604" />
+		<item path="shap03605.bin" type="binary" value="3605" />
+		<item path="shap03606.bin" type="binary" value="3606" />
+		<item path="shap03607.bin" type="binary" value="3607" />
+		<item path="shap03608.bin" type="binary" value="3608" />
+		<item path="shap03609.bin" type="binary" value="3609" />
+		<item path="shap03610.bin" type="binary" value="3610" />
+		<item path="shap03611.bin" type="binary" value="3611" />
+		<item path="shap03612.bin" type="binary" value="3612" />
+		<item path="shap03613.bin" type="binary" value="3613" />
+		<item path="shap03614.bin" type="binary" value="3614" />
+		<item path="shap03615.bin" type="binary" value="3615" />
+		<item path="shap03616.bin" type="binary" value="3616" />
+		<item path="shap03617.bin" type="binary" value="3617" />
+		<item path="shap03618.bin" type="binary" value="3618" />
+		<item path="shap03619.bin" type="binary" value="3619" />
+		<item path="shap03620.bin" type="binary" value="3620" />
+		<item path="shap03621.bin" type="binary" value="3621" />
+		<item path="shap03622.bin" type="binary" value="3622" />
+		<item path="shap03623.bin" type="binary" value="3623" />
+		<item path="shap03624.bin" type="binary" value="3624" />
+		<item path="shap03625.bin" type="binary" value="3625" />
+		<item path="shap03626.bin" type="binary" value="3626" />
+		<item path="shap03627.bin" type="binary" value="3627" />
+		<item path="shap03628.bin" type="binary" value="3628" />
+		<item path="shap03629.bin" type="binary" value="3629" />
+		<item path="shap03630.bin" type="binary" value="3630" />
+		<item path="shap03631.bin" type="binary" value="3631" />
+		<item path="shap03632.bin" type="binary" value="3632" />
+		<item path="shap03633.bin" type="binary" value="3633" />
+		<item path="shap03634.bin" type="binary" value="3634" />
+		<item path="shap03635.bin" type="binary" value="3635" />
+		<item path="shap03636.bin" type="binary" value="3636" />
+		<item path="shap03637.bin" type="binary" value="3637" />
+		<item path="shap03638.bin" type="binary" value="3638" />
+		<item path="shap03639.bin" type="binary" value="3639" />
+		<item path="shap03640.bin" type="binary" value="3640" />
+		<item path="shap03641.bin" type="binary" value="3641" />
+		<item path="shap03642.bin" type="binary" value="3642" />
+		<item path="shap03643.bin" type="binary" value="3643" />
+		<item path="shap03644.bin" type="binary" value="3644" />
+		<item path="shap03645.bin" type="binary" value="3645" />
+		<item path="shap03646.bin" type="binary" value="3646" />
+		<item path="shap03647.bin" type="binary" value="3647" />
+		<item path="shap03648.bin" type="binary" value="3648" />
+		<item path="shap03649.bin" type="binary" value="3649" />
+		<item path="shap03650.bin" type="binary" value="3650" />
+		<item path="shap03651.bin" type="binary" value="3651" />
+		<item path="shap03652.bin" type="binary" value="3652" />
+		<item path="shap03653.bin" type="binary" value="3653" />
+		<item path="shap03654.bin" type="binary" value="3654" />
+		<item path="shap03655.bin" type="binary" value="3655" />
+		<item path="shap03656.bin" type="binary" value="3656" />
+		<item path="shap03657.bin" type="binary" value="3657" />
+		<item path="shap03658.bin" type="binary" value="3658" />
+		<item path="shap03659.bin" type="binary" value="3659" />
+		<item path="shap03660.bin" type="binary" value="3660" />
+		<item path="shap03661.bin" type="binary" value="3661" />
+		<item path="shap03800.bmp" value="3800" />
+		<item path="shap03801.bmp" value="3801" />
+		<item path="shap03802.bmp" value="3802" />
+		<item path="shap03803.bmp" value="3803" />
+		<item path="shap03804.bin" type="binary" value="3804" />
+		<item path="shap03805.bmp" value="3805" />
+		<item path="shap03806.bmp" value="3806" />
+		<item path="shap03807.bmp" value="3807" />
+		<item path="shap03808.bmp" value="3808" />
+		<item path="shap03809.bin" type="binary" value="3809" />
+		<item path="shap03810.bin" type="binary" value="3810" />
+		<item path="shap03811.bin" type="binary" value="3811" />
+		<item path="shap03812.bin" type="binary" value="3812" />
+		<item path="shap03813.bin" type="binary" value="3813" />
+		<item path="shap03814.bin" type="binary" value="3814" />
+		<item path="shap03815.bmp" value="3815" />
+		<item path="shap03816.bmp" value="3816" />
+		<item path="shap03817.bmp" value="3817" />
+		<item path="shap03818.bmp" value="3818" />
+		<item path="shap03819.bmp" value="3819" />
+		<item path="shap03820.bmp" value="3820" />
+		<item path="shap03821.bmp" value="3821" />
+		<item path="shap03822.bmp" value="3822" />
+		<item path="shap03823.bmp" value="3823" />
+		<item path="shap03824.bmp" value="3824" />
+		<item path="shap03825.bmp" value="3825" />
+		<item path="shap03826.bmp" value="3826" />
+		<item path="shap03827.bmp" value="3827" />
+		<item path="shap03828.bmp" value="3828" />
+		<item path="shap03829.bmp" value="3829" />
+		<item path="shap03830.bmp" value="3830" />
+		<item path="shap03831.bmp" value="3831" />
+		<item path="shap03832.bmp" value="3832" />
+		<item path="shap03833.bmp" value="3833" />
+		<item path="shap03834.bmp" value="3834" />
+		<item path="shap03835.bmp" value="3835" />
+		<item path="shap03836.bmp" value="3836" />
+		<item path="shap03837.bmp" value="3837" />
+		<item path="shap03838.bmp" value="3838" />
+		<item path="shap03839.bmp" value="3839" />
+		<item path="shap03840.bmp" value="3840" />
+		<item path="shap03841.bmp" value="3841" />
+		<item path="shap03842.bmp" value="3842" />
+		<item path="shap03843.bmp" value="3843" />
+		<item path="shap03844.bmp" value="3844" />
+		<item path="shap03845.bmp" value="3845" />
+		<item path="shap03846.bmp" value="3846" />
+		<item path="shap03847.bmp" value="3847" />
+		<item path="shap03848.bmp" value="3848" />
+		<item path="shap03849.bmp" value="3849" />
+		<item path="shap03850.bmp" value="3850" />
+		<item path="shap03851.bmp" value="3851" />
+		<item path="shap03852.bmp" value="3852" />
+		<item path="shap03853.bmp" value="3853" />
+		<item path="shap03854.bmp" value="3854" />
+		<item path="shap03855.bmp" value="3855" />
+		<item path="shap03856.bmp" value="3856" />
+		<item path="shap03857.bmp" value="3857" />
+		<item path="shap03858.bmp" value="3858" />
+		<item path="shap03859.bmp" value="3859" />
+		<item path="shap03860.bmp" value="3860" />
+		<item path="shap03861.bmp" value="3861" />
+		<item path="shap04050.bmp" value="4050" />
+		<item path="shap04051.bmp" value="4051" />
+		<item path="shap04052.bmp" value="4052" />
+		<item path="shap04053.bmp" value="4053" />
+		<item path="shap04054.bmp" value="4054" />
+		<item path="shap04055.bmp" value="4055" />
+		<item path="shap04056.bmp" value="4056" />
+		<item path="shap04057.bmp" value="4057" />
+		<item path="shap04058.bmp" value="4058" />
+		<item path="shap04059.bmp" value="4059" />
+		<item path="shap04225.bmp" value="4225" />
+		<item path="shap04226.bmp" value="4226" />
+		<item path="shap04227.bmp" value="4227" />
+		<item path="shap04228.bmp" value="4228" />
+		<item path="shap04229.bmp" value="4229" />
+		<item path="shap04230.bmp" value="4230" />
+		<item path="shap04231.bmp" value="4231" />
+		<item path="shap04232.bmp" value="4232" />
+		<item path="shap04233.bmp" value="4233" />
+		<item path="shap04234.bmp" value="4234" />
+		<item path="shap04235.bmp" value="4235" />
+<folder palette="25303">
+		<item path="shap25303.bmp" value="25303" />
+		<item path="shap25304.bmp" value="25304" />
+		<item path="shap25305.bmp" value="25305" />
+		<item path="shap25306.bmp" value="25306" />
+		<item path="shap25307.bmp" value="25307" />
+		<item path="shap25308.bmp" value="25308" />
+		<item path="shap25309.bmp" value="25309" />
+		<item path="shap25310.bmp" value="25310" />
+		<item path="shap25311.bmp" value="25311" />
+		<item path="shap25312.bmp" value="25312" />
+</folder>
+</folder>
+		<item path="shpl03500.bin" type="binary" value="3500" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="DESERT" file="DESERT.DAT" palette="3500" paletteindex="svga palette">
+		<item path="cust04000.bin" type="binary" value="4000" index="custom" flags="0x0" />
+		<item path="cust04025.bin" type="binary" value="4025" index="custom" flags="0x0" />
+		<item path="cust04050.bin" type="binary" value="4050" index="custom" flags="0x0" />
+		<item path="palc03500.bin" type="binary" value="3500" index="cga palette" flags="0x0" />
+		<item path="pals03500.pal" type="palette-pop2-320cols" value="3500" index="svga palette" flags="0x0" />
+		<item path="piec03500.bin" type="binary" value="3500" index="piece" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image-full">
+		<item path="shap03501.bmp" value="3501" />
+		<item path="shap04000.bmp" value="4000" />
+		<item path="shap04001.bmp" value="4001" />
+		<item path="shap04002.bmp" value="4002" />
+		<item path="shap04003.bmp" value="4003" />
+		<item path="shap04004.bmp" value="4004" />
+		<item path="shap04005.bmp" value="4005" />
+		<item path="shap04006.bmp" value="4006" />
+		<item path="shap04007.bmp" value="4007" />
+		<item path="shap04008.bmp" value="4008" />
+		<item path="shap04009.bmp" value="4009" />
+		<item path="shap04010.bmp" value="4010" />
+		<item path="shap04011.bmp" value="4011" />
+		<item path="shap04012.bmp" value="4012" />
+		<item path="shap04013.bmp" value="4013" />
+		<item path="shap04014.bmp" value="4014" />
+		<item path="shap04015.bmp" value="4015" />
+		<item path="shap04016.bmp" value="4016" />
+		<item path="shap04017.bmp" value="4017" />
+		<item path="shap04018.bmp" value="4018" />
+		<item path="shap04019.bmp" value="4019" />
+		<item path="shap04020.bmp" value="4020" />
+		<item path="shap04025.bmp" value="4025" />
+		<item path="shap04026.bmp" value="4026" />
+		<item path="shap04027.bmp" value="4027" />
+		<item path="shap04028.bmp" value="4028" />
+		<item path="shap04029.bmp" value="4029" />
+		<item path="shap04050.bmp" value="4050" />
+		<item path="shap04051.bmp" value="4051" />
+		<item path="shap04052.bmp" value="4052" />
+		<item path="shap04053.bmp" value="4053" />
+		<item path="shap04054.bmp" value="4054" />
+		<item path="shap04055.bmp" value="4055" />
+</folder>
+		<item path="shpl03500.bin" type="binary" value="3500" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="FINAL" file="FINAL.DAT" palette="3500" paletteindex="svga palette">
+		<item path="_psl25000.bin" type="binary" value="25000" index="psl" flags="0x0" />
+		<item path="_psl25001.bin" type="binary" value="25001" index="psl" flags="0x0" />
+		<item path="_psl25002.bin" type="binary" value="25002" index="psl" flags="0x0" />
+		<item path="_scr25000.bin" type="binary" value="25000" index="screen" flags="0x0" />
+		<item path="_scr25001.bin" type="binary" value="25001" index="screen" flags="0x0" />
+		<item path="_scr25002.bin" type="binary" value="25002" index="screen" flags="0x0" />
+		<item path="cust04000.bin" type="binary" value="4000" index="custom" flags="0x0" />
+		<item path="cust04025.bin" type="binary" value="4025" index="custom" flags="0x0" />
+		<item path="cust04050.bin" type="binary" value="4050" index="custom" flags="0x0" />
+		<item path="cust04075.bin" type="binary" value="4075" index="custom" flags="0x0" />
+		<item path="cust04100.bin" type="binary" value="4100" index="custom" flags="0x0" />
+		<item path="cust04125.bin" type="binary" value="4125" index="custom" flags="0x0" />
+		<item path="cust04150.bin" type="binary" value="4150" index="custom" flags="0x0" />
+		<item path="cust04175.bin" type="binary" value="4175" index="custom" flags="0x0" />
+		<item path="palc03500.bin" type="binary" value="3500" index="cga palette" flags="0x0" />
+		<item path="pals03500.pal" type="palette-pop2-320cols" value="3500" index="svga palette" flags="0x0" />
+		<item path="palt25000.pal" type="palette-pop2-320cols" value="25000" index="tga palette" flags="0x0" />
+		<item path="palt25001.pal" type="palette-pop2-320cols" value="25001" index="tga palette" flags="0x0" />
+		<item path="palt25002.pal" type="palette-pop2-320cols" value="25002" index="tga palette" flags="0x0" />
+		<item path="palt25003.pal" type="palette-pop2-320cols" value="25003" index="tga palette" flags="0x0" />
+		<item path="palt25004.pal" type="palette-pop2-320cols" value="25004" index="tga palette" flags="0x0" />
+		<item path="palt25005.pal" type="palette-pop2-320cols" value="25005" index="tga palette" flags="0x0" />
+		<item path="palt25006.pal" type="palette-pop2-320cols" value="25006" index="tga palette" flags="0x0" />
+		<item path="piec03500.bin" type="binary" value="3500" index="piece" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image-full">
+		<item path="shap03501.bmp" value="3501" />
+		<item path="shap04000.bmp" value="4000" />
+		<item path="shap04001.bmp" value="4001" />
+		<item path="shap04025.bmp" value="4025" />
+		<item path="shap04026.bmp" value="4026" />
+		<item path="shap04027.bmp" value="4027" />
+		<item path="shap04050.bmp" value="4050" />
+		<item path="shap04051.bmp" value="4051" />
+		<item path="shap04052.bmp" value="4052" />
+		<item path="shap04053.bmp" value="4053" />
+		<item path="shap04054.bmp" value="4054" />
+		<item path="shap04055.bmp" value="4055" />
+		<item path="shap04056.bmp" value="4056" />
+		<item path="shap04057.bmp" value="4057" />
+		<item path="shap04058.bmp" value="4058" />
+		<item path="shap04059.bmp" value="4059" />
+		<item path="shap04060.bmp" value="4060" />
+		<item path="shap04061.bmp" value="4061" />
+		<item path="shap04075.bmp" value="4075" />
+		<item path="shap04076.bmp" value="4076" />
+		<item path="shap04077.bmp" value="4077" />
+		<item path="shap04078.bmp" value="4078" />
+		<item path="shap04079.bmp" value="4079" />
+		<item path="shap04080.bmp" value="4080" />
+		<item path="shap04081.bmp" value="4081" />
+		<item path="shap04100.bmp" value="4100" />
+		<item path="shap04101.bmp" value="4101" />
+		<item path="shap04102.bmp" value="4102" />
+		<item path="shap04103.bmp" value="4103" />
+		<item path="shap04104.bmp" value="4104" />
+		<item path="shap04105.bmp" value="4105" />
+		<item path="shap04125.bmp" value="4125" />
+		<item path="shap04126.bmp" value="4126" />
+		<item path="shap04127.bmp" value="4127" />
+		<item path="shap04128.bmp" value="4128" />
+		<item path="shap04129.bmp" value="4129" />
+		<item path="shap04130.bmp" value="4130" />
+		<item path="shap04131.bmp" value="4131" />
+		<item path="shap04132.bmp" value="4132" />
+		<item path="shap04150.bmp" value="4150" />
+		<item path="shap04151.bmp" value="4151" />
+		<item path="shap04152.bmp" value="4152" />
+		<item path="shap04153.bmp" value="4153" />
+		<item path="shap04154.bmp" value="4154" />
+		<item path="shap04155.bmp" value="4155" />
+		<item path="shap04156.bmp" value="4156" />
+		<item path="shap04157.bmp" value="4157" />
+		<item path="shap04158.bmp" value="4158" />
+		<item path="shap04159.bmp" value="4159" />
+		<item path="shap04160.bmp" value="4160" />
+		<item path="shap04161.bmp" value="4161" />
+		<item path="shap04175.bmp" value="4175" />
+		<item path="shap04176.bmp" value="4176" />
+		<item path="shap04177.bmp" value="4177" />
+		<item path="shap04178.bmp" value="4178" />
+		<item path="shap04179.bmp" value="4179" />
+		<item path="shap04180.bmp" value="4180" />
+		<item path="shap04181.bmp" value="4181" />
+		<item path="shap04182.bmp" value="4182" />
+		<item path="shap04183.bmp" value="4183" />
+		<item path="shap04184.bmp" value="4184" />
+		<item path="shap04185.bmp" value="4185" />
+		<item path="shap04186.bmp" value="4186" />
+		<item path="shap04187.bmp" value="4187" />
+		<item path="shap04188.bmp" value="4188" />
+		<item path="shap04189.bmp" value="4189" />
+<folder paletteindex="tga palette" palette="25000" type="image">
+		<item path="shap24902.bmp" value="24902" />
+		<item path="shap24903.bmp" value="24903" />
+		<item path="shap24904.bmp" value="24904" />
+		<item path="shap24905.bmp" value="24905" />
+		<item path="shap24906.bmp" value="24906" />
+		<item path="shap24907.bmp" value="24907" />
+		<item path="shap24908.bmp" value="24908" />
+		<item path="shap24909.bmp" value="24909" />
+		<item path="shap24910.bmp" value="24910" />
+		<item path="shap24911.bmp" value="24911" />
+		<item path="shap24912.bmp" value="24912" />
+		<item path="shap24913.bmp" value="24913" />
+		<item path="shap24914.bmp" value="24914" />
+		<item path="shap24915.bmp" value="24915" />
+		<item path="shap25250.bmp" value="25250" />
+		<item path="shap25251.bmp" value="25251" />
+		<item path="shap25252.bmp" value="25252" />
+		<item path="shap25253.bmp" value="25253" />
+		<item path="shap25254.bmp" value="25254" />
+		<item path="shap25255.bmp" value="25255" />
+		<item path="shap25256.bmp" value="25256" />
+		<item path="shap25257.bmp" value="25257" />
+		<item path="shap25258.bmp" value="25258" />
+		<item path="shap25259.bmp" value="25259" />
+		<item path="shap25260.bmp" value="25260" />
+		<item path="shap25261.bmp" value="25261" />
+</folder>
+<folder type="binary">
+		<item path="shap25302.bin" value="25302" />
+		<item path="shap25303.bin" value="25303" />
+		<item path="shap25304.bin" value="25304" />
+		<item path="shap25305.bin" value="25305" />
+		<item path="shap25306.bin" value="25306" />
+		<item path="shap25307.bin" value="25307" />
+		<item path="shap25308.bin" value="25308" />
+		<item path="shap25309.bin" value="25309" />
+		<item path="shap25310.bin" value="25310" />
+		<item path="shap25311.bin" value="25311" />
+		<item path="shap25312.bin" value="25312" />
+		<item path="shap25313.bin" value="25313" />
+		<item path="shap25314.bin" value="25314" />
+		<item path="shap25315.bin" value="25315" />
+</folder>
+<folder paletteindex="tga palette" palette="25000">
+		<item path="shap25344.bmp" value="25344" />
+		<item path="shap25345.bmp" value="25345" />
+		<item path="shap25346.bmp" value="25346" />
+		<item path="shap25347.bmp" value="25347" />
+		<item path="shap25348.bmp" value="25348" />
+		<item path="shap25349.bmp" value="25349" />
+		<item path="shap25350.bmp" value="25350" />
+		<item path="shap25351.bmp" value="25351" />
+		<item path="shap25352.bmp" value="25352" />
+		<item path="shap25353.bmp" value="25353" />
+		<item path="shap25354.bmp" value="25354" />
+		<item path="shap25355.bmp" value="25355" />
+		<item path="shap25356.bmp" value="25356" />
+		<item path="shap25357.bmp" value="25357" />
+		<item path="shap25358.bmp" value="25358" />
+		<item path="shap25359.bmp" value="25359" />
+		<item path="shap25360.bmp" value="25360" />
+		<item path="shap25361.bmp" value="25361" />
+		<item path="shap25362.bmp" value="25362" />
+		<item path="shap25363.bmp" value="25363" />
+		<item path="shap25364.bmp" value="25364" />
+		<item path="shap25365.bmp" value="25365" />
+		<item path="shap25366.bmp" value="25366" />
+		<item path="shap25367.bmp" value="25367" />
+		<item path="shap25368.bmp" value="25368" />
+		<item path="shap25369.bmp" value="25369" />
+		<item path="shap25370.bmp" value="25370" />
+		<item path="shap25371.bmp" value="25371" />
+		<item path="shap25372.bmp" value="25372" />
+		<item path="shap25373.bmp" value="25373" />
+		<item path="shap25374.bmp" value="25374" />
+		<item path="shap25375.bmp" value="25375" />
+		<item path="shap25376.bmp" value="25376" />
+		<item path="shap25377.bmp" value="25377" />
+		<item path="shap25378.bmp" value="25378" />
+		<item path="shap25379.bmp" value="25379" />
+		<item path="shap25382.bmp" value="25382" />
+		<item path="shap25383.bmp" value="25383" />
+		<item path="shap25384.bmp" value="25384" />
+		<item path="shap25385.bmp" value="25385" />
+		<item path="shap25386.bmp" value="25386" />
+		<item path="shap25387.bmp" value="25387" />
+		<item path="shap25388.bmp" value="25388" />
+		<item path="shap25389.bmp" value="25389" />
+		<item path="shap25390.bmp" value="25390" />
+</folder>
+</folder>
+		<item path="shpl03500.bin" type="binary" value="3500" index="shape palette" flags="0x0" />
+		<item path="shpl25000.bin" type="binary" value="25000" index="shape palette" flags="0x0" />
+		<item path="shpl25001.bin" type="binary" value="25001" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="FLAME" file="FLAME.DAT" palette="750" paletteindex="svga palette">
+		<item path="fram00750.bin" type="binary" value="750" index="frame" flags="0x0" />
+		<item path="palc00750.bin" type="binary" value="750" index="cga palette" flags="0x0" />
+		<item path="pals00750.pal" type="palette-pop2-320cols" value="750" index="svga palette" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image">
+		<item path="shap00751.bmp" value="751" />
+		<item path="shap00752.bmp" value="752" />
+		<item path="shap00753.bmp" value="753" />
+		<item path="shap00754.bmp" value="754" />
+		<item path="shap00755.bmp" value="755" />
+		<item path="shap00756.bmp" value="756" />
+		<item path="shap00757.bmp" value="757" />
+		<item path="shap00758.bmp" value="758" />
+		<item path="shap00759.bmp" value="759" />
+		<item path="shap00760.bmp" value="760" />
+		<item path="shap00761.bmp" value="761" />
+		<item path="shap00762.bmp" value="762" />
+		<item path="shap00763.bmp" value="763" />
+		<item path="shap00764.bmp" value="764" />
+		<item path="shap00765.bmp" value="765" />
+		<item path="shap00766.bmp" value="766" />
+		<item path="shap00767.bmp" value="767" />
+		<item path="shap00768.bmp" value="768" />
+		<item path="shap00769.bmp" value="769" />
+		<item path="shap00770.bmp" value="770" />
+		<item path="shap00771.bmp" value="771" />
+		<item path="shap00772.bmp" value="772" />
+		<item path="shap00773.bmp" value="773" />
+</folder>
+		<item path="shpl00750.bin" type="binary" value="750" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="GUARD" file="GUARD.DAT" palette="750" paletteindex="shape palette">
+		<item path="fram00750.bin" type="binary" value="750" index="frame" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image">
+		<item path="shap00751.bmp" value="751" />
+		<item path="shap00752.bmp" value="752" />
+		<item path="shap00753.bmp" value="753" />
+		<item path="shap00754.bmp" value="754" />
+		<item path="shap00755.bmp" value="755" />
+		<item path="shap00756.bmp" value="756" />
+		<item path="shap00757.bmp" value="757" />
+		<item path="shap00758.bmp" value="758" />
+		<item path="shap00759.bmp" value="759" />
+		<item path="shap00760.bmp" value="760" />
+		<item path="shap00761.bmp" value="761" />
+		<item path="shap00762.bmp" value="762" />
+		<item path="shap00763.bmp" value="763" />
+		<item path="shap00764.bmp" value="764" />
+		<item path="shap00765.bmp" value="765" />
+		<item path="shap00766.bmp" value="766" />
+		<item path="shap00767.bmp" value="767" />
+		<item path="shap00768.bmp" value="768" />
+		<item path="shap00769.bmp" value="769" />
+		<item path="shap00770.bmp" value="770" />
+		<item path="shap00771.bmp" value="771" />
+		<item path="shap00772.bmp" value="772" />
+		<item path="shap00773.bmp" value="773" />
+		<item path="shap00774.bmp" value="774" />
+		<item path="shap00775.bmp" value="775" />
+		<item path="shap00776.bmp" value="776" />
+		<item path="shap00777.bmp" value="777" />
+		<item path="shap00778.bmp" value="778" />
+		<item path="shap00779.bmp" value="779" />
+<folder type="binary">
+		<item path="shap00780.bin" value="780" />
+		<item path="shap00781.bin" value="781" />
+		<item path="shap00782.bin" value="782" />
+		<item path="shap00783.bin" value="783" />
+		<item path="shap00784.bin" value="784" />
+		<item path="shap00785.bin" value="785" />
+		<item path="shap00786.bin" value="786" />
+		<item path="shap00787.bin" value="787" />
+		<item path="shap00788.bin" value="788" />
+		<item path="shap00789.bin" value="789" />
+		<item path="shap00790.bin" value="790" />
+		<item path="shap00791.bin" value="791" />
+		<item path="shap00792.bin" value="792" />
+		<item path="shap00793.bin" value="793" />
+		<item path="shap00794.bin" value="794" />
+		<item path="shap00795.bin" value="795" />
+		<item path="shap00796.bin" value="796" />
+		<item path="shap00797.bin" value="797" />
+		<item path="shap00798.bin" value="798" />
+		<item path="shap00799.bin" value="799" />
+		<item path="shap00800.bin" value="800" />
+		<item path="shap00801.bin" value="801" />
+		<item path="shap00802.bin" value="802" />
+		<item path="shap00803.bin" value="803" />
+		<item path="shap00804.bin" value="804" />
+		<item path="shap00805.bin" value="805" />
+		<item path="shap00806.bin" value="806" />
+		<item path="shap00807.bin" value="807" />
+		<item path="shap00808.bin" value="808" />
+		<item path="shap00809.bin" value="809" />
+		<item path="shap00810.bin" value="810" />
+		<item path="shap00811.bin" value="811" />
+		<item path="shap00812.bin" value="812" />
+		<item path="shap00813.bin" value="813" />
+		<item path="shap00814.bin" value="814" />
+		<item path="shap00815.bin" value="815" />
+		<item path="shap00816.bin" value="816" />
+		<item path="shap00817.bin" value="817" />
+		<item path="shap00818.bin" value="818" />
+		<item path="shap00819.bin" value="819" />
+		<item path="shap00820.bin" value="820" />
+		<item path="shap00821.bin" value="821" />
+		<item path="shap00822.bin" value="822" />
+		<item path="shap00823.bin" value="823" />
+		<item path="shap00824.bin" value="824" />
+		<item path="shap00825.bin" value="825" />
+		<item path="shap00826.bin" value="826" />
+		<item path="shap00827.bin" value="827" />
+		<item path="shap00828.bin" value="828" />
+		<item path="shap00829.bin" value="829" />
+		<item path="shap00830.bin" value="830" />
+		<item path="shap00831.bin" value="831" />
+		<item path="shap00832.bin" value="832" />
+		<item path="shap00833.bin" value="833" />
+		<item path="shap00834.bin" value="834" />
+		<item path="shap00835.bin" value="835" />
+		<item path="shap00836.bin" value="836" />
+</folder>
+		<item path="shap00882.bmp" value="882" />
+		<item path="shap00883.bmp" value="883" />
+		<item path="shap00884.bmp" value="884" />
+		<item path="shap00885.bmp" value="885" />
+		<item path="shap00886.bmp" value="886" />
+		<item path="shap00887.bmp" value="887" />
+		<item path="shap00888.bmp" value="888" />
+		<item path="shap00889.bmp" value="889" />
+		<item path="shap00890.bmp" value="890" />
+		<item path="shap00891.bmp" value="891" />
+		<item path="shap00892.bmp" value="892" />
+		<item path="shap00893.bmp" value="893" />
+		<item path="shap00894.bmp" value="894" />
+		<item path="shap00895.bmp" value="895" />
+		<item path="shap00896.bmp" value="896" />
+		<item path="shap00897.bmp" value="897" />
+		<item path="shap00898.bmp" value="898" />
+		<item path="shap00899.bmp" value="899" />
+		<item path="shap00900.bmp" value="900" />
+		<item path="shap00901.bmp" value="901" />
+		<item path="shap00902.bmp" value="902" />
+		<item path="shap00903.bmp" value="903" />
+		<item path="shap00904.bmp" value="904" />
+		<item path="shap00905.bmp" value="905" />
+		<item path="shap00906.bmp" value="906" />
+		<item path="shap00907.bmp" value="907" />
+		<item path="shap00908.bmp" value="908" />
+		<item path="shap00909.bmp" value="909" />
+		<item path="shap00910.bmp" value="910" />
+		<item path="shap00911.bmp" value="911" />
+		<item path="shap00912.bmp" value="912" />
+		<item path="shap00913.bmp" value="913" />
+		<item path="shap00914.bmp" value="914" />
+		<item path="shap00915.bmp" value="915" />
+		<item path="shap00916.bmp" value="916" />
+		<item path="shap00917.bmp" value="917" />
+		<item path="shap00918.bmp" value="918" />
+		<item path="shap00919.bmp" value="919" />
+		<item path="shap00920.bmp" value="920" />
+		<item path="shap00921.bmp" value="921" />
+		<item path="shap00922.bmp" value="922" />
+		<item path="shap00923.bmp" value="923" />
+		<item path="shap00924.bmp" value="924" />
+		<item path="shap00925.bmp" value="925" />
+		<item path="shap00926.bmp" value="926" />
+		<item path="shap00927.bmp" value="927" />
+		<item path="shap00928.bmp" value="928" />
+		<item path="shap00929.bmp" value="929" />
+		<item path="shap00930.bmp" value="930" />
+		<item path="shap00931.bmp" value="931" />
+		<item path="shap00932.bmp" value="932" />
+		<item path="shap00933.bmp" value="933" />
+		<item path="shap00934.bmp" value="934" />
+		<item path="shap00935.bmp" value="935" />
+		<item path="shap00936.bmp" value="936" />
+</folder>
+		<item path="shpl00750.bin" type="binary" value="750" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="HEAD" file="HEAD.DAT" palette="750" paletteindex="svga palette">
+		<item path="____00755.bin" type="binary" value="755" index="" flags="0x0" />
+		<item path="fram00750.bin" type="binary" value="750" index="frame" flags="0x0" />
+		<item path="palc00750.bin" type="binary" value="750" index="cga palette" flags="0x0" />
+		<item path="pals00750.pal" type="palette-pop2-320cols" value="750" index="svga palette" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image">
+		<item path="shap00751.bmp" value="751" />
+		<item path="shap00752.bmp" value="752" />
+		<item path="shap00753.bmp" value="753" />
+		<item path="shap00754.bmp" value="754" />
+		<item path="shap00755.bmp" value="755" />
+		<item path="shap00756.bmp" value="756" />
+		<item path="shap00757.bmp" value="757" />
+		<item path="shap00758.bmp" value="758" />
+		<item path="shap00759.bmp" value="759" />
+		<item path="shap00760.bmp" value="760" />
+		<item path="shap00761.bmp" value="761" />
+		<item path="shap00762.bmp" value="762" />
+		<item path="shap00763.bmp" value="763" />
+		<item path="shap00764.bmp" value="764" />
+		<item path="shap00765.bmp" value="765" />
+		<item path="shap00766.bin" type="binary" value="766" />
+		<item path="shap00767.bmp" value="767" />
+		<item path="shap00768.bmp" value="768" />
+		<item path="shap00769.bmp" value="769" />
+		<item path="shap00770.bmp" value="770" />
+		<item path="shap00771.bmp" value="771" />
+		<item path="shap00772.bmp" value="772" />
+		<item path="shap00773.bmp" value="773" />
+		<item path="shap00774.bmp" value="774" />
+		<item path="shap00775.bmp" value="775" />
+		<item path="shap00776.bmp" value="776" />
+		<item path="shap00777.bmp" value="777" />
+		<item path="shap00778.bmp" value="778" />
+		<item path="shap00779.bmp" value="779" />
+		<item path="shap00780.bmp" value="780" />
+		<item path="shap00781.bmp" value="781" />
+		<item path="shap00782.bmp" value="782" />
+		<item path="shap00783.bmp" value="783" />
+		<item path="shap00784.bmp" value="784" />
+		<item path="shap00785.bmp" value="785" />
+		<item path="shap00786.bmp" value="786" />
+		<item path="shap00787.bmp" value="787" />
+		<item path="shap00788.bmp" value="788" />
+		<item path="shap00789.bmp" value="789" />
+		<item path="shap00790.bmp" value="790" />
+		<item path="shap00791.bmp" value="791" />
+		<item path="shap00792.bmp" value="792" />
+		<item path="shap00793.bmp" value="793" />
+		<item path="shap00794.bmp" value="794" />
+		<item path="shap00795.bmp" value="795" />
+		<item path="shap00796.bmp" value="796" />
+		<item path="shap00797.bmp" value="797" />
+		<item path="shap00798.bmp" value="798" />
+		<item path="shap00799.bin" type="binary" value="799" />
+		<item path="shap00800.bmp" value="800" />
+		<item path="shap00801.bmp" value="801" />
+		<item path="shap00802.bmp" value="802" />
+		<item path="shap00803.bmp" value="803" />
+		<item path="shap00804.bmp" value="804" />
+		<item path="shap00805.bmp" value="805" />
+		<item path="shap00806.bmp" value="806" />
+		<item path="shap00807.bmp" value="807" />
+		<item path="shap00808.bmp" value="808" />
+		<item path="shap00809.bmp" value="809" />
+		<item path="shap00810.bmp" value="810" />
+		<item path="shap00811.bmp" value="811" />
+		<item path="shap00812.bmp" value="812" />
+		<item path="shap00813.bmp" value="813" />
+		<item path="shap00814.bmp" value="814" />
+		<item path="shap00815.bmp" value="815" />
+		<item path="shap00816.bmp" value="816" />
+		<item path="shap00817.bmp" value="817" />
+		<item path="shap00818.bmp" value="818" />
+		<item path="shap00819.bmp" value="819" />
+		<item path="shap00820.bmp" value="820" />
+		<item path="shap00821.bmp" value="821" />
+		<item path="shap00822.bmp" value="822" />
+		<item path="shap00823.bmp" value="823" />
+		<item path="shap00824.bmp" value="824" />
+		<item path="shap00825.bmp" value="825" />
+		<item path="shap00826.bmp" value="826" />
+		<item path="shap00827.bmp" value="827" />
+		<item path="shap00828.bmp" value="828" />
+		<item path="shap00829.bmp" value="829" />
+		<item path="shap00830.bin" type="binary" value="830" />
+		<item path="shap00831.bmp" value="831" />
+		<item path="shap00832.bmp" value="832" />
+		<item path="shap00833.bmp" value="833" />
+		<item path="shap00834.bmp" value="834" />
+		<item path="shap00835.bmp" value="835" />
+		<item path="shap00836.bmp" value="836" />
+		<item path="shap00837.bmp" value="837" />
+		<item path="shap00838.bmp" value="838" />
+		<item path="shap00839.bmp" value="839" />
+		<item path="shap00840.bmp" value="840" />
+		<item path="shap00841.bmp" value="841" />
+		<item path="shap00842.bmp" value="842" />
+		<item path="shap00843.bmp" value="843" />
+		<item path="shap00844.bmp" value="844" />
+		<item path="shap00845.bmp" value="845" />
+		<item path="shap00846.bmp" value="846" />
+		<item path="shap00847.bmp" value="847" />
+		<item path="shap00848.bmp" value="848" />
+		<item path="shap00849.bmp" value="849" />
+		<item path="shap00850.bmp" value="850" />
+		<item path="shap00851.bmp" value="851" />
+		<item path="shap00852.bmp" value="852" />
+		<item path="shap00853.bmp" value="853" />
+		<item path="shap00854.bmp" value="854" />
+		<item path="shap00855.bmp" value="855" />
+		<item path="shap00856.bmp" value="856" />
+		<item path="shap00857.bmp" value="857" />
+		<item path="shap00858.bmp" value="858" />
+		<item path="shap00859.bmp" value="859" />
+		<item path="shap00860.bmp" value="860" />
+		<item path="shap00861.bmp" value="861" />
+		<item path="shap00862.bmp" value="862" />
+		<item path="shap00863.bmp" value="863" />
+		<item path="shap00864.bmp" value="864" />
+		<item path="shap00865.bmp" value="865" />
+		<item path="shap00866.bmp" value="866" />
+		<item path="shap00867.bmp" value="867" />
+		<item path="shap00868.bmp" value="868" />
+		<item path="shap00869.bmp" value="869" />
+		<item path="shap00870.bmp" value="870" />
+		<item path="shap00871.bmp" value="871" />
+		<item path="shap00872.bmp" value="872" />
+		<item path="shap00873.bmp" value="873" />
+		<item path="shap00874.bmp" value="874" />
+		<item path="shap00875.bmp" value="875" />
+		<item path="shap00876.bmp" value="876" />
+		<item path="shap00877.bmp" value="877" />
+		<item path="shap00878.bmp" value="878" />
+</folder>
+		<item path="shpl00750.bin" type="binary" value="750" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="JINNEE" file="JINNEE.DAT" palette="750" paletteindex="svga palette">
+		<item path="fram00750.bin" type="binary" value="750" index="frame" flags="0x0" />
+		<item path="palc00750.bin" type="binary" value="750" index="cga palette" flags="0x0" />
+		<item path="pals00750.pal" type="palette-pop2-320cols" value="750" index="svga palette" flags="0x0" />
+<folder index="shape" flags="0x400000">
+		<item path="shap00751.bin" type="binary" value="751" />
+		<item path="shap00752.bin" type="binary" value="752" />
+		<item path="shap00753.bin" type="binary" value="753" />
+		<item path="shap00754.bin" type="binary" value="754" />
+		<item path="shap00755.bin" type="binary" value="755" />
+		<item path="shap00756.bin" type="binary" value="756" />
+		<item path="shap00757.bin" type="binary" value="757" />
+		<item path="shap00758.bin" type="binary" value="758" />
+		<item path="shap00759.bin" type="binary" value="759" />
+		<item path="shap00760.bin" type="binary" value="760" />
+		<item path="shap00761.bin" type="binary" value="761" />
+		<item path="shap00762.bin" type="binary" value="762" />
+		<item path="shap00763.bin" type="binary" value="763" />
+		<item path="shap00764.bin" type="binary" value="764" />
+		<item path="shap00765.bin" type="binary" value="765" />
+		<item path="shap00766.bin" type="binary" value="766" />
+		<item path="shap00767.bin" type="binary" value="767" />
+		<item path="shap00768.bin" type="binary" value="768" />
+		<item path="shap00769.bin" type="binary" value="769" />
+		<item path="shap00770.bin" type="binary" value="770" />
+		<item path="shap00771.bin" type="binary" value="771" />
+		<item path="shap00772.bin" type="binary" value="772" />
+		<item path="shap00773.bin" type="binary" value="773" />
+		<item path="shap00774.bin" type="binary" value="774" />
+		<item path="shap00775.bmp" type="image" value="775" />
+		<item path="shap00776.bin" type="binary" value="776" />
+		<item path="shap00777.bin" type="binary" value="777" />
+		<item path="shap00778.bin" type="binary" value="778" />
+		<item path="shap00779.bin" type="binary" value="779" />
+		<item path="shap00780.bin" type="binary" value="780" />
+		<item path="shap00781.bin" type="binary" value="781" />
+		<item path="shap00782.bin" type="binary" value="782" />
+		<item path="shap00783.bin" type="binary" value="783" />
+		<item path="shap00784.bin" type="binary" value="784" />
+		<item path="shap00785.bin" type="binary" value="785" />
+		<item path="shap00786.bin" type="binary" value="786" />
+		<item path="shap00787.bin" type="binary" value="787" />
+		<item path="shap00788.bin" type="binary" value="788" />
+		<item path="shap00789.bin" type="binary" value="789" />
+		<item path="shap00790.bin" type="binary" value="790" />
+		<item path="shap00791.bin" type="binary" value="791" />
+		<item path="shap00792.bin" type="binary" value="792" />
+		<item path="shap00793.bin" type="binary" value="793" />
+		<item path="shap00794.bin" type="binary" value="794" />
+		<item path="shap00795.bin" type="binary" value="795" />
+		<item path="shap00796.bmp" type="image" value="796" />
+		<item path="shap00797.bmp" type="image" value="797" />
+		<item path="shap00798.bmp" type="image" value="798" />
+		<item path="shap00799.bmp" type="image" value="799" />
+		<item path="shap00800.bmp" type="image" value="800" />
+		<item path="shap00801.bmp" type="image" value="801" />
+		<item path="shap00802.bmp" type="image" value="802" />
+		<item path="shap00803.bmp" type="image" value="803" />
+		<item path="shap00804.bmp" type="image" value="804" />
+		<item path="shap00805.bmp" type="image" value="805" />
+		<item path="shap00806.bmp" type="image" value="806" />
+		<item path="shap00807.bmp" type="image" value="807" />
+		<item path="shap00808.bmp" type="image" value="808" />
+		<item path="shap00809.bmp" type="image" value="809" />
+		<item path="shap00810.bmp" type="image" value="810" />
+		<item path="shap00811.bmp" type="image" value="811" />
+		<item path="shap00812.bmp" type="image" value="812" />
+		<item path="shap00813.bmp" type="image" value="813" />
+		<item path="shap00814.bmp" type="image" value="814" />
+		<item path="shap00815.bin" type="binary" value="815" />
+		<item path="shap00816.bin" type="binary" value="816" />
+		<item path="shap00817.bin" type="binary" value="817" />
+</folder>
+		<item path="shpl00750.bin" type="binary" value="750" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="KID" file="KID.DAT" palette="25001" paletteindex="svga palette">
+		<item path="palc25001.bin" type="binary" value="25001" index="cga palette" flags="0x0" />
+		<item path="pals25001.pal" type="palette-pop2-320cols" value="25001" index="svga palette" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image">
+		<item path="shap24824.bmp" value="24824" />
+		<item path="shap24825.bmp" value="24825" />
+		<item path="shap24826.bmp" value="24826" />
+		<item path="shap24827.bmp" value="24827" />
+		<item path="shap24828.bmp" value="24828" />
+		<item path="shap24829.bmp" value="24829" />
+		<item path="shap24830.bmp" value="24830" />
+		<item path="shap24831.bmp" value="24831" />
+		<item path="shap24832.bmp" value="24832" />
+		<item path="shap24833.bmp" value="24833" />
+		<item path="shap24834.bmp" value="24834" />
+		<item path="shap24835.bmp" value="24835" />
+		<item path="shap24836.bmp" value="24836" />
+		<item path="shap24837.bmp" value="24837" />
+		<item path="shap24838.bmp" value="24838" />
+		<item path="shap24839.bmp" value="24839" />
+		<item path="shap24840.bmp" value="24840" />
+		<item path="shap24841.bmp" value="24841" />
+		<item path="shap24842.bmp" value="24842" />
+		<item path="shap24843.bmp" value="24843" />
+		<item path="shap24844.bmp" value="24844" />
+		<item path="shap24845.bmp" value="24845" />
+		<item path="shap24846.bmp" value="24846" />
+		<item path="shap24847.bmp" value="24847" />
+		<item path="shap24848.bmp" value="24848" />
+		<item path="shap24849.bmp" value="24849" />
+		<item path="shap24850.bmp" value="24850" />
+		<item path="shap24851.bmp" value="24851" />
+		<item path="shap24852.bmp" value="24852" />
+		<item path="shap24853.bmp" value="24853" />
+		<item path="shap24854.bmp" value="24854" />
+		<item path="shap24855.bmp" value="24855" />
+		<item path="shap24856.bmp" value="24856" />
+		<item path="shap24857.bmp" value="24857" />
+		<item path="shap24858.bmp" value="24858" />
+		<item path="shap24859.bmp" value="24859" />
+		<item path="shap24860.bmp" value="24860" />
+		<item path="shap24861.bmp" value="24861" />
+		<item path="shap24862.bmp" value="24862" />
+		<item path="shap24863.bmp" value="24863" />
+		<item path="shap24864.bmp" value="24864" />
+		<item path="shap24865.bmp" value="24865" />
+		<item path="shap24866.bmp" value="24866" />
+		<item path="shap24867.bmp" value="24867" />
+		<item path="shap24868.bmp" value="24868" />
+		<item path="shap24869.bmp" value="24869" />
+		<item path="shap24870.bmp" value="24870" />
+		<item path="shap24871.bmp" value="24871" />
+		<item path="shap24872.bmp" value="24872" />
+		<item path="shap24873.bmp" value="24873" />
+		<item path="shap24874.bmp" value="24874" />
+		<item path="shap24875.bmp" value="24875" />
+		<item path="shap24876.bmp" value="24876" />
+		<item path="shap24877.bmp" value="24877" />
+		<item path="shap24878.bmp" value="24878" />
+		<item path="shap24879.bmp" value="24879" />
+		<item path="shap24880.bmp" value="24880" />
+		<item path="shap24881.bmp" value="24881" />
+		<item path="shap24882.bin" type="binary" value="24882" />
+		<item path="shap24883.bin" type="binary" value="24883" />
+		<item path="shap24884.bin" type="binary" value="24884" />
+		<item path="shap24885.bmp" value="24885" />
+		<item path="shap24886.bin" type="binary" value="24886" />
+		<item path="shap24887.bin" type="binary" value="24887" />
+		<item path="shap24888.bin" type="binary" value="24888" />
+		<item path="shap24889.bmp" value="24889" />
+		<item path="shap24890.bmp" value="24890" />
+		<item path="shap24891.bmp" value="24891" />
+		<item path="shap24892.bmp" value="24892" />
+		<item path="shap24893.bmp" value="24893" />
+		<item path="shap24894.bmp" value="24894" />
+		<item path="shap24895.bmp" value="24895" />
+		<item path="shap24896.bmp" value="24896" />
+		<item path="shap24897.bmp" value="24897" />
+		<item path="shap24898.bmp" value="24898" />
+		<item path="shap24899.bmp" value="24899" />
+		<item path="shap24900.bmp" value="24900" />
+		<item path="shap24901.bmp" value="24901" />
+		<item path="shap25002.bmp" value="25002" />
+		<item path="shap25003.bmp" value="25003" />
+		<item path="shap25004.bmp" value="25004" />
+		<item path="shap25005.bmp" value="25005" />
+		<item path="shap25006.bmp" value="25006" />
+		<item path="shap25007.bmp" value="25007" />
+		<item path="shap25008.bmp" value="25008" />
+		<item path="shap25009.bmp" value="25009" />
+		<item path="shap25010.bmp" value="25010" />
+		<item path="shap25011.bmp" value="25011" />
+		<item path="shap25012.bmp" value="25012" />
+		<item path="shap25013.bmp" value="25013" />
+		<item path="shap25014.bmp" value="25014" />
+		<item path="shap25015.bmp" value="25015" />
+		<item path="shap25016.bmp" value="25016" />
+		<item path="shap25017.bmp" value="25017" />
+		<item path="shap25018.bmp" value="25018" />
+		<item path="shap25019.bmp" value="25019" />
+		<item path="shap25020.bmp" value="25020" />
+		<item path="shap25021.bmp" value="25021" />
+		<item path="shap25022.bmp" value="25022" />
+		<item path="shap25023.bmp" value="25023" />
+		<item path="shap25024.bmp" value="25024" />
+		<item path="shap25025.bmp" value="25025" />
+		<item path="shap25026.bmp" value="25026" />
+		<item path="shap25027.bmp" value="25027" />
+		<item path="shap25028.bmp" value="25028" />
+		<item path="shap25029.bmp" value="25029" />
+		<item path="shap25030.bmp" value="25030" />
+		<item path="shap25031.bmp" value="25031" />
+		<item path="shap25032.bmp" value="25032" />
+		<item path="shap25033.bmp" value="25033" />
+		<item path="shap25034.bmp" value="25034" />
+		<item path="shap25035.bmp" value="25035" />
+		<item path="shap25036.bmp" value="25036" />
+		<item path="shap25037.bmp" value="25037" />
+		<item path="shap25038.bmp" value="25038" />
+		<item path="shap25039.bmp" value="25039" />
+		<item path="shap25040.bmp" value="25040" />
+		<item path="shap25041.bmp" value="25041" />
+		<item path="shap25042.bmp" value="25042" />
+		<item path="shap25043.bmp" value="25043" />
+		<item path="shap25044.bmp" value="25044" />
+		<item path="shap25045.bmp" value="25045" />
+		<item path="shap25046.bmp" value="25046" />
+		<item path="shap25047.bmp" value="25047" />
+		<item path="shap25048.bmp" value="25048" />
+		<item path="shap25049.bmp" value="25049" />
+		<item path="shap25050.bmp" value="25050" />
+		<item path="shap25051.bmp" value="25051" />
+		<item path="shap25052.bmp" value="25052" />
+		<item path="shap25053.bmp" value="25053" />
+		<item path="shap25054.bmp" value="25054" />
+		<item path="shap25055.bmp" value="25055" />
+		<item path="shap25056.bmp" value="25056" />
+		<item path="shap25057.bmp" value="25057" />
+		<item path="shap25058.bmp" value="25058" />
+		<item path="shap25059.bmp" value="25059" />
+		<item path="shap25060.bmp" value="25060" />
+		<item path="shap25061.bmp" value="25061" />
+		<item path="shap25062.bmp" value="25062" />
+		<item path="shap25063.bmp" value="25063" />
+		<item path="shap25064.bmp" value="25064" />
+		<item path="shap25065.bin" type="binary" value="25065" />
+		<item path="shap25066.bmp" value="25066" />
+		<item path="shap25067.bmp" value="25067" />
+		<item path="shap25068.bmp" value="25068" />
+		<item path="shap25069.bmp" value="25069" />
+		<item path="shap25070.bmp" value="25070" />
+		<item path="shap25071.bmp" value="25071" />
+		<item path="shap25072.bmp" value="25072" />
+		<item path="shap25073.bmp" value="25073" />
+		<item path="shap25074.bmp" value="25074" />
+		<item path="shap25075.bmp" value="25075" />
+		<item path="shap25076.bmp" value="25076" />
+		<item path="shap25077.bmp" value="25077" />
+		<item path="shap25078.bmp" value="25078" />
+		<item path="shap25079.bmp" value="25079" />
+		<item path="shap25080.bmp" value="25080" />
+		<item path="shap25081.bmp" value="25081" />
+		<item path="shap25082.bmp" value="25082" />
+		<item path="shap25083.bmp" value="25083" />
+		<item path="shap25084.bmp" value="25084" />
+		<item path="shap25085.bmp" value="25085" />
+		<item path="shap25086.bmp" value="25086" />
+		<item path="shap25087.bmp" value="25087" />
+		<item path="shap25088.bmp" value="25088" />
+		<item path="shap25089.bmp" value="25089" />
+		<item path="shap25090.bmp" value="25090" />
+		<item path="shap25091.bmp" value="25091" />
+		<item path="shap25092.bmp" value="25092" />
+		<item path="shap25093.bmp" value="25093" />
+		<item path="shap25094.bmp" value="25094" />
+		<item path="shap25095.bmp" value="25095" />
+		<item path="shap25096.bmp" value="25096" />
+		<item path="shap25097.bmp" value="25097" />
+		<item path="shap25098.bmp" value="25098" />
+		<item path="shap25099.bmp" value="25099" />
+		<item path="shap25100.bmp" value="25100" />
+		<item path="shap25101.bmp" value="25101" />
+		<item path="shap25102.bmp" value="25102" />
+		<item path="shap25103.bmp" value="25103" />
+		<item path="shap25104.bmp" value="25104" />
+		<item path="shap25105.bmp" value="25105" />
+		<item path="shap25106.bmp" value="25106" />
+		<item path="shap25107.bmp" value="25107" />
+		<item path="shap25108.bmp" value="25108" />
+		<item path="shap25109.bmp" value="25109" />
+		<item path="shap25110.bmp" value="25110" />
+		<item path="shap25111.bmp" value="25111" />
+		<item path="shap25112.bmp" value="25112" />
+		<item path="shap25113.bmp" value="25113" />
+		<item path="shap25114.bmp" value="25114" />
+		<item path="shap25115.bmp" value="25115" />
+		<item path="shap25116.bmp" value="25116" />
+		<item path="shap25117.bmp" value="25117" />
+		<item path="shap25118.bmp" value="25118" />
+		<item path="shap25119.bmp" value="25119" />
+		<item path="shap25120.bmp" value="25120" />
+		<item path="shap25121.bmp" value="25121" />
+		<item path="shap25122.bmp" value="25122" />
+		<item path="shap25123.bmp" value="25123" />
+		<item path="shap25124.bmp" value="25124" />
+		<item path="shap25125.bmp" value="25125" />
+		<item path="shap25126.bmp" value="25126" />
+		<item path="shap25127.bmp" value="25127" />
+		<item path="shap25128.bmp" value="25128" />
+		<item path="shap25129.bmp" value="25129" />
+		<item path="shap25130.bmp" value="25130" />
+		<item path="shap25131.bmp" value="25131" />
+		<item path="shap25132.bin" type="binary" value="25132" />
+		<item path="shap25133.bmp" value="25133" />
+		<item path="shap25134.bmp" value="25134" />
+		<item path="shap25135.bmp" value="25135" />
+		<item path="shap25136.bmp" value="25136" />
+		<item path="shap25137.bmp" value="25137" />
+		<item path="shap25138.bmp" value="25138" />
+		<item path="shap25139.bmp" value="25139" />
+		<item path="shap25140.bmp" value="25140" />
+		<item path="shap25141.bmp" value="25141" />
+		<item path="shap25142.bmp" value="25142" />
+		<item path="shap25143.bmp" value="25143" />
+		<item path="shap25144.bmp" value="25144" />
+		<item path="shap25145.bmp" value="25145" />
+		<item path="shap25146.bmp" value="25146" />
+		<item path="shap25147.bmp" value="25147" />
+		<item path="shap25148.bmp" value="25148" />
+		<item path="shap25149.bmp" value="25149" />
+		<item path="shap25150.bmp" value="25150" />
+		<item path="shap25151.bmp" value="25151" />
+		<item path="shap25152.bmp" value="25152" />
+		<item path="shap25153.bmp" value="25153" />
+		<item path="shap25154.bmp" value="25154" />
+		<item path="shap25155.bmp" value="25155" />
+		<item path="shap25156.bmp" value="25156" />
+		<item path="shap25157.bmp" value="25157" />
+		<item path="shap25158.bmp" value="25158" />
+		<item path="shap25159.bmp" value="25159" />
+		<item path="shap25160.bmp" value="25160" />
+		<item path="shap25161.bmp" value="25161" />
+		<item path="shap25162.bmp" value="25162" />
+		<item path="shap25163.bmp" value="25163" />
+		<item path="shap25164.bmp" value="25164" />
+		<item path="shap25165.bmp" value="25165" />
+		<item path="shap25166.bmp" value="25166" />
+		<item path="shap25167.bmp" value="25167" />
+		<item path="shap25168.bmp" value="25168" />
+		<item path="shap25169.bmp" value="25169" />
+		<item path="shap25170.bmp" value="25170" />
+		<item path="shap25171.bmp" value="25171" />
+		<item path="shap25172.bmp" value="25172" />
+		<item path="shap25173.bmp" value="25173" />
+		<item path="shap25174.bmp" value="25174" />
+		<item path="shap25175.bmp" value="25175" />
+		<item path="shap25176.bmp" value="25176" />
+		<item path="shap25177.bmp" value="25177" />
+		<item path="shap25178.bmp" value="25178" />
+		<item path="shap25179.bmp" value="25179" />
+		<item path="shap25180.bmp" value="25180" />
+		<item path="shap25181.bmp" value="25181" />
+		<item path="shap25182.bmp" value="25182" />
+		<item path="shap25183.bmp" value="25183" />
+		<item path="shap25184.bmp" value="25184" />
+		<item path="shap25185.bmp" value="25185" />
+		<item path="shap25186.bmp" value="25186" />
+		<item path="shap25187.bmp" value="25187" />
+		<item path="shap25188.bmp" value="25188" />
+		<item path="shap25189.bmp" value="25189" />
+		<item path="shap25190.bmp" value="25190" />
+		<item path="shap25191.bmp" value="25191" />
+		<item path="shap25192.bmp" value="25192" />
+		<item path="shap25193.bmp" value="25193" />
+		<item path="shap25194.bmp" value="25194" />
+		<item path="shap25195.bmp" value="25195" />
+		<item path="shap25196.bmp" value="25196" />
+		<item path="shap25197.bmp" value="25197" />
+		<item path="shap25198.bmp" value="25198" />
+		<item path="shap25199.bmp" value="25199" />
+		<item path="shap25200.bmp" value="25200" />
+		<item path="shap25201.bmp" value="25201" />
+		<item path="shap25202.bmp" value="25202" />
+		<item path="shap25203.bmp" value="25203" />
+		<item path="shap25204.bmp" value="25204" />
+		<item path="shap25205.bmp" value="25205" />
+		<item path="shap25206.bmp" value="25206" />
+		<item path="shap25207.bmp" value="25207" />
+		<item path="shap25208.bmp" value="25208" />
+		<item path="shap25209.bmp" value="25209" />
+		<item path="shap25210.bmp" value="25210" />
+		<item path="shap25211.bmp" value="25211" />
+		<item path="shap25212.bmp" value="25212" />
+		<item path="shap25213.bmp" value="25213" />
+		<item path="shap25214.bmp" value="25214" />
+		<item path="shap25215.bmp" value="25215" />
+		<item path="shap25216.bmp" value="25216" />
+		<item path="shap25217.bmp" value="25217" />
+		<item path="shap25218.bmp" value="25218" />
+		<item path="shap25219.bmp" value="25219" />
+		<item path="shap25220.bmp" value="25220" />
+		<item path="shap25221.bmp" value="25221" />
+		<item path="shap25222.bmp" value="25222" />
+		<item path="shap25223.bmp" value="25223" />
+	<folder type="binary">
+		<item path="shap25224.bin" value="25224" />
+		<item path="shap25225.bin" value="25225" />
+		<item path="shap25226.bin" value="25226" />
+		<item path="shap25227.bin" value="25227" />
+		<item path="shap25228.bin" value="25228" />
+		<item path="shap25229.bin" value="25229" />
+		<item path="shap25230.bin" value="25230" />
+		<item path="shap25231.bin" value="25231" />
+		<item path="shap25232.bin" value="25232" />
+		<item path="shap25233.bin" value="25233" />
+		<item path="shap25234.bin" value="25234" />
+		<item path="shap25235.bin" value="25235" />
+		<item path="shap25236.bin" value="25236" />
+		<item path="shap25237.bin" value="25237" />
+		<item path="shap25238.bin" value="25238" />
+		<item path="shap25239.bin" value="25239" />
+		<item path="shap25240.bin" value="25240" />
+		<item path="shap25241.bin" value="25241" />
+		<item path="shap25242.bin" value="25242" />
+		<item path="shap25243.bin" value="25243" />
+		<item path="shap25244.bin" value="25244" />
+		<item path="shap25245.bin" value="25245" />
+		<item path="shap25246.bin" value="25246" />
+		<item path="shap25247.bin" value="25247" />
+		<item path="shap25248.bin" value="25248" />
+		<item path="shap25249.bin" value="25249" />
+		<item path="shap25250.bin" value="25250" />
+		<item path="shap25251.bin" value="25251" />
+		<item path="shap25252.bin" value="25252" />
+		<item path="shap25253.bin" value="25253" />
+		<item path="shap25254.bin" value="25254" />
+		<item path="shap25255.bin" value="25255" />
+		<item path="shap25256.bin" value="25256" />
+		<item path="shap25257.bin" value="25257" />
+		<item path="shap25258.bin" value="25258" />
+		<item path="shap25259.bin" value="25259" />
+		<item path="shap25260.bin" value="25260" />
+		<item path="shap25261.bin" value="25261" />
+		<item path="shap25262.bin" value="25262" />
+		<item path="shap25263.bin" value="25263" />
+		<item path="shap25264.bin" value="25264" />
+		<item path="shap25265.bin" value="25265" />
+		<item path="shap25266.bin" value="25266" />
+		<item path="shap25267.bin" value="25267" />
+		<item path="shap25268.bin" value="25268" />
+		<item path="shap25269.bin" value="25269" />
+		<item path="shap25270.bin" value="25270" />
+		<item path="shap25271.bin" value="25271" />
+		<item path="shap25272.bin" value="25272" />
+		<item path="shap25273.bin" value="25273" />
+		<item path="shap25274.bin" value="25274" />
+		<item path="shap25275.bin" value="25275" />
+		<item path="shap25276.bin" value="25276" />
+		<item path="shap25277.bin" value="25277" />
+		<item path="shap25278.bin" value="25278" />
+		<item path="shap25279.bin" value="25279" />
+		<item path="shap25280.bin" value="25280" />
+		<item path="shap25281.bin" value="25281" />
+		<item path="shap25282.bin" value="25282" />
+		<item path="shap25283.bin" value="25283" />
+		<item path="shap25284.bin" value="25284" />
+		<item path="shap25285.bin" value="25285" />
+		<item path="shap25286.bin" value="25286" />
+		<item path="shap25287.bin" value="25287" />
+		<item path="shap25288.bin" value="25288" />
+		<item path="shap25289.bin" value="25289" />
+		<item path="shap25290.bin" value="25290" />
+		<item path="shap25291.bin" value="25291" />
+		<item path="shap25292.bin" value="25292" />
+		<item path="shap25293.bin" value="25293" />
+		<item path="shap25294.bin" value="25294" />
+		<item path="shap25295.bin" value="25295" />
+		<item path="shap25296.bin" value="25296" />
+		<item path="shap25297.bin" value="25297" />
+		<item path="shap25298.bin" value="25298" />
+		<item path="shap25299.bin" value="25299" />
+		<item path="shap25300.bin" value="25300" />
+		<item path="shap25301.bin" value="25301" />
+	</folder>
+</folder>
+		<item path="shpl25001.bin" type="binary" value="25001" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="NIS" file="NIS.DAT" palette="0" paletteindex="tga palette" flags="0x0" type="binary">
+<folder index="psl">
+		<item path="_psl26001.bin" value="26001" />
+		<item path="_psl26002.bin" value="26002" />
+		<item path="_psl26003.bin" value="26003" />
+		<item path="_psl26004.bin" value="26004" />
+		<item path="_psl26005.bin" value="26005" />
+		<item path="_psl26006.bin" value="26006" />
+		<item path="_psl26007.bin" value="26007" />
+		<item path="_psl26008.bin" value="26008" />
+		<item path="_psl26009.bin" value="26009" />
+		<item path="_psl29001.bin" value="29001" />
+		<item path="_psl29002.bin" value="29002" />
+		<item path="_psl30001.bin" value="30001" />
+		<item path="_psl30002.bin" value="30002" />
+</folder>
+<folder index="screen">
+		<item path="_scr26001.bin" value="26001" />
+		<item path="_scr26002.bin" value="26002" />
+		<item path="_scr26003.bin" value="26003" />
+		<item path="_scr26004.bin" value="26004" />
+		<item path="_scr26005.bin" value="26005" />
+		<item path="_scr26006.bin" value="26006" />
+		<item path="_scr26007.bin" value="26007" />
+		<item path="_scr26008.bin" value="26008" />
+		<item path="_scr26009.bin" value="26009" />
+		<item path="_scr29001.bin" value="29001" />
+		<item path="_scr29002.bin" value="29002" />
+		<item path="_scr30001.bin" value="30001" />
+		<item path="_scr30002.bin" value="30002" />
+</folder>
+<folder index="tga palette" type="palette-pop2-320cols">
+		<item path="palt26001.pal" value="26001" />
+		<item path="palt26002.pal" value="26002" />
+		<item path="palt26003.pal" value="26003" />
+		<item path="palt26004.pal" value="26004" />
+		<item path="palt27001.pal" value="27001" />
+		<item path="palt27002.pal" value="27002" />
+		<item path="palt27003.pal" value="27003" />
+		<item path="palt27004.pal" value="27004" />
+		<item path="palt27005.pal" value="27005" />
+		<item path="palt27006.pal" value="27006" />
+		<item path="palt27007.pal" value="27007" />
+		<item path="palt28001.pal" value="28001" />
+		<item path="palt28002.pal" value="28002" />
+		<item path="palt28003.pal" value="28003" />
+		<item path="palt28004.pal" value="28004" />
+		<item path="palt28005.pal" value="28005" />
+		<item path="palt28006.pal" value="28006" />
+		<item path="palt29001.pal" value="29001" />
+		<item path="palt29002.pal" value="29002" />
+		<item path="palt30001.pal" value="30001" />
+		<item path="palt30002.pal" value="30002" />
+		<item path="palt30003.pal" value="30003" />
+		<item path="palt30004.pal" value="30004" />
+		<item path="palt30005.pal" value="30005" />
+</folder>
+<folder index="shape" type="image-full" flags="0x400000">
+<folder palette="26001">
+		<item path="shap25001.bmp" value="25001" />
+		<item path="shap25002.bmp" value="25002" />
+		<item path="shap25003.bmp" value="25003" />
+		<item path="shap25004.bmp" value="25004" />
+		<item path="shap25005.bmp" value="25005" />
+		<item path="shap25006.bmp" value="25006" />
+		<item path="shap25007.bmp" value="25007" />
+		<item path="shap26002.bmp" value="26002" />
+		<item path="shap26015.bmp" value="26015" />
+		<item path="shap26017.bmp" value="26017" />
+		<item path="shap26018.bmp" value="26018" />
+		<item path="shap26019.bmp" value="26019" />
+		<item path="shap26020.bmp" value="26020" />
+		<item path="shap26021.bmp" value="26021" />
+		<item path="shap26022.bmp" value="26022" />
+		<item path="shap26023.bmp" value="26023" />
+		<item path="shap26024.bmp" value="26024" />
+		<item path="shap26033.bmp" value="26033" />
+		<item path="shap26034.bmp" value="26034" />
+		<item path="shap26035.bmp" value="26035" />
+		<item path="shap26036.bmp" value="26036" />
+		<item path="shap26037.bmp" value="26037" />
+		<item path="shap26038.bmp" value="26038" />
+		<item path="shap26041.bmp" value="26041" />
+		<item path="shap26042.bmp" value="26042" />
+		<item path="shap26043.bmp" value="26043" />
+		<item path="shap26044.bmp" value="26044" />
+		<item path="shap26045.bmp" value="26045" />
+		<item path="shap26046.bmp" value="26046" />
+		<item path="shap26047.bmp" value="26047" />
+		<item path="shap26048.bmp" value="26048" />
+		<item path="shap26049.bmp" value="26049" />
+		<item path="shap26050.bmp" value="26050" />
+		<item path="shap26051.bmp" value="26051" />
+		<item path="shap26052.bmp" value="26052" />
+		<item path="shap27004.bmp" value="27004" />
+		<item path="shap27005.bmp" value="27005" />
+</folder>
+<folder palette="27001">
+		<item path="shap27006.bmp" value="27006" />
+</folder>
+<folder palette="27002">
+		<item path="shap27007.bmp" value="27007" />
+		<item path="shap27008.bmp" value="27008" />
+		<item path="shap27009.bmp" value="27009" />
+		<item path="shap27010.bmp" value="27010" />
+</folder>
+<folder palette="27004">
+		<item path="shap27011.bmp" value="27011" />
+</folder>
+<folder palette="27003">
+		<item path="shap27012.bmp" value="27012" />
+</folder>
+<folder palette="27005">
+		<item path="shap27013.bmp" value="27013" />
+		<item path="shap27014.bmp" value="27014" />
+		<item path="shap27015.bmp" value="27015" />
+		<item path="shap27016.bmp" value="27016" />
+		<item path="shap27017.bmp" value="27017" />
+		<item path="shap27018.bmp" value="27018" />
+		<item path="shap27019.bmp" value="27019" />
+		<item path="shap27020.bmp" value="27020" />
+		<item path="shap27021.bmp" value="27021" />
+		<item path="shap27022.bmp" value="27022" />
+		<item path="shap27023.bmp" value="27023" />
+		<item path="shap27024.bmp" value="27024" />
+		<item path="shap27025.bmp" value="27025" />
+		<item path="shap27026.bmp" value="27026" />
+		<item path="shap27027.bmp" value="27027" />
+		<item path="shap27028.bmp" value="27028" />
+		<item path="shap27029.bmp" value="27029" />
+		<item path="shap27030.bmp" value="27030" />
+		<item path="shap27031.bmp" value="27031" />
+		<item path="shap27032.bmp" value="27032" />
+</folder>
+<folder palette="27006">
+		<item path="shap27033.bmp" value="27033" />
+		<item path="shap27034.bmp" value="27034" />
+		<item path="shap27035.bmp" value="27035" />
+		<item path="shap27036.bmp" value="27036" />
+		<item path="shap27037.bmp" value="27037" />
+		<item path="shap27038.bmp" value="27038" />
+		<item path="shap27039.bmp" value="27039" />
+		<item path="shap27040.bmp" value="27040" />
+		<item path="shap27041.bmp" value="27041" />
+		<item path="shap27042.bmp" value="27042" />
+		<item path="shap27043.bmp" value="27043" />
+</folder>
+<folder palette="27007">
+		<item path="shap27044.bmp" value="27044" />
+		<item path="shap27045.bmp" value="27045" />
+</folder>
+<folder palette="28001">
+		<item path="shap28002.bmp" value="28002" />
+</folder>
+<folder palette="28002">
+		<item path="shap28003.bmp" value="28003" />
+		<item path="shap28004.bmp" value="28004" />
+		<item path="shap28005.bmp" value="28005" />
+		<item path="shap28006.bmp" value="28006" />
+		<item path="shap28007.bmp" value="28007" />
+		<item path="shap28008.bmp" value="28008" />
+</folder>
+<folder palette="28006">
+		<item path="shap28009.bmp" value="28009" />
+		<item path="shap28010.bmp" value="28010" />
+		<item path="shap28011.bmp" value="28011" />
+		<item path="shap28012.bmp" value="28012" />
+		<item path="shap28013.bmp" value="28013" />
+		<item path="shap28014.bmp" value="28014" />
+		<item path="shap28015.bmp" value="28015" />
+		<item path="shap28016.bmp" value="28016" />
+		<item path="shap28017.bmp" value="28017" />
+</folder>
+<folder palette="29001">
+		<item path="shap29002.bmp" value="29002" />
+		<item path="shap29003.bmp" value="29003" />
+		<item path="shap29004.bmp" value="29004" />
+		<item path="shap29005.bmp" value="29005" />
+		<item path="shap29006.bmp" value="29006" />
+		<item path="shap29007.bmp" value="29007" />
+		<item path="shap29008.bmp" value="29008" />
+		<item path="shap29009.bmp" value="29009" />
+		<item path="shap29010.bmp" value="29010" />
+</folder>
+<folder palette="29002">
+		<item path="shap29011.bmp" value="29011" />
+		<item path="shap29012.bmp" value="29012" />
+		<item path="shap29013.bmp" value="29013" />
+		<item path="shap29014.bmp" value="29014" />
+		<item path="shap29015.bmp" value="29015" />
+		<item path="shap29016.bmp" value="29016" />
+		<item path="shap29017.bmp" value="29017" />
+		<item path="shap29018.bmp" value="29018" />
+		<item path="shap29019.bmp" value="29019" />
+		<item path="shap29020.bmp" value="29020" />
+		<item path="shap29021.bmp" value="29021" />
+		<item path="shap29022.bmp" value="29022" />
+		<item path="shap29023.bmp" value="29023" />
+</folder>
+<folder palette="30001">
+		<item path="shap30002.bmp" value="30002" />
+		<item path="shap30003.bmp" value="30003" />
+		<item path="shap30004.bmp" value="30004" />
+		<item path="shap30005.bmp" value="30005" />
+		<item path="shap30006.bmp" value="30006" />
+		<item path="shap30007.bmp" value="30007" />
+</folder>
+<folder palette="30002">
+		<item path="shap30008.bmp" value="30008" />
+		<item path="shap30009.bmp" value="30009" />
+		<item path="shap30010.bmp" value="30010" />
+		<item path="shap30011.bmp" value="30011" />
+		<item path="shap30012.bmp" value="30012" />
+		<item path="shap30013.bmp" value="30013" />
+		<item path="shap30014.bmp" value="30014" />
+		<item path="shap30015.bmp" value="30015" />
+		<item path="shap30016.bmp" value="30016" />
+		<item path="shap30017.bmp" value="30017" />
+		<item path="shap30018.bmp" value="30018" />
+		<item path="shap30019.bmp" value="30019" />
+		<item path="shap30020.bmp" value="30020" />
+		<item path="shap30021.bmp" value="30021" />
+		<item path="shap30022.bmp" value="30022" />
+		<item path="shap30023.bmp" value="30023" />
+		<item path="shap30024.bmp" value="30024" />
+		<item path="shap30025.bmp" value="30025" />
+		<item path="shap30026.bmp" value="30026" />
+</folder>
+<folder palette="30001">
+		<item path="shap30044.bmp" value="30044" />
+</folder>
+</folder>
+		<item path="shpl25000.bin" value="25000" index="shape palette" />
+		<item path="shpl26000.bin" value="26000" index="shape palette" />
+		<item path="shpl27000.bin" value="27000" index="shape palette" />
+		<item path="shpl28000.bin" value="28000" index="shape palette" />
+		<item path="shpl29000.bin" value="29000" index="shape palette" />
+		<item path="shpl30000.bin" value="30000" index="shape palette" />
+		<item path="strl26000.bin" value="26000" index="string" />
+		<item path="strl27000.bin" value="27000" index="string" />
+		<item path="strl28000.bin" value="28000" index="string" />
+		<item path="strl29000.bin" value="29000" index="string" />
+		<item path="strl30000.bin" value="30000" index="string" />
+	</folder>
+
+	<folder path="PRINCE" file="PRINCE.DAT" palette="0" paletteindex="svga palette" flags="0x0">
+		<item path="____00025.bin" type="binary" value="25" index="" />
+		<item path="____00026.bin" type="binary" value="26" index="" />
+		<item path="____00027.bin" type="binary" value="27" index="" />
+<!-- resources 2000-2033 are levels -->
+	<!-- regular levels -->
+		<item path="____02000.plv" type="level" number="1" value="2000" index="" />
+		<item path="____02001.plv" type="level" number="2" value="2001" index="" />
+		<item path="____02002.plv" type="level" number="3" value="2002" index="" />
+		<item path="____02003.plv" type="level" number="4" value="2003" index="" />
+		<item path="____02004.plv" type="level" number="5" value="2004" index="" />
+		<item path="____02005.plv" type="level" number="6" value="2005" index="" />
+		<item path="____02006.plv" type="level" number="7" value="2006" index="" />
+		<item path="____02007.plv" type="level" number="8" value="2007" index="" />
+		<item path="____02008.plv" type="level" number="9" value="2008" index="" />
+		<item path="____02009.plv" type="level" number="10" value="2009" index="" />
+		<item path="____02010.plv" type="level" number="11" value="2010" index="" />
+		<item path="____02011.plv" type="level" number="12" value="2011" index="" />
+		<item path="____02012.plv" type="level" number="13" value="2012" index="" />
+		<item path="____02013.plv" type="level" number="14" value="2013" index="" />
+	<!-- levels that you can play with the GAMEPLAY command line option -->
+		<item path="____02020.plv" type="level" number="1" value="2020" index="" />
+		<item path="____02021.plv" type="level" number="2" value="2021" index="" />
+		<item path="____02022.plv" type="level" number="3" value="2022" index="" />
+		<item path="____02023.plv" type="level" number="4" value="2023" index="" />
+		<item path="____02024.plv" type="level" number="5" value="2024" index="" />
+		<item path="____02025.plv" type="level" number="6" value="2025" index="" />
+		<item path="____02026.plv" type="level" number="7" value="2026" index="" />
+		<item path="____02027.plv" type="level" number="8" value="2027" index="" />
+		<item path="____02028.plv" type="level" number="9" value="2028" index="" />
+		<item path="____02029.plv" type="level" number="10" value="2029" index="" />
+		<item path="____02030.plv" type="level" number="11" value="2030" index="" />
+		<item path="____02031.plv" type="level" number="12" value="2031" index="" />
+		<item path="____02032.plv" type="level" number="13" value="2032" index="" />
+		<item path="____02033.plv" type="level" number="14" value="2033" index="" />
+		<item path="____08000.bin" type="binary" value="8000" index="" />
+		<item path="font00010.bin" type="binary" value="10" index="font" />
+		<item path="font00011.bin" type="binary" value="11" index="font" />
+		<item path="font00012.bin" type="binary" value="12" index="font" />
+		<item path="font00013.bin" type="binary" value="13" index="font" />
+		<item path="font00100.bin" type="binary" value="100" index="font" />
+		<item path="fram01000.bin" type="binary" value="1000" index="frame" />
+		<item path="fram01200.bin" type="binary" value="1200" index="frame" />
+		<item path="palc00010.bin" type="binary" value="10" index="cga palette" />
+		<item path="palc00750.bin" type="binary" value="750" index="cga palette" />
+		<item path="palc01000.bin" type="binary" value="1000" index="cga palette" />
+		<item path="palc02000.bin" type="binary" value="2000" index="cga palette" />
+		<item path="palc03000.bin" type="binary" value="3000" index="cga palette" />
+		<item path="pals00010.pal" type="palette-pop2-320cols" value="10" index="svga palette" />
+		<item path="pals00750.pal" type="palette-pop2-320cols" value="750" index="svga palette" />
+		<item path="pals01000.pal" type="palette-pop2-320cols" value="1000" index="svga palette" />
+		<item path="pals02000.pal" type="palette-pop2-320cols" value="2000" index="svga palette" />
+		<item path="pals03000.pal" type="palette-pop2-320cols" value="3000" index="svga palette" />
+<folder index="shape" flags="0x400000" type="image">
+<folder palette="1000">
+		<item path="shap01001.bmp" value="1001" />
+		<item path="shap01002.bmp" value="1002" />
+		<item path="shap01003.bmp" value="1003" />
+		<item path="shap01004.bmp" value="1004" />
+		<item path="shap01005.bmp" value="1005" />
+		<item path="shap01006.bmp" value="1006" />
+		<item path="shap01007.bmp" value="1007" />
+		<item path="shap01008.bmp" value="1008" />
+		<item path="shap01009.bmp" value="1009" />
+		<item path="shap01010.bmp" value="1010" />
+		<item path="shap01011.bmp" value="1011" />
+		<item path="shap01012.bmp" value="1012" />
+		<item path="shap01013.bmp" value="1013" />
+		<item path="shap01014.bmp" value="1014" />
+		<item path="shap01015.bmp" value="1015" />
+		<item path="shap01016.bmp" value="1016" />
+		<item path="shap01017.bmp" value="1017" />
+		<item path="shap01018.bmp" value="1018" />
+		<item path="shap01019.bmp" value="1019" />
+		<item path="shap01020.bmp" value="1020" />
+		<item path="shap01021.bmp" value="1021" />
+		<item path="shap01022.bmp" value="1022" />
+		<item path="shap01023.bmp" value="1023" />
+		<item path="shap01024.bmp" value="1024" />
+		<item path="shap01025.bmp" value="1025" />
+		<item path="shap01026.bmp" value="1026" />
+		<item path="shap01027.bmp" value="1027" />
+		<item path="shap01028.bmp" value="1028" />
+		<item path="shap01029.bmp" value="1029" />
+		<item path="shap01030.bmp" value="1030" />
+		<item path="shap01031.bmp" value="1031" />
+		<item path="shap01032.bmp" value="1032" />
+		<item path="shap01033.bmp" value="1033" />
+		<item path="shap01034.bmp" value="1034" />
+		<item path="shap01035.bmp" value="1035" />
+		<item path="shap01036.bmp" value="1036" />
+		<item path="shap01037.bmp" value="1037" />
+		<item path="shap01038.bmp" value="1038" />
+		<item path="shap01039.bmp" value="1039" />
+		<item path="shap01040.bmp" value="1040" />
+		<item path="shap01041.bmp" value="1041" />
+		<item path="shap01042.bmp" value="1042" />
+		<item path="shap01043.bmp" value="1043" />
+		<item path="shap01044.bmp" value="1044" />
+		<item path="shap01045.bmp" value="1045" />
+		<item path="shap01046.bmp" value="1046" />
+		<item path="shap01047.bin" type="binary" value="1047" />
+		<item path="shap01048.bin" type="binary" value="1048" />
+		<item path="shap01049.bin" type="binary" value="1049" />
+		<item path="shap01050.bin" type="binary" value="1050" />
+		<item path="shap01051.bin" type="binary" value="1051" />
+		<item path="shap01052.bin" type="binary" value="1052" />
+		<item path="shap01053.bin" type="binary" value="1053" />
+		<item path="shap01054.bin" type="binary" value="1054" />
+		<item path="shap01055.bin" type="binary" value="1055" />
+		<item path="shap01056.bin" type="binary" value="1056" />
+		<item path="shap01057.bin" type="binary" value="1057" />
+		<item path="shap01058.bin" type="binary" value="1058" />
+		<item path="shap01148.bmp" value="1148" />
+		<item path="shap01149.bmp" value="1149" />
+		<item path="shap01150.bmp" value="1150" />
+		<item path="shap01151.bmp" value="1151" />
+		<item path="shap01152.bmp" value="1152" />
+		<item path="shap01153.bmp" value="1153" />
+		<item path="shap01154.bmp" value="1154" />
+		<item path="shap01155.bmp" value="1155" />
+		<item path="shap01156.bmp" value="1156" />
+		<item path="shap01157.bmp" value="1157" />
+		<item path="shap01158.bmp" value="1158" />
+		<item path="shap01201.bmp" value="1201" />
+		<item path="shap01202.bmp" value="1202" />
+		<item path="shap01203.bmp" value="1203" />
+		<item path="shap01204.bmp" value="1204" />
+		<item path="shap01205.bmp" value="1205" />
+		<item path="shap01206.bmp" value="1206" />
+		<item path="shap01207.bmp" value="1207" />
+		<item path="shap01208.bmp" value="1208" />
+		<item path="shap01209.bmp" value="1209" />
+		<item path="shap01210.bmp" value="1210" />
+		<item path="shap01211.bmp" value="1211" />
+		<item path="shap01212.bmp" value="1212" />
+		<item path="shap01213.bmp" value="1213" />
+		<item path="shap01214.bmp" value="1214" />
+		<item path="shap01215.bmp" value="1215" />
+		<item path="shap01216.bmp" value="1216" />
+		<item path="shap01217.bmp" value="1217" />
+		<item path="shap01218.bmp" value="1218" />
+		<item path="shap01219.bmp" value="1219" />
+		<item path="shap01220.bmp" value="1220" />
+		<item path="shap01221.bmp" value="1221" />
+		<item path="shap01222.bmp" value="1222" />
+		<item path="shap01223.bmp" value="1223" />
+		<item path="shap01224.bmp" value="1224" />
+		<item path="shap01225.bmp" value="1225" />
+		<item path="shap01226.bmp" value="1226" />
+		<item path="shap01227.bmp" value="1227" />
+		<item path="shap01228.bmp" value="1228" />
+		<item path="shap01229.bmp" value="1229" />
+		<item path="shap01230.bmp" value="1230" />
+		<item path="shap01231.bmp" value="1231" />
+		<item path="shap01232.bmp" value="1232" />
+		<item path="shap01233.bmp" value="1233" />
+		<item path="shap01234.bmp" value="1234" />
+		<item path="shap01235.bmp" value="1235" />
+		<item path="shap01236.bmp" value="1236" />
+		<item path="shap01237.bmp" value="1237" />
+		<item path="shap01238.bmp" value="1238" />
+		<item path="shap01239.bmp" value="1239" />
+		<item path="shap01240.bmp" value="1240" />
+		<item path="shap01241.bmp" value="1241" />
+		<item path="shap01242.bmp" value="1242" />
+		<item path="shap01243.bmp" value="1243" />
+		<item path="shap01244.bmp" value="1244" />
+		<item path="shap01245.bmp" value="1245" />
+		<item path="shap01246.bmp" value="1246" />
+</folder>
+<folder palette="3000">
+		<item path="shap03001.bmp" value="3001" />
+		<item path="shap03002.bmp" value="3002" />
+<folder palette="monochrome" colors="2">
+		<item path="shap03003.bmp" value="3003" />
+		<item path="shap03004.bmp" value="3004" />
+		<item path="shap03005.bmp" value="3005" />
+		<item path="shap03006.bmp" value="3006" />
+		<item path="shap03007.bmp" value="3007" />
+		<item path="shap03008.bmp" value="3008" />
+		<item path="shap03009.bmp" value="3009" />
+		<item path="shap03010.bmp" value="3010" />
+		<item path="shap03011.bmp" value="3011" />
+		<item path="shap03012.bmp" value="3012" />
+		<item path="shap03013.bmp" value="3013" />
+		<item path="shap03014.bmp" value="3014" />
+		<item path="shap03015.bmp" value="3015" />
+		<item path="shap03016.bmp" value="3016" />
+		<item path="shap03017.bmp" value="3017" />
+		<item path="shap03018.bmp" value="3018" />
+		<item path="shap03019.bmp" value="3019" />
+		<item path="shap03020.bmp" value="3020" />
+		<item path="shap03021.bmp" value="3021" />
+		<item path="shap03022.bmp" value="3022" />
+</folder>
+		<item path="shap03023.bmp" value="3023" />
+		<item path="shap03024.bmp" value="3024" />
+		<item path="shap03025.bmp" value="3025" />
+		<item path="shap03026.bmp" value="3026" />
+		<item path="shap03027.bmp" value="3027" />
+		<item path="shap03028.bmp" value="3028" />
+		<item path="shap03029.bmp" value="3029" />
+		<item path="shap03030.bmp" value="3030" />
+		<item path="shap03031.bmp" value="3031" />
+		<item path="shap03032.bmp" value="3032" />
+		<item path="shap03033.bmp" value="3033" />
+		<item path="shap03034.bmp" value="3034" />
+		<item path="shap03035.bmp" value="3035" />
+</folder>
+<folder palette="8000" paletteindex="shape palette">
+		<item path="shap08001.bmp" type="image-full" value="8001" />
+		<item path="shap08002.bmp" type="image-full" value="8002" />
+		<item path="shap08003.bmp" type="image-full" value="8003" />
+		<item path="shap08004.bmp" type="image-full" value="8004" />
+		<item path="shap08005.bmp" type="image-full" value="8005" />
+		<item path="shap08006.bmp" type="image-full" value="8006" />
+		<item path="shap08007.bmp" type="image-full" value="8007" />
+		<item path="shap08008.bmp" type="image-full" value="8008" />
+		<item path="shap08009.bmp" type="image-full" value="8009" />
+		<item path="shap08010.bmp" type="image-full" value="8010" />
+		<item path="shap08011.bmp" type="image-full" value="8011" />
+		<item path="shap08012.bmp" type="image-full" value="8012" />
+		<item path="shap08013.bmp" type="image-full" value="8013" />
+</folder>
+		<item path="shap25456.bmp" type="image-full" value="25456" />
+		<item path="shap25457.bmp" type="image-full" value="25457" />
+		<item path="shap25458.bmp" type="image-full" value="25458" />
+</folder>
+		<item path="shpl01000.bin" type="binary" value="1000" index="shape palette" />
+		<item path="shpl01200.bin" type="binary" value="1200" index="shape palette" />
+		<item path="shpl03000.bin" type="binary" value="3000" index="shape palette" />
+		<item path="shpl08000.bin" type="binary" value="8000" index="shape palette" />
+<folder index="txt4">
+		<item path="txt400010.bin" type="binary" value="10" />
+		<item path="txt401000.bin" type="binary" value="1000" />
+		<item path="txt401001.bin" type="binary" value="1001" />
+		<item path="txt401002.bin" type="binary" value="1002" />
+		<item path="txt401003.bin" type="binary" value="1003" />
+		<item path="txt401004.bin" type="binary" value="1004" />
+		<item path="txt401005.bin" type="binary" value="1005" />
+		<item path="txt401006.bin" type="binary" value="1006" />
+		<item path="txt401007.bin" type="binary" value="1007" />
+		<item path="txt401008.bin" type="binary" value="1008" />
+		<item path="txt401009.bin" type="binary" value="1009" />
+		<item path="txt401010.bin" type="binary" value="1010" />
+		<item path="txt401011.bin" type="binary" value="1011" />
+		<item path="txt401020.bin" type="binary" value="1020" />
+		<item path="txt401021.bin" type="binary" value="1021" />
+		<item path="txt401022.bin" type="binary" value="1022" />
+		<item path="txt401023.bin" type="binary" value="1023" />
+		<item path="txt401024.bin" type="binary" value="1024" />
+		<item path="txt401025.bin" type="binary" value="1025" />
+		<item path="txt401026.bin" type="binary" value="1026" />
+		<item path="txt408000.bin" type="binary" value="8000" />
+		<item path="txt408001.bin" type="binary" value="8001" />
+		<item path="txt408002.bin" type="binary" value="8002" />
+		<item path="txt408003.bin" type="binary" value="8003" />
+		<item path="txt408004.bin" type="binary" value="8004" />
+		<item path="txt408005.bin" type="binary" value="8005" />
+		<item path="txt408006.bin" type="binary" value="8006" />
+		<item path="txt408007.bin" type="binary" value="8007" />
+		<item path="txt408008.bin" type="binary" value="8008" />
+		<item path="txt408009.bin" type="binary" value="8009" />
+		<item path="txt408010.bin" type="binary" value="8010" />
+		<item path="txt408012.bin" type="binary" value="8012" />
+		<item path="txt408013.bin" type="binary" value="8013" />
+		<item path="txt408014.bin" type="binary" value="8014" />
+		<item path="txt408015.bin" type="binary" value="8015" />
+		<item path="txt408016.bin" type="binary" value="8016" />
+
+		<item path="txt401012.bin" type="binary" value="1012" />
+		<item path="txt408011.bin" type="binary" value="8011" /> 
+</folder>
+	</folder>
+
+	<folder path="ROOFTOPS" file="ROOFTOPS.DAT" palette="3500" paletteindex="svga palette">
+		<item path="cust04000.bin" type="binary" value="4000" index="custom" flags="0x0" />
+		<item path="cust04025.bin" type="binary" value="4025" index="custom" flags="0x0" />
+		<item path="cust04050.bin" type="binary" value="4050" index="custom" flags="0x0" />
+		<item path="cust04075.bin" type="binary" value="4075" index="custom" flags="0x0" />
+		<item path="cust04100.bin" type="binary" value="4100" index="custom" flags="0x0" />
+		<item path="cust04225.bin" type="binary" value="4225" index="custom" flags="0x0" />
+		<item path="cust04250.bin" type="binary" value="4250" index="custom" flags="0x0" />
+		<item path="cust04275.bin" type="binary" value="4275" index="custom" flags="0x0" />
+		<item path="cust04350.bin" type="binary" value="4350" index="custom" flags="0x0" />
+		<item path="cust04375.bin" type="binary" value="4375" index="custom" flags="0x0" />
+		<item path="cust04450.bin" type="binary" value="4450" index="custom" flags="0x0" />
+		<item path="palc03500.bin" type="binary" value="3500" index="cga palette" flags="0x0" />
+		<item path="pals03500.pal" type="palette-pop2-320cols" value="3500" index="svga palette" flags="0x0" />
+		<item path="piec03500.bin" type="binary" value="3500" index="piece" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image-full">
+		<item path="shap03501.bmp" value="3501" />
+		<item path="shap04050.bmp" value="4050" />
+		<item path="shap04051.bmp" value="4051" />
+		<item path="shap04052.bmp" value="4052" />
+		<item path="shap04053.bmp" value="4053" />
+		<item path="shap04054.bmp" value="4054" />
+		<item path="shap04055.bmp" value="4055" />
+		<item path="shap04056.bmp" value="4056" />
+		<item path="shap04057.bmp" value="4057" />
+		<item path="shap04058.bmp" value="4058" />
+		<item path="shap04059.bmp" value="4059" />
+		<item path="shap04060.bin" type="binary" value="4060" />
+		<item path="shap04061.bmp" value="4061" />
+		<item path="shap04062.bin" type="binary" value="4062" />
+		<item path="shap04063.bmp" value="4063" />
+		<item path="shap04064.bmp" value="4064" />
+		<item path="shap04065.bmp" value="4065" />
+		<item path="shap04066.bmp" value="4066" />
+		<item path="shap04067.bmp" value="4067" />
+		<item path="shap04068.bmp" value="4068" />
+		<item path="shap04069.bmp" value="4069" />
+		<item path="shap04070.bmp" value="4070" />
+		<item path="shap04071.bmp" value="4071" />
+		<item path="shap04072.bmp" value="4072" />
+		<item path="shap04073.bmp" value="4073" />
+		<item path="shap04074.bmp" value="4074" />
+		<item path="shap04075.bmp" value="4075" />
+		<item path="shap04076.bin" type="binary" value="4076" />
+		<item path="shap04077.bin" type="binary" value="4077" />
+		<item path="shap04078.bin" type="binary" value="4078" />
+		<item path="shap04079.bmp" value="4079" />
+		<item path="shap04080.bmp" value="4080" />
+		<item path="shap04081.bmp" value="4081" />
+		<item path="shap04082.bmp" value="4082" />
+		<item path="shap04083.bmp" value="4083" />
+		<item path="shap04084.bmp" value="4084" />
+		<item path="shap04085.bmp" value="4085" />
+		<item path="shap04086.bmp" value="4086" />
+		<item path="shap04087.bmp" value="4087" />
+		<item path="shap04088.bmp" value="4088" />
+		<item path="shap04089.bmp" value="4089" />
+		<item path="shap04090.bmp" value="4090" />
+		<item path="shap04091.bmp" value="4091" />
+		<item path="shap04092.bmp" value="4092" />
+		<item path="shap04093.bmp" value="4093" />
+		<item path="shap04094.bin" type="binary" value="4094" />
+		<item path="shap04095.bmp" value="4095" />
+		<item path="shap04096.bmp" value="4096" />
+		<item path="shap04097.bmp" value="4097" />
+		<item path="shap04098.bmp" value="4098" />
+		<item path="shap04099.bin" type="binary" value="4099" />
+		<item path="shap04100.bmp" value="4100" />
+		<item path="shap04101.bmp" value="4101" />
+		<item path="shap04102.bmp" value="4102" />
+		<item path="shap04103.bin" type="binary" value="4103" />
+		<item path="shap04104.bmp" value="4104" />
+		<item path="shap04105.bmp" value="4105" />
+		<item path="shap04106.bmp" value="4106" />
+		<item path="shap04107.bmp" value="4107" />
+		<item path="shap04108.bmp" value="4108" />
+		<item path="shap04109.bmp" value="4109" />
+		<item path="shap04110.bmp" value="4110" />
+		<item path="shap04111.bmp" value="4111" />
+		<item path="shap04112.bmp" value="4112" />
+		<item path="shap04113.bmp" value="4113" />
+		<item path="shap04114.bmp" value="4114" />
+		<item path="shap04115.bmp" value="4115" />
+		<item path="shap04116.bmp" value="4116" />
+		<item path="shap04117.bmp" value="4117" />
+		<item path="shap04118.bmp" value="4118" />
+		<item path="shap04119.bmp" value="4119" />
+		<item path="shap04120.bin" type="binary" value="4120" />
+		<item path="shap04121.bmp" value="4121" />
+		<item path="shap04122.bmp" value="4122" />
+		<item path="shap04123.bmp" value="4123" />
+		<item path="shap04124.bmp" value="4124" />
+		<item path="shap04125.bmp" value="4125" />
+		<item path="shap04126.bmp" value="4126" />
+		<item path="shap04127.bmp" value="4127" />
+		<item path="shap04128.bmp" value="4128" />
+		<item path="shap04129.bmp" value="4129" />
+		<item path="shap04130.bmp" value="4130" />
+		<item path="shap04131.bmp" value="4131" />
+		<item path="shap04132.bmp" value="4132" />
+		<item path="shap04133.bmp" value="4133" />
+		<item path="shap04150.bmp" value="4150" />
+		<item path="shap04151.bmp" value="4151" />
+		<item path="shap04152.bmp" value="4152" />
+		<item path="shap04153.bmp" value="4153" />
+		<item path="shap04154.bmp" value="4154" />
+		<item path="shap04155.bmp" value="4155" />
+		<item path="shap04156.bmp" value="4156" />
+		<item path="shap04157.bmp" value="4157" />
+		<item path="shap04158.bmp" value="4158" />
+		<item path="shap04159.bmp" value="4159" />
+		<item path="shap04160.bmp" value="4160" />
+		<item path="shap04161.bmp" value="4161" />
+		<item path="shap04162.bmp" value="4162" />
+		<item path="shap04163.bmp" value="4163" />
+		<item path="shap04164.bmp" value="4164" />
+		<item path="shap04165.bin" type="binary" value="4165" />
+		<item path="shap04166.bmp" value="4166" />
+		<item path="shap04167.bmp" value="4167" />
+		<item path="shap04168.bin" type="binary" value="4168" />
+		<item path="shap04169.bin" type="binary" value="4169" />
+		<item path="shap04170.bin" type="binary" value="4170" />
+		<item path="shap04171.bmp" value="4171" />
+		<item path="shap04172.bmp" value="4172" />
+		<item path="shap04173.bmp" value="4173" />
+		<item path="shap04174.bmp" value="4174" />
+		<item path="shap04175.bmp" value="4175" />
+		<item path="shap04176.bmp" value="4176" />
+		<item path="shap04177.bmp" value="4177" />
+		<item path="shap04350.bmp" value="4350" />
+		<item path="shap04351.bmp" value="4351" />
+		<item path="shap04352.bmp" value="4352" />
+</folder>
+		<item path="shpl03500.bin" type="binary" value="3500" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="RUINS" file="RUINS.DAT" palette="3500" paletteindex="svga palette">
+		<item path="cust04025.bin" type="binary" value="4025" index="custom" flags="0x0" />
+		<item path="cust04200.bin" type="binary" value="4200" index="custom" flags="0x0" />
+		<item path="cust04250.bin" type="binary" value="4250" index="custom" flags="0x0" />
+		<item path="cust04275.bin" type="binary" value="4275" index="custom" flags="0x0" />
+		<item path="cust04300.bin" type="binary" value="4300" index="custom" flags="0x0" />
+		<item path="cust04325.bin" type="binary" value="4325" index="custom" flags="0x0" />
+		<item path="cust04350.bin" type="binary" value="4350" index="custom" flags="0x0" />
+		<item path="cust04375.bin" type="binary" value="4375" index="custom" flags="0x0" />
+		<item path="cust04650.bin" type="binary" value="4650" index="custom" flags="0x0" />
+		<item path="palc03500.bin" type="binary" value="3500" index="cga palette" flags="0x0" />
+		<item path="pals03500.pal" type="palette-pop2-320cols" value="3500" index="svga palette" flags="0x0" />
+		<item path="piec03500.bin" type="binary" value="3500" index="piece" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image-full">
+		<item path="shap03501.bmp" value="3501" />
+		<item path="shap03502.bmp" value="3502" />
+		<item path="shap03503.bmp" value="3503" />
+		<item path="shap03504.bmp" value="3504" />
+		<item path="shap03505.bmp" value="3505" />
+		<item path="shap03506.bmp" value="3506" />
+		<item path="shap03507.bmp" value="3507" />
+		<item path="shap03508.bmp" value="3508" />
+		<item path="shap03509.bmp" value="3509" />
+		<item path="shap03510.bmp" value="3510" />
+		<item path="shap03511.bin" type="binary" value="3511" />
+		<item path="shap03512.bmp" value="3512" />
+		<item path="shap03513.bmp" value="3513" />
+		<item path="shap03514.bmp" value="3514" />
+		<item path="shap03515.bmp" value="3515" />
+		<item path="shap03516.bmp" value="3516" />
+		<item path="shap03517.bmp" value="3517" />
+		<item path="shap03518.bmp" value="3518" />
+		<item path="shap03519.bmp" value="3519" />
+		<item path="shap03520.bmp" value="3520" />
+		<item path="shap03521.bin" type="binary" value="3521" />
+		<item path="shap03522.bmp" value="3522" />
+		<item path="shap03523.bmp" value="3523" />
+		<item path="shap03524.bmp" value="3524" />
+		<item path="shap03525.bmp" value="3525" />
+		<item path="shap03526.bmp" value="3526" />
+		<item path="shap03527.bmp" value="3527" />
+		<item path="shap03528.bmp" value="3528" />
+		<item path="shap03529.bmp" value="3529" />
+		<item path="shap03530.bmp" value="3530" />
+		<item path="shap03531.bmp" value="3531" />
+		<item path="shap03532.bmp" value="3532" />
+		<item path="shap03533.bmp" value="3533" />
+		<item path="shap03534.bmp" value="3534" />
+		<item path="shap03535.bmp" value="3535" />
+		<item path="shap03536.bmp" value="3536" />
+		<item path="shap03537.bmp" value="3537" />
+		<item path="shap03538.bmp" value="3538" />
+		<item path="shap03539.bmp" value="3539" />
+		<item path="shap03540.bmp" value="3540" />
+		<item path="shap03541.bmp" value="3541" />
+		<item path="shap03542.bmp" value="3542" />
+		<item path="shap03543.bmp" value="3543" />
+		<item path="shap03544.bmp" value="3544" />
+		<item path="shap03545.bmp" value="3545" />
+		<item path="shap03546.bmp" value="3546" />
+		<item path="shap03547.bmp" value="3547" />
+		<item path="shap03548.bmp" value="3548" />
+		<item path="shap03549.bmp" value="3549" />
+		<item path="shap03550.bmp" value="3550" />
+		<item path="shap03551.bmp" value="3551" />
+		<item path="shap03552.bmp" value="3552" />
+		<item path="shap03553.bmp" value="3553" />
+		<item path="shap03554.bmp" value="3554" />
+		<item path="shap03555.bmp" value="3555" />
+		<item path="shap03556.bmp" value="3556" />
+		<item path="shap03557.bmp" value="3557" />
+		<item path="shap03558.bmp" value="3558" />
+		<item path="shap03559.bmp" value="3559" />
+		<item path="shap03560.bmp" value="3560" />
+		<item path="shap03561.bmp" value="3561" />
+		<item path="shap03562.bmp" value="3562" />
+		<item path="shap03563.bmp" value="3563" />
+		<item path="shap03564.bmp" value="3564" />
+		<item path="shap03565.bmp" value="3565" />
+		<item path="shap03566.bmp" value="3566" />
+		<item path="shap03567.bmp" value="3567" />
+		<item path="shap03568.bmp" value="3568" />
+		<item path="shap03569.bmp" value="3569" />
+		<item path="shap03570.bmp" value="3570" />
+		<item path="shap03571.bmp" value="3571" />
+		<item path="shap03572.bmp" value="3572" />
+		<item path="shap03573.bmp" value="3573" />
+		<item path="shap03574.bmp" value="3574" />
+		<item path="shap03575.bmp" value="3575" />
+		<item path="shap03576.bmp" value="3576" />
+		<item path="shap03577.bmp" value="3577" />
+		<item path="shap03578.bmp" value="3578" />
+		<item path="shap03579.bmp" value="3579" />
+		<item path="shap03580.bmp" value="3580" />
+		<item path="shap03581.bmp" value="3581" />
+<folder type="binary">
+		<item path="shap03582.bin" value="3582" />
+		<item path="shap03583.bin" value="3583" />
+		<item path="shap03584.bin" value="3584" />
+		<item path="shap03585.bin" value="3585" />
+		<item path="shap03586.bin" value="3586" />
+		<item path="shap03587.bin" value="3587" />
+		<item path="shap03588.bin" value="3588" />
+		<item path="shap03589.bin" value="3589" />
+		<item path="shap03590.bin" value="3590" />
+		<item path="shap03591.bin" value="3591" />
+		<item path="shap03592.bin" value="3592" />
+		<item path="shap03593.bin" value="3593" />
+		<item path="shap03594.bin" value="3594" />
+		<item path="shap03595.bin" value="3595" />
+		<item path="shap03596.bin" value="3596" />
+		<item path="shap03597.bin" value="3597" />
+		<item path="shap03598.bin" value="3598" />
+		<item path="shap03599.bin" value="3599" />
+		<item path="shap03600.bin" value="3600" />
+		<item path="shap03601.bin" value="3601" />
+		<item path="shap03602.bin" value="3602" />
+		<item path="shap03603.bin" value="3603" />
+		<item path="shap03604.bin" value="3604" />
+		<item path="shap03605.bin" value="3605" />
+		<item path="shap03606.bin" value="3606" />
+		<item path="shap03607.bin" value="3607" />
+		<item path="shap03608.bin" value="3608" />
+		<item path="shap03609.bin" value="3609" />
+		<item path="shap03610.bin" value="3610" />
+		<item path="shap03611.bin" value="3611" />
+		<item path="shap03612.bin" value="3612" />
+		<item path="shap03613.bin" value="3613" />
+		<item path="shap03614.bin" value="3614" />
+</folder>
+		<item path="shap03790.bmp" value="3790" />
+		<item path="shap03791.bmp" value="3791" />
+		<item path="shap03792.bin" type="binary" value="3792" />
+		<item path="shap03793.bin" type="binary" value="3793" />
+		<item path="shap03794.bin" type="binary" value="3794" />
+		<item path="shap03795.bmp" value="3795" />
+		<item path="shap03796.bmp" value="3796" />
+		<item path="shap03797.bmp" value="3797" />
+		<item path="shap03798.bmp" value="3798" />
+		<item path="shap03799.bmp" value="3799" />
+		<item path="shap03800.bmp" value="3800" />
+		<item path="shap03801.bmp" value="3801" />
+		<item path="shap03802.bmp" value="3802" />
+		<item path="shap03803.bmp" value="3803" />
+		<item path="shap03804.bmp" value="3804" />
+		<item path="shap03805.bmp" value="3805" />
+		<item path="shap03806.bmp" value="3806" />
+		<item path="shap03807.bmp" value="3807" />
+		<item path="shap03808.bmp" value="3808" />
+		<item path="shap03809.bmp" value="3809" />
+		<item path="shap03810.bmp" value="3810" />
+		<item path="shap03811.bmp" value="3811" />
+		<item path="shap03812.bmp" value="3812" />
+		<item path="shap03813.bmp" value="3813" />
+		<item path="shap03814.bmp" value="3814" />
+		<item path="shap04200.bmp" value="4200" />
+		<item path="shap04201.bmp" value="4201" />
+		<item path="shap04202.bmp" value="4202" />
+		<item path="shap04203.bmp" value="4203" />
+		<item path="shap04204.bmp" value="4204" />
+		<item path="shap04205.bmp" value="4205" />
+		<item path="shap04206.bmp" value="4206" />
+		<item path="shap04207.bmp" value="4207" />
+		<item path="shap04250.bmp" value="4250" />
+		<item path="shap04251.bmp" value="4251" />
+		<item path="shap04252.bmp" value="4252" />
+		<item path="shap04253.bmp" value="4253" />
+		<item path="shap04254.bmp" value="4254" />
+		<item path="shap04255.bmp" value="4255" />
+		<item path="shap04256.bmp" value="4256" />
+		<item path="shap04257.bmp" value="4257" />
+		<item path="shap04258.bmp" value="4258" />
+		<item path="shap04259.bmp" value="4259" />
+		<item path="shap04260.bmp" value="4260" />
+		<item path="shap04261.bmp" value="4261" />
+		<item path="shap04262.bmp" value="4262" />
+		<item path="shap04263.bmp" value="4263" />
+		<item path="shap04264.bmp" value="4264" />
+		<item path="shap04265.bmp" value="4265" />
+		<item path="shap04266.bmp" value="4266" />
+		<item path="shap04267.bmp" value="4267" />
+		<item path="shap04600.bmp" value="4600" />
+		<item path="shap04601.bmp" value="4601" />
+		<item path="shap04602.bmp" value="4602" />
+</folder>
+		<item path="shpl03500.bin" type="binary" value="3500" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="SKELETON" file="SKELETON.DAT" palette="750" paletteindex="svga palette">
+		<item path="fram00750.bin" type="binary" value="750" index="frame" flags="0x0" />
+		<item path="palc00750.bin" type="binary" value="750" index="cga palette" flags="0x0" />
+		<item path="pals00750.pal" type="palette-pop2-320cols" value="750" index="svga palette" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image">
+		<item path="shap00751.bmp" value="751" />
+		<item path="shap00752.bmp" value="752" />
+		<item path="shap00753.bmp" value="753" />
+		<item path="shap00754.bmp" value="754" />
+		<item path="shap00755.bmp" value="755" />
+		<item path="shap00756.bmp" value="756" />
+		<item path="shap00757.bmp" value="757" />
+		<item path="shap00758.bmp" value="758" />
+		<item path="shap00759.bmp" value="759" />
+		<item path="shap00760.bmp" value="760" />
+		<item path="shap00761.bmp" value="761" />
+		<item path="shap00762.bmp" value="762" />
+		<item path="shap00763.bmp" value="763" />
+		<item path="shap00764.bmp" value="764" />
+		<item path="shap00765.bmp" value="765" />
+		<item path="shap00766.bmp" value="766" />
+		<item path="shap00767.bmp" value="767" />
+		<item path="shap00768.bmp" value="768" />
+		<item path="shap00769.bmp" value="769" />
+		<item path="shap00770.bmp" value="770" />
+		<item path="shap00771.bmp" value="771" />
+		<item path="shap00772.bmp" value="772" />
+		<item path="shap00773.bmp" value="773" />
+		<item path="shap00774.bmp" value="774" />
+		<item path="shap00775.bmp" value="775" />
+		<item path="shap00776.bmp" value="776" />
+		<item path="shap00777.bmp" value="777" />
+		<item path="shap00778.bmp" value="778" />
+		<item path="shap00779.bmp" value="779" />
+		<item path="shap00780.bin" type="binary" value="780" />
+		<item path="shap00781.bin" type="binary" value="781" />
+		<item path="shap00782.bmp" value="782" />
+		<item path="shap00783.bmp" value="783" />
+<folder type="binary">
+		<item path="shap00784.bin" value="784" />
+		<item path="shap00785.bin" value="785" />
+		<item path="shap00786.bin" value="786" />
+		<item path="shap00787.bin" value="787" />
+		<item path="shap00788.bin" value="788" />
+		<item path="shap00789.bin" value="789" />
+		<item path="shap00790.bin" value="790" />
+		<item path="shap00791.bin" value="791" />
+		<item path="shap00792.bin" value="792" />
+		<item path="shap00793.bin" value="793" />
+		<item path="shap00794.bin" value="794" />
+		<item path="shap00795.bin" value="795" />
+		<item path="shap00796.bin" value="796" />
+		<item path="shap00797.bin" value="797" />
+		<item path="shap00798.bin" value="798" />
+		<item path="shap00799.bin" value="799" />
+		<item path="shap00800.bin" value="800" />
+		<item path="shap00801.bin" value="801" />
+		<item path="shap00802.bin" value="802" />
+		<item path="shap00803.bin" value="803" />
+</folder>
+		<item path="shap00884.bmp" value="884" />
+		<item path="shap00885.bmp" value="885" />
+		<item path="shap00886.bmp" value="886" />
+		<item path="shap00887.bmp" value="887" />
+		<item path="shap00888.bmp" value="888" />
+		<item path="shap00889.bmp" value="889" />
+		<item path="shap00890.bmp" value="890" />
+		<item path="shap00891.bmp" value="891" />
+		<item path="shap00892.bmp" value="892" />
+		<item path="shap00893.bmp" value="893" />
+		<item path="shap00894.bmp" value="894" />
+		<item path="shap00895.bmp" value="895" />
+		<item path="shap00896.bmp" value="896" />
+		<item path="shap00897.bmp" value="897" />
+		<item path="shap00898.bmp" value="898" />
+		<item path="shap00899.bmp" value="899" />
+		<item path="shap00900.bmp" value="900" />
+		<item path="shap00901.bmp" value="901" />
+		<item path="shap00902.bmp" value="902" />
+		<item path="shap00903.bmp" value="903" />
+</folder>
+		<item path="shpl00750.bin" type="binary" value="750" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="TEMPLE" file="TEMPLE.DAT" palette="3500" paletteindex="svga palette">
+		<item path="cust04025.bin" type="binary" value="4025" index="custom" flags="0x0" />
+		<item path="cust04075.bin" type="binary" value="4075" index="custom" flags="0x0" />
+		<item path="palc03500.bin" type="binary" value="3500" index="cga palette" flags="0x0" />
+		<item path="palc04075.bin" type="binary" value="4075" index="cga palette" flags="0x0" />
+		<item path="pals03500.pal" type="palette-pop2-320cols" value="3500" index="svga palette" flags="0x0" />
+		<item path="pals04075.pal" type="palette-pop2-320cols" value="4075" index="svga palette" flags="0x0" />
+		<item path="piec03500.bin" type="binary" value="3500" index="piece" flags="0x0" />
+<folder index="shape" flags="0x400000" type="image-full">
+		<item path="shap03501.bmp" value="3501" />
+		<item path="shap03502.bmp" value="3502" />
+		<item path="shap03503.bmp" value="3503" />
+		<item path="shap03504.bmp" value="3504" />
+		<item path="shap03505.bmp" value="3505" />
+		<item path="shap03506.bmp" value="3506" />
+		<item path="shap03507.bmp" value="3507" />
+		<item path="shap03508.bmp" value="3508" />
+		<item path="shap03509.bmp" value="3509" />
+		<item path="shap03510.bmp" value="3510" />
+		<item path="shap03511.bmp" value="3511" />
+		<item path="shap03512.bmp" value="3512" />
+		<item path="shap03513.bmp" value="3513" />
+		<item path="shap03514.bmp" value="3514" />
+		<item path="shap03515.bmp" value="3515" />
+		<item path="shap03516.bmp" value="3516" />
+		<item path="shap03517.bmp" value="3517" />
+		<item path="shap03518.bmp" value="3518" />
+		<item path="shap03519.bmp" value="3519" />
+		<item path="shap03520.bmp" value="3520" />
+		<item path="shap03521.bmp" value="3521" />
+		<item path="shap03522.bmp" value="3522" />
+		<item path="shap03523.bmp" value="3523" />
+		<item path="shap03524.bmp" value="3524" />
+		<item path="shap03525.bmp" value="3525" />
+		<item path="shap03526.bmp" value="3526" />
+		<item path="shap03527.bmp" value="3527" />
+		<item path="shap03528.bmp" value="3528" />
+		<item path="shap03529.bmp" value="3529" />
+		<item path="shap03530.bmp" value="3530" />
+		<item path="shap03531.bmp" value="3531" />
+		<item path="shap03532.bmp" value="3532" />
+		<item path="shap03533.bmp" value="3533" />
+		<item path="shap03534.bmp" value="3534" />
+		<item path="shap03535.bmp" value="3535" />
+		<item path="shap03536.bmp" value="3536" />
+		<item path="shap03537.bmp" value="3537" />
+		<item path="shap03538.bmp" value="3538" />
+		<item path="shap03539.bmp" value="3539" />
+		<item path="shap03540.bmp" value="3540" />
+		<item path="shap03541.bmp" value="3541" />
+		<item path="shap03542.bmp" value="3542" />
+		<item path="shap03543.bmp" value="3543" />
+		<item path="shap03544.bmp" value="3544" />
+		<item path="shap03545.bin" type="binary" value="3545" />
+		<item path="shap03546.bmp" value="3546" />
+		<item path="shap03547.bmp" value="3547" />
+		<item path="shap03548.bmp" value="3548" />
+		<item path="shap03549.bin" type="binary" value="3549" />
+		<item path="shap03550.bmp" value="3550" />
+		<item path="shap03551.bmp" value="3551" />
+		<item path="shap03552.bmp" value="3552" />
+		<item path="shap03553.bmp" value="3553" />
+		<item path="shap03554.bmp" value="3554" />
+		<item path="shap03555.bin" type="binary" value="3555" />
+		<item path="shap03556.bmp" value="3556" />
+		<item path="shap03557.bmp" value="3557" />
+		<item path="shap03558.bmp" value="3558" />
+		<item path="shap03559.bmp" value="3559" />
+		<item path="shap03560.bmp" value="3560" />
+		<item path="shap03561.bmp" value="3561" />
+		<item path="shap03562.bmp" value="3562" />
+		<item path="shap03563.bmp" value="3563" />
+<folder type="binary">
+		<item path="shap03564.bin" value="3564" />
+		<item path="shap03565.bin" value="3565" />
+		<item path="shap03566.bin" value="3566" />
+		<item path="shap03567.bin" value="3567" />
+		<item path="shap03568.bin" value="3568" />
+		<item path="shap03569.bin" value="3569" />
+		<item path="shap03570.bin" value="3570" />
+		<item path="shap03571.bin" value="3571" />
+		<item path="shap03572.bin" value="3572" />
+		<item path="shap03573.bin" value="3573" />
+		<item path="shap03574.bin" value="3574" />
+		<item path="shap03575.bin" value="3575" />
+		<item path="shap03576.bin" value="3576" />
+		<item path="shap03577.bin" value="3577" />
+		<item path="shap03578.bin" value="3578" />
+		<item path="shap03579.bin" value="3579" />
+		<item path="shap03580.bin" value="3580" />
+		<item path="shap03581.bin" value="3581" />
+		<item path="shap03582.bin" value="3582" />
+		<item path="shap03583.bin" value="3583" />
+		<item path="shap03584.bin" value="3584" />
+		<item path="shap03585.bin" value="3585" />
+		<item path="shap03586.bin" value="3586" />
+		<item path="shap03587.bin" value="3587" />
+		<item path="shap03588.bin" value="3588" />
+		<item path="shap03589.bin" value="3589" />
+		<item path="shap03590.bin" value="3590" />
+		<item path="shap03591.bin" value="3591" />
+		<item path="shap03592.bin" value="3592" />
+		<item path="shap03593.bin" value="3593" />
+		<item path="shap03594.bin" value="3594" />
+		<item path="shap03595.bin" value="3595" />
+		<item path="shap03596.bin" value="3596" />
+		<item path="shap03597.bin" value="3597" />
+		<item path="shap03598.bin" value="3598" />
+		<item path="shap03599.bin" value="3599" />
+		<item path="shap03600.bin" value="3600" />
+		<item path="shap03601.bin" value="3601" />
+		<item path="shap03602.bin" value="3602" />
+		<item path="shap03603.bin" value="3603" />
+		<item path="shap03604.bin" value="3604" />
+		<item path="shap03605.bin" value="3605" />
+		<item path="shap03606.bin" value="3606" />
+		<item path="shap03607.bin" value="3607" />
+		<item path="shap03608.bin" value="3608" />
+		<item path="shap03609.bin" value="3609" />
+		<item path="shap03610.bin" value="3610" />
+		<item path="shap03611.bin" value="3611" />
+		<item path="shap03612.bin" value="3612" />
+		<item path="shap03613.bin" value="3613" />
+		<item path="shap03614.bin" value="3614" />
+		<item path="shap03615.bin" value="3615" />
+		<item path="shap03616.bin" value="3616" />
+		<item path="shap03617.bin" value="3617" />
+		<item path="shap03618.bin" value="3618" />
+		<item path="shap03619.bin" value="3619" />
+		<item path="shap03620.bin" value="3620" />
+		<item path="shap03621.bin" value="3621" />
+		<item path="shap03622.bin" value="3622" />
+		<item path="shap03623.bin" value="3623" />
+		<item path="shap03624.bin" value="3624" />
+		<item path="shap03625.bin" value="3625" />
+		<item path="shap03626.bin" value="3626" />
+</folder>
+		<item path="shap03779.bmp" value="3779" />
+		<item path="shap03780.bmp" value="3780" />
+		<item path="shap03781.bmp" value="3781" />
+		<item path="shap03782.bmp" value="3782" />
+		<item path="shap03783.bmp" value="3783" />
+		<item path="shap03784.bmp" value="3784" />
+		<item path="shap03785.bmp" value="3785" />
+		<item path="shap03786.bmp" value="3786" />
+		<item path="shap03787.bmp" value="3787" />
+		<item path="shap03788.bmp" value="3788" />
+		<item path="shap03789.bmp" value="3789" />
+		<item path="shap03790.bmp" value="3790" />
+		<item path="shap03791.bmp" value="3791" />
+		<item path="shap03792.bmp" value="3792" />
+		<item path="shap03793.bmp" value="3793" />
+		<item path="shap03794.bmp" value="3794" />
+		<item path="shap03795.bmp" value="3795" />
+		<item path="shap03796.bmp" value="3796" />
+		<item path="shap03797.bmp" value="3797" />
+		<item path="shap03798.bmp" value="3798" />
+		<item path="shap03799.bmp" value="3799" />
+		<item path="shap03800.bmp" value="3800" />
+		<item path="shap03801.bmp" value="3801" />
+		<item path="shap03802.bmp" value="3802" />
+		<item path="shap03803.bmp" value="3803" />
+		<item path="shap03804.bmp" value="3804" />
+		<item path="shap03805.bmp" value="3805" />
+		<item path="shap03806.bmp" value="3806" />
+		<item path="shap03807.bmp" value="3807" />
+		<item path="shap03808.bmp" value="3808" />
+		<item path="shap03809.bmp" value="3809" />
+		<item path="shap03810.bmp" value="3810" />
+		<item path="shap03811.bmp" value="3811" />
+		<item path="shap03812.bmp" value="3812" />
+		<item path="shap03813.bmp" value="3813" />
+		<item path="shap03814.bmp" value="3814" />
+		<item path="shap03815.bmp" value="3815" />
+		<item path="shap03816.bmp" value="3816" />
+		<item path="shap03817.bmp" value="3817" />
+		<item path="shap03818.bmp" value="3818" />
+		<item path="shap03819.bmp" value="3819" />
+		<item path="shap03820.bmp" value="3820" />
+		<item path="shap03821.bmp" value="3821" />
+		<item path="shap03822.bmp" value="3822" />
+		<item path="shap03823.bmp" value="3823" />
+		<item path="shap03824.bmp" value="3824" />
+		<item path="shap03825.bmp" value="3825" />
+		<item path="shap03826.bmp" value="3826" />
+		<item path="shap04025.bmp" value="4025" />
+		<item path="shap04026.bmp" value="4026" />
+		<item path="shap04075.bmp" value="4075" />
+		<item path="shap04076.bmp" value="4076" />
+		<item path="shap04077.bmp" value="4077" />
+<folder palette="4075">
+		<item path="shap04078.bmp" value="4078" />
+		<item path="shap04079.bmp" value="4079" />
+		<item path="shap04080.bmp" value="4080" />
+		<item path="shap04081.bmp" value="4081" />
+		<item path="shap04082.bmp" value="4082" />
+		<item path="shap04083.bmp" value="4083" />
+		<item path="shap04084.bmp" value="4084" />
+		<item path="shap04085.bmp" value="4085" />
+		<item path="shap04086.bmp" value="4086" />
+		<item path="shap04087.bmp" value="4087" />
+		<item path="shap04088.bmp" value="4088" />
+		<item path="shap04089.bmp" value="4089" />
+		<item path="shap04090.bmp" value="4090" />
+		<item path="shap04091.bmp" value="4091" />
+		<item path="shap04092.bmp" value="4092" />
+		<item path="shap04093.bmp" value="4093" />
+		<item path="shap04094.bmp" value="4094" />
+		<item path="shap04095.bmp" value="4095" />
+		<item path="shap04096.bmp" value="4096" />
+		<item path="shap04097.bmp" value="4097" />
+		<item path="shap04098.bmp" value="4098" />
+		<item path="shap04099.bmp" value="4099" />
+		<item path="shap04100.bmp" value="4100" />
+		<item path="shap04101.bmp" value="4101" />
+		<item path="shap04102.bmp" value="4102" />
+		<item path="shap04103.bmp" value="4103" />
+		<item path="shap04104.bmp" value="4104" />
+		<item path="shap04105.bmp" value="4105" />
+</folder>
+		<item path="shap04106.bmp" value="4106" />
+</folder>
+		<item path="shpl03500.bin" type="binary" value="3500" index="shape palette" flags="0x0" />
+	</folder>
+
+	<folder path="TRANS" file="TRANS.DAT" palette="0" paletteindex="tga palette" flags="0x0">
+<folder index="psl" type="binary">
+		<item path="_psl04210.bin" value="4210" />
+		<item path="_psl25001.bin" value="25001" />
+		<item path="_psl25002.bin" value="25002" />
+		<item path="_psl25003.bin" value="25003" />
+		<item path="_psl25004.bin" value="25004" />
+		<item path="_psl25005.bin" value="25005" />
+		<item path="_psl25006.bin" value="25006" />
+		<item path="_psl25007.bin" value="25007" />
+		<item path="_psl25008.bin" value="25008" />
+		<item path="_psl25009.bin" value="25009" />
+		<item path="_psl25010.bin" value="25010" />
+		<item path="_psl25011.bin" value="25011" />
+		<item path="_psl25012.bin" value="25012" />
+</folder>
+<folder type="binary" index="screen">
+		<item path="_scr04210.bin" value="4210" />
+		<item path="_scr25001.bin" value="25001" />
+		<item path="_scr25002.bin" value="25002" />
+		<item path="_scr25003.bin" value="25003" />
+		<item path="_scr25004.bin" value="25004" />
+		<item path="_scr25005.bin" value="25005" />
+		<item path="_scr25006.bin" value="25006" />
+		<item path="_scr25007.bin" value="25007" />
+		<item path="_scr25008.bin" value="25008" />
+		<item path="_scr25009.bin" value="25009" />
+		<item path="_scr25010.bin" value="25010" />
+		<item path="_scr25011.bin" value="25011" />
+		<item path="_scr25012.bin" value="25012" />
+</folder>
+<folder type="palette-pop2-320cols" index="tga palette">
+		<item path="palt04208.pal" value="4208" />
+		<item path="palt04209.pal" value="4209" />
+		<item path="palt04210.pal" value="4210" />
+		<item path="palt04211.pal" value="4211" />
+		<item path="palt25001.pal" value="25001" />
+		<item path="palt25002.pal" value="25002" />
+		<item path="palt25003.pal" value="25003" />
+		<item path="palt25004.pal" value="25004" />
+		<item path="palt25005.pal" value="25005" />
+		<item path="palt25006.pal" value="25006" />
+		<item path="palt25007.pal" value="25007" />
+		<item path="palt25008.pal" value="25008" />
+		<item path="palt25009.pal" value="25009" />
+		<item path="palt25010.pal" value="25010" />
+		<item path="palt25011.pal" value="25011" />
+</folder>
+<folder index="shape" flags="0x400000" type="image-full">
+<folder palette="4208">
+		<item path="shap04208.bmp" value="4208" />
+		<item path="shap04209.bmp" value="4209" />
+</folder>
+<folder palette="4210" type="image">
+		<item path="shap04210.bmp" value="4210" />
+		<item path="shap04211.bmp" value="4211" />
+		<item path="shap04212.bmp" value="4212" />
+		<item path="shap04213.bmp" value="4213" />
+</folder>
+<folder palette="25001">
+	<folder type="image">
+		<item path="shap25235.bmp" value="25235" />
+		<item path="shap25236.bmp" value="25236" />
+		<item path="shap25237.bmp" value="25237" />
+		<item path="shap25238.bmp" value="25238" />
+		<item path="shap25239.bmp" value="25239" />
+		<item path="shap25240.bmp" value="25240" />
+		<item path="shap25241.bmp" value="25241" />
+		<item path="shap25243.bmp" value="25243" />
+		<item path="shap25244.bmp" value="25244" />
+		<item path="shap25264.bmp" value="25264" />
+	</folder>
+		<item path="shap25267.bmp" value="25267" />
+		<item path="shap25268.bmp" value="25268" />
+		<item path="shap25269.bmp" value="25269" />
+		<item path="shap25270.bmp" value="25270" />
+		<item path="shap25271.bmp" value="25271" />
+		<item path="shap25272.bmp" value="25272" />
+		<item path="shap25273.bmp" value="25273" />
+		<item path="shap25274.bmp" value="25274" />
+		<item path="shap25275.bmp" value="25275" />
+		<item path="shap25276.bmp" value="25276" />
+		<item path="shap25277.bmp" value="25277" />
+		<item path="shap25278.bmp" value="25278" />
+		<item path="shap25279.bmp" value="25279" />
+		<item path="shap25280.bmp" value="25280" />
+		<item path="shap25281.bmp" value="25281" />
+		<item path="shap25282.bmp" value="25282" />
+		<item path="shap25283.bmp" value="25283" />
+		<item path="shap25284.bmp" value="25284" />
+		<item path="shap25285.bmp" value="25285" />
+		<item path="shap25285.bmp" value="25285" />
+		<item path="shap25286.bmp" value="25286" />
+		<item path="shap25286.bmp" value="25286" />
+		<item path="shap25287.bmp" value="25287" />
+		<item path="shap25287.bmp" value="25287" />
+		<item path="shap25288.bmp" value="25288" />
+		<item path="shap25288.bmp" value="25288" />
+		<item path="shap25289.bmp" value="25289" />
+		<item path="shap25289.bmp" value="25289" />
+		<item path="shap25290.bmp" value="25290" />
+		<item path="shap25290.bmp" value="25290" />
+		<item path="shap25291.bmp" value="25291" />
+		<item path="shap25291.bmp" value="25291" />
+		<item path="shap25292.bmp" value="25292" />
+		<item path="shap25292.bmp" value="25292" />
+		<item path="shap25293.bmp" value="25293" />
+		<item path="shap25293.bmp" value="25293" />
+		<item path="shap25294.bmp" value="25294" />
+		<item path="shap25294.bmp" value="25294" />
+		<item path="shap25295.bmp" value="25295" />
+		<item path="shap25295.bmp" value="25295" />
+		<item path="shap25296.bmp" value="25296" />
+		<item path="shap25296.bmp" value="25296" />
+		<item path="shap25297.bmp" value="25297" />
+		<item path="shap25298.bmp" value="25298" />
+		<item path="shap25299.bmp" value="25299" />
+		<item path="shap25300.bmp" value="25300" />
+		<item path="shap25301.bmp" value="25301" />
+		<item path="shap25302.bmp" value="25302" />
+</folder>
+<folder palette="25002">
+		<item path="shap25312.bmp" value="25312" />
+		<item path="shap25313.bmp" value="25313" />
+</folder>
+<folder palette="25003">
+		<item path="shap25316.bmp" value="25316" />
+		<item path="shap25317.bmp" value="25317" />
+</folder>
+<folder palette="25002">
+		<item path="shap25320.bmp" value="25320" />
+		<item path="shap25321.bmp" value="25321" />
+		<item path="shap25322.bmp" value="25322" />
+		<item path="shap25323.bmp" value="25323" />
+</folder>
+<folder palette="25003">
+		<item path="shap25325.bmp" value="25325" />
+		<item path="shap25326.bmp" value="25326" />
+		<item path="shap25327.bmp" value="25327" />
+		<item path="shap25328.bmp" value="25328" />
+		<item path="shap25329.bmp" value="25329" />
+		<item path="shap25330.bmp" value="25330" />
+		<item path="shap25331.bmp" value="25331" />
+		<item path="shap25332.bmp" value="25332" />
+		<item path="shap25333.bmp" value="25333" />
+		<item path="shap25334.bmp" value="25334" />
+		<item path="shap25335.bmp" value="25335" />
+		<item path="shap25336.bmp" value="25336" />
+		<item path="shap25337.bmp" value="25337" />
+		<item path="shap25338.bmp" value="25338" />
+		<item path="shap25339.bmp" value="25339" />
+		<item path="shap25340.bmp" value="25340" />
+		<item path="shap25341.bmp" value="25341" />
+		<item path="shap25342.bmp" value="25342" />
+		<item path="shap25343.bmp" value="25343" />
+		<item path="shap25344.bmp" value="25344" />
+		<item path="shap25345.bmp" value="25345" />
+</folder>
+<folder palette="25005">
+		<item path="shap25347.bmp" value="25347" />
+		<item path="shap25348.bmp" value="25348" />
+		<item path="shap25349.bmp" value="25349" />
+		<item path="shap25350.bmp" value="25350" />
+		<item path="shap25351.bmp" value="25351" />
+</folder>
+<folder palette="25008">
+		<item path="shap25352.bmp" value="25352" />
+		<item path="shap25353.bmp" value="25353" />
+		<item path="shap25354.bmp" value="25354" />
+		<item path="shap25355.bmp" value="25355" />
+		<item path="shap25356.bmp" value="25356" />
+		<item path="shap25357.bmp" value="25357" />
+		<item path="shap25358.bmp" value="25358" />
+		<item path="shap25359.bmp" value="25359" />
+		<item path="shap25360.bmp" value="25360" />
+		<item path="shap25361.bmp" value="25361" />
+		<item path="shap25362.bmp" value="25362" />
+		<item path="shap25363.bmp" value="25363" />
+		<item path="shap25364.bmp" value="25364" />
+		<item path="shap25365.bmp" value="25365" />
+		<item path="shap25366.bmp" value="25366" />
+		<item path="shap25367.bmp" value="25367" />
+		<item path="shap25368.bmp" value="25368" />
+		<item path="shap25369.bmp" value="25369" />
+		<item path="shap25370.bmp" value="25370" />
+		<item path="shap25371.bmp" value="25371" />
+		<item path="shap25372.bmp" value="25372" />
+		<item path="shap25373.bmp" value="25373" />
+		<item path="shap25374.bmp" value="25374" />
+		<item path="shap25375.bmp" value="25375" />
+		<item path="shap25376.bmp" value="25376" />
+</folder>
+<folder palette="0">
+		<item path="shap25379.bmp" value="25379" />
+		<item path="shap25380.bmp" value="25380" />
+		<item path="shap25381.bmp" value="25381" />
+		<item path="shap25382.bmp" value="25382" />
+		<item path="shap25383.bmp" value="25383" />
+		<item path="shap25384.bmp" value="25384" />
+		<item path="shap25385.bmp" value="25385" />
+		<item path="shap25386.bmp" value="25386" />
+		<item path="shap25387.bmp" value="25387" />
+		<item path="shap25388.bmp" value="25388" />
+		<item path="shap25389.bmp" value="25389" />
+		<item path="shap25390.bmp" value="25390" />
+		<item path="shap25391.bmp" value="25391" />
+		<item path="shap25392.bmp" value="25392" />
+		<item path="shap25393.bmp" value="25393" />
+		<item path="shap25394.bmp" value="25394" />
+		<item path="shap25395.bmp" value="25395" />
+		<item path="shap25396.bmp" value="25396" />
+		<item path="shap25397.bmp" value="25397" />
+		<item path="shap25398.bmp" value="25398" />
+		<item path="shap25399.bmp" value="25399" />
+		<item path="shap25400.bmp" value="25400" />
+</folder>
+<folder palette="25004">
+		<item path="shap25401.bmp" value="25401" />
+		<item path="shap25402.bmp" value="25402" />
+		<item path="shap25403.bmp" value="25403" />
+		<item path="shap25404.bmp" value="25404" />
+		<item path="shap25405.bmp" value="25405" />
+		<item path="shap25406.bmp" value="25406" />
+		<item path="shap25407.bmp" value="25407" />
+		<item path="shap25408.bmp" value="25408" />
+		<item path="shap25409.bmp" value="25409" />
+		<item path="shap25410.bmp" value="25410" />
+		<item path="shap25411.bmp" value="25411" />
+		<item path="shap25412.bmp" value="25412" />
+		<item path="shap25413.bmp" value="25413" />
+		<item path="shap25414.bmp" value="25414" />
+		<item path="shap25415.bmp" value="25415" />
+		<item path="shap25416.bmp" value="25416" />
+		<item path="shap25417.bmp" value="25417" />
+		<item path="shap25418.bmp" value="25418" />
+		<item path="shap25419.bmp" value="25419" />
+		<item path="shap25420.bmp" value="25420" />
+		<item path="shap25421.bmp" value="25421" />
+		<item path="shap25422.bmp" value="25422" />
+		<item path="shap25423.bmp" value="25423" />
+		<item path="shap25424.bmp" value="25424" />
+		<item path="shap25425.bmp" value="25425" />
+		<item path="shap25426.bmp" value="25426" />
+		<item path="shap25427.bmp" value="25427" />
+		<item path="shap25428.bmp" value="25428" />
+		<item path="shap25429.bmp" value="25429" />
+		<item path="shap25430.bmp" value="25430" />
+		<item path="shap25431.bmp" value="25431" />
+		<item path="shap25432.bmp" value="25432" />
+		<item path="shap25433.bmp" value="25433" />
+		<item path="shap25434.bmp" value="25434" />
+		<item path="shap25435.bmp" value="25435" />
+		<item path="shap25436.bmp" value="25436" />
+		<item path="shap25437.bmp" value="25437" />
+		<item path="shap25438.bmp" value="25438" />
+		<item path="shap25439.bmp" value="25439" />
+		<item path="shap25440.bmp" value="25440" />
+		<item path="shap25441.bmp" value="25441" />
+		<item path="shap25442.bmp" value="25442" />
+		<item path="shap25443.bmp" value="25443" />
+		<item path="shap25444.bmp" value="25444" />
+		<item path="shap25445.bmp" value="25445" />
+		<item path="shap25446.bmp" value="25446" />
+		<item path="shap25447.bmp" value="25447" />
+		<item path="shap25448.bmp" value="25448" />
+		<item path="shap25449.bmp" value="25449" />
+		<item path="shap25450.bmp" value="25450" />
+		<item path="shap25451.bmp" value="25451" />
+		<item path="shap25452.bmp" value="25452" />
+		<item path="shap25453.bmp" value="25453" />
+		<item path="shap25454.bmp" value="25454" />
+		<item path="shap25455.bmp" value="25455" />
+</folder>
+</folder>
+		<item path="shpl25000.bin" type="binary" value="25000" index="shape palette" />
+		<item path="strl31000.bin" type="binary" value="31000" index="string" />
+	</folder>
+
+	<folder path="DIGISND" file="DIGISND.DAT" palette="0" paletteindex="" type="wave" index="sound" flags="0x400000">
+		<item path="_snd65534.wav" value="65534" />
+		<item path="_snd10000.wav" value="10000" />
+		<item path="_snd10001.wav" value="10001" />
+		<item path="_snd10002.wav" value="10002" />
+		<item path="_snd10003.wav" value="10003" />
+		<item path="_snd10004.wav" value="10004" />
+		<item path="_snd10005.wav" value="10005" />
+		<item path="_snd10006.wav" value="10006" />
+		<item path="_snd10007.wav" value="10007" />
+		<item path="_snd10008.wav" value="10008" />
+		<item path="_snd10009.wav" value="10009" />
+		<item path="_snd10010.wav" value="10010" />
+		<item path="_snd10011.wav" value="10011" />
+		<item path="_snd10012.wav" value="10012" />
+		<item path="_snd10013.wav" value="10013" />
+		<item path="_snd10014.wav" value="10014" />
+		<item path="_snd10015.wav" value="10015" />
+		<item path="_snd10016.wav" value="10016" />
+		<item path="_snd10017.wav" value="10017" />
+		<item path="_snd10018.wav" value="10018" />
+		<item path="_snd10019.wav" value="10019" />
+		<item path="_snd10020.wav" value="10020" />
+		<item path="_snd10021.wav" value="10021" />
+		<item path="_snd10022.wav" value="10022" />
+		<item path="_snd10023.wav" value="10023" />
+		<item path="_snd10024.wav" value="10024" />
+		<item path="_snd10025.wav" value="10025" />
+		<item path="_snd10026.wav" value="10026" />
+		<item path="_snd10031.wav" value="10031" />
+		<item path="_snd10032.wav" value="10032" />
+		<item path="_snd10036.wav" value="10036" />
+		<item path="_snd10038.wav" value="10038" />
+		<item path="_snd10042.wav" value="10042" />
+		<item path="_snd10043.wav" value="10043" />
+		<item path="_snd10044.wav" value="10044" />
+		<item path="_snd10045.wav" value="10045" />
+		<item path="_snd10046.wav" value="10046" />
+		<item path="_snd10047.wav" value="10047" />
+		<item path="_snd10048.wav" value="10048" />
+		<item path="_snd10049.wav" value="10049" />
+		<item path="_snd10053.wav" value="10053" />
+		<item path="_snd10054.wav" value="10054" />
+		<item path="_snd10055.wav" value="10055" />
+		<item path="_snd10056.wav" value="10056" />
+		<item path="_snd10057.wav" value="10057" />
+		<item path="_snd10062.wav" value="10062" />
+		<item path="_snd10067.wav" value="10067" />
+		<item path="_snd10068.wav" value="10068" />
+		<item path="_snd10069.wav" value="10069" />
+		<item path="_snd10070.wav" value="10070" />
+		<item path="_snd10071.wav" value="10071" />
+		<item path="_snd10072.wav" value="10072" />
+		<item path="_snd10075.wav" value="10075" />
+		<item path="_snd10076.wav" value="10076" />
+		<item path="_snd10077.wav" value="10077" />
+		<item path="_snd10078.wav" value="10078" />
+		<item path="_snd10079.wav" value="10079" />
+		<item path="_snd10080.wav" value="10080" />
+		<item path="_snd10081.wav" value="10081" />
+		<item path="_snd10082.wav" value="10082" />
+		<item path="_snd10083.wav" value="10083" />
+		<item path="_snd10084.wav" value="10084" />
+		<item path="_snd10085.wav" value="10085" />
+		<item path="_snd10086.wav" value="10086" />
+		<item path="_snd10087.wav" value="10087" />
+		<item path="_snd10088.wav" value="10088" />
+		<item path="_snd10089.wav" value="10089" />
+		<item path="_snd10090.wav" value="10090" />
+		<item path="_snd10093.wav" value="10093" />
+		<item path="_snd10094.wav" value="10094" />
+		<item path="_snd10095.wav" value="10095" />
+		<item path="_snd10097.wav" value="10097" />
+		<item path="_snd10098.wav" value="10098" />
+		<item path="_snd10099.wav" value="10099" />
+		<item path="_snd10193.wav" value="10193" />
+		<item path="_snd10194.wav" value="10194" />
+		<item path="_snd10195.wav" value="10195" />
+		<item path="_snd10197.wav" value="10197" />
+		<item path="_snd10256.wav" value="10256" />
+		<item path="_snd10257.wav" value="10257" />
+		<item path="_snd10258.wav" value="10258" />
+		<item path="_snd10259.wav" value="10259" />
+		<item path="_snd10261.wav" value="10261" />
+		<item path="_snd10262.wav" value="10262" />
+		<item path="_snd10600.wav" value="10600" />
+	</folder>
+
+	<folder path="FRAGSND" file="FRAGSND.DAT" palette="0" paletteindex="" type="binary" index="sound" flags="0x0">
+		<item path="_snd10000.bin" value="10000" flags="0x400000" />
+		<item path="_snd10001.bin" value="10001" />
+		<item path="_snd10002.bin" value="10002" />
+		<item path="_snd10003.bin" value="10003" />
+		<item path="_snd10004.bin" value="10004" />
+		<item path="_snd10006.bin" value="10006" />
+		<item path="_snd10007.bin" value="10007" />
+		<item path="_snd10008.bin" value="10008" />
+		<item path="_snd10009.bin" value="10009" />
+		<item path="_snd10010.bin" value="10010" />
+		<item path="_snd10012.bin" value="10012" />
+		<item path="_snd10013.bin" value="10013" />
+		<item path="_snd10014.bin" value="10014" />
+		<item path="_snd10015.bin" value="10015" />
+		<item path="_snd10016.bin" value="10016" />
+		<item path="_snd10017.bin" value="10017" />
+		<item path="_snd10018.bin" value="10018" />
+		<item path="_snd10019.bin" value="10019" />
+		<item path="_snd10020.bin" value="10020" />
+		<item path="_snd10021.bin" value="10021" />
+		<item path="_snd10025.bin" value="10025" />
+		<item path="_snd10043.bin" value="10043" />
+		<item path="_snd10044.bin" value="10044" />
+		<item path="_snd10045.bin" value="10045" />
+		<item path="_snd10055.bin" value="10055" />
+		<item path="_snd10069.bin" value="10069" />
+		<item path="_snd10070.bin" value="10070" />
+		<item path="_snd10072.bin" value="10072" />
+		<item path="_snd10075.bin" value="10075" />
+		<item path="_snd10076.bin" value="10076" />
+		<item path="_snd10077.bin" value="10077" />
+		<item path="_snd10078.bin" value="10078" />
+		<item path="_snd10080.bin" value="10080" />
+		<item path="_snd10081.bin" value="10081" />
+		<item path="_snd10083.bin" value="10083" />
+		<item path="_snd10084.bin" value="10084" />
+		<item path="_snd10085.bin" value="10085" />
+		<item path="_snd10086.bin" value="10086" />
+		<item path="_snd10089.bin" value="10089" />
+		<item path="_snd10093.bin" value="10093" />
+		<item path="_snd10094.bin" value="10094" />
+		<item path="_snd10098.bin" value="10098" />
+		<item path="_snd10099.bin" value="10099" />
+		<item path="_snd10194.bin" value="10194" />
+		<item path="_snd10195.bin" value="10195" />
+		<item path="_snd10530.bin" value="10530" />
+		<item path="_snd10535.bin" value="10535" />
+		<item path="_snd10540.bin" value="10540" />
+		<item path="_snd10545.bin" value="10545" />
+		<item path="_snd30500.bin" value="30500" />
+	</folder>
+
+	<folder path="NIS3VC" file="NIS3VC.DAT" palette="0" paletteindex="" type="midi" index="sound" flags="0x400000">
+		<item path="_snd25004.mid" value="25004" />
+		<item path="_snd25006.mid" value="25006" />
+		<item path="_snd25009.mid" value="25009" />
+		<item path="_snd25010.mid" value="25010" />
+		<item path="_snd25011.mid" value="25011" />
+		<item path="_snd25012.mid" value="25012" />
+		<item path="_snd25013.mid" value="25013" />
+		<item path="_snd25014.mid" value="25014" />
+		<item path="_snd25015.mid" value="25015" />
+		<item path="_snd25016.mid" value="25016" />
+		<item path="_snd26011.mid" value="26011" />
+		<item path="_snd26012.mid" value="26012" />
+		<item path="_snd26013.mid" value="26013" />
+		<item path="_snd26014.mid" value="26014" />
+		<item path="_snd26015.mid" value="26015" />
+		<item path="_snd26016.mid" value="26016" />
+		<item path="_snd26017.mid" value="26017" />
+		<item path="_snd26018.mid" value="26018" />
+		<item path="_snd26019.mid" value="26019" />
+		<item path="_snd28100.mid" value="28100" />
+		<item path="_snd28101.mid" value="28101" />
+		<item path="_snd29100.mid" value="29100" />
+		<item path="_snd29101.mid" value="29101" />
+		<item path="_snd29102.mid" value="29102" />
+		<item path="_snd30000.mid" value="30000" />
+		<item path="_snd30010.mid" value="30010" />
+		<item path="_snd30020.mid" value="30020" />
+		<item path="_snd31020.mid" value="31020" />
+		<item path="_snd31021.mid" value="31021" />
+		<item path="_snd31030.mid" value="31030" />
+		<item path="_snd31031.mid" value="31031" />
+	</folder>
+
+	<folder path="NISDIGI" file="NISDIGI.DAT" palette="0" paletteindex="" type="binary" index="sound" flags="0x400000">
+<!-- This file contains compressed waves. Since the compression method is unknown, I'll leave them as binaries. -->
+		<item path="_snd10500.bin" value="10500" />
+		<item path="_snd10505.bin" value="10505" />
+		<item path="_snd10510.bin" value="10510" />
+		<item path="_snd10515.bin" value="10515" />
+		<item path="_snd10520.bin" value="10520" />
+		<item path="_snd10525.bin" value="10525" />
+		<item path="_snd10530.bin" value="10530" />
+		<item path="_snd10535.bin" value="10535" />
+		<item path="_snd10540.bin" value="10540" />
+		<item path="_snd10545.bin" value="10545" />
+		<item path="_snd10550.bin" value="10550" />
+		<item path="_snd26001.bin" value="26001" />
+		<item path="_snd26002.bin" value="26002" />
+		<item path="_snd26004.bin" value="26004" />
+		<item path="_snd27001.bin" value="27001" />
+		<item path="_snd27002.bin" value="27002" />
+		<item path="_snd27003.bin" value="27003" />
+		<item path="_snd27004.bin" value="27004" />
+		<item path="_snd27005.bin" value="27005" />
+		<item path="_snd27006.bin" value="27006" />
+		<item path="_snd27007.bin" value="27007" />
+		<item path="_snd27008.bin" value="27008" />
+		<item path="_snd27009.bin" value="27009" />
+		<item path="_snd27010.bin" value="27010" />
+		<item path="_snd27011.bin" value="27011" />
+		<item path="_snd27012.bin" value="27012" />
+		<item path="_snd27013.bin" value="27013" />
+		<item path="_snd27014.bin" value="27014" />
+		<item path="_snd27015.bin" value="27015" />
+		<item path="_snd27016.bin" value="27016" />
+		<item path="_snd27017.bin" value="27017" />
+		<item path="_snd27018.bin" value="27018" />
+		<item path="_snd27019.bin" value="27019" />
+		<item path="_snd27020.bin" value="27020" />
+		<item path="_snd27021.bin" value="27021" />
+		<item path="_snd27022.bin" value="27022" />
+		<item path="_snd27023.bin" value="27023" />
+		<item path="_snd27024.bin" value="27024" />
+		<item path="_snd27025.bin" value="27025" />
+		<item path="_snd27026.bin" value="27026" />
+		<item path="_snd28001.bin" value="28001" />
+		<item path="_snd28002.bin" value="28002" />
+		<item path="_snd28003.bin" value="28003" />
+		<item path="_snd28005.bin" value="28005" />
+		<item path="_snd29001.bin" value="29001" />
+		<item path="_snd29002.bin" value="29002" />
+		<item path="_snd29003.bin" value="29003" />
+		<item path="_snd29004.bin" value="29004" />
+		<item path="_snd29005.bin" value="29005" />
+		<item path="_snd29006.bin" value="29006" />
+		<item path="_snd29007.bin" value="29007" />
+		<item path="_snd29008.bin" value="29008" />
+		<item path="_snd29009.bin" value="29009" />
+		<item path="_snd29010.bin" value="29010" />
+		<item path="_snd29011.bin" value="29011" />
+		<item path="_snd30001.bin" value="30001" />
+		<item path="_snd30002.bin" value="30002" />
+		<item path="_snd30004.bin" value="30004" />
+		<item path="_snd30005.bin" value="30005" />
+		<item path="_snd30006.bin" value="30006" />
+		<item path="_snd30007.bin" value="30007" />
+		<item path="_snd30008.bin" value="30008" />
+		<item path="_snd30500.bin" value="30500" />
+		<item path="_snd30501.bin" value="30501" />
+		<item path="_snd30503.bin" value="30503" />
+		<item path="_snd31001.bin" value="31001" />
+		<item path="_snd31002.bin" value="31002" />
+		<item path="_snd31003.bin" value="31003" />
+		<item path="_snd31004.bin" value="31004" />
+		<item path="_snd31005.bin" value="31005" />
+		<item path="_snd31006.bin" value="31006" />
+	</folder>
+
+	<folder path="NISIBM" file="NISIBM.DAT" palette="0" paletteindex="" type="pcspeaker" index="sound" flags="0x400000">
+		<item path="_snd10049.pcs" value="10049" />
+		<item path="_snd10545.pcs" value="10545" />
+		<item path="_snd25004.pcs" value="25004" />
+		<item path="_snd25006.pcs" value="25006" />
+		<item path="_snd25009.pcs" value="25009" />
+		<item path="_snd25010.pcs" value="25010" />
+		<item path="_snd25011.pcs" value="25011" />
+		<item path="_snd25012.pcs" value="25012" />
+		<item path="_snd25013.pcs" value="25013" />
+		<item path="_snd25014.pcs" value="25014" />
+		<item path="_snd25015.pcs" value="25015" />
+		<item path="_snd25016.pcs" value="25016" />
+		<item path="_snd26011.pcs" value="26011" />
+		<item path="_snd26012.pcs" value="26012" />
+		<item path="_snd26013.pcs" value="26013" />
+		<item path="_snd26014.pcs" value="26014" />
+		<item path="_snd26015.pcs" value="26015" />
+		<item path="_snd26016.pcs" value="26016" />
+		<item path="_snd26017.pcs" value="26017" />
+		<item path="_snd26018.pcs" value="26018" />
+		<item path="_snd26019.pcs" value="26019" />
+		<item path="_snd28100.pcs" value="28100" />
+		<item path="_snd28101.pcs" value="28101" />
+		<item path="_snd29100.pcs" value="29100" />
+		<item path="_snd29101.pcs" value="29101" />
+		<item path="_snd29102.pcs" value="29102" />
+		<item path="_snd30000.pcs" value="30000" />
+		<item path="_snd30010.pcs" value="30010" />
+		<item path="_snd30020.pcs" value="30020" />
+		<item path="_snd31020.pcs" value="31020" />
+		<item path="_snd31021.pcs" value="31021" />
+		<item path="_snd31031.pcs" value="31031" />
+	</folder>
+
+	<folder path="NISMIDI" file="NISMIDI.DAT" palette="0" paletteindex="" type="midi" index="sound" flags="0x400000">
+		<item path="_snd25004.mid" value="25004" />
+		<item path="_snd25006.mid" value="25006" />
+		<item path="_snd25009.mid" value="25009" />
+		<item path="_snd25010.mid" value="25010" />
+		<item path="_snd25011.mid" value="25011" />
+		<item path="_snd25012.mid" value="25012" />
+		<item path="_snd25013.mid" value="25013" />
+		<item path="_snd25014.mid" value="25014" />
+		<item path="_snd25015.mid" value="25015" />
+		<item path="_snd25016.mid" value="25016" />
+		<item path="_snd26011.mid" value="26011" />
+		<item path="_snd26012.mid" value="26012" />
+		<item path="_snd26013.mid" value="26013" />
+		<item path="_snd26014.mid" value="26014" />
+		<item path="_snd26015.mid" value="26015" />
+		<item path="_snd26016.mid" value="26016" />
+		<item path="_snd26017.mid" value="26017" />
+		<item path="_snd26018.mid" value="26018" />
+		<item path="_snd26019.mid" value="26019" />
+		<item path="_snd28100.mid" value="28100" />
+		<item path="_snd28101.mid" value="28101" />
+		<item path="_snd29100.mid" value="29100" />
+		<item path="_snd29101.mid" value="29101" />
+		<item path="_snd29102.mid" value="29102" />
+		<item path="_snd30000.mid" value="30000" />
+		<item path="_snd30010.mid" value="30010" />
+		<item path="_snd30020.mid" value="30020" />
+		<item path="_snd31020.mid" value="31020" />
+		<item path="_snd31021.mid" value="31021" />
+		<item path="_snd31030.mid" value="31030" />
+		<item path="_snd31031.mid" value="31031" />
+	</folder>
+
+	<folder path="SEQUENCE" file="SEQUENCE.DAT" palette="0" paletteindex="" type="binary" index="sequence" flags="0x400000">
+		<item path="seqs00001.bin" value="1" />
+		<item path="seqs00002.bin" value="2" />
+		<item path="seqs00003.bin" value="3" />
+		<item path="seqs00004.bin" value="4" />
+		<item path="seqs00005.bin" value="5" />
+		<item path="seqs00006.bin" value="6" />
+		<item path="seqs00007.bin" value="7" />
+		<item path="seqs00008.bin" value="8" />
+		<item path="seqs00009.bin" value="9" />
+		<item path="seqs00010.bin" value="10" />
+		<item path="seqs00011.bin" value="11" />
+		<item path="seqs00012.bin" value="12" />
+		<item path="seqs00013.bin" value="13" />
+		<item path="seqs00014.bin" value="14" />
+		<item path="seqs00015.bin" value="15" />
+		<item path="seqs00016.bin" value="16" />
+		<item path="seqs00017.bin" value="17" />
+		<item path="seqs00018.bin" value="18" />
+		<item path="seqs00019.bin" value="19" />
+		<item path="seqs00020.bin" value="20" />
+		<item path="seqs00021.bin" value="21" />
+		<item path="seqs00022.bin" value="22" />
+		<item path="seqs00023.bin" value="23" />
+		<item path="seqs00024.bin" value="24" />
+		<item path="seqs00025.bin" value="25" />
+		<item path="seqs00026.bin" value="26" />
+		<item path="seqs00027.bin" value="27" />
+		<item path="seqs00028.bin" value="28" />
+		<item path="seqs00029.bin" value="29" />
+		<item path="seqs00030.bin" value="30" />
+		<item path="seqs00031.bin" value="31" />
+		<item path="seqs00032.bin" value="32" />
+		<item path="seqs00033.bin" value="33" />
+		<item path="seqs00034.bin" value="34" />
+		<item path="seqs00035.bin" value="35" />
+		<item path="seqs00036.bin" value="36" />
+		<item path="seqs00037.bin" value="37" />
+		<item path="seqs00038.bin" value="38" />
+		<item path="seqs00039.bin" value="39" />
+		<item path="seqs00040.bin" value="40" />
+		<item path="seqs00041.bin" value="41" />
+		<item path="seqs00042.bin" value="42" />
+		<item path="seqs00043.bin" value="43" />
+		<item path="seqs00044.bin" value="44" />
+		<item path="seqs00045.bin" value="45" />
+		<item path="seqs00046.bin" value="46" />
+		<item path="seqs00047.bin" value="47" />
+		<item path="seqs00048.bin" value="48" />
+		<item path="seqs00049.bin" value="49" />
+		<item path="seqs00050.bin" value="50" />
+		<item path="seqs00051.bin" value="51" />
+		<item path="seqs00052.bin" value="52" />
+		<item path="seqs00053.bin" value="53" />
+		<item path="seqs00054.bin" value="54" />
+		<item path="seqs00055.bin" value="55" />
+		<item path="seqs00056.bin" value="56" />
+		<item path="seqs00057.bin" value="57" />
+		<item path="seqs00058.bin" value="58" />
+		<item path="seqs00059.bin" value="59" />
+		<item path="seqs00060.bin" value="60" />
+		<item path="seqs00061.bin" value="61" />
+		<item path="seqs00062.bin" value="62" />
+		<item path="seqs00063.bin" value="63" />
+		<item path="seqs00064.bin" value="64" />
+		<item path="seqs00065.bin" value="65" />
+		<item path="seqs00066.bin" value="66" />
+		<item path="seqs00067.bin" value="67" />
+		<item path="seqs00068.bin" value="68" />
+		<item path="seqs00069.bin" value="69" />
+		<item path="seqs00070.bin" value="70" />
+		<item path="seqs00071.bin" value="71" />
+		<item path="seqs00072.bin" value="72" />
+		<item path="seqs00073.bin" value="73" />
+		<item path="seqs00074.bin" value="74" />
+		<item path="seqs00075.bin" value="75" />
+		<item path="seqs00076.bin" value="76" />
+		<item path="seqs00077.bin" value="77" />
+		<item path="seqs00078.bin" value="78" />
+		<item path="seqs00079.bin" value="79" />
+		<item path="seqs00080.bin" value="80" />
+		<item path="seqs00081.bin" value="81" />
+		<item path="seqs00082.bin" value="82" />
+		<item path="seqs00083.bin" value="83" />
+		<item path="seqs00084.bin" value="84" />
+		<item path="seqs00085.bin" value="85" />
+		<item path="seqs00086.bin" value="86" />
+		<item path="seqs00087.bin" value="87" />
+		<item path="seqs00088.bin" value="88" />
+		<item path="seqs00089.bin" value="89" />
+		<item path="seqs00090.bin" value="90" />
+		<item path="seqs00091.bin" value="91" />
+		<item path="seqs00092.bin" value="92" />
+		<item path="seqs00093.bin" value="93" />
+		<item path="seqs00094.bin" value="94" />
+		<item path="seqs00095.bin" value="95" />
+		<item path="seqs00096.bin" value="96" />
+		<item path="seqs00097.bin" value="97" />
+		<item path="seqs00098.bin" value="98" />
+		<item path="seqs00099.bin" value="99" />
+		<item path="seqs00100.bin" value="100" />
+		<item path="seqs00101.bin" value="101" />
+		<item path="seqs00102.bin" value="102" />
+		<item path="seqs00103.bin" value="103" />
+		<item path="seqs00104.bin" value="104" />
+		<item path="seqs00105.bin" value="105" />
+		<item path="seqs00106.bin" value="106" />
+		<item path="seqs00107.bin" value="107" />
+		<item path="seqs00108.bin" value="108" />
+		<item path="seqs00109.bin" value="109" />
+		<item path="seqs00110.bin" value="110" />
+		<item path="seqs00111.bin" value="111" />
+		<item path="seqs00112.bin" value="112" />
+		<item path="seqs00113.bin" value="113" />
+		<item path="seqs00114.bin" value="114" />
+		<item path="seqs00115.bin" value="115" />
+		<item path="seqs00116.bin" value="116" />
+		<item path="seqs00117.bin" value="117" />
+		<item path="seqs00118.bin" value="118" />
+		<item path="seqs00119.bin" value="119" />
+		<item path="seqs00120.bin" value="120" />
+		<item path="seqs00121.bin" value="121" />
+		<item path="seqs00122.bin" value="122" />
+		<item path="seqs00123.bin" value="123" />
+		<item path="seqs00124.bin" value="124" />
+		<item path="seqs00125.bin" value="125" />
+		<item path="seqs00126.bin" value="126" />
+		<item path="seqs00127.bin" value="127" />
+		<item path="seqs00128.bin" value="128" />
+		<item path="seqs00129.bin" value="129" />
+		<item path="seqs00130.bin" value="130" />
+		<item path="seqs00131.bin" value="131" />
+		<item path="seqs00132.bin" value="132" />
+		<item path="seqs00133.bin" value="133" />
+		<item path="seqs00134.bin" value="134" />
+		<item path="seqs00135.bin" value="135" />
+		<item path="seqs00136.bin" value="136" />
+		<item path="seqs00137.bin" value="137" />
+		<item path="seqs00138.bin" value="138" />
+		<item path="seqs00139.bin" value="139" />
+		<item path="seqs00140.bin" value="140" />
+		<item path="seqs00141.bin" value="141" />
+		<item path="seqs00142.bin" value="142" />
+		<item path="seqs00143.bin" value="143" />
+		<item path="seqs00144.bin" value="144" />
+		<item path="seqs00145.bin" value="145" />
+		<item path="seqs00146.bin" value="146" />
+		<item path="seqs00147.bin" value="147" />
+		<item path="seqs00150.bin" value="150" />
+		<item path="seqs00151.bin" value="151" />
+		<item path="seqs00152.bin" value="152" />
+		<item path="seqs00153.bin" value="153" />
+		<item path="seqs00154.bin" value="154" />
+		<item path="seqs00155.bin" value="155" />
+		<item path="seqs00156.bin" value="156" />
+		<item path="seqs00157.bin" value="157" />
+		<item path="seqs00158.bin" value="158" />
+		<item path="seqs00159.bin" value="159" />
+		<item path="seqs00160.bin" value="160" />
+		<item path="seqs00161.bin" value="161" />
+		<item path="seqs00162.bin" value="162" />
+		<item path="seqs00163.bin" value="163" />
+		<item path="seqs00164.bin" value="164" />
+		<item path="seqs00165.bin" value="165" />
+		<item path="seqs00166.bin" value="166" />
+		<item path="seqs00168.bin" value="168" />
+		<item path="seqs00169.bin" value="169" />
+		<item path="seqs00170.bin" value="170" />
+		<item path="seqs00171.bin" value="171" />
+		<item path="seqs00172.bin" value="172" />
+		<item path="seqs00173.bin" value="173" />
+		<item path="seqs00174.bin" value="174" />
+		<item path="seqs00175.bin" value="175" />
+		<item path="seqs00176.bin" value="176" />
+		<item path="seqs00177.bin" value="177" />
+		<item path="seqs00180.bin" value="180" />
+		<item path="seqs00184.bin" value="184" />
+		<item path="seqs00185.bin" value="185" />
+		<item path="seqs00186.bin" value="186" />
+		<item path="seqs00187.bin" value="187" />
+		<item path="seqs00188.bin" value="188" />
+		<item path="seqs00189.bin" value="189" />
+		<item path="seqs00190.bin" value="190" />
+		<item path="seqs00191.bin" value="191" />
+		<item path="seqs00192.bin" value="192" />
+		<item path="seqs00193.bin" value="193" />
+		<item path="seqs00194.bin" value="194" />
+		<item path="seqs00195.bin" value="195" />
+		<item path="seqs00196.bin" value="196" />
+		<item path="seqs00197.bin" value="197" />
+		<item path="seqs00198.bin" value="198" />
+		<item path="seqs00199.bin" value="199" flags="0x0" />
+		<item path="seqs00200.bin" value="200" />
+		<item path="seqs00201.bin" value="201" />
+		<item path="seqs00202.bin" value="202" />
+		<item path="seqs00203.bin" value="203" />
+		<item path="seqs00204.bin" value="204" />
+		<item path="seqs00205.bin" value="205" />
+		<item path="seqs00206.bin" value="206" />
+		<item path="seqs00207.bin" value="207" />
+		<item path="seqs00208.bin" value="208" />
+		<item path="seqs00209.bin" value="209" />
+		<item path="seqs00210.bin" value="210" />
+		<item path="seqs00211.bin" value="211" />
+		<item path="seqs00212.bin" value="212" />
+		<item path="seqs00213.bin" value="213" />
+		<item path="seqs00214.bin" value="214" />
+		<item path="seqs00215.bin" value="215" />
+		<item path="seqs00216.bin" value="216" />
+		<item path="seqs00217.bin" value="217" />
+		<item path="seqs00218.bin" value="218" />
+		<item path="seqs00219.bin" value="219" />
+		<item path="seqs00220.bin" value="220" />
+		<item path="seqs00221.bin" value="221" />
+		<item path="seqs00222.bin" value="222" />
+		<item path="seqs00223.bin" value="223" />
+		<item path="seqs00225.bin" value="225" />
+		<item path="seqs00225.bin" value="225" />
+		<item path="seqs00226.bin" value="226" />
+		<item path="seqs00227.bin" value="227" />
+		<item path="seqs00228.bin" value="228" />
+		<item path="seqs00229.bin" value="229" />
+		<item path="seqs00230.bin" value="230" />
+		<item path="seqs00231.bin" value="231" />
+		<item path="seqs00232.bin" value="232" />
+		<item path="seqs00235.bin" value="235" />
+		<item path="seqs00236.bin" value="236" />
+		<item path="seqs00237.bin" value="237" />
+		<item path="seqs00238.bin" value="238" />
+		<item path="seqs00239.bin" value="239" />
+		<item path="seqs00240.bin" value="240" />
+		<item path="seqs00241.bin" value="241" />
+		<item path="seqs00242.bin" value="242" />
+		<item path="seqs00243.bin" value="243" />
+		<item path="seqs00244.bin" value="244" />
+	</folder>
+
+	<folder path="TANDYSND" file="TANDYSND.DAT" palette="0" paletteindex="" type="midi" index="sound" flags="0x400000">
+		<item path="_snd10027.mid" value="10027" />
+		<item path="_snd10028.mid" value="10028" />
+		<item path="_snd10029.mid" value="10029" />
+		<item path="_snd10030.mid" value="10030" />
+		<item path="_snd10033.mid" value="10033" />
+		<item path="_snd10034.mid" value="10034" />
+		<item path="_snd10035.mid" value="10035" />
+		<item path="_snd10037.mid" value="10037" />
+		<item path="_snd10039.mid" value="10039" />
+		<item path="_snd10040.mid" value="10040" />
+		<item path="_snd10041.mid" value="10041" />
+		<item path="_snd10050.mid" value="10050" />
+		<item path="_snd10051.mid" value="10051" />
+		<item path="_snd10058.mid" value="10058" />
+		<item path="_snd10059.mid" value="10059" />
+		<item path="_snd10060.mid" value="10060" />
+		<item path="_snd10061.mid" value="10061" />
+		<item path="_snd10063.mid" value="10063" />
+		<item path="_snd10064.mid" value="10064" />
+		<item path="_snd10065.mid" value="10065" />
+		<item path="_snd10066.mid" value="10066" />
+		<item path="_snd10073.mid" value="10073" />
+		<item path="_snd10074.mid" value="10074" />
+		<item path="_snd10091.mid" value="10091" />
+		<item path="_snd10092.mid" value="10092" />
+		<item path="_snd10100.mid" value="10100" />
+		<item path="_snd10101.mid" value="10101" />
+		<item path="_snd10102.mid" value="10102" />
+		<item path="_snd10103.mid" value="10103" />
+		<item path="_snd10104.mid" value="10104" />
+		<item path="_snd10105.mid" value="10105" />
+		<item path="_snd10106.mid" value="10106" />
+		<item path="_snd10107.mid" value="10107" />
+		<item path="_snd10108.mid" value="10108" />
+		<item path="_snd10109.mid" value="10109" />
+		<item path="_snd10110.mid" value="10110" />
+		<item path="_snd10111.mid" value="10111" />
+		<item path="_snd10112.mid" value="10112" />
+		<item path="_snd10113.mid" value="10113" />
+		<item path="_snd10114.mid" value="10114" />
+		<item path="_snd10115.mid" value="10115" />
+		<item path="_snd10116.mid" value="10116" />
+		<item path="_snd10117.mid" value="10117" />
+		<item path="_snd10118.mid" value="10118" />
+		<item path="_snd10119.mid" value="10119" />
+		<item path="_snd10120.mid" value="10120" />
+		<item path="_snd10121.mid" value="10121" />
+		<item path="_snd10122.mid" value="10122" />
+		<item path="_snd10123.mid" value="10123" />
+		<item path="_snd10124.mid" value="10124" />
+		<item path="_snd10125.mid" value="10125" />
+		<item path="_snd10126.mid" value="10126" />
+		<item path="_snd10127.mid" value="10127" />
+		<item path="_snd10128.mid" value="10128" />
+		<item path="_snd10129.mid" value="10129" />
+		<item path="_snd10130.mid" value="10130" />
+		<item path="_snd10131.mid" value="10131" />
+		<item path="_snd10132.mid" value="10132" />
+		<item path="_snd10133.mid" value="10133" />
+		<item path="_snd10134.mid" value="10134" />
+		<item path="_snd10135.mid" value="10135" />
+		<item path="_snd10136.mid" value="10136" />
+		<item path="_snd10137.mid" value="10137" />
+		<item path="_snd10138.mid" value="10138" />
+		<item path="_snd10139.mid" value="10139" />
+		<item path="_snd10140.mid" value="10140" />
+		<item path="_snd10141.mid" value="10141" />
+		<item path="_snd10142.mid" value="10142" />
+		<item path="_snd10145.mid" value="10145" />
+		<item path="_snd10146.mid" value="10146" />
+		<item path="_snd10147.mid" value="10147" />
+		<item path="_snd10149.mid" value="10149" />
+		<item path="_snd10150.mid" value="10150" />
+		<item path="_snd10151.mid" value="10151" />
+		<item path="_snd10152.mid" value="10152" />
+		<item path="_snd10153.mid" value="10153" />
+		<item path="_snd10154.mid" value="10154" />
+		<item path="_snd10155.mid" value="10155" />
+		<item path="_snd10156.mid" value="10156" />
+		<item path="_snd10157.mid" value="10157" />
+		<item path="_snd10158.mid" value="10158" />
+		<item path="_snd10159.mid" value="10159" />
+		<item path="_snd10160.mid" value="10160" />
+		<item path="_snd10161.mid" value="10161" />
+		<item path="_snd10162.mid" value="10162" />
+		<item path="_snd10163.mid" value="10163" />
+		<item path="_snd10164.mid" value="10164" />
+		<item path="_snd10165.mid" value="10165" />
+		<item path="_snd10166.mid" value="10166" />
+		<item path="_snd10167.mid" value="10167" />
+		<item path="_snd10168.mid" value="10168" />
+		<item path="_snd10169.mid" value="10169" />
+		<item path="_snd10170.mid" value="10170" />
+		<item path="_snd10171.mid" value="10171" />
+		<item path="_snd10172.mid" value="10172" />
+		<item path="_snd10173.mid" value="10173" />
+		<item path="_snd10174.mid" value="10174" />
+		<item path="_snd10175.mid" value="10175" />
+		<item path="_snd10176.mid" value="10176" />
+		<item path="_snd10177.mid" value="10177" />
+		<item path="_snd10178.mid" value="10178" />
+		<item path="_snd10179.mid" value="10179" />
+		<item path="_snd10180.mid" value="10180" />
+		<item path="_snd10181.mid" value="10181" />
+		<item path="_snd10182.mid" value="10182" />
+		<item path="_snd10183.mid" value="10183" />
+		<item path="_snd10184.mid" value="10184" />
+		<item path="_snd10185.mid" value="10185" />
+		<item path="_snd10186.mid" value="10186" />
+		<item path="_snd10187.mid" value="10187" />
+		<item path="_snd10188.mid" value="10188" />
+		<item path="_snd10189.mid" value="10189" />
+		<item path="_snd10190.mid" value="10190" />
+		<item path="_snd10191.mid" value="10191" />
+		<item path="_snd10192.mid" value="10192" />
+		<item path="_snd10196.mid" value="10196" />
+		<item path="_snd10207.mid" value="10207" />
+		<item path="_snd10208.mid" value="10208" />
+		<item path="_snd10209.mid" value="10209" />
+		<item path="_snd10210.mid" value="10210" />
+		<item path="_snd10211.mid" value="10211" />
+		<item path="_snd10212.mid" value="10212" />
+		<item path="_snd10213.mid" value="10213" />
+		<item path="_snd10214.mid" value="10214" />
+		<item path="_snd10215.mid" value="10215" />
+		<item path="_snd10216.mid" value="10216" />
+		<item path="_snd10217.mid" value="10217" />
+		<item path="_snd10218.mid" value="10218" />
+		<item path="_snd10219.mid" value="10219" />
+		<item path="_snd10220.mid" value="10220" />
+		<item path="_snd10221.mid" value="10221" />
+		<item path="_snd10222.mid" value="10222" />
+		<item path="_snd10223.mid" value="10223" />
+		<item path="_snd10224.mid" value="10224" />
+		<item path="_snd10225.mid" value="10225" />
+		<item path="_snd10226.mid" value="10226" />
+		<item path="_snd10227.mid" value="10227" />
+		<item path="_snd10228.mid" value="10228" />
+		<item path="_snd10229.mid" value="10229" />
+		<item path="_snd10230.mid" value="10230" />
+		<item path="_snd10231.mid" value="10231" />
+		<item path="_snd10232.mid" value="10232" />
+		<item path="_snd10233.mid" value="10233" />
+		<item path="_snd10234.mid" value="10234" />
+		<item path="_snd10235.mid" value="10235" />
+		<item path="_snd10236.mid" value="10236" />
+		<item path="_snd10237.mid" value="10237" />
+		<item path="_snd10238.mid" value="10238" />
+		<item path="_snd10239.mid" value="10239" />
+		<item path="_snd10240.mid" value="10240" />
+		<item path="_snd10241.mid" value="10241" />
+		<item path="_snd10242.mid" value="10242" />
+		<item path="_snd10243.mid" value="10243" />
+		<item path="_snd10244.mid" value="10244" />
+		<item path="_snd10245.mid" value="10245" />
+		<item path="_snd10246.mid" value="10246" />
+		<item path="_snd10247.mid" value="10247" />
+		<item path="_snd10248.mid" value="10248" />
+		<item path="_snd10249.mid" value="10249" />
+		<item path="_snd10251.mid" value="10251" />
+		<item path="_snd10253.mid" value="10253" />
+		<item path="_snd10254.mid" value="10254" />
+		<item path="_snd10263.mid" value="10263" />
+		<item path="_snd10264.mid" value="10264" />
+		<item path="_snd10265.mid" value="10265" />
+		<item path="_snd10266.mid" value="10266" />
+		<item path="_snd10267.mid" value="10267" />
+		<item path="_snd10268.mid" value="10268" />
+		<item path="_snd10269.mid" value="10269" />
+		<item path="_snd10270.mid" value="10270" />
+		<item path="_snd10271.mid" value="10271" />
+		<item path="_snd10272.mid" value="10272" />
+
+		<item path="_snd10198.mid" value="10198" />
+		<item path="_snd10199.mid" value="10199" />
+		<item path="_snd10255.mid" value="10255" /> 
+	</folder>
+
+	<folder path="IBMSND" file="IBMSND.DAT" palette="0" paletteindex="" type="pcspeaker" index="sound" flags="0x400000">
+		<item path="_snd10000.pcs" value="10000" />
+		<item path="_snd10001.pcs" value="10001" />
+		<item path="_snd10002.pcs" value="10002" />
+		<item path="_snd10003.pcs" value="10003" />
+		<item path="_snd10004.pcs" value="10004" />
+		<item path="_snd10005.pcs" value="10005" />
+		<item path="_snd10006.pcs" value="10006" />
+		<item path="_snd10007.pcs" value="10007" />
+		<item path="_snd10008.pcs" value="10008" />
+		<item path="_snd10009.pcs" value="10009" />
+		<item path="_snd10010.pcs" value="10010" />
+		<item path="_snd10011.pcs" value="10011" />
+		<item path="_snd10012.pcs" value="10012" />
+		<item path="_snd10013.pcs" value="10013" />
+		<item path="_snd10014.pcs" value="10014" />
+		<item path="_snd10015.pcs" value="10015" />
+		<item path="_snd10016.pcs" value="10016" />
+		<item path="_snd10017.pcs" value="10017" />
+		<item path="_snd10018.pcs" value="10018" />
+		<item path="_snd10019.pcs" value="10019" />
+		<item path="_snd10020.pcs" value="10020" />
+		<item path="_snd10021.pcs" value="10021" />
+		<item path="_snd10022.pcs" value="10022" />
+		<item path="_snd10023.pcs" value="10023" />
+		<item path="_snd10024.pcs" value="10024" />
+		<item path="_snd10025.pcs" value="10025" />
+		<item path="_snd10026.pcs" value="10026" />
+		<item path="_snd10027.pcs" value="10027" />
+		<item path="_snd10028.pcs" value="10028" />
+		<item path="_snd10029.pcs" value="10029" />
+		<item path="_snd10030.pcs" value="10030" />
+		<item path="_snd10031.pcs" value="10031" />
+		<item path="_snd10032.pcs" value="10032" />
+		<item path="_snd10033.pcs" value="10033" />
+		<item path="_snd10034.pcs" value="10034" />
+		<item path="_snd10035.pcs" value="10035" />
+		<item path="_snd10036.pcs" value="10036" />
+		<item path="_snd10037.pcs" value="10037" />
+		<item path="_snd10038.pcs" value="10038" />
+		<item path="_snd10039.pcs" value="10039" />
+		<item path="_snd10040.pcs" value="10040" />
+		<item path="_snd10041.pcs" value="10041" />
+		<item path="_snd10042.pcs" value="10042" />
+		<item path="_snd10043.pcs" value="10043" />
+		<item path="_snd10044.pcs" value="10044" />
+		<item path="_snd10045.pcs" value="10045" />
+		<item path="_snd10046.pcs" value="10046" />
+		<item path="_snd10047.pcs" value="10047" />
+		<item path="_snd10048.pcs" value="10048" />
+		<item path="_snd10049.pcs" value="10049" />
+		<item path="_snd10050.pcs" value="10050" />
+		<item path="_snd10051.pcs" value="10051" />
+		<item path="_snd10053.pcs" value="10053" />
+		<item path="_snd10054.pcs" value="10054" />
+		<item path="_snd10055.pcs" value="10055" />
+		<item path="_snd10056.pcs" value="10056" />
+		<item path="_snd10057.pcs" value="10057" />
+		<item path="_snd10058.pcs" value="10058" />
+		<item path="_snd10059.pcs" value="10059" />
+		<item path="_snd10060.pcs" value="10060" />
+		<item path="_snd10061.pcs" value="10061" />
+		<item path="_snd10062.pcs" value="10062" />
+		<item path="_snd10062.pcs" value="10062" />
+		<item path="_snd10063.pcs" value="10063" />
+		<item path="_snd10064.pcs" value="10064" />
+		<item path="_snd10065.pcs" value="10065" />
+		<item path="_snd10066.pcs" value="10066" />
+		<item path="_snd10067.pcs" value="10067" />
+		<item path="_snd10068.pcs" value="10068" />
+		<item path="_snd10069.pcs" value="10069" />
+		<item path="_snd10070.pcs" value="10070" />
+		<item path="_snd10071.pcs" value="10071" />
+		<item path="_snd10072.pcs" value="10072" />
+		<item path="_snd10073.pcs" value="10073" />
+		<item path="_snd10074.pcs" value="10074" />
+		<item path="_snd10075.pcs" value="10075" />
+		<item path="_snd10076.pcs" value="10076" />
+		<item path="_snd10077.pcs" value="10077" />
+		<item path="_snd10078.pcs" value="10078" />
+		<item path="_snd10079.pcs" value="10079" />
+		<item path="_snd10080.pcs" value="10080" />
+		<item path="_snd10081.pcs" value="10081" />
+		<item path="_snd10082.pcs" value="10082" />
+		<item path="_snd10083.pcs" value="10083" />
+		<item path="_snd10084.pcs" value="10084" />
+		<item path="_snd10085.pcs" value="10085" />
+		<item path="_snd10086.pcs" value="10086" />
+		<item path="_snd10087.pcs" value="10087" />
+		<item path="_snd10088.pcs" value="10088" />
+		<item path="_snd10089.pcs" value="10089" />
+		<item path="_snd10090.pcs" value="10090" />
+		<item path="_snd10091.pcs" value="10091" />
+		<item path="_snd10092.pcs" value="10092" />
+		<item path="_snd10093.pcs" value="10093" />
+		<item path="_snd10094.pcs" value="10094" />
+		<item path="_snd10095.pcs" value="10095" />
+		<item path="_snd10096.pcs" value="10096" />
+		<item path="_snd10097.pcs" value="10097" />
+		<item path="_snd10098.pcs" value="10098" />
+		<item path="_snd10099.pcs" value="10099" />
+		<item path="_snd10100.pcs" value="10100" />
+		<item path="_snd10101.pcs" value="10101" />
+		<item path="_snd10102.pcs" value="10102" />
+		<item path="_snd10103.pcs" value="10103" />
+		<item path="_snd10104.pcs" value="10104" />
+		<item path="_snd10105.pcs" value="10105" />
+		<item path="_snd10106.pcs" value="10106" />
+		<item path="_snd10107.pcs" value="10107" />
+		<item path="_snd10108.pcs" value="10108" />
+		<item path="_snd10109.pcs" value="10109" />
+		<item path="_snd10110.pcs" value="10110" />
+		<item path="_snd10111.pcs" value="10111" />
+		<item path="_snd10112.pcs" value="10112" />
+		<item path="_snd10113.pcs" value="10113" />
+		<item path="_snd10114.pcs" value="10114" />
+		<item path="_snd10115.pcs" value="10115" />
+		<item path="_snd10116.pcs" value="10116" />
+		<item path="_snd10117.pcs" value="10117" />
+		<item path="_snd10118.pcs" value="10118" />
+		<item path="_snd10119.pcs" value="10119" />
+		<item path="_snd10120.pcs" value="10120" />
+		<item path="_snd10121.pcs" value="10121" />
+		<item path="_snd10122.pcs" value="10122" />
+		<item path="_snd10123.pcs" value="10123" />
+		<item path="_snd10124.pcs" value="10124" />
+		<item path="_snd10125.pcs" value="10125" />
+		<item path="_snd10126.pcs" value="10126" />
+		<item path="_snd10127.pcs" value="10127" />
+		<item path="_snd10128.pcs" value="10128" />
+		<item path="_snd10129.pcs" value="10129" />
+		<item path="_snd10130.pcs" value="10130" />
+		<item path="_snd10131.pcs" value="10131" />
+		<item path="_snd10132.pcs" value="10132" />
+		<item path="_snd10133.pcs" value="10133" />
+		<item path="_snd10134.pcs" value="10134" />
+		<item path="_snd10135.pcs" value="10135" />
+		<item path="_snd10136.pcs" value="10136" />
+		<item path="_snd10137.pcs" value="10137" />
+		<item path="_snd10138.pcs" value="10138" />
+		<item path="_snd10139.pcs" value="10139" />
+		<item path="_snd10140.pcs" value="10140" />
+		<item path="_snd10141.pcs" value="10141" />
+		<item path="_snd10142.pcs" value="10142" />
+		<item path="_snd10143.pcs" value="10143" />
+		<item path="_snd10144.pcs" value="10144" />
+		<item path="_snd10145.pcs" value="10145" />
+		<item path="_snd10146.pcs" value="10146" />
+		<item path="_snd10147.pcs" value="10147" />
+		<item path="_snd10148.pcs" value="10148" />
+		<item path="_snd10149.pcs" value="10149" />
+		<item path="_snd10150.pcs" value="10150" />
+		<item path="_snd10151.pcs" value="10151" />
+		<item path="_snd10152.pcs" value="10152" />
+		<item path="_snd10153.pcs" value="10153" />
+		<item path="_snd10154.pcs" value="10154" />
+		<item path="_snd10155.pcs" value="10155" />
+		<item path="_snd10156.pcs" value="10156" />
+		<item path="_snd10157.pcs" value="10157" />
+		<item path="_snd10158.pcs" value="10158" />
+		<item path="_snd10159.pcs" value="10159" />
+		<item path="_snd10160.pcs" value="10160" />
+		<item path="_snd10161.pcs" value="10161" />
+		<item path="_snd10162.pcs" value="10162" />
+		<item path="_snd10163.pcs" value="10163" />
+		<item path="_snd10164.pcs" value="10164" />
+		<item path="_snd10165.pcs" value="10165" />
+		<item path="_snd10166.pcs" value="10166" />
+		<item path="_snd10167.pcs" value="10167" />
+		<item path="_snd10168.pcs" value="10168" />
+		<item path="_snd10169.pcs" value="10169" />
+		<item path="_snd10170.pcs" value="10170" />
+		<item path="_snd10171.pcs" value="10171" />
+		<item path="_snd10172.pcs" value="10172" />
+		<item path="_snd10173.pcs" value="10173" />
+		<item path="_snd10174.pcs" value="10174" />
+		<item path="_snd10175.pcs" value="10175" />
+		<item path="_snd10176.pcs" value="10176" />
+		<item path="_snd10177.pcs" value="10177" />
+		<item path="_snd10178.pcs" value="10178" />
+		<item path="_snd10179.pcs" value="10179" />
+		<item path="_snd10180.pcs" value="10180" />
+		<item path="_snd10181.pcs" value="10181" />
+		<item path="_snd10182.pcs" value="10182" />
+		<item path="_snd10183.pcs" value="10183" />
+		<item path="_snd10184.pcs" value="10184" />
+		<item path="_snd10185.pcs" value="10185" />
+		<item path="_snd10186.pcs" value="10186" />
+		<item path="_snd10187.pcs" value="10187" />
+		<item path="_snd10188.pcs" value="10188" />
+		<item path="_snd10189.pcs" value="10189" />
+		<item path="_snd10190.pcs" value="10190" />
+		<item path="_snd10191.pcs" value="10191" />
+		<item path="_snd10192.pcs" value="10192" />
+		<item path="_snd10193.pcs" value="10193" />
+		<item path="_snd10194.pcs" value="10194" />
+		<item path="_snd10195.pcs" value="10195" />
+		<item path="_snd10196.pcs" value="10196" />
+		<item path="_snd10197.pcs" value="10197" />
+		<item path="_snd10198.pcs" value="10198" />
+		<item path="_snd10199.pcs" value="10199" />
+		<item path="_snd10200.pcs" value="10200" />
+		<item path="_snd10201.pcs" value="10201" />
+		<item path="_snd10202.pcs" value="10202" />
+		<item path="_snd10203.pcs" value="10203" />
+		<item path="_snd10204.pcs" value="10204" />
+		<item path="_snd10205.pcs" value="10205" />
+		<item path="_snd10206.pcs" value="10206" />
+		<item path="_snd10207.pcs" value="10207" />
+		<item path="_snd10208.pcs" value="10208" />
+		<item path="_snd10209.pcs" value="10209" />
+		<item path="_snd10210.pcs" value="10210" />
+		<item path="_snd10211.pcs" value="10211" />
+		<item path="_snd10212.pcs" value="10212" />
+		<item path="_snd10213.pcs" value="10213" />
+		<item path="_snd10214.pcs" value="10214" />
+		<item path="_snd10215.pcs" value="10215" />
+		<item path="_snd10216.pcs" value="10216" />
+		<item path="_snd10217.pcs" value="10217" />
+		<item path="_snd10218.pcs" value="10218" />
+		<item path="_snd10219.pcs" value="10219" />
+		<item path="_snd10220.pcs" value="10220" />
+		<item path="_snd10221.pcs" value="10221" />
+		<item path="_snd10222.pcs" value="10222" />
+		<item path="_snd10223.pcs" value="10223" />
+		<item path="_snd10224.pcs" value="10224" />
+		<item path="_snd10225.pcs" value="10225" />
+		<item path="_snd10226.pcs" value="10226" />
+		<item path="_snd10227.pcs" value="10227" />
+		<item path="_snd10228.pcs" value="10228" />
+		<item path="_snd10229.pcs" value="10229" />
+		<item path="_snd10230.pcs" value="10230" />
+		<item path="_snd10231.pcs" value="10231" />
+		<item path="_snd10232.pcs" value="10232" />
+		<item path="_snd10233.pcs" value="10233" />
+		<item path="_snd10234.pcs" value="10234" />
+		<item path="_snd10235.pcs" value="10235" />
+		<item path="_snd10236.pcs" value="10236" />
+		<item path="_snd10237.pcs" value="10237" />
+		<item path="_snd10238.pcs" value="10238" />
+		<item path="_snd10239.pcs" value="10239" />
+		<item path="_snd10240.pcs" value="10240" />
+		<item path="_snd10241.pcs" value="10241" />
+		<item path="_snd10242.pcs" value="10242" />
+		<item path="_snd10243.pcs" value="10243" />
+		<item path="_snd10244.pcs" value="10244" />
+		<item path="_snd10245.pcs" value="10245" />
+		<item path="_snd10253.pcs" value="10253" />
+		<item path="_snd10253.pcs" value="10253" />
+		<item path="_snd10256.pcs" value="10256" />
+		<item path="_snd10257.pcs" value="10257" />
+		<item path="_snd10258.pcs" value="10258" />
+		<item path="_snd10259.pcs" value="10259" />
+		<item path="_snd10260.pcs" value="10260" />
+		<item path="_snd10261.pcs" value="10261" />
+		<item path="_snd10263.pcs" value="10263" />
+		<item path="_snd10264.pcs" value="10264" />
+		<item path="_snd10265.pcs" value="10265" />
+		<item path="_snd10266.pcs" value="10266" />
+		<item path="_snd10267.pcs" value="10267" />
+		<item path="_snd10268.pcs" value="10268" />
+		<item path="_snd10269.pcs" value="10269" />
+		<item path="_snd10270.pcs" value="10270" />
+		<item path="_snd10271.pcs" value="10271" />
+		<item path="_snd10272.pcs" value="10272" />
+
+		<item path="_snd10254.pcs" value="10254" />
+		<item path="_snd10255.pcs" value="10255" /> 
+	</folder>
+
+	<folder path="MIDISND" file="MIDISND.DAT" palette="0" paletteindex="" type="midi" index="sound" flags="0x400000">
+		<item path="_snd10027.mid" value="10027" />
+		<item path="_snd10028.mid" value="10028" />
+		<item path="_snd10029.mid" value="10029" />
+		<item path="_snd10030.mid" value="10030" />
+		<item path="_snd10033.mid" value="10033" />
+		<item path="_snd10034.mid" value="10034" />
+		<item path="_snd10035.mid" value="10035" />
+		<item path="_snd10037.mid" value="10037" />
+		<item path="_snd10039.mid" value="10039" />
+		<item path="_snd10040.mid" value="10040" />
+		<item path="_snd10041.mid" value="10041" />
+		<item path="_snd10050.mid" value="10050" />
+		<item path="_snd10051.mid" value="10051" />
+		<item path="_snd10058.mid" value="10058" />
+		<item path="_snd10059.mid" value="10059" />
+		<item path="_snd10060.mid" value="10060" />
+		<item path="_snd10061.mid" value="10061" />
+		<item path="_snd10063.mid" value="10063" />
+		<item path="_snd10064.mid" value="10064" />
+		<item path="_snd10065.mid" value="10065" />
+		<item path="_snd10066.mid" value="10066" />
+		<item path="_snd10073.mid" value="10073" />
+		<item path="_snd10074.mid" value="10074" />
+		<item path="_snd10091.mid" value="10091" />
+		<item path="_snd10092.mid" value="10092" />
+		<item path="_snd10100.mid" value="10100" />
+		<item path="_snd10101.mid" value="10101" />
+		<item path="_snd10102.mid" value="10102" />
+		<item path="_snd10103.mid" value="10103" />
+		<item path="_snd10104.mid" value="10104" />
+		<item path="_snd10105.mid" value="10105" />
+		<item path="_snd10106.mid" value="10106" />
+		<item path="_snd10107.mid" value="10107" />
+		<item path="_snd10108.mid" value="10108" />
+		<item path="_snd10109.mid" value="10109" />
+		<item path="_snd10110.mid" value="10110" />
+		<item path="_snd10111.mid" value="10111" />
+		<item path="_snd10112.mid" value="10112" />
+		<item path="_snd10113.mid" value="10113" />
+		<item path="_snd10114.mid" value="10114" />
+		<item path="_snd10115.mid" value="10115" />
+		<item path="_snd10116.mid" value="10116" />
+		<item path="_snd10117.mid" value="10117" />
+		<item path="_snd10118.mid" value="10118" />
+		<item path="_snd10119.mid" value="10119" />
+		<item path="_snd10120.mid" value="10120" />
+		<item path="_snd10121.mid" value="10121" />
+		<item path="_snd10122.mid" value="10122" />
+		<item path="_snd10123.mid" value="10123" />
+		<item path="_snd10124.mid" value="10124" />
+		<item path="_snd10125.mid" value="10125" />
+		<item path="_snd10126.mid" value="10126" />
+		<item path="_snd10127.mid" value="10127" />
+		<item path="_snd10128.mid" value="10128" />
+		<item path="_snd10129.mid" value="10129" />
+		<item path="_snd10130.mid" value="10130" />
+		<item path="_snd10131.mid" value="10131" />
+		<item path="_snd10132.mid" value="10132" />
+		<item path="_snd10133.mid" value="10133" />
+		<item path="_snd10134.mid" value="10134" />
+		<item path="_snd10135.mid" value="10135" />
+		<item path="_snd10136.mid" value="10136" />
+		<item path="_snd10137.mid" value="10137" />
+		<item path="_snd10138.mid" value="10138" />
+		<item path="_snd10139.mid" value="10139" />
+		<item path="_snd10140.mid" value="10140" />
+		<item path="_snd10141.mid" value="10141" />
+		<item path="_snd10142.mid" value="10142" />
+		<item path="_snd10145.mid" value="10145" />
+		<item path="_snd10146.mid" value="10146" />
+		<item path="_snd10147.mid" value="10147" />
+		<item path="_snd10149.mid" value="10149" />
+		<item path="_snd10150.mid" value="10150" />
+		<item path="_snd10151.mid" value="10151" />
+		<item path="_snd10152.mid" value="10152" />
+		<item path="_snd10153.mid" value="10153" />
+		<item path="_snd10154.mid" value="10154" />
+		<item path="_snd10155.mid" value="10155" />
+		<item path="_snd10156.mid" value="10156" />
+		<item path="_snd10157.mid" value="10157" />
+		<item path="_snd10158.mid" value="10158" />
+		<item path="_snd10159.mid" value="10159" />
+		<item path="_snd10160.mid" value="10160" />
+		<item path="_snd10161.mid" value="10161" />
+		<item path="_snd10162.mid" value="10162" />
+		<item path="_snd10163.mid" value="10163" />
+		<item path="_snd10164.mid" value="10164" />
+		<item path="_snd10165.mid" value="10165" />
+		<item path="_snd10166.mid" value="10166" />
+		<item path="_snd10167.mid" value="10167" />
+		<item path="_snd10168.mid" value="10168" />
+		<item path="_snd10169.mid" value="10169" />
+		<item path="_snd10170.mid" value="10170" />
+		<item path="_snd10171.mid" value="10171" />
+		<item path="_snd10172.mid" value="10172" />
+		<item path="_snd10173.mid" value="10173" />
+		<item path="_snd10174.mid" value="10174" />
+		<item path="_snd10175.mid" value="10175" />
+		<item path="_snd10176.mid" value="10176" />
+		<item path="_snd10177.mid" value="10177" />
+		<item path="_snd10178.mid" value="10178" />
+		<item path="_snd10179.mid" value="10179" />
+		<item path="_snd10180.mid" value="10180" />
+		<item path="_snd10181.mid" value="10181" />
+		<item path="_snd10182.mid" value="10182" />
+		<item path="_snd10183.mid" value="10183" />
+		<item path="_snd10184.mid" value="10184" />
+		<item path="_snd10185.mid" value="10185" />
+		<item path="_snd10186.mid" value="10186" />
+		<item path="_snd10187.mid" value="10187" />
+		<item path="_snd10188.mid" value="10188" />
+		<item path="_snd10189.mid" value="10189" />
+		<item path="_snd10190.mid" value="10190" />
+		<item path="_snd10191.mid" value="10191" />
+		<item path="_snd10192.mid" value="10192" />
+		<item path="_snd10196.mid" value="10196" />
+		<item path="_snd10207.mid" value="10207" />
+		<item path="_snd10208.mid" value="10208" />
+		<item path="_snd10209.mid" value="10209" />
+		<item path="_snd10210.mid" value="10210" />
+		<item path="_snd10211.mid" value="10211" />
+		<item path="_snd10212.mid" value="10212" />
+		<item path="_snd10213.mid" value="10213" />
+		<item path="_snd10214.mid" value="10214" />
+		<item path="_snd10215.mid" value="10215" />
+		<item path="_snd10216.mid" value="10216" />
+		<item path="_snd10217.mid" value="10217" />
+		<item path="_snd10218.mid" value="10218" />
+		<item path="_snd10219.mid" value="10219" />
+		<item path="_snd10220.mid" value="10220" />
+		<item path="_snd10221.mid" value="10221" />
+		<item path="_snd10222.mid" value="10222" />
+		<item path="_snd10223.mid" value="10223" />
+		<item path="_snd10224.mid" value="10224" />
+		<item path="_snd10225.mid" value="10225" />
+		<item path="_snd10226.mid" value="10226" />
+		<item path="_snd10227.mid" value="10227" />
+		<item path="_snd10228.mid" value="10228" />
+		<item path="_snd10229.mid" value="10229" />
+		<item path="_snd10230.mid" value="10230" />
+		<item path="_snd10231.mid" value="10231" />
+		<item path="_snd10232.mid" value="10232" />
+		<item path="_snd10233.mid" value="10233" />
+		<item path="_snd10234.mid" value="10234" />
+		<item path="_snd10235.mid" value="10235" />
+		<item path="_snd10236.mid" value="10236" />
+		<item path="_snd10237.mid" value="10237" />
+		<item path="_snd10238.mid" value="10238" />
+		<item path="_snd10239.mid" value="10239" />
+		<item path="_snd10240.mid" value="10240" />
+		<item path="_snd10241.mid" value="10241" />
+		<item path="_snd10242.mid" value="10242" />
+		<item path="_snd10243.mid" value="10243" />
+		<item path="_snd10244.mid" value="10244" />
+		<item path="_snd10245.mid" value="10245" />
+		<item path="_snd10246.mid" value="10246" />
+		<item path="_snd10247.mid" value="10247" />
+		<item path="_snd10248.mid" value="10248" />
+		<item path="_snd10249.mid" value="10249" />
+		<item path="_snd10251.mid" value="10251" />
+		<item path="_snd10253.mid" value="10253" />
+		<item path="_snd10254.mid" value="10254" />
+		<item path="_snd10263.mid" value="10263" />
+		<item path="_snd10264.mid" value="10264" />
+		<item path="_snd10265.mid" value="10265" />
+		<item path="_snd10266.mid" value="10266" />
+		<item path="_snd10267.mid" value="10267" />
+		<item path="_snd10268.mid" value="10268" />
+		<item path="_snd10269.mid" value="10269" />
+		<item path="_snd10270.mid" value="10270" />
+		<item path="_snd10271.mid" value="10271" />
+		<item path="_snd10272.mid" value="10272" />
+
+		<item path="_snd10198.mid" value="10198" />
+		<item path="_snd10199.mid" value="10199" />
+		<item path="_snd10255.mid" value="10255" /> 
+	</folder>
+
+</resources>

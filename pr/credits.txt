@@ -1,0 +1,27 @@
+5) Credits
+
+ Coding & main routines
+  Enrique Calot
+  
+ Coding Assistant
+  Santiago Zamora
+
+ Graphic compression algorithms
+  Tammo Jan Dijkema
+  Enrique Calot
+  Diego Essaya
+
+ Graphic format development
+  Tammo Jan Dijkema
+  Anke Balderer
+
+ MID Sound format development
+  Christian Lundheim
+
+ Resources.xml edition
+  Steven Fayers
+  Piotr Kochanek
+
+Pr is also using some GPL compatible and GPL components made by
+[Kevlin Henney] (dirent stucture port for windows) and [the Free Software
+Foundation, Inc.] (getopt parsing functions ports).
