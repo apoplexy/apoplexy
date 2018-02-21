@@ -16,3 +16,11 @@ xml/*
 /src/apoplexy.o
 /src/*private*
 /src/Makefile.win
+
+# We want empty prince/, prince2/ and snes/ directories.
+prince/*
+!/prince/empty.txt
+prince2/*
+!/prince2/empty.txt
+snes/*
+!/snes/empty.txt
