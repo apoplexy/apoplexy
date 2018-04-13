@@ -5,6 +5,15 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.3 (April 14, 2018) - Norbert de Jonge
+--------------------
+10-Year Anniversary!
++ A pop-up simplifies playtesting with SDLPoP and MININIM.
++ All native tiles are now marked with an SDLPoP and/or MININIM icon.
++ Added PoP1 for DOS speed options to the EXE screen (base, fight, chomper).
++ Highlighting for special blue potions on the Map window.
+* Chompers in-editor no longer make noise by default.
+
 v3.2 (February 21, 2018) - Norbert de Jonge
 --------------------
 + If one or more games are not present, instead of merely showing clickable web links to allow the user to manually add the games, buttons can now be clicked to auto-download the games.

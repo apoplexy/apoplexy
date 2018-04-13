@@ -2,7 +2,7 @@
 MAIN SCREEN
 ---------------------------------------------------------------------------
 0-9                                  [PoP1] Shortcuts for various tiles.
-d                                    Start the level in DOSBox/ZSNES/SDLPoP.
+d                                    Playtest using DOSBox/ZSNES or native.
 e                                    Go to the events screen.
 f (and Alt + Enter/Return/Space)     Toggle fullscreen mode.
 h                                    Flip the room horizontally.
@@ -13,7 +13,7 @@ r                                    Go to the room links screen.
 s                                    Save the level.
 t                                    [PoP1] Switch between environments.
 v                                    Flip the room vertically.
-x                                    [PoP1 for DOS] Go to the SDLPoP screen.
+x                                    [PoP1 for DOS] Go to the native tiles.
 z                                    Change the interface size.
 Enter (and Return and Space)         Go to the tiles screen.
 Left arrow                           Go to the tile to the left.
@@ -37,12 +37,12 @@ F2                                   [PoP1] Go to the executable screen.
 Ctrl+c                               Copy the room.
 Ctrl+v                               Paste the room.
 Ctrl+p                               [PoP1 for SNES] Print template data.
-Ctrl + left mouse button             [PoP1 for DOS] Go to the SDLPoP screen.
+Ctrl + left mouse button             [PoP1 for DOS] Go to the native tiles.
 
 ---------------------------------------------------------------------------
 ROOM LINKS SCREEN
 ---------------------------------------------------------------------------
-d                                    Start the level in DOSBox/ZSNES/SDLPoP.
+d                                    Playtest using DOSBox/ZSNES or native.
 e                                    Go to the events screen.
 m                                    [PoP1 for DOS] Open the Map screen.
 q (and Escape)                       Go to the main screen.
@@ -66,7 +66,7 @@ Arrow keys                           Select adjacent room.
 ---------------------------------------------------------------------------
 EVENTS SCREEN
 ---------------------------------------------------------------------------
-d                                    Start the level in DOSBox/ZSNES/SDLPoP.
+d                                    Playtest using DOSBox/ZSNES or native.
 m                                    [PoP1 for DOS] Open the Map screen.
 n                                    [PoP1] Check the box under N.
 q (and Escape)                       Go to the main screen.
@@ -136,7 +136,7 @@ f                                    [PoP1 for SNES] Attributes: floor.
 n                                    [PoP1/2 for DOS] Change foreg. modifier.
 q (and Escape and c)                 Back to the tiles screen.
 s                                    [PoP1 for SNES] Attributes: space.
-x                                    [PoP1 for DOS] Go to the SDLPoP screen.
+x                                    [PoP1 for DOS] Go to the native tiles.
 y                                    [PoP1/2 for DOS] Change foreg. modifier.
 w                                    [PoP1 for SNES] Attributes: wall.
 Enter (and Return and Space)         Use the custom tile.

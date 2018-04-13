@@ -1,4 +1,4 @@
-/* apoplexy v3.2 (February 2018)
+/* apoplexy v3.3 (April 2018)
  * Copyright (C) 2008-2018 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,9 +56,9 @@
 #define SCREEN_HEIGHT 380 + 75
 #define SCREEN_BPP 16
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.2 (February 2018)"
+#define EDITOR_VERSION "v3.3 (April 2018)"
 #define COPYRIGHT "Copyright (C) 2018 The apoplexy Team"
-#define COMPATIBLE_SDLPOP_VERSION "1.16+"
+#define COMPATIBLE_NATIVE "SDLPoP 1.18.1, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
 #define MAX_FILE 100
 #define MAX_ADJ 10
@@ -179,10 +179,11 @@
 
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
 #define DEVNULL "NUL"
+#define COPY "copy"
 #define PR_EXECUTABLE "pr\\pr.exe"
 #define POP1_EXECUTABLE "prince\\PRINCE.EXE"
 #define POP1_DIR "prince\\"
-#define BATCH_FILE_SDLPOP "apoplexy.bat"
+#define BATCH_FILE_NATIVE "apoplexy.bat"
 #define SLASH "\\"
 #define HERE ""
 #define POP2_EXECUTABLE "prince2\\PRINCE.EXE"
@@ -200,6 +201,8 @@
 #define IN_DIR_POP2 "levels2\\PRINCE\\"
 #define OUT_DIR_POP2 "levels2\\PRINCE\\"
 #define XML_DIR "xml\\"
+#define SDLPOP_DIR "SDLPoP\\"
+#define MININIM_DIR "MININIM\\"
 #define BATCH_FILE "prince\\apoplexy.bat"
 #define BATCH_FILE_POP2 "prince2\\apoplexy.bat"
 #define TEMPLATES_SNES "templates\\snes\\"
@@ -246,14 +249,16 @@
 #define PNG_INCOMING "png\\incoming\\"
 #define PNG_MUSIC "png\\music\\"
 #define PNG_CONTROLLER "png\\controller\\"
-#define PNG_SDLPOP "png\\sdlpop\\"
+#define PNG_NATIVE "png\\native\\"
+#define PNG_PLAYTEST "png\\playtest\\"
 #define PNG_MINI1 "png\\mini_pop1\\"
 #else
 #define DEVNULL "/dev/null"
+#define COPY "cp"
 #define PR_EXECUTABLE "pr/pr"
 #define POP1_EXECUTABLE "prince/PRINCE.EXE"
 #define POP1_DIR "prince/"
-#define BATCH_FILE_SDLPOP "apoplexy.sh"
+#define BATCH_FILE_NATIVE "apoplexy.sh"
 #define SLASH "/"
 #define HERE "./"
 #define POP2_EXECUTABLE "prince2/PRINCE.EXE"
@@ -271,6 +276,8 @@
 #define IN_DIR_POP2 "levels2/PRINCE/"
 #define OUT_DIR_POP2 "levels2/PRINCE/"
 #define XML_DIR "xml/"
+#define SDLPOP_DIR "SDLPoP/"
+#define MININIM_DIR "MININIM/"
 #define BATCH_FILE "prince/apoplexy.bat"
 #define BATCH_FILE_POP2 "prince2/apoplexy.bat"
 #define TEMPLATES_SNES "templates/snes/"
@@ -317,7 +324,8 @@
 #define PNG_INCOMING "png/incoming/"
 #define PNG_MUSIC "png/music/"
 #define PNG_CONTROLLER "png/controller/"
-#define PNG_SDLPOP "png/sdlpop/"
+#define PNG_NATIVE "png/native/"
+#define PNG_PLAYTEST "png/playtest/"
 #define PNG_MINI1 "png/mini_pop1/"
 #endif
 /*========== Defines ==========*/
@@ -338,7 +346,6 @@ SDL_Color color_g8 = {0x88, 0x88, 0x88, 255};
 SDL_Color color_gb = {0xbb, 0xbb, 0xbb, 255};
 SDL_Color color_f4 = {0xf4, 0xf4, 0xf4, 255};
 SDL_Color color_tooltip = {0xc7, 0xff, 0xc7, 255};
-SDL_Color color_border = {0xed, 0xe9, 0xe3, 255};
 SDL_Rect offset;
 SDL_Surface *message;
 SDL_Texture *messaget;
@@ -462,7 +469,7 @@ int iDownAt;
 int iDownAtMap;
 int iSelected;
 int iOnTile;
-int iOnTileSDLPoP;
+int iOnTileNative;
 int iOKOn;
 int iYesOn;
 int iNoOn;
@@ -491,9 +498,9 @@ int iMTopOn;
 int iMMiddleOn;
 int iMBottomOn;
 int iMInvertOn;
-int iSDLPoPOn;
-int iCloseSDLPoPOn;
-int iSDLPoPTabOn;
+int iNativeOn;
+int iCloseNativeOn;
+int iNativeTabOn;
 int iHelpOK;
 int iEXESave;
 int iEXEDetails;
@@ -599,7 +606,7 @@ int iOnPoP1;
 int iOnPoP2;
 int iOnPoP1SNES;
 int iPoP1OrPoP2;
-int iUsesSDLPoP;
+int iUsesNative;
 int iEditPoP;
 int iRooms;
 int iRoomLinks;
@@ -642,8 +649,8 @@ int iStoredLevelsSizes[27 + 2];
 char sSNESFile[MAX_FILE + 2];
 char sStatus[MAX_STATUS + 2], sStatusOld[MAX_STATUS + 2];
 int iTooltip, iTooltipHeight;
-char sSDLPoP[MAX_FILE + 2];
-int iSDLPoPTab;
+char sNativeFile[3 + 2][MAX_FILE + 2];
+int iNativeTab;
 char cStore[3 + 2];
 unsigned int iActiveWindowID;
 int iMapOpen;
@@ -651,6 +658,11 @@ int iMapHoverYes;
 int iMapHoverRoom;
 int iMapHoverTile;
 int iMapShowNumbers;
+int iFoundDOSBox, iOnDOSBox;
+int iFoundSDLPoP, iOnSDLPoP;
+int iFoundMININIM, iOnMININIM;
+int iPlaytest;
+int iAutoUse, iAutoUseChk;
 
 /*** controller ***/
 SDL_GameController *controller;
@@ -687,6 +699,15 @@ static const unsigned long arWin[6] =
 	{ 0X011D8, 0X02888, 0X01393, 0X01AD3, 0X01323, 0X02453 };
 int iEXEWinLevel;
 int iEXEWinRoom;
+static const unsigned long arBaseSpeed[6] =
+	{ 0X4F01, 0X65B1, 0X5389, 0X5AC9, 0X4E45, 0X5F75 };
+int iEXEBaseSpeed;
+static const unsigned long arFightSpeed[6] =
+	{ 0X4EF9, 0X65A9, 0X5381, 0X5AC1, 0X4E3D, 0X5F6D };
+int iEXEFightSpeed;
+static const unsigned long arChomperSpeed[6] =
+	{ 0X8BBD, 0XA26D, 0X906D, 0X97AD, 0X8B29, 0X9C59 };
+int iEXEChomperSpeed;
 static const unsigned long arEnvironment[6] =
 	{ 0X1ACE8, 0X1C840, 0X1B9AC, 0X1C5C4, 0X17D4A, 0X18F3A };
 static const int arDefaultEnv[16] =
@@ -989,7 +1010,7 @@ SDL_Texture *spritesworddsel;
 SDL_Texture *spriteswordp;
 SDL_Texture *spriteswordpsel;
 
-/*** locations; SDLPoP ***/
+/*** locations; native ***/
 SDL_Texture *imgd0_4[2 + 2];
 SDL_Texture *imgp0_4[2 + 2];
 SDL_Texture *imgd0_5[2 + 2];
@@ -1478,11 +1499,21 @@ SDL_Texture *hallwayb[0x21 + 2];
 SDL_Texture *jaffarb[0x0f + 2];
 SDL_Texture *introb[0x65 + 2];
 
-/*** SDLPoP ***/
-SDL_Texture *imgsdlpopoff, *imgsdlpopon_0, *imgsdlpopon_1, *imgsdlpop_f;
-SDL_Texture *imgsdlpoptab_0, *imgsdlpoptab_1, *imgsdlpoptab_0a, *imgsdlpop;
-SDL_Texture *imgsdlpop_bb, *imgsdlpop_bbl;
-SDL_Texture *imgsdlpop_d[12 + 2], *imgsdlpop_p[12 + 2];
+/*** native ***/
+SDL_Texture *imgnativeoff, *imgnativeon_0, *imgnativeon_1, *imgnative_f;
+SDL_Texture *imgnativetab_0[12 + 2], *imgnativetab_1[12 + 2];
+SDL_Texture *imgnativetab_0a[12 + 2], *imgnative;
+SDL_Texture *imgnative_bb, *imgnative_bbl;
+SDL_Texture *imgnative_d[12 + 2], *imgnative_p[12 + 2];
+SDL_Texture *imgnative_s, *imgnative_m, *imgnative_b;
+
+/*** playtest ***/
+SDL_Texture *imgpt;
+SDL_Texture *imgptdosboxdis, *imgptdosboxoff, *imgptdosboxon;
+SDL_Texture *imgptsdlpopdis, *imgptsdlpopoff, *imgptsdlpopon;
+SDL_Texture *imgptmininimdis, *imgptmininimoff, *imgptmininimon;
+SDL_Texture *imgptnativeoff, *imgptnativeon;
+SDL_Texture *imgptdosboxkey, *imgptsdlpopkey, *imgptmininimkey;
 
 /*** Map window ***/
 SDL_Texture *imgmapon_0, *imgmapon_1, *imgmapoff;
@@ -1555,11 +1586,15 @@ void InitScreen (void);
 void EventDoor (int iX, int iY);
 void EventNext (int iNoNext);
 void RunLevel (int iLevel);
+void RunLevelS (int iLevel);
+void RunLevelM (int iLevel);
 void EventRoom (int iRoom);
 void RemoveOldRoom (void);
 void AddNewRoom (int iX, int iY, int iRoom);
 void InitRooms (void);
 int StartGame (void *unused);
+int StartGameS (void *unused);
+int StartGameM (void *unused);
 int UPack (void *unused);
 void Quit (void);
 void ShowScreen (int iScreenS, SDL_Renderer *screen);
@@ -1570,9 +1605,9 @@ void CheckSides (int iRoom, int iX, int iY);
 void ShowRooms (int iRoom, int iX, int iY, int iNext);
 void SetMapHover (int iRoom, int iX, int iY);
 void ShowRoomsMap (int iRoom, int iX, int iY);
-void InitPopUp (int iAtScreen);
+void InitPopUp (void);
 void ShowPopUp (void);
-void InitPopUpSave (int iAtScreen);
+void InitPopUpSave (void);
 void ShowPopUpSave (void);
 void DisplayText (int iStartX, int iStartY, int iFontSize,
 	char arText[9 + 2][MAX_TEXT + 2], int iLines, TTF_Font *font);
@@ -1637,7 +1672,7 @@ void LoadFonts (void);
 void CustomTile (int iThing, int iModifier[], char *sRetString);
 void ShowCurrentCustom (SDL_Renderer *screen);
 void CreateBAK (void);
-void Help (int iAtScreen);
+void Help (void);
 void ShowHelp (void);
 unsigned long BytesAsLU (unsigned char *sData, int iBytes);
 void EXECheckbox (int iX, int iY17, int *iChange, int iTo);
@@ -1645,7 +1680,7 @@ void EXELoad (void);
 void EXELoadSNES (void);
 void EXESave (void);
 void EXESaveSNES (void);
-void EXE (int iAtScreen);
+void EXE (void);
 void ShowEXE (void);
 void KidColorsLoad (void);
 void KidColorsSave (void);
@@ -1736,12 +1771,12 @@ void UpdateStatusBar3 (void);
 int OnLevelBar (void);
 void AlwaysJumpThroughMirror (void);
 void StringToLower (char *sInput, char *sOutput);
-int UsesSDLPoP (void);
-void SDLPoPAction (char *sAction);
-int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom);
-void ShowSDLPoP (SDL_Renderer *screen);
-int OnTileSDLPoP (void);
-int UseTileSDLPoP (int iTile, int iLocation, int iRoom);
+int UsesNative (int iDir, char *sNameWithoutExtension);
+void NativeAction (char *sAction);
+int Native (int iLocation, SDL_Renderer *screen, int iViaCustom);
+void ShowNative (SDL_Renderer *screen);
+int OnTileNative (void);
+int UseTileNative (int iTile, int iLocation, int iRoom);
 void MapAction (char *sAction);
 int MapEvents (SDL_Event event);
 void MapControllerDown (SDL_Event event);
@@ -1764,6 +1799,11 @@ int RelatedToHover (int iRoom, int iTile);
 size_t WriteData (void *ptr, size_t size, size_t nmemb, FILE *stream);
 int DownloadAndUnzipTo (char *sURL, char *sDir);
 void CreateDir (char *sDir);
+void PlaytestAction (char *sAction, int iLevel);
+void Playtest (int iLevel);
+void ShowPlaytest (void);
+void CheckPlaytestFiles (void);
+void AutoUse (int iLevel);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -1777,7 +1817,7 @@ int main (int argc, char *argv[])
 
 	iDebug = 0;
 	iNoAudio = 0;
-	iNoChomp = 0;
+	iNoChomp = 1;
 	iNoAnim = 0;
 	iNoController = 0;
 	iNoSave = 0;
@@ -1811,10 +1851,11 @@ int main (int argc, char *argv[])
 	iInfo = 0;
 	iModified = 0;
 	iKidColorsBW = 1; /*** white ***/
-	snprintf (sSDLPoP, MAX_FILE, "%s", "");
+	snprintf (sNativeFile[1], MAX_FILE, "%s", "");
 	iMapOpen = 0;
 	iMapHoverRoom = 0;
 	iMapShowNumbers = 0;
+	iAutoUse = 0;
 
 	CheckSSE();
 
@@ -1861,9 +1902,9 @@ int main (int argc, char *argv[])
 				iNoAudio = 1;
 			}
 			else if ((strcmp (argv[iTemp], "-q") == 0) ||
-				(strcmp (argv[iTemp], "--quiet") == 0))
+				(strcmp (argv[iTemp], "--quiteloud") == 0))
 			{
-				iNoChomp = 1;
+				iNoChomp = 0;
 			}
 			else if ((strcmp (argv[iTemp], "-i") == 0) ||
 				(strcmp (argv[iTemp], "--improved") == 0))
@@ -2025,7 +2066,7 @@ void CheckRequiredFiles (void)
 		iPoP1 = 0;
 	} else {
 		iPoP1 = 1;
-		iUsesSDLPoP = UsesSDLPoP(); /*** SDLPoP ***/
+		CheckPlaytestFiles();
 	}
 
 	/*** PoP2 ***/
@@ -2072,7 +2113,8 @@ void CheckRequiredFiles (void)
 		}
 		if (iFound == 0)
 		{
-			printf ("[ WARN ] %s: Could not find a ROM file!\n", SNES_DIR);
+			printf ("[ WARN ] %s: Could not find a (.smc or .sfc) ROM file!\n",
+				SNES_DIR);
 			iPoP1SNES = 0;
 		} else {
 			if (access (sSNESFile, R_OK|W_OK) == -1)
@@ -2348,7 +2390,7 @@ void LoadPLV (char *sFileName)
 			iPoP2DoorLeft[iTemp] = sPoP2DoorEvents[(iTemp * 5) + 3];
 			iPoP2DoorRight[iTemp] = sPoP2DoorEvents[(iTemp * 5) + 4];
 
-			/*** Some events in (the original) PoP2 point to non-existing tiles. ***/
+			/*** Some events in (the original) PoP2 point to non-exist. tiles. ***/
 			if ((iPoP2DoorRoom[iTemp] < 1) || (iPoP2DoorRoom[iTemp] > iRooms))
 				{ iPoP2DoorRoom[iTemp] = 1; }
 			if ((iPoP2DoorLocation[iTemp] < 0) || (iPoP2DoorLocation[iTemp] > 29))
@@ -7062,7 +7104,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			break;
 		case 212: dest.x = 25; dest.y = 50; break; /*** ZSNES ***/
 		case 213: dest.x = 0; dest.y = 258; break; /*** jaffar tooltip ***/
-		case 214: dest.x = 275; dest.y = 14; break; /*** SDLPoP button ***/
+		case 214: dest.x = 275; dest.y = 14; break; /*** native button ***/
 		case 215:
 			dest.x = 277;
 			switch (iModifier[1])
@@ -7074,16 +7116,16 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 				case 5: dest.y = 125; break; /*** MS Windows: Other ***/
 			}
 			break;
-		case 216: /*** SDLPoP changing ***/
-			dest.x = 2 + (((iOnTileSDLPoP - 1) % 13) * 50);
-			dest.y = 2 + (((int)((iOnTileSDLPoP - 1) / 13)) * 64);
+		case 216: /*** native changing ***/
+			dest.x = 2 + (((iOnTileNative - 1) % 13) * 50);
+			dest.y = 2 + (((int)((iOnTileNative - 1) / 13)) * 64);
 			break;
 		case 217:
 			iIsCustom = 0;
 			dest.x = -1; dest.y = -1;
 			iTile = iThingA[iCurRoom][iSelected - 1];
 			iMod1 = iModifierA[iCurRoom][iSelected - 1][1];
-			if (iSDLPoPTab == 1)
+			if (iNativeTab == 1)
 			{
 				/*** First row. ***/
 				if ((iTile == 0) && (iMod1 == 12))
@@ -7115,11 +7157,8 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			}
 			if ((dest.x == -1) || (dest.y == -1)) { iIsCustom = 1; }
 			break;
-		case 218: /*** SDLPoP tabs ***/
-			dest.x = -21 + (iModifier[1] * 50);
-			dest.y = 385;
-			break;
-		case 219: dest.x = 518; dest.y = 18; break; /*** SDLPoP preview ***/
+		/*** case 218 ***/
+		case 219: dest.x = 518; dest.y = 18; break; /*** native preview ***/
 	}
 	if ((iLocation >= 2010) && (iLocation <= 2324)) /*** adjacent rooms ***/
 	{
@@ -8041,54 +8080,45 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 		}
 	}
 
-	/*** SDLPoP ***/
+	/*** native ***/
 	if (iThing == -3)
 	{
 		switch (iModifier[0])
 		{
 			case 0:
-				CustomRenderCopy (imgsdlpopoff, "imgsdlpopoff", &loc, screen, &dest);
+				CustomRenderCopy (imgnativeoff, "imgnativeoff", &loc, screen, &dest);
 				break;
 			case 1:
-				CustomRenderCopy (imgsdlpopon_0, "imgsdlpopon_0", &loc,
+				CustomRenderCopy (imgnativeon_0, "imgnativeon_0", &loc,
 					screen, &dest); break;
 			case 2:
-				CustomRenderCopy (imgsdlpopon_1, "imgsdlpopon_1", &loc,
+				CustomRenderCopy (imgnativeon_1, "imgnativeon_1", &loc,
 					screen, &dest); break;
 			case 3:
-				CustomRenderCopy (imgsdlpop_f, "imgsdlpop_f", &loc, screen, &dest);
+				CustomRenderCopy (imgnative_f, "imgnative_f", &loc, screen, &dest);
 				break;
-			case 4:
-				CustomRenderCopy (imgsdlpoptab_0, "imgsdlpoptab_0", &loc,
-					screen, &dest);
-				break;
-			case 5:
-				CustomRenderCopy (imgsdlpoptab_1, "imgsdlpoptab_1", &loc,
-					screen, &dest);
-				break;
-			case 6:
-				CustomRenderCopy (imgsdlpoptab_0a, "imgsdlpoptab_0a", &loc,
-					screen, &dest);
-				break;
+			/*** case 4: ***/
+			/*** case 5: ***/
+			/*** case 6: ***/
 			case 7:
-				CustomRenderCopy (imgsdlpop, "imgsdlpop", &loc, screen, &dest);
+				CustomRenderCopy (imgnative, "imgnative", &loc, screen, &dest);
 				break;
 			case 8:
-				CustomRenderCopy (imgsdlpop_bb, "imgsdlpop_bb", &loc, screen, &dest);
+				CustomRenderCopy (imgnative_bb, "imgnative_bb", &loc, screen, &dest);
 				break;
 			case 9:
 				if (iIsCustom == 0)
-					CustomRenderCopy (imgsdlpop_bbl, "imgsdlpop_bbl", &loc,
+					CustomRenderCopy (imgnative_bbl, "imgnative_bbl", &loc,
 						screen, &dest);
 				break;
 			case 10:
-				snprintf (sText, MAX_TEXT, "imgsdlpop_d[%i]", iModifier[1]);
-				CustomRenderCopy (imgsdlpop_d[iModifier[1]], sText, &loc,
+				snprintf (sText, MAX_TEXT, "imgnative_d[%i]", iModifier[1]);
+				CustomRenderCopy (imgnative_d[iModifier[1]], sText, &loc,
 					screen, &dest);
 				break;
 			case 11:
-				snprintf (sText, MAX_TEXT, "imgsdlpop_p[%i]", iModifier[1]);
-				CustomRenderCopy (imgsdlpop_p[iModifier[1]], sText, &loc,
+				snprintf (sText, MAX_TEXT, "imgnative_p[%i]", iModifier[1]);
+				CustomRenderCopy (imgnative_p[iModifier[1]], sText, &loc,
 					screen, &dest);
 				break;
 		}
@@ -8590,47 +8620,47 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			if ((iThing == 43) && (iModifier[0] == 0)) /*** loose tile, stuck ***/
 				ShowPos (loc, dest, iLocation, imgd43_0, imgp43_0, "");
 
-			/*** SDLPoP ***/
+			/*** native ***/
 			if ((iThing == 0) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd0_4, imgp0_4, "");
+				ShowPos (loc, dest, iLocation, imgd0_4, imgp0_4, "SDLPoP");
 			if ((iThing == 0) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd0_5, imgp0_5, "");
+				ShowPos (loc, dest, iLocation, imgd0_5, imgp0_5, "SDLPoP");
 			if ((iThing == 0) && (iModifier[0] == 12))
-				ShowPos (loc, dest, iLocation, imgd0_12, imgp0_12, "");
+				ShowPos (loc, dest, iLocation, imgd0_12, imgp0_12, "SDLPoP");
 			if ((iThing == 0) && (iModifier[0] == 13))
-				ShowPos (loc, dest, iLocation, imgd0_13, imgp0_13, "");
+				ShowPos (loc, dest, iLocation, imgd0_13, imgp0_13, "SDLPoP");
 			if ((iThing == 0) && (iModifier[0] == 50))
-				ShowPos (loc, dest, iLocation, imgd0_50, imgp0_50, "");
+				ShowPos (loc, dest, iLocation, imgd0_50, imgp0_50, "SDLPoP");
 			if ((iThing == 0) && (iModifier[0] == 51))
-				ShowPos (loc, dest, iLocation, imgd0_51, imgp0_51, "");
+				ShowPos (loc, dest, iLocation, imgd0_51, imgp0_51, "SDLPoP");
 			if ((iThing == 0) && (iModifier[0] == 52))
-				ShowPos (loc, dest, iLocation, imgd0_52, imgp0_52, "");
+				ShowPos (loc, dest, iLocation, imgd0_52, imgp0_52, "SDLPoP");
 			if ((iThing == 0) && (iModifier[0] == 53))
-				ShowPos (loc, dest, iLocation, imgd0_53, imgp0_53, "");
+				ShowPos (loc, dest, iLocation, imgd0_53, imgp0_53, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd1_5, imgp1_5, "");
+				ShowPos (loc, dest, iLocation, imgd1_5, imgp1_5, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 6))
-				ShowPos (loc, dest, iLocation, imgd1_6, imgp1_6, "");
+				ShowPos (loc, dest, iLocation, imgd1_6, imgp1_6, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 13))
-				ShowPos (loc, dest, iLocation, imgd1_13, imgp1_13, "");
+				ShowPos (loc, dest, iLocation, imgd1_13, imgp1_13, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 14))
-				ShowPos (loc, dest, iLocation, imgd1_14, imgp1_14, "");
+				ShowPos (loc, dest, iLocation, imgd1_14, imgp1_14, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 50))
-				ShowPos (loc, dest, iLocation, imgd1_50, imgp1_50, "");
+				ShowPos (loc, dest, iLocation, imgd1_50, imgp1_50, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 51))
-				ShowPos (loc, dest, iLocation, imgd1_51, imgp1_51, "");
+				ShowPos (loc, dest, iLocation, imgd1_51, imgp1_51, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 52))
-				ShowPos (loc, dest, iLocation, imgd1_52, imgp1_52, "");
+				ShowPos (loc, dest, iLocation, imgd1_52, imgp1_52, "SDLPoP");
 			if ((iThing == 1) && (iModifier[0] == 53))
-				ShowPos (loc, dest, iLocation, imgd1_53, imgp1_53, "");
+				ShowPos (loc, dest, iLocation, imgd1_53, imgp1_53, "SDLPoP");
 			if ((iThing == 20) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd20_4, imgp20_4, "");
+				ShowPos (loc, dest, iLocation, imgd20_4, imgp20_4, "SDLPoP");
 			if ((iThing == 20) && (iModifier[0] == 6))
-				ShowPos (loc, dest, iLocation, imgd20_6, imgp20_6, "");
+				ShowPos (loc, dest, iLocation, imgd20_6, imgp20_6, "SDLPoP");
 			if ((iThing == 20) && (iModifier[0] == 12))
-				ShowPos (loc, dest, iLocation, imgd20_12, imgp20_12, "");
+				ShowPos (loc, dest, iLocation, imgd20_12, imgp20_12, "SDLPoP");
 			if ((iThing == 20) && (iModifier[0] == 14))
-				ShowPos (loc, dest, iLocation, imgd20_14, imgp20_14, "");
+				ShowPos (loc, dest, iLocation, imgd20_14, imgp20_14, "SDLPoP");
 		}
 
 		if (iEditPoP == 2)
@@ -11205,7 +11235,7 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 661; break;
+		case 1: iNrToPreLoad = 712; break;
 		case 2: iNrToPreLoad = 858; break;
 		case 3: iNrToPreLoad = 4806; break;
 	}
@@ -11292,7 +11322,7 @@ void InitScreen (void)
 		PreLoad (PNG_DUNGEON, "d_22_0_sprite.png", &spriteswordd);
 		PreLoad (PNG_DUNGEON, "d_sel_22_0_sprite.png", &spritesworddsel);
 
-		/*** SDLPoP ***/
+		/*** native ***/
 		PreLoadSet (PNG_DUNGEON, 'd', "0_4", imgd0_4);
 		PreLoadSet (PNG_DUNGEON, 'd', "0_5", imgd0_5);
 		PreLoadSet (PNG_DUNGEON, 'd', "0_12", imgd0_12);
@@ -11397,7 +11427,7 @@ void InitScreen (void)
 		PreLoad (PNG_PALACE, "p_22_0_sprite.png", &spriteswordp);
 		PreLoad (PNG_PALACE, "p_sel_22_0_sprite.png", &spriteswordpsel);
 
-		/*** SDLPoP ***/
+		/*** native ***/
 		PreLoadSet (PNG_PALACE, 'p', "0_4", imgp0_4);
 		PreLoadSet (PNG_PALACE, 'p', "0_5", imgp0_5);
 		PreLoadSet (PNG_PALACE, 'p', "0_12", imgp0_12);
@@ -12729,25 +12759,61 @@ void InitScreen (void)
 		PreLoad (PNG_ROOMS, "room32.png", &imgroom32);
 	}
 
-	/*** SDLPoP ***/
+	/*** native ***/
 	if (iEditPoP == 1)
 	{
-		PreLoad (PNG_SDLPOP, "off.png", &imgsdlpopoff);
-		PreLoad (PNG_SDLPOP, "on_0.png", &imgsdlpopon_0);
-		PreLoad (PNG_SDLPOP, "on_1.png", &imgsdlpopon_1);
-		PreLoad (PNG_SDLPOP, "found.png", &imgsdlpop_f);
-		PreLoad (PNG_SDLPOP, "tab_0.png", &imgsdlpoptab_0);
-		PreLoad (PNG_SDLPOP, "tab_1.png", &imgsdlpoptab_1);
-		PreLoad (PNG_SDLPOP, "tab_0a.png", &imgsdlpoptab_0a);
-		PreLoad (PNG_SDLPOP, "main.png", &imgsdlpop);
-		PreLoad (PNG_SDLPOP, "border_big.png", &imgsdlpop_bb);
-		PreLoad (PNG_SDLPOP, "border_big_live.png", &imgsdlpop_bbl);
+		PreLoad (PNG_NATIVE, "off.png", &imgnativeoff);
+		PreLoad (PNG_NATIVE, "on_0.png", &imgnativeon_0);
+		PreLoad (PNG_NATIVE, "on_1.png", &imgnativeon_1);
+		PreLoad (PNG_NATIVE, "found.png", &imgnative_f);
+		for (iButton = 1; iButton <= 12; iButton++)
+		{
+			snprintf (sFileName, MAX_FILE, "tab_0_%i.png", iButton);
+			PreLoad (PNG_NATIVE, sFileName, &imgnativetab_0[iButton]);
+			snprintf (sFileName, MAX_FILE, "tab_1_%i.png", iButton);
+			PreLoad (PNG_NATIVE, sFileName, &imgnativetab_1[iButton]);
+			snprintf (sFileName, MAX_FILE, "tab_0a_%i.png", iButton);
+			PreLoad (PNG_NATIVE, sFileName, &imgnativetab_0a[iButton]);
+		}
+		PreLoad (PNG_NATIVE, "main.png", &imgnative);
+		PreLoad (PNG_NATIVE, "border_big.png", &imgnative_bb);
+		PreLoad (PNG_NATIVE, "border_big_live.png", &imgnative_bbl);
 		for (iButton = 1; iButton <= 12; iButton++)
 		{
 			snprintf (sFileName, MAX_FILE, "dungeon_%i.png", iButton);
-			PreLoad (PNG_SDLPOP, sFileName, &imgsdlpop_d[iButton]);
+			PreLoad (PNG_NATIVE, sFileName, &imgnative_d[iButton]);
 			snprintf (sFileName, MAX_FILE, "palace_%i.png", iButton);
-			PreLoad (PNG_SDLPOP, sFileName, &imgsdlpop_p[iButton]);
+			PreLoad (PNG_NATIVE, sFileName, &imgnative_p[iButton]);
+		}
+		PreLoad (PNG_NATIVE, "SDLPoP.png", &imgnative_s);
+		PreLoad (PNG_NATIVE, "MININIM.png", &imgnative_m);
+		PreLoad (PNG_NATIVE, "both.png", &imgnative_b);
+	}
+
+	/*** playtest ***/
+	if (iEditPoP == 1)
+	{
+		PreLoad (PNG_PLAYTEST, "playtest.png", &imgpt);
+		PreLoad (PNG_PLAYTEST, "DOSBox_disabled.png", &imgptdosboxdis);
+		PreLoad (PNG_PLAYTEST, "DOSBox_off.png", &imgptdosboxoff);
+		PreLoad (PNG_PLAYTEST, "DOSBox_on.png", &imgptdosboxon);
+		PreLoad (PNG_PLAYTEST, "SDLPoP_disabled.png", &imgptsdlpopdis);
+		PreLoad (PNG_PLAYTEST, "SDLPoP_off.png", &imgptsdlpopoff);
+		PreLoad (PNG_PLAYTEST, "SDLPoP_on.png", &imgptsdlpopon);
+		PreLoad (PNG_PLAYTEST, "MININIM_disabled.png", &imgptmininimdis);
+		PreLoad (PNG_PLAYTEST, "MININIM_off.png", &imgptmininimoff);
+		PreLoad (PNG_PLAYTEST, "MININIM_on.png", &imgptmininimon);
+		PreLoad (PNG_PLAYTEST, "native_off.png", &imgptnativeoff);
+		PreLoad (PNG_PLAYTEST, "native_on.png", &imgptnativeon);
+		if (iController != 1)
+		{
+			PreLoad (PNG_PLAYTEST, "DOSBox_key.png", &imgptdosboxkey);
+			PreLoad (PNG_PLAYTEST, "SDLPoP_key.png", &imgptsdlpopkey);
+			PreLoad (PNG_PLAYTEST, "MININIM_key.png", &imgptmininimkey);
+		} else {
+			PreLoad (PNG_CONTROLLER, "DOSBox_key.png", &imgptdosboxkey);
+			PreLoad (PNG_CONTROLLER, "SDLPoP_key.png", &imgptsdlpopkey);
+			PreLoad (PNG_CONTROLLER, "MININIM_key.png", &imgptmininimkey);
 		}
 	}
 
@@ -12886,11 +12952,11 @@ void InitScreen (void)
 	iGuardTooltip = 0;
 	iEXEDetails = 0;
 	if (iEditPoP == 3) { iEXETab = 7; } else { iEXETab = 1; }
-	iSDLPoPTab = 1;
+	iNativeTab = 1;
 	SDL_SetCursor (curArrow);
 
 	ShowScreen (iScreen, ascreen);
-	InitPopUp (1);
+	InitPopUp();
 	while (1)
 	{
 		if (iNoAnim == 0)
@@ -12968,11 +13034,12 @@ void InitScreen (void)
 						case SDL_CONTROLLER_BUTTON_BACK:
 							if ((iScreen == 1) && (iEditPoP == 1))
 							{
-								if (iUsesSDLPoP != 0)
+								if ((iUsesNative != 0) ||
+									(iFoundSDLPoP != 0) || (iFoundMININIM != 0))
 								{
-									SDLPoP (iSelected, ascreen, 0);
+									Native (iSelected, ascreen, 0);
 								} else {
-									printf ("[ WARN ] SDLPoP not found!\n");
+									printf ("[ WARN ] No native PoP1 found!\n");
 								}
 							}
 							if (iScreen == 2)
@@ -12994,19 +13061,24 @@ void InitScreen (void)
 						case SDL_CONTROLLER_BUTTON_GUIDE:
 							if (iChanged != 0) { CallSave (0); } break;
 						case SDL_CONTROLLER_BUTTON_START:
-							RunLevel ((int)luLevelNr);
+							if (iEditPoP == 1)
+							{
+								AutoUse ((int)luLevelNr);
+							} else {
+								RunLevel ((int)luLevelNr);
+							}
 							break;
 						case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
 							if ((int)luLevelNr != 1)
 							{
-								if (iChanged != 0) { InitPopUpSave (iScreen); }
+								if (iChanged != 0) { InitPopUpSave(); }
 								Prev ((int)luLevelNr);
 							}
 							break;
 						case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
 							if (((int)luLevelNr != 0) && ((int)luLevelNr != 28))
 							{
-								if (iChanged != 0) { InitPopUpSave (iScreen); }
+								if (iChanged != 0) { InitPopUpSave(); }
 								Next ((int)luLevelNr);
 							}
 							break;
@@ -13138,7 +13210,7 @@ void InitScreen (void)
 						case SDLK_F1:
 							if (iScreen == 1)
 							{
-								Help (iScreen); SDL_SetCursor (curArrow);
+								Help();
 							}
 							break;
 						case SDLK_F2:
@@ -13153,7 +13225,7 @@ void InitScreen (void)
 										printf ("[ INFO ] %s has an unknown executable type.\n",
 											POP1_EXECUTABLE);
 									} else {
-										EXE (iScreen); SDL_SetCursor (curArrow);
+										EXE();
 									}
 								}
 							}
@@ -13165,7 +13237,12 @@ void InitScreen (void)
 							InitScreenAction ("right bracket");
 							break;
 						case SDLK_d:
-							RunLevel ((int)luLevelNr);
+							if (iEditPoP == 1)
+							{
+								AutoUse ((int)luLevelNr);
+							} else {
+								RunLevel ((int)luLevelNr);
+							}
 							break;
 						case SDLK_SLASH:
 							if (iScreen == 1) { ClearRoom(); }
@@ -13332,7 +13409,7 @@ void InitScreen (void)
 						case SDLK_KP_MINUS:
 							if ((int)luLevelNr != 1)
 							{
-								if (iChanged != 0) { InitPopUpSave (iScreen); }
+								if (iChanged != 0) { InitPopUpSave(); }
 								Prev ((int)luLevelNr);
 							}
 							break;
@@ -13340,7 +13417,7 @@ void InitScreen (void)
 						case SDLK_EQUALS:
 							if (((int)luLevelNr != 0) && ((int)luLevelNr != 28))
 							{
-								if (iChanged != 0) { InitPopUpSave (iScreen); }
+								if (iChanged != 0) { InitPopUpSave(); }
 								Next ((int)luLevelNr);
 							}
 							break;
@@ -13638,11 +13715,12 @@ void InitScreen (void)
 						case SDLK_x:
 							if ((iEditPoP == 1) && (iScreen == 1))
 							{
-								if (iUsesSDLPoP != 0)
+								if ((iUsesNative != 0) ||
+									(iFoundSDLPoP != 0) || (iFoundMININIM != 0))
 								{
-									SDLPoP (iSelected, ascreen, 0);
+									Native (iSelected, ascreen, 0);
 								} else {
-									printf ("[ WARN ] SDLPoP not found!\n");
+									printf ("[ WARN ] No native PoP1 found!\n");
 								}
 							}
 							break;
@@ -14055,7 +14133,7 @@ void InitScreen (void)
 						{
 							if (iChanged != 0)
 							{
-								InitPopUpSave (iScreen);
+								InitPopUpSave();
 							}
 							Prev ((int)luLevelNr);
 							ShowScreen (iScreen, ascreen); break;
@@ -14064,14 +14142,20 @@ void InitScreen (void)
 						{
 							if (iChanged != 0)
 							{
-								InitPopUpSave (iScreen);
+								InitPopUpSave();
 							}
 							Next ((int)luLevelNr);
 							ShowScreen (iScreen, ascreen); break;
 						}
 						if (OnLevelBar() == 1) /*** level bar ***/
 						{
-							RunLevel ((int)luLevelNr);
+							if (iEditPoP == 1)
+							{
+								AutoUse ((int)luLevelNr);
+								break; /*** Stop processing SDL_MOUSEBUTTONUP. ***/
+							} else {
+								RunLevel ((int)luLevelNr);
+							}
 						}
 
 						if (iScreen == 1)
@@ -14111,11 +14195,12 @@ void InitScreen (void)
 									(keystate[SDL_SCANCODE_RCTRL])) {
 									if (iEditPoP == 1)
 									{
-										if (iUsesSDLPoP != 0)
+										if ((iUsesNative != 0) ||
+											(iFoundSDLPoP != 0) || (iFoundMININIM != 0))
 										{
-											SDLPoP (iSelected, ascreen, 0);
+											Native (iSelected, ascreen, 0);
 										} else {
-											printf ("[ WARN ] SDLPoP not found!\n");
+											printf ("[ WARN ] No native PoP1 found!\n");
 										}
 									}
 								} else {
@@ -14180,7 +14265,7 @@ void InitScreen (void)
 							/*** 5 ***/
 							if (InArea (650, 3, 659, 12) == 1)
 							{
-								Help (iScreen); SDL_SetCursor (curArrow);
+								Help();
 							}
 
 							/*** 10 ***/
@@ -14193,7 +14278,7 @@ void InitScreen (void)
 									printf ("[ INFO ] %s has an unknown executable type.\n",
 										POP1_EXECUTABLE);
 								} else {
-									EXE (iScreen); SDL_SetCursor (curArrow);
+									EXE();
 								}
 							}
 						}
@@ -14601,7 +14686,6 @@ void EventNext (int iNoNext)
 void RunLevel (int iLevel)
 /*****************************************************************************/
 {
-	/*** The following are used for the DOS batch files. ***/
 	int iFd;
 	char sToWrite[MAX_TOWRITE + 2];
 	SDL_Thread *princethread;
@@ -14612,16 +14696,16 @@ void RunLevel (int iLevel)
 		/*** Create batch file. ***/
 		if (iEditPoP == 1)
 		{
-			if (iUsesSDLPoP == 0)
+			if (iUsesNative == 0)
 			{
 				iFd = open (BATCH_FILE, O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0600);
 			} else {
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
-iFd = open (POP1_DIR BATCH_FILE_SDLPOP,
-O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0600);
+iFd = open (POP1_DIR BATCH_FILE_NATIVE,
+	O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0600);
 #else
-iFd = open (POP1_DIR BATCH_FILE_SDLPOP,
-O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0700);
+iFd = open (POP1_DIR BATCH_FILE_NATIVE,
+	O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0700);
 #endif
 			}
 		} else {
@@ -14635,17 +14719,17 @@ O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0700);
 		}
 		if (iEditPoP == 1)
 		{
-			if (iUsesSDLPoP == 0)
+			if (iUsesNative == 0)
 			{
 				snprintf (sToWrite, MAX_TOWRITE, "PRINCE %s %i\n", sCheat1, iLevel);
 			} else {
-				if (strcmp (sSDLPoP, "") == 0)
+				if (strcmp (sNativeFile[1], "") == 0)
 				{
-					printf ("[ WARN ] SDLPoP is available, but not for your OS?\n");
-					snprintf (sSDLPoP, MAX_FILE, "%s", "prince"); /*** Fallback. ***/
+					printf ("[ WARN ] Native EXE is available, but not for your OS?\n");
+					snprintf (sNativeFile[1], MAX_FILE, "%s", "prince"); /*** Fallb. ***/
 				}
-				snprintf (sToWrite, MAX_TOWRITE, "%s %s %i\n",
-					sSDLPoP, sCheat1, iLevel);
+				snprintf (sToWrite, MAX_TOWRITE, "%s%s %s %i\n",
+					HERE, sNativeFile[1], sCheat1, iLevel);
 			}
 		} else {
 			if (iLevel <= 14)
@@ -14672,6 +14756,94 @@ O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0700);
 		ModifyForZSNES (iLevel);
 
 		princethread = SDL_CreateThread (StartGame, "StartGame", NULL);
+		if (princethread == NULL)
+		{
+			printf ("[FAILED] Could not create thread!\n");
+			exit (EXIT_ERROR);
+		}
+	}
+}
+/*****************************************************************************/
+void RunLevelS (int iLevel)
+/*****************************************************************************/
+{
+	int iFd;
+	char sToWrite[MAX_TOWRITE + 2];
+	SDL_Thread *princethread;
+
+#if defined WIN32 || _WIN32 || WIN64 || _WIN64
+iFd = open (POP1_DIR BATCH_FILE_NATIVE,
+	O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0600);
+#else
+iFd = open (POP1_DIR BATCH_FILE_NATIVE,
+	O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0700);
+#endif
+
+	if (iFd == -1)
+	{
+		printf ("[FAILED] Could not create batch file: %s!\n",
+			strerror (errno));
+		exit (EXIT_ERROR);
+	}
+
+	if (strcmp (sNativeFile[2], "") == 0)
+	{
+		printf ("[ WARN ] SDLPoP is available, but not for your OS?\n");
+		snprintf (sNativeFile[2], MAX_FILE, "%s", "prince"); /*** Fallback. ***/
+	}
+	snprintf (sToWrite, MAX_TOWRITE, "..%s%s%s %s %i\n",
+		SLASH, SDLPOP_DIR, sNativeFile[2], sCheat1, iLevel);
+	write (iFd, sToWrite, strlen (sToWrite));
+
+	close (iFd);
+	princethread = SDL_CreateThread (StartGameS, "StartGameS", NULL);
+	if (princethread == NULL)
+	{
+		printf ("[FAILED] Could not create thread!\n");
+		exit (EXIT_ERROR);
+	}
+}
+/*****************************************************************************/
+void RunLevelM (int iLevel)
+/*****************************************************************************/
+{
+	int iFd;
+	char sToWrite[MAX_TOWRITE + 2];
+	SDL_Thread *princethread;
+
+	if ((iLevel != 15) && (iLevel != 0))
+	{
+#if defined WIN32 || _WIN32 || WIN64 || _WIN64
+iFd = open (POP1_DIR BATCH_FILE_NATIVE,
+	O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0600);
+#else
+iFd = open (POP1_DIR BATCH_FILE_NATIVE,
+	O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0700);
+#endif
+
+		if (iFd == -1)
+		{
+			printf ("[FAILED] Could not create batch file: %s!\n",
+				strerror (errno));
+			exit (EXIT_ERROR);
+		}
+
+		/*** Workaround. ***/
+		snprintf (sToWrite, MAX_TOWRITE, "%s %s ..%s%s\n",
+			COPY, "LEVELS.DAT", SLASH, MININIM_DIR);
+		write (iFd, sToWrite, strlen (sToWrite));
+
+		if (strcmp (sNativeFile[3], "") == 0)
+		{
+			printf ("[ WARN ] MININIM is available, but not for your OS?\n");
+			snprintf (sNativeFile[3], MAX_FILE, "%s", "mininim"); /*** Fallback. ***/
+		}
+		snprintf (sToWrite, MAX_TOWRITE, "..%s%s%s %s %i 2> %s\n",
+			SLASH, MININIM_DIR, sNativeFile[3], sCheat1, iLevel, DEVNULL);
+		write (iFd, sToWrite, strlen (sToWrite));
+
+		close (iFd);
+		princethread = SDL_CreateThread (StartGameM, "StartGameM", NULL);
 		if (princethread == NULL)
 		{
 			printf ("[FAILED] Could not create thread!\n");
@@ -14850,14 +15022,14 @@ int StartGame (void *unused)
 	switch (iEditPoP)
 	{
 		case 1:
-			if (iUsesSDLPoP == 0)
+			if (iUsesNative == 0)
 			{
 				if (system ("dosbox " BATCH_FILE " -noconsole > " DEVNULL) == -1)
 					{ printf ("[FAILED] Could not execute PoP1 batch file!\n"); }
 			} else {
 				if (system ("cd " POP1_DIR " && "
-					HERE BATCH_FILE_SDLPOP " > " DEVNULL) == -1)
-					{ printf ("[FAILED] Could not execute SDLPoP!\n"); }
+					HERE BATCH_FILE_NATIVE " > " DEVNULL) == -1)
+					{ printf ("[FAILED] Could not execute native EXE!\n"); }
 			}
 			break;
 		case 2:
@@ -14874,6 +15046,32 @@ int StartGame (void *unused)
 	return (EXIT_NORMAL);
 }
 /*****************************************************************************/
+int StartGameS (void *unused)
+/*****************************************************************************/
+{
+	if (unused != NULL) { } /*** To prevent warnings. ***/
+
+	PlaySound ("wav/dosbox.wav");
+	if (system ("cd " POP1_DIR " && "
+		HERE BATCH_FILE_NATIVE " > " DEVNULL) == -1)
+		{ printf ("[FAILED] Could not execute SDLPoP!\n"); }
+
+	return (EXIT_NORMAL);
+}
+/*****************************************************************************/
+int StartGameM (void *unused)
+/*****************************************************************************/
+{
+	if (unused != NULL) { } /*** To prevent warnings. ***/
+
+	PlaySound ("wav/dosbox.wav");
+	if (system ("cd " POP1_DIR " && "
+		HERE BATCH_FILE_NATIVE " > " DEVNULL) == -1)
+		{ printf ("[FAILED] Could not execute MININIM!\n"); }
+
+	return (EXIT_NORMAL);
+}
+/*****************************************************************************/
 int UPack (void *unused)
 /*****************************************************************************/
 {
@@ -14887,7 +15085,7 @@ int UPack (void *unused)
 void Quit (void)
 /*****************************************************************************/
 {
-	if (iChanged != 0) { InitPopUpSave (iScreen); }
+	if (iChanged != 0) { InitPopUpSave(); }
 	if (iModified == 1) { ModifyBack(); }
 	TTF_CloseFont (font1);
 	TTF_CloseFont (font2);
@@ -15682,7 +15880,8 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 	if (iEditPoP == 1) { ShowMap(); }
 
 	/*** refresh screen ***/
-	SDL_RenderPresent (screen);
+	if (iPlaytest != 1)
+		{ SDL_RenderPresent (screen); }
 }
 /*****************************************************************************/
 void Prev (int iCurLevel)
@@ -16124,7 +16323,7 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 		{ ShowRoomsMap (iRoomConnections[iRoom][4], iX, iY + 1); }
 }
 /*****************************************************************************/
-void InitPopUp (int iAtScreen)
+void InitPopUp (void)
 /*****************************************************************************/
 {
 	SDL_Event event;
@@ -16214,7 +16413,7 @@ void InitPopUp (int iAtScreen)
 		looptime = SDL_GetTicks();
 	}
 	PlaySound ("wav/popup_close.wav");
-	ShowScreen (iAtScreen, ascreen);
+	ShowScreen (iScreen, ascreen);
 }
 /*****************************************************************************/
 void ShowPopUp (void)
@@ -16265,7 +16464,7 @@ void ShowPopUp (void)
 	SDL_RenderPresent (ascreen);
 }
 /*****************************************************************************/
-void InitPopUpSave (int iAtScreen)
+void InitPopUpSave (void)
 /*****************************************************************************/
 {
 	SDL_Event event;
@@ -16375,7 +16574,7 @@ void InitPopUpSave (int iAtScreen)
 		looptime = SDL_GetTicks();
 	}
 	PlaySound ("wav/popup_close.wav");
-	ShowScreen (iAtScreen, ascreen);
+	ShowScreen (iScreen, ascreen);
 }
 /*****************************************************************************/
 void ShowPopUpSave (void)
@@ -16491,7 +16690,8 @@ void ShowPos (SDL_Rect loc, SDL_Rect dest, int iLocation,
 			ascreen, &dest);
 	}
 
-	if (strcmp (sLbl, "") != 0)
+	if ((strcmp (sLbl, "") != 0) && (strcmp (sLbl, "SDLPoP") != 0) &&
+		(strcmp (sLbl, "MININIM") != 0) && (strcmp (sLbl, "both") != 0))
 	{
 		message = TTF_RenderText_Shaded (font2, sLbl, color_bl, color_wh);
 		messaget = SDL_CreateTextureFromSurface (ascreen, message);
@@ -16512,6 +16712,22 @@ void ShowPos (SDL_Rect loc, SDL_Rect dest, int iLocation,
 			CustomRenderCopy (img_second[2], "img_second[2]", &loc,
 				ascreen, &dest);
 		}
+	}
+
+	if (strcmp (sLbl, "SDLPoP") == 0)
+	{
+		ShowImageBasic (imgnative_s, dest.x + 22, dest.y + 32, "imgnative_s",
+			ascreen, iScale, 1);
+	}
+	if (strcmp (sLbl, "MININIM") == 0)
+	{
+		ShowImageBasic (imgnative_m, dest.x + 22, dest.y + 32, "imgnative_m",
+			ascreen, iScale, 1);
+	}
+	if (strcmp (sLbl, "both") == 0)
+	{
+		ShowImageBasic (imgnative_b, dest.x + 22, dest.y + 32, "imgnative_b",
+			ascreen, iScale, 1);
 	}
 
 	iPosShown = 1;
@@ -18494,10 +18710,10 @@ int ChangePosCustom (int iLocation, SDL_Renderer *screen)
 							}
 							break;
 						case SDL_CONTROLLER_BUTTON_BACK:
-							if ((iEditPoP == 1) && (iUsesSDLPoP != 0))
+							if ((iEditPoP == 1) && (iUsesNative != 0))
 							{
 								PlaySound ("wav/screen2or3.wav");
-								iChangingCustom = SDLPoP (iLocation, screen, 1);
+								iChangingCustom = Native (iLocation, screen, 1);
 								if (iChangingCustom == 0) { iChanging = 0; }
 							}
 							if (iEditPoP == 2)
@@ -18701,10 +18917,10 @@ int ChangePosCustom (int iLocation, SDL_Renderer *screen)
 							}
 							break;
 						case SDLK_x:
-							if ((iEditPoP == 1) && (iUsesSDLPoP != 0))
+							if ((iEditPoP == 1) && (iUsesNative != 0))
 							{
 								PlaySound ("wav/screen2or3.wav");
-								iChangingCustom = SDLPoP (iLocation, screen, 1);
+								iChangingCustom = Native (iLocation, screen, 1);
 								if (iChangingCustom == 0) { iChanging = 0; }
 							}
 							break;
@@ -18796,9 +19012,9 @@ int ChangePosCustom (int iLocation, SDL_Renderer *screen)
 							if (iCustomUseOn != 1) { iCustomUseOn = 1; }
 							ShowChangeCustom (screen);
 						}
-						if (InArea (275, 14, 381, 147) == 1) /*** SDLPoP ***/
+						if (InArea (275, 14, 381, 147) == 1) /*** native ***/
 						{
-							if (iSDLPoPOn != 1) { iSDLPoPOn = 1; }
+							if (iNativeOn != 1) { iNativeOn = 1; }
 							ShowChangeCustom (screen);
 						}
 					}
@@ -18806,7 +19022,7 @@ int ChangePosCustom (int iLocation, SDL_Renderer *screen)
 				case SDL_MOUSEBUTTONUP:
 					iCloseCustomOn = 0;
 					iCustomUseOn = 0;
-					iSDLPoPOn = 0;
+					iNativeOn = 0;
 					if (event.button.button == 1) /*** left mouse button ***/
 					{
 						/*** foreground random ***/
@@ -18953,13 +19169,13 @@ int ChangePosCustom (int iLocation, SDL_Renderer *screen)
 							iChanging = 0;
 						}
 
-						/*** SDLPoP ***/
-						if (iUsesSDLPoP != 0)
+						/*** native ***/
+						if (iUsesNative != 0)
 						{
 							if (InArea (275, 14, 381, 147) == 1)
 							{
 								PlaySound ("wav/screen2or3.wav");
-								iChangingCustom = SDLPoP (iLocation, screen, 1);
+								iChangingCustom = Native (iLocation, screen, 1);
 								if (iChangingCustom == 0) { iChanging = 0; }
 							}
 						}
@@ -22687,37 +22903,37 @@ void ShowChangeCustom (SDL_Renderer *screen)
 		SDL_RenderFillRect (screen, &remove);
 	}
 
-	/*** SDLPoP ***/
+	/*** native ***/
 	if (iEditPoP == 1)
 	{
-		if (iUsesSDLPoP == 0)
+		if (iUsesNative == 0)
 		{
 			ShowImage (-3, (int[]){0, 0, 0, 0}, screen, 214, 0, 0, 106, 133);
 			/*** Not found ***/
 			ShowImage (-3, (int[]){3, 1, 0, 0}, screen, 215, 0, 0, 102, 15);
 		} else {
-			switch (iSDLPoPOn)
+			switch (iNativeOn)
 			{
 				case 0: /*** off ***/
 					ShowImage (-3, (int[]){1, 0, 0, 0},
 						screen, 214, 0, 0, 106, 133);
-					if ((iUsesSDLPoP == 1) || (iUsesSDLPoP == 3) ||
-						(iUsesSDLPoP == 5) || (iUsesSDLPoP == 9))
+					if ((iUsesNative == 1) || (iUsesNative == 3) ||
+						(iUsesNative == 5) || (iUsesNative == 9))
 					{
 						/*** Linux ELF ***/
 						ShowImage (-3, (int[]){3, 2, 0, 0}, screen, 215, 0, 0, 102, 15);
 					}
-					if ((iUsesSDLPoP == 2) || (iUsesSDLPoP == 3))
+					if ((iUsesNative == 2) || (iUsesNative == 3))
 					{
 						/*** MS Windows: i386 32-bit ***/
 						ShowImage (-3, (int[]){3, 3, 0, 0}, screen, 215, 0, 0, 102, 15);
 					}
-					if ((iUsesSDLPoP == 4) || (iUsesSDLPoP == 5))
+					if ((iUsesNative == 4) || (iUsesNative == 5))
 					{
 						/*** MS Windows: AMD64 64-bit ***/
 						ShowImage (-3, (int[]){3, 4, 0, 0}, screen, 215, 0, 0, 102, 15);
 					}
-					if ((iUsesSDLPoP == 8) || (iUsesSDLPoP == 9))
+					if ((iUsesNative == 8) || (iUsesNative == 9))
 					{
 						/*** MS Windows: Other ***/
 						ShowImage (-3, (int[]){3, 5, 0, 0}, screen, 215, 0, 0, 102, 15);
@@ -24094,7 +24310,7 @@ void ShowUsage (void)
 	printf ("  -y,        --import         import PoP1 for DOS levels as XML\n");
 	printf ("  -d,        --debug          also show levels on the console\n");
 	printf ("  -n,        --noaudio        do not play sound effects\n");
-	printf ("  -q,        --quiet          do not play the chomp sound\n");
+	printf ("  -q,        --quiteloud      chompers in-editor make noise\n");
 	printf ("  -i,        --improved       \"improved\" instead of"
 		" \"megahit\"\n");
 	printf ("  -m,        --makinit        \"makinit\" instead of"
@@ -24611,7 +24827,7 @@ void CreateBAK (void)
 	fclose (fBAK);
 }
 /*****************************************************************************/
-void Help (int iAtScreen)
+void Help (void)
 /*****************************************************************************/
 {
 	SDL_Event event;
@@ -24717,7 +24933,8 @@ void Help (int iAtScreen)
 		looptime = SDL_GetTicks();
 	}
 	PlaySound ("wav/popup_close.wav");
-	ShowScreen (iAtScreen, ascreen);
+	SDL_SetCursor (curArrow);
+	ShowScreen (iScreen, ascreen);
 }
 /*****************************************************************************/
 void ShowHelp (void)
@@ -24823,6 +25040,21 @@ void EXELoad (void)
 	CheckCodes ("75 0C 83 3E .. ..", iFdEXE);
 	ReadFromFile (iFdEXE, "", 1, sData);
 	iEXEWinRoom = BytesAsLU (sData, 1);
+
+	/*** Base speed. ***/
+	LSeek (iFdEXE, arBaseSpeed[iEXEType]);
+	ReadFromFile (iFdEXE, "", 2, sData);
+	iEXEBaseSpeed = BytesAsLU (sData, 2);
+
+	/*** Fight speed. ***/
+	LSeek (iFdEXE, arFightSpeed[iEXEType]);
+	ReadFromFile (iFdEXE, "", 2, sData);
+	iEXEFightSpeed = BytesAsLU (sData, 2);
+
+	/*** Chomper speed. ***/
+	LSeek (iFdEXE, arChomperSpeed[iEXEType]);
+	ReadFromFile (iFdEXE, "", 2, sData);
+	iEXEChomperSpeed = BytesAsLU (sData, 2);
 
 	/*** (environments and enemy resources) ***/
 	LSeek (iFdEXE, arEnvironment[iEXEType]);
@@ -25095,6 +25327,24 @@ void EXESave (void)
 	sBytes[0] = iEXEWinRoom;
 	WriteCharByChar (iFdEXE, sBytes, 1);
 
+	/*** Base speed. ***/
+	LSeek (iFdEXE, arBaseSpeed[iEXEType]);
+	sBytes[0] = (iEXEBaseSpeed >> 0) & 0xFF;
+	sBytes[1] = (iEXEBaseSpeed >> 8) & 0xFF;
+	WriteCharByChar (iFdEXE, sBytes, 2);
+
+	/*** Fight speed. ***/
+	LSeek (iFdEXE, arFightSpeed[iEXEType]);
+	sBytes[0] = (iEXEFightSpeed >> 0) & 0xFF;
+	sBytes[1] = (iEXEFightSpeed >> 8) & 0xFF;
+	WriteCharByChar (iFdEXE, sBytes, 2);
+
+	/*** Chomper speed. ***/
+	LSeek (iFdEXE, arChomperSpeed[iEXEType]);
+	sBytes[0] = (iEXEChomperSpeed >> 0) & 0xFF;
+	sBytes[1] = (iEXEChomperSpeed >> 8) & 0xFF;
+	WriteCharByChar (iFdEXE, sBytes, 2);
+
 	/*** (environments and enemy resources) ***/
 	LSeek (iFdEXE, arEnvironment[iEXEType]);
 	CheckCodes ("74 00", iFdEXE);
@@ -25362,7 +25612,7 @@ void EXECheckbox (int iX, int iY17, int *iChange, int iTo)
 	}
 }
 /*****************************************************************************/
-void EXE (int iAtScreen)
+void EXE (void)
 /*****************************************************************************/
 {
 	int iEXE;
@@ -25535,6 +25785,18 @@ void EXE (int iAtScreen)
 							PlusMinus (&iEXEWinRoom, 234, 176, 1, 24, -1, 0);
 							PlusMinus (&iEXEWinRoom, 304, 176, 1, 24, +1, 0);
 							PlusMinus (&iEXEWinRoom, 319, 176, 1, 24, +10, 0);
+
+							/*** Base speed. ***/
+							PlusMinus (&iEXEBaseSpeed, 415, 331, 0, 10, -1, 0);
+							PlusMinus (&iEXEBaseSpeed, 485, 331, 0, 10, +1, 0);
+
+							/*** Fight speed. ***/
+							PlusMinus (&iEXEFightSpeed, 415, 355, 0, 15, -1, 0);
+							PlusMinus (&iEXEFightSpeed, 485, 355, 0, 15, +1, 0);
+
+							/*** Chomper speed. ***/
+							PlusMinus (&iEXEChomperSpeed, 576, 331, 6, 127, -1, 0);
+							PlusMinus (&iEXEChomperSpeed, 646, 331, 6, 127, +1, 0);
 
 							/*** (environments and enemy resources) ***/
 							for (iTemp = 0; iTemp <= 7; iTemp++) /*** 1-8 ***/
@@ -25997,7 +26259,8 @@ void EXE (int iAtScreen)
 		looptime = SDL_GetTicks();
 	}
 	PlaySound ("wav/popup_close.wav");
-	ShowScreen (iAtScreen, ascreen);
+	SDL_SetCursor (curArrow);
+	ShowScreen (iScreen, ascreen);
 }
 /*****************************************************************************/
 void ShowEXE (void)
@@ -26009,7 +26272,6 @@ void ShowEXE (void)
 	int iTemp;
 	int iLeft, iRight;
 	int iColor[18 + 2];
-	char sText[MAX_TEXT + 2];
 	int iX, iY;
 	int iC;
 
@@ -26127,6 +26389,18 @@ void ShowEXE (void)
 		CenterNumber (ascreen, iEXEWinLevel, 94, 176, clr, color_wh, 0);
 		if (iEXEWinRoom == 5) { clr = color_bl; } else { clr = color_blue; }
 		CenterNumber (ascreen, iEXEWinRoom, 247, 176, clr, color_wh, 0);
+
+		/*** Base speed. ***/
+		if (iEXEBaseSpeed == 5) { clr = color_bl; } else { clr = color_blue; }
+		CenterNumber (ascreen, iEXEBaseSpeed, 428, 331, clr, color_wh, 0);
+
+		/*** Fight speed. ***/
+		if (iEXEFightSpeed == 6) { clr = color_bl; } else { clr = color_blue; }
+		CenterNumber (ascreen, iEXEFightSpeed, 428, 355, clr, color_wh, 0);
+
+		/*** Chomper speed. ***/
+		if (iEXEChomperSpeed == 15) { clr = color_bl; } else { clr = color_blue; }
+		CenterNumber (ascreen, iEXEChomperSpeed, 589, 331, clr, color_wh, 0);
 
 		/*** (environments and enemy resources) ***/
 		for (iTemp = 0; iTemp <= 15; iTemp++)
@@ -26262,13 +26536,6 @@ void ShowEXE (void)
 				{ clr = color_bl; } else { clr = color_blue; }
 			CenterNumber (ascreen, iEXEGuardD[iEXETab][12],
 				574, 196, clr, color_wh, 0);
-		}
-
-		if (iUsesSDLPoP != 0)
-		{
-			snprintf (sText, MAX_TEXT, "%s", "To modify SDLPoP, edit the"
-				" SDLPoP.ini file.");
-			DisplayTextLine (18, 413, sText, font1, color_red, color_border, 0);
 		}
 	}
 
@@ -27313,7 +27580,7 @@ void LoadLevel (int iLevel)
 	} else {
 		iOnTile = 1;
 	}
-	iOnTileSDLPoP = 1;
+	iOnTileNative = 1;
 
 	/*** Back to a centered map. ***/
 	iXPosMapMoveOffset = 0;
@@ -31963,6 +32230,21 @@ void UpdateStatusBar1 (void)
 		snprintf (sStatus, MAX_STATUS, "%s",
 			"If this is enabled, you can point raise/drop buttons to loose tiles.");
 	}
+	if (InArea (373, 331, 373 + 125, 331 + 20) == 1) /*** Base speed. ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s",
+			"The game speed when not fighting.");
+	}
+	if (InArea (374, 355, 374 + 124, 355 + 20) == 1) /*** Fight speed. ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s",
+			"The game speed when fighting.");
+	}
+	if (InArea (506, 331, 506 + 153, 331 + 20) == 1) /*** Chomper speed. ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s",
+			"The chomper speed is also impacted by the base/fight speed.");
+	}
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE(); }
 }
 /*****************************************************************************/
@@ -32107,7 +32389,7 @@ void StringToLower (char *sInput, char *sOutput)
 	sOutput[iLoop] = '\0';
 }
 /*****************************************************************************/
-int UsesSDLPoP (void)
+int UsesNative (int iDir, char *sNameWithoutExtension)
 /*****************************************************************************/
 {
 	/* Return values:
@@ -32130,23 +32412,34 @@ int UsesSDLPoP (void)
 	unsigned char sCheck[14 + 2];
 	int ii386, iAMD64, i32bit, i64bit;
 	int iReturn;
+	char sDir[MAX_FILE + 2];
+	char sNameWithExtension[MAX_FILE + 2];
+
+	switch (iDir)
+	{
+		case 1: snprintf (sDir, MAX_FILE, "%s", POP1_DIR); break;
+		case 2: snprintf (sDir, MAX_FILE, "%s", SDLPOP_DIR); break;
+		case 3: snprintf (sDir, MAX_FILE, "%s", MININIM_DIR); break;
+	}
 
 	iReturn = 0; /*** Not found ***/
 
-	dDir = opendir (POP1_DIR);
+	dDir = opendir (sDir);
 	if (dDir == NULL)
 	{
-		printf ("[ WARN ] %s: %s!\n", POP1_DIR, strerror (errno));
+		printf ("[ WARN ] %s: %s!\n", sDir, strerror (errno));
 	} else {
+		snprintf (sNameWithExtension, MAX_FILE, "%s.exe", sNameWithoutExtension);
+
 		while ((stDirent = readdir (dDir)) != NULL)
 		{
 			snprintf (sRegular, MAX_FILE, "%s", stDirent->d_name);
 			StringToLower (sRegular, sToLower);
 
-			if ((strcmp (sToLower, "prince") == 0) || /*** Linux ***/
-				(strcmp (sToLower, "prince.exe") == 0)) /*** Windows ***/
+			if ((strcmp (sToLower, sNameWithoutExtension) == 0) || /*** Linux ***/
+				(strcmp (sToLower, sNameWithExtension) == 0)) /*** Windows ***/
 			{
-				snprintf (sFileName, MAX_FILE, "%s%s", POP1_DIR, sRegular);
+				snprintf (sFileName, MAX_FILE, "%s%s", sDir, sRegular);
 				if (access (sFileName, R_OK) == -1)
 				{
 					printf ("[ WARN ] %s: %s!\n", sFileName, strerror (errno));
@@ -32158,7 +32451,7 @@ int UsesSDLPoP (void)
 							sFileName, strerror (errno));
 					} else {
 						/*** Linux? ***/
-						if (strcmp (sToLower, "prince") == 0)
+						if (strcmp (sToLower, sNameWithoutExtension) == 0)
 						{
 							ReadFromFile (iFd, "7F E L F", 4, sCheck);
 							if ((sCheck[0] == 0x7f) && (sCheck[1] == 0x45) &&
@@ -32167,14 +32460,14 @@ int UsesSDLPoP (void)
 								/*** It is a Linux executable. ***/
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
 #else
-snprintf (sSDLPoP, MAX_FILE, "./%s", sRegular);
+snprintf (sNativeFile[iDir], MAX_FILE, "%s", sRegular);
 #endif
 								iReturn+=1; /*** Linux ***/
 							}
 						}
 
 						/*** MS Windows? ***/
-						if (strcmp (sToLower, "prince.exe") == 0)
+						if (strcmp (sToLower, sNameWithExtension) == 0)
 						{
 							ReadFromFile (iFd, "M Z", 2, sCheck);
 							if ((sCheck[0] != 0x4d) || (sCheck[1] != 0x5a))
@@ -32193,7 +32486,7 @@ snprintf (sSDLPoP, MAX_FILE, "./%s", sRegular);
 								} else {
 									/*** It is an MS Windows executable. ***/
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
-snprintf (sSDLPoP, MAX_FILE, "%s", sRegular);
+snprintf (sNativeFile[iDir], MAX_FILE, "%s", sRegular);
 #endif
 									ii386 = 0; iAMD64 = 0;
 									ReadFromFile (iFd, "Machine", 2, sCheck);
@@ -32241,51 +32534,51 @@ snprintf (sSDLPoP, MAX_FILE, "%s", sRegular);
 	return (iReturn);
 }
 /*****************************************************************************/
-void SDLPoPAction (char *sAction)
+void NativeAction (char *sAction)
 /*****************************************************************************/
 {
 	if (strcmp (sAction, "left") == 0)
 	{
-		iOnTileSDLPoP--;
-		switch (iOnTileSDLPoP)
+		iOnTileNative--;
+		switch (iOnTileNative)
 		{
-			case 0: iOnTileSDLPoP = 10; break;
-			case 13: iOnTileSDLPoP = 23; break;
-			case 26: iOnTileSDLPoP = 36; break;
-			case 39: iOnTileSDLPoP = 49; break;
+			case 0: iOnTileNative = 10; break;
+			case 13: iOnTileNative = 23; break;
+			case 26: iOnTileNative = 36; break;
+			case 39: iOnTileNative = 49; break;
 		}
 	}
 
 	if (strcmp (sAction, "right") == 0)
 	{
-		iOnTileSDLPoP++;
-		switch (iOnTileSDLPoP)
+		iOnTileNative++;
+		switch (iOnTileNative)
 		{
-			case 11: iOnTileSDLPoP = 1; break;
-			case 24: iOnTileSDLPoP = 14; break;
-			case 37: iOnTileSDLPoP = 27; break;
-			case 50: iOnTileSDLPoP = 40; break;
+			case 11: iOnTileNative = 1; break;
+			case 24: iOnTileNative = 14; break;
+			case 37: iOnTileNative = 27; break;
+			case 50: iOnTileNative = 40; break;
 		}
 	}
 
 	if (strcmp (sAction, "up") == 0)
 	{
-		if ((iOnTileSDLPoP >= 1) && (iOnTileSDLPoP <= 10))
-			{ iOnTileSDLPoP+=39; } else { iOnTileSDLPoP-=13; }
+		if ((iOnTileNative >= 1) && (iOnTileNative <= 10))
+			{ iOnTileNative+=39; } else { iOnTileNative-=13; }
 	}
 
 	if (strcmp (sAction, "down") == 0)
 	{
-		if ((iOnTileSDLPoP >= 40) && (iOnTileSDLPoP <= 49))
-			{ iOnTileSDLPoP-=39; } else { iOnTileSDLPoP+=13; }
+		if ((iOnTileNative >= 40) && (iOnTileNative <= 49))
+			{ iOnTileNative-=39; } else { iOnTileNative+=13; }
 	}
 }
 /*****************************************************************************/
-int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
+int Native (int iLocation, SDL_Renderer *screen, int iViaCustom)
 /*****************************************************************************/
 {
 	SDL_Event event;
-	int iSDLPoP;
+	int iNativeW;
 	int iTemp;
 	int iTemp2;
 	int iNowOn;
@@ -32298,10 +32591,10 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 	int iXJoy1, iXJoy2;
 
 	iChangingCustom = iViaCustom;
-	iSDLPoP = 1;
+	iNativeW = 1;
 
-	ShowSDLPoP (screen);
-	while (iSDLPoP == 1)
+	ShowNative (screen);
+	while (iNativeW == 1)
 	{
 		while (SDL_PollEvent (&event))
 		{
@@ -32316,12 +32609,12 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 					{
 						case SDL_CONTROLLER_BUTTON_A:
 							iUsed = 0;
-							if (iOnTileSDLPoP != 0) {
-								iUsed+=UseTileSDLPoP (iOnTileSDLPoP, iLocation, iCurRoom);
+							if (iOnTileNative != 0) {
+								iUsed+=UseTileNative (iOnTileNative, iLocation, iCurRoom);
 							}
 							if (iUsed != 0)
 							{
-								iSDLPoP = 0;
+								iNativeW = 0;
 								if (iChangingCustom == 1)
 								{
 									iChangingCustom = 0;
@@ -32333,17 +32626,17 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 							break;
 						case SDL_CONTROLLER_BUTTON_B:
 						case SDL_CONTROLLER_BUTTON_BACK:
-							PlaySound ("wav/ok_close.wav"); iSDLPoP = 0; break;
+							PlaySound ("wav/ok_close.wav"); iNativeW = 0; break;
 						case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-							SDLPoPAction ("left"); break;
+							NativeAction ("left"); break;
 						case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-							SDLPoPAction ("right"); break;
+							NativeAction ("right"); break;
 						case SDL_CONTROLLER_BUTTON_DPAD_UP:
-							SDLPoPAction ("up"); break;
+							NativeAction ("up"); break;
 						case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-							SDLPoPAction ("down"); break;
+							NativeAction ("down"); break;
 					}
-					ShowSDLPoP (screen);
+					ShowNative (screen);
 					break;
 				case SDL_CONTROLLERAXISMOTION: /*** triggers and analog sticks ***/
 					iXJoy1 = SDL_JoystickGetAxis (joystick, 0);
@@ -32353,8 +32646,8 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 						if ((SDL_GetTicks() - joyleft) > 300)
 						{
 							PlaySound ("wav/screen2or3.wav");
-							iSDLPoPTab--;
-							if (iSDLPoPTab < 1) { iSDLPoPTab = 12; }
+							iNativeTab--;
+							if (iNativeTab < 1) { iNativeTab = 12; }
 							joyleft = SDL_GetTicks();
 						}
 					}
@@ -32363,12 +32656,12 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 						if ((SDL_GetTicks() - joyright) > 300)
 						{
 							PlaySound ("wav/screen2or3.wav");
-							iSDLPoPTab++;
-							if (iSDLPoPTab > 12) { iSDLPoPTab = 1; }
+							iNativeTab++;
+							if (iNativeTab > 12) { iNativeTab = 1; }
 							joyright = SDL_GetTicks();
 						}
 					}
-					ShowSDLPoP (screen);
+					ShowNative (screen);
 					break;
 				case SDL_KEYDOWN:
 					iTemp = 0;
@@ -32384,19 +32677,19 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 								for (iTemp2 = 1; iTemp2 <= iRooms; iTemp2++)
 								{
 									for (iTemp = 1; iTemp <= 30; iTemp++)
-										{ iUsed+=UseTileSDLPoP (iOnTileSDLPoP, iTemp, iTemp2); }
+										{ iUsed+=UseTileNative (iOnTileNative, iTemp, iTemp2); }
 								}
 							} else if ((event.key.keysym.mod & KMOD_LSHIFT) ||
 								(event.key.keysym.mod & KMOD_RSHIFT))
 							{
 								for (iTemp = 1; iTemp <= 30; iTemp++)
-									{ iUsed+=UseTileSDLPoP (iOnTileSDLPoP, iTemp, iCurRoom); }
-							} else if (iOnTileSDLPoP != 0) {
-								iUsed+=UseTileSDLPoP (iOnTileSDLPoP, iLocation, iCurRoom);
+									{ iUsed+=UseTileNative (iOnTileNative, iTemp, iCurRoom); }
+							} else if (iOnTileNative != 0) {
+								iUsed+=UseTileNative (iOnTileNative, iLocation, iCurRoom);
 							}
 							if (iUsed != 0)
 							{
-								iSDLPoP = 0;
+								iNativeW = 0;
 								if (iChangingCustom == 1)
 								{
 									iChangingCustom = 0;
@@ -32409,24 +32702,24 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 						case SDLK_ESCAPE:
 						case SDLK_q:
 						case SDLK_c:
-							PlaySound ("wav/ok_close.wav"); iSDLPoP = 0; break;
-						case SDLK_LEFT: SDLPoPAction ("left"); break;
-						case SDLK_RIGHT: SDLPoPAction ("right"); break;
-						case SDLK_UP: SDLPoPAction ("up"); break;
-						case SDLK_DOWN: SDLPoPAction ("down"); break;
+							PlaySound ("wav/ok_close.wav"); iNativeW = 0; break;
+						case SDLK_LEFT: NativeAction ("left"); break;
+						case SDLK_RIGHT: NativeAction ("right"); break;
+						case SDLK_UP: NativeAction ("up"); break;
+						case SDLK_DOWN: NativeAction ("down"); break;
 						case SDLK_LEFTBRACKET:
 							PlaySound ("wav/screen2or3.wav");
-							iSDLPoPTab--;
-							if (iSDLPoPTab < 1) { iSDLPoPTab = 12; }
+							iNativeTab--;
+							if (iNativeTab < 1) { iNativeTab = 12; }
 							break;
 						case SDLK_RIGHTBRACKET:
 							PlaySound ("wav/screen2or3.wav");
-							iSDLPoPTab++;
-							if (iSDLPoPTab > 12) { iSDLPoPTab = 1; }
+							iNativeTab++;
+							if (iNativeTab > 12) { iNativeTab = 1; }
 							break;
 						default: break;
 					}
-					ShowSDLPoP (screen);
+					ShowNative (screen);
 					break;
 				case SDL_MOUSEMOTION:
 					iOldXPos = iXPos;
@@ -32435,11 +32728,11 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 					iYPos = event.motion.y;
 					if ((iOldXPos == iXPos) && (iOldYPos == iYPos)) { break; }
 
-					iNowOn = OnTileSDLPoP();
-					if ((iOnTileSDLPoP != iNowOn) && (iNowOn != 0))
+					iNowOn = OnTileNative();
+					if ((iOnTileNative != iNowOn) && (iNowOn != 0))
 					{
-						iOnTileSDLPoP = iNowOn;
-						ShowSDLPoP (screen);
+						iOnTileNative = iNowOn;
+						ShowNative (screen);
 					}
 					break;
 				case SDL_MOUSEBUTTONDOWN: /*** ChangePos ***/
@@ -32451,24 +32744,24 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 							if (InArea (-21 + (iButton * 50), 385,
 								-21 + (iButton * 50) + 48, 385 + 62) == 1)
 							{
-								if (iSDLPoPTabOn != iButton)
+								if (iNativeTabOn != iButton)
 								{
-									iSDLPoPTabOn = iButton;
-									ShowSDLPoP (screen);
+									iNativeTabOn = iButton;
+									ShowNative (screen);
 								}
 							}
 						}
 
 						if (InArea (656, 0, 692, 455) == 1) /*** close ***/
 						{
-							if (iCloseSDLPoPOn != 1) { iCloseSDLPoPOn = 1; }
-							ShowSDLPoP (screen);
+							if (iCloseNativeOn != 1) { iCloseNativeOn = 1; }
+							ShowNative (screen);
 						}
 					}
 					break;
 				case SDL_MOUSEBUTTONUP:
-					iCloseSDLPoPOn = 0;
-					iSDLPoPTabOn = 0;
+					iCloseNativeOn = 0;
+					iNativeTabOn = 0;
 
 					/*** tile ***/
 					iUseTile = 0;
@@ -32480,10 +32773,10 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 						if (InArea (-21 + (iButton * 50), 385,
 							-21 + (iButton * 50) + 48, 385 + 62) == 1)
 						{
-							if (iSDLPoPTab != iButton)
+							if (iNativeTab != iButton)
 							{
 								PlaySound ("wav/screen2or3.wav");
-								iSDLPoPTab = iButton;
+								iNativeTab = iButton;
 							}
 						}
 					}
@@ -32492,27 +32785,27 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 					if (InArea (7, 385, 27, 447) == 1)
 					{
 						PlaySound ("wav/screen2or3.wav");
-						iSDLPoPTab--;
-						if (iSDLPoPTab < 1) { iSDLPoPTab = 12; }
+						iNativeTab--;
+						if (iNativeTab < 1) { iNativeTab = 12; }
 					}
 					if (InArea (629, 385, 649, 447) == 1)
 					{
 						PlaySound ("wav/screen2or3.wav");
-						iSDLPoPTab++;
-						if (iSDLPoPTab > 12) { iSDLPoPTab = 1; }
+						iNativeTab++;
+						if (iNativeTab > 12) { iNativeTab = 1; }
 					}
 
 					iUsed = 0;
 
 					if (event.button.button == 1) /*** left mouse button, tile ***/
 					{
-						/*** On close: exit SDLPoP. ***/
+						/*** On close: exit native. ***/
 						if (InArea (656, 0, 692, 455) == 1)
-							{ PlaySound ("wav/ok_close.wav"); iSDLPoP = 0; }
+							{ PlaySound ("wav/ok_close.wav"); iNativeW = 0; }
 
 						if (iUseTile == 1)
 						{
-							iUsed+=UseTileSDLPoP (iOnTileSDLPoP, iLocation, iCurRoom);
+							iUsed+=UseTileNative (iOnTileNative, iLocation, iCurRoom);
 						}
 					}
 
@@ -32522,7 +32815,7 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 						{
 							for (iTemp = 1; iTemp <= 30; iTemp++)
 							{
-								iUsed+=UseTileSDLPoP (iOnTileSDLPoP, iTemp, iCurRoom);
+								iUsed+=UseTileNative (iOnTileNative, iTemp, iCurRoom);
 							}
 						}
 					}
@@ -32535,7 +32828,7 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 							{
 								for (iTemp = 1; iTemp <= 30; iTemp++)
 								{
-									iUsed+=UseTileSDLPoP (iOnTileSDLPoP, iTemp, iTemp2);
+									iUsed+=UseTileNative (iOnTileNative, iTemp, iTemp2);
 								}
 							}
 						}
@@ -32543,7 +32836,7 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 
 					if (iUsed != 0)
 					{
-						iSDLPoP = 0;
+						iNativeW = 0;
 						if (iChangingCustom == 1)
 						{
 							iChangingCustom = 0;
@@ -32553,13 +32846,13 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 						iChanged++;
 					}
 
-					ShowSDLPoP (screen);
+					ShowNative (screen);
 					break;
 				case SDL_WINDOWEVENT:
 					switch (event.window.event)
 					{
 						case SDL_WINDOWEVENT_EXPOSED:
-							ShowSDLPoP (screen); break;
+							ShowNative (screen); break;
 						case SDL_WINDOWEVENT_CLOSE:
 							Quit(); break;
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
@@ -32583,7 +32876,7 @@ int SDLPoP (int iLocation, SDL_Renderer *screen, int iViaCustom)
 	return (iChangingCustom);
 }
 /*****************************************************************************/
-void ShowSDLPoP (SDL_Renderer *screen)
+void ShowNative (SDL_Renderer *screen)
 /*****************************************************************************/
 {
 	int iMod;
@@ -32595,36 +32888,44 @@ void ShowSDLPoP (SDL_Renderer *screen)
 	ShowImage (-3, (int[]){7, 0, 0, 0}, screen, 31, 0, 0, 692, 455);
 
 	/*** compatibility ***/
-	DisplayTextLine (462, 366, COMPATIBLE_SDLPOP_VERSION,
+	DisplayTextLine (368, 366, COMPATIBLE_NATIVE,
 		font2, color_mag, color_wh, 0);
 
 	/*** tiles ***/
 	if (cCurType == 'd') { iMod = 10; } else { iMod = 11; }
-	ShowImage (-3, (int[]){iMod, iSDLPoPTab, 0, 0},
+	ShowImage (-3, (int[]){iMod, iNativeTab, 0, 0},
 		screen, 137, 0, 0, 648, 318);
 
 	/*** tabs ***/
 	for (iButton = 1; iButton <= 12; iButton++)
 	{
-		if (iButton == iSDLPoPTab)
+		if (iButton == iNativeTab)
 		{
 			/*** up; current ***/
-			iMod = 6;
+			ShowImageBasic (imgnativetab_0a[iButton],
+				-21 + (iButton * 50), 385,
+				"imgnativetab_0a[iButton]",
+				ascreen, iScale, 1);
 		} else {
-			if (iButton != iSDLPoPTabOn)
+			if (iButton != iNativeTabOn)
 			{
 				/*** up ***/
-				iMod = 4;
+				ShowImageBasic (imgnativetab_0[iButton],
+					-21 + (iButton * 50), 385,
+					"imgnativetab_0[iButton]",
+					ascreen, iScale, 1);
 			} else {
 				/*** down ***/
-				iMod = 5;
+				ShowImageBasic (imgnativetab_1[iButton],
+					-21 + (iButton * 50), 385,
+					"imgnativetab_1[iButton]",
+					ascreen, iScale, 1);
 			}
 		}
-		ShowImage (-3, (int[]){iMod, iButton, 0, 0}, screen, 218, 0, 0, 48, 62);
 	}
 
 	/*** close ***/
-	switch (iCloseSDLPoPOn)
+	switch (iCloseNativeOn)
 	{
 		case 0: /*** off ***/
 			ShowImage (-12, (int[]){31, 0, 0, 0}, screen, 47, 0, 0, 36, 455); break;
@@ -32636,14 +32937,14 @@ void ShowSDLPoP (SDL_Renderer *screen)
 	ShowImage (-3, (int[]){9, 0, 0, 0}, screen, 217, 0, 0, 52, 66);
 
 	/*** bright green border ***/
-	if (iOnTileSDLPoP != 0)
+	if (iOnTileNative != 0)
 		{ ShowImage (-3, (int[]){8, 0, 0, 0}, screen, 216, 0, 0, 52, 66); }
 
 	/*** preview ***/
 	iThing = -1; iMod1 = -1;
-	if (iSDLPoPTab == 1)
+	if (iNativeTab == 1)
 	{
-		switch (iOnTileSDLPoP)
+		switch (iOnTileNative)
 		{
 			/*** First row. ***/
 			case 1: iThing = 0; iMod1 = 12; break;
@@ -32679,7 +32980,7 @@ void ShowSDLPoP (SDL_Renderer *screen)
 	SDL_RenderPresent (screen);
 }
 /*****************************************************************************/
-int OnTileSDLPoP (void)
+int OnTileNative (void)
 /*****************************************************************************/
 {
 	int iTempX, iTempY;
@@ -32703,14 +33004,14 @@ int OnTileSDLPoP (void)
 	return (0);
 }
 /*****************************************************************************/
-int UseTileSDLPoP (int iTile, int iLocation, int iRoom)
+int UseTileNative (int iTile, int iLocation, int iRoom)
 /*****************************************************************************/
 {
 	int iUsed;
 
 	iUsed = 1;
 
-	if (iSDLPoPTab == 1)
+	if (iNativeTab == 1)
 	{
 		switch (iTile)
 		{
@@ -33434,16 +33735,18 @@ int RelatedToHover (int iRoom, int iTile)
 {
 	int iRelated;
 	int iHoverThing, iTileThing;
+	int iHoverModifier, iTileModifier;
 	int iStartEvent;
 
 	iRelated = 0;
 
 	/*** If the hover is a button... ***/
 	iHoverThing = iThingA[iMapHoverRoom][iMapHoverTile - 1];
+	iHoverModifier = iModifierA[iMapHoverRoom][iMapHoverTile - 1][1];
 	if ((iHoverThing == 6) || (iHoverThing == 38) ||
 		(iHoverThing == 15) || (iHoverThing == 47))
 	{
-		iStartEvent = iModifierA[iMapHoverRoom][iMapHoverTile - 1][1];
+		iStartEvent = iHoverModifier;
 		do {
 			iStartEvent++;
 			if ((EventInfo (iStartEvent - 1, 1) == iRoom) &&
@@ -33453,13 +33756,19 @@ int RelatedToHover (int iRoom, int iTile)
 			}
 		} while ((EventInfo (iStartEvent - 1, 3) == 1) && (iStartEvent != 256));
 	}
+	/*** If the hover is a special blue potion... ***/
+	if (((iHoverThing == 10) || (iHoverThing == 42)) && (iHoverModifier == 6))
+	{
+		if ((iRoom == 8) && (iTile == 1)) { iRelated = 1; }
+	}
 
 	/*** If this tile is a button, check whether it triggers the hover. ***/
 	iTileThing = iThingA[iRoom][iTile - 1];
+	iTileModifier = iModifierA[iRoom][iTile - 1][1];
 	if ((iTileThing == 6) || (iTileThing == 38) ||
 		(iTileThing == 15) || (iTileThing == 47))
 	{
-		iStartEvent = iModifierA[iRoom][iTile - 1][1];
+		iStartEvent = iTileModifier;
 		do {
 			iStartEvent++;
 			if ((EventInfo (iStartEvent - 1, 1) == iMapHoverRoom) &&
@@ -33468,6 +33777,13 @@ int RelatedToHover (int iRoom, int iTile)
 				iRelated = 1;
 			}
 		} while ((EventInfo (iStartEvent - 1, 3) == 1) && (iStartEvent != 256));
+	}
+	/* If this tile is a special blue potion,
+	 * check whether the hover is in room 8 upper left.
+	 */
+	if (((iTileThing == 10) || (iTileThing == 42)) && (iTileModifier == 6))
+	{
+		if ((iMapHoverRoom == 8) && (iMapHoverTile == 1)) { iRelated = 1; }
 	}
 
 	return (iRelated);
@@ -33506,6 +33822,9 @@ int DownloadAndUnzipTo (char *sURL, char *sDir)
 
 	/*** Used for looping. ***/
 	int iFileLoop;
+
+	/*** Create directory. ***/
+	CreateDir (sDir);
 
 	/*** Step 1: get the file as "temp.zip". ***/
 	curl = curl_easy_init();
@@ -33604,6 +33923,540 @@ mkdir (sDir);
 #else
 mkdir (sDir, 0700);
 #endif
+	}
+}
+/*****************************************************************************/
+void PlaytestAction (char *sAction, int iLevel)
+/*****************************************************************************/
+{
+	if (strcmp (sAction, "one") == 0)
+	{
+		if (iFoundDOSBox != 0)
+		{
+			if (iAutoUseChk == 1) { iAutoUse = 1; }
+			iPlaytest = -1;
+			RunLevel (iLevel);
+		}
+	}
+
+	if (strcmp (sAction, "two") == 0)
+	{
+		if (iFoundSDLPoP != 0)
+		{
+			if (iAutoUseChk == 1) { iAutoUse = 2; }
+			iPlaytest = -1;
+			RunLevelS (iLevel);
+		} else {
+			/*** s Download ***/
+			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
+				"software/SDLPoP/SDLPoP-latest.zip", SDLPOP_DIR);
+#if defined WIN32 || _WIN32 || WIN64 || _WIN64
+#else
+chmod (SDLPOP_DIR SLASH "prince", 0700);
+#endif
+			CheckPlaytestFiles();
+		}
+	}
+
+	if (strcmp (sAction, "three") == 0)
+	{
+		if (iFoundMININIM != 0)
+		{
+			if (iAutoUseChk == 1) { iAutoUse = 3; }
+			iPlaytest = -1;
+			RunLevelM (iLevel);
+		} else {
+			/*** m Download ***/
+			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
+				"software/MININIM/mininim-latest.zip", MININIM_DIR);
+#if defined WIN32 || _WIN32 || WIN64 || _WIN64
+#else
+chmod (MININIM_DIR SLASH "mininim", 0700);
+#endif
+			CheckPlaytestFiles();
+		}
+	}
+}
+/*****************************************************************************/
+void Playtest (int iLevel)
+/*****************************************************************************/
+{
+	SDL_Event event;
+	int iXJoy1, iXJoy2;
+
+	CheckPlaytestFiles();
+	iPlaytest = 1;
+	iAutoUseChk = 0;
+
+	PlaySound ("wav/popup.wav");
+	ShowPlaytest();
+	while (iPlaytest == 1)
+	{
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_A:
+						case SDL_CONTROLLER_BUTTON_START:
+							/*** DOSBox ***/
+							if ((iFoundDOSBox != 0) && (iOnDOSBox == 1))
+							{
+								PlaytestAction ("one", iLevel);
+							}
+							/*** SDLPoP ***/
+							if ((iFoundSDLPoP != 0) && (iOnSDLPoP == 1))
+							{
+								PlaytestAction ("two", iLevel);
+							}
+							/*** MININIM ***/
+							if ((iFoundMININIM != 0) && (iOnMININIM == 1))
+							{
+								PlaytestAction ("three", iLevel);
+							}
+							break;
+						case SDL_CONTROLLER_BUTTON_B:
+						case SDL_CONTROLLER_BUTTON_BACK:
+							iPlaytest = 0; break;
+						case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+						case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+							if (iOnMININIM == 1)
+							{
+								if (iFoundSDLPoP != 0) /*** SDLPoP <- MININIM ***/
+								{
+									iOnMININIM = 0; iOnSDLPoP = 1;
+									ShowPlaytest();
+								} else if (iFoundDOSBox != 0) { /*** DOSBox <- MININIM ***/
+									iOnMININIM = 0; iOnDOSBox = 1;
+									ShowPlaytest();
+								}
+							} else if (iOnSDLPoP == 1) {
+								if (iFoundDOSBox != 0) /*** DOSBox <- SDLPoP ***/
+								{
+									iOnSDLPoP = 0; iOnDOSBox = 1;
+									ShowPlaytest();
+								}
+							}
+							break;
+						case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+						case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+							if (iOnDOSBox == 1)
+							{
+								if (iFoundSDLPoP != 0) /*** DOSBox -> SDLPoP ***/
+								{
+									iOnDOSBox = 0; iOnSDLPoP = 1;
+									ShowPlaytest();
+								} else if (iFoundMININIM != 0) { /*** DOSBox -> MININIM ***/
+									iOnDOSBox = 0; iOnMININIM = 1;
+									ShowPlaytest();
+								}
+							} else if (iOnSDLPoP == 1) {
+								if (iFoundMININIM != 0) /*** SDLPoP -> MININIM ***/
+								{
+									iOnSDLPoP = 0; iOnMININIM = 1;
+									ShowPlaytest();
+								}
+							}
+							break;
+						case SDL_CONTROLLER_BUTTON_X:
+							PlaytestAction ("one", iLevel);
+							break;
+						case SDL_CONTROLLER_BUTTON_Y:
+							PlaytestAction ("two", iLevel);
+							break;
+						case SDL_CONTROLLER_BUTTON_GUIDE:
+							PlaytestAction ("three", iLevel);
+							break;
+					}
+					ShowPlaytest();
+					break;
+				case SDL_CONTROLLERAXISMOTION: /*** triggers and analog sticks ***/
+					iXJoy1 = SDL_JoystickGetAxis (joystick, 0);
+					iXJoy2 = SDL_JoystickGetAxis (joystick, 3);
+					if ((event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT) ||
+						(iXJoy1 < -30000) || (iXJoy2 < -30000)) /*** left ***/
+					{
+						if (iOnMININIM == 1)
+						{
+							if (iFoundSDLPoP != 0) /*** SDLPoP <- MININIM ***/
+							{
+								iOnMININIM = 0; iOnSDLPoP = 1;
+								ShowPlaytest();
+							} else if (iFoundDOSBox != 0) { /*** DOSBox <- MININIM ***/
+								iOnMININIM = 0; iOnDOSBox = 1;
+								ShowPlaytest();
+							}
+						} else if (iOnSDLPoP == 1) {
+							if (iFoundDOSBox != 0) /*** DOSBox <- SDLPoP ***/
+							{
+								iOnSDLPoP = 0; iOnDOSBox = 1;
+								ShowPlaytest();
+							}
+						}
+					}
+					if ((event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT) ||
+						(iXJoy1 > 30000) || (iXJoy2 > 30000)) /*** right ***/
+					{
+						if (iOnDOSBox == 1)
+						{
+							if (iFoundSDLPoP != 0) /*** DOSBox -> SDLPoP ***/
+							{
+								iOnDOSBox = 0; iOnSDLPoP = 1;
+								ShowPlaytest();
+							} else if (iFoundMININIM != 0) { /*** DOSBox -> MININIM ***/
+								iOnDOSBox = 0; iOnMININIM = 1;
+								ShowPlaytest();
+							}
+						} else if (iOnSDLPoP == 1) {
+							if (iFoundMININIM != 0) /*** SDLPoP -> MININIM ***/
+							{
+								iOnSDLPoP = 0; iOnMININIM = 1;
+								ShowPlaytest();
+							}
+						}
+					}
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							iPlaytest = 0; break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+							/*** DOSBox ***/
+							if ((iFoundDOSBox != 0) && (iOnDOSBox == 1))
+							{
+								PlaytestAction ("one", iLevel);
+							}
+							/*** SDLPoP ***/
+							if ((iFoundSDLPoP != 0) && (iOnSDLPoP == 1))
+							{
+								PlaytestAction ("two", iLevel);
+							}
+							/*** MININIM ***/
+							if ((iFoundMININIM != 0) && (iOnMININIM == 1))
+							{
+								PlaytestAction ("three", iLevel);
+							}
+							break;
+						case SDLK_a: /*** checkbox ***/
+							if (iAutoUseChk == 0)
+								{ iAutoUseChk = 1; } else { iAutoUseChk = 0; }
+							PlaySound ("wav/check_box.wav");
+							break;
+						case SDLK_d: /*** DOSBox ***/
+							PlaytestAction ("one", iLevel);
+							break;
+						case SDLK_s: /*** SDLPoP ***/
+							PlaytestAction ("two", iLevel);
+							break;
+						case SDLK_m: /*** MININIM ***/
+							PlaytestAction ("three", iLevel);
+							break;
+						case SDLK_LEFT:
+							if (iOnMININIM == 1)
+							{
+								if (iFoundSDLPoP != 0) /*** SDLPoP <- MININIM ***/
+								{
+									iOnMININIM = 0; iOnSDLPoP = 1;
+									ShowPlaytest();
+								} else if (iFoundDOSBox != 0) { /*** DOSBox <- MININIM ***/
+									iOnMININIM = 0; iOnDOSBox = 1;
+									ShowPlaytest();
+								}
+							} else if (iOnSDLPoP == 1) {
+								if (iFoundDOSBox != 0) /*** DOSBox <- SDLPoP ***/
+								{
+									iOnSDLPoP = 0; iOnDOSBox = 1;
+									ShowPlaytest();
+								}
+							}
+							break;
+						case SDLK_RIGHT:
+							if (iOnDOSBox == 1)
+							{
+								if (iFoundSDLPoP != 0) /*** DOSBox -> SDLPoP ***/
+								{
+									iOnDOSBox = 0; iOnSDLPoP = 1;
+									ShowPlaytest();
+								} else if (iFoundMININIM != 0) { /*** DOSBox -> MININIM ***/
+									iOnDOSBox = 0; iOnMININIM = 1;
+									ShowPlaytest();
+								}
+							} else if (iOnSDLPoP == 1) {
+								if (iFoundMININIM != 0) /*** SDLPoP -> MININIM ***/
+								{
+									iOnSDLPoP = 0; iOnMININIM = 1;
+									ShowPlaytest();
+								}
+							}
+							break;
+						default: break;
+					}
+					ShowPlaytest();
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+					if ((InArea (286, 127, 345, 143) == 1) ||
+						(InArea (353, 127, 407, 143) == 1) ||
+						(InArea (431, 127, 494, 143) == 1))
+					{
+						SDL_SetCursor (curHand);
+					} else {
+						SDL_SetCursor (curArrow);
+					}
+					if (InArea (119, 162, 119 + 140, 162 + 140) == 1)
+					{
+						if ((iFoundDOSBox != 0) && (iOnDOSBox != 1))
+						{
+							iOnDOSBox = 1; iOnSDLPoP = 0; iOnMININIM = 0;
+						}
+					} else if (InArea (276, 162, 276 + 140, 162 + 140) == 1) {
+						if ((iFoundSDLPoP != 0) && (iOnSDLPoP != 1))
+						{
+							iOnDOSBox = 0; iOnSDLPoP = 1; iOnMININIM = 0;
+						}
+					} else if (InArea (433, 162, 433 + 140, 162 + 140) == 1) {
+						if ((iFoundMININIM != 0) && (iOnMININIM != 1))
+						{
+							iOnDOSBox = 0; iOnSDLPoP = 0; iOnMININIM = 1;
+						}
+					} else {
+						iOnDOSBox = 0; iOnSDLPoP = 0; iOnMININIM = 0;
+					}
+					ShowPlaytest();
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if ((iFoundSDLPoP == 0) &&
+						(InArea (288, 216, 288 + 115, 216 + 32) == 1))
+					{
+						/*** s Download ***/
+						iDownAt = 2;
+					}
+					if ((iFoundMININIM == 0) &&
+						(InArea (445, 216, 445 + 115, 216 + 32) == 1))
+					{
+						/*** m Download ***/
+						iDownAt = 3;
+					}
+					ShowPlaytest();
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iOnDOSBox = 0;
+					iOnSDLPoP = 0;
+					iOnMININIM = 0;
+					iDownAt = 0;
+					if (event.button.button == 1)
+					{
+						if (InArea (286, 127, 345, 143) == 1)
+							{ OpenURL ("https://www.dosbox.com/"); }
+						if (InArea (353, 127, 407, 143) == 1)
+							{ OpenURL ("https://www.popot.org/get_the_games.php?"
+								"game=SDLPoP"); }
+						if (InArea (431, 127, 494, 143) == 1)
+							{ OpenURL ("https://oitofelix.github.io/mininim/"); }
+						/*** checkbox ***/
+						if (InArea (121, 320, 121 + 14, 320 + 14) == 1)
+						{
+							if (iAutoUseChk == 0)
+								{ iAutoUseChk = 1; } else { iAutoUseChk = 0; }
+							PlaySound ("wav/check_box.wav");
+						}
+						if ((iFoundDOSBox != 0) &&
+							(InArea (119, 162, 119 + 140, 162 + 140) == 1))
+						{ /*** DOSBox ***/
+							PlaytestAction ("one", iLevel);
+						}
+						if (((iFoundSDLPoP != 0) &&
+							(InArea (276, 162, 276 + 140, 162 + 140) == 1)) ||
+							((iFoundSDLPoP == 0) &&
+							(InArea (288, 216, 288 + 115, 216 + 32) == 1)))
+						{ /*** SDLPoP ***/
+							PlaytestAction ("two", iLevel);
+						}
+						if (((iFoundMININIM != 0) &&
+							(InArea (433, 162, 433 + 140, 162 + 140) == 1)) ||
+							((iFoundMININIM == 0) &&
+							(InArea (445, 216, 445 + 115, 216 + 32) == 1)))
+						{ /*** MININIM ***/
+							PlaytestAction ("three", iLevel);
+						}
+					}
+					ShowPlaytest();
+					break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowPlaytest(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+			}
+		}
+
+		/*** prevent CPU eating ***/
+		gamespeed = REFRESH;
+		while ((SDL_GetTicks() - looptime) < gamespeed)
+		{
+			SDL_Delay (10);
+		}
+		looptime = SDL_GetTicks();
+	}
+	if (iPlaytest == 0) { PlaySound ("wav/popup_close.wav"); }
+	SDL_SetCursor (curArrow);
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void ShowPlaytest (void)
+/*****************************************************************************/
+{
+	ShowScreen (iScreen, ascreen);
+
+	/*** faded background ***/
+	ShowImageBasic (imgfadedl, 0, 0, "imgfadedl", ascreen, iScale, 1);
+
+	/*** playtest background ***/
+	ShowImageBasic (imgpt, 100, 100, "imgpt", ascreen, iScale, 1);
+
+	/*** DOSBox (including optional native) ***/
+	if (iFoundDOSBox == 0)
+	{
+		/*** disabled ***/
+		ShowImageBasic (imgptdosboxdis, 119, 162, "imgptdosboxdis",
+			ascreen, iScale, 1);
+		/*** No download. ***/
+	} else if (iOnDOSBox == 0) {
+		/*** off ***/
+		if (iUsesNative == 0)
+		{
+			ShowImageBasic (imgptdosboxoff, 119, 162, "imgptdosboxoff",
+				ascreen, iScale, 1);
+		} else {
+			ShowImageBasic (imgptnativeoff, 119, 162, "imgptnativeoff",
+				ascreen, iScale, 1);
+		}
+	} else {
+		/*** on ***/
+		if (iUsesNative == 0)
+		{
+			ShowImageBasic (imgptdosboxon, 119, 162, "imgptdosboxon",
+				ascreen, iScale, 1);
+		} else {
+			ShowImageBasic (imgptnativeon, 119, 162, "imgptnativeon",
+				ascreen, iScale, 1);
+		}
+	}
+	if (iFoundDOSBox != 0)
+	{
+		ShowImageBasic (imgptdosboxkey, 240, 283, "imgptdosboxkey",
+			ascreen, iScale, 1);
+	}
+
+	/*** SDLPoP ***/
+	if (iFoundSDLPoP == 0)
+	{
+		/*** disabled ***/
+		ShowImageBasic (imgptsdlpopdis, 276, 162, "imgptsdlpopdis",
+			ascreen, iScale, 1);
+		if (iDownAt != 2)
+		{
+			ShowImageBasic (imgdownloads[1], 288, 216,
+				"imgdownloads[1]", ascreen, iScale, 1);
+		} else {
+			ShowImageBasic (imgdownloads[2], 288, 216,
+				"imgdownloads[2]", ascreen, iScale, 1);
+		}
+	} else if (iOnSDLPoP == 0) {
+		/*** off ***/
+		ShowImageBasic (imgptsdlpopoff, 276, 162, "imgptsdlpopoff",
+			ascreen, iScale, 1);
+	} else {
+		/*** on ***/
+		ShowImageBasic (imgptsdlpopon, 276, 162, "imgptsdlpopon",
+			ascreen, iScale, 1);
+	}
+	if (iFoundSDLPoP != 0)
+	{
+		ShowImageBasic (imgptsdlpopkey, 397, 283, "imgptsdlpopkey",
+			ascreen, iScale, 1);
+	}
+
+	/*** MININIM ***/
+	if (iFoundMININIM == 0)
+	{
+		/*** disabled ***/
+		ShowImageBasic (imgptmininimdis, 433, 162, "imgptmininimdis",
+			ascreen, iScale, 1);
+		if (iDownAt != 3)
+		{
+			ShowImageBasic (imgdownloadm[1], 445, 216,
+				"imgdownloadm[1]", ascreen, iScale, 1);
+		} else {
+			ShowImageBasic (imgdownloadm[2], 445, 216,
+				"imgdownloadm[2]", ascreen, iScale, 1);
+		}
+	} else if (iOnMININIM == 0) {
+		/*** off ***/
+		ShowImageBasic (imgptmininimoff, 433, 162, "imgptmininimoff",
+			ascreen, iScale, 1);
+	} else {
+		ShowImageBasic (imgptmininimon, 433, 162, "imgptmininimon",
+			ascreen, iScale, 1);
+	}
+	if (iFoundMININIM != 0)
+	{
+		ShowImageBasic (imgptmininimkey, 554, 283, "imgptmininimkey",
+			ascreen, iScale, 1);
+	}
+
+	/*** checkbox ***/
+	if (iAutoUseChk == 1)
+	{
+		ShowImageBasic (imgsell, 121, 320, "imgsell", ascreen, iScale, 1);
+	}
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+void CheckPlaytestFiles (void)
+/*****************************************************************************/
+{
+	/*** iFoundDOSBox (including optional native) ***/
+	iUsesNative = UsesNative (1, "prince");
+	if ((access (POP1_EXECUTABLE, R_OK) == -1) && (iUsesNative == 0))
+		{ iFoundDOSBox = 0; } else { iFoundDOSBox = 1; }
+
+	/*** iFoundSDLPoP ***/
+	iFoundSDLPoP = UsesNative (2, "prince");
+
+	/*** iFoundMININIM ***/
+	iFoundMININIM = UsesNative (3, "mininim");
+}
+/*****************************************************************************/
+void AutoUse (int iLevel)
+/*****************************************************************************/
+{
+	switch (iAutoUse)
+	{
+		case 0: Playtest (iLevel); break;
+		case 1: RunLevel (iLevel); break;
+		case 2: RunLevelS (iLevel); break;
+		case 3: RunLevelM (iLevel); break;
 	}
 }
 /*****************************************************************************/
