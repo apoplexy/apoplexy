@@ -21,4 +21,4 @@ Feel free to use PrIfDe() to give the user additional information. (If they choo
 
 Make sure to test with a zoomed main window ("z"). And remember, this program can edit three games; depending on where in the code you are working, you may need to check against iEditPoP.
 
-The six fonts used are: Akzidenz Grotesk CE, Andagii, Nimbus Sans L Bold Condensed, Sans, Terminus, and URW Gothic L Semi-Bold.
+The seven fonts used are: Akzidenz Grotesk CE, Andagii, Bitstream Vera Sans Bold, Nimbus Sans L Bold Condensed, Sans, Terminus, and URW Gothic L Semi-Bold.

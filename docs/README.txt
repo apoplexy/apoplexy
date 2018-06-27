@@ -10,7 +10,7 @@
 
 ===[1 - ABOUT]=================================================================
 
-apoplexy v3.3 (April 2018)
+apoplexy v3.4 (June 2018)
 Copyright (C) 2008-2018 The apoplexy Team (see credits.txt)
 
 A level editor of Prince of Persia 1 (for DOS and SNES) and 2 (for DOS).
@@ -30,7 +30,8 @@ You should have received a copy of the GNU General Public License along with thi
 IMPORTANT: Files in the following directories are licensed differently.
 -----
 pr/ -> http://sourceforge.net/projects/princed/files/PR - Graphic_Sound Editor/
-ttf/ -> http://www.gnome.org/fonts/ (© Bitstream, Inc.)
+ttf/Bitstream-Vera-Sans-Bold.ttf -> http://www.gnome.org/fonts/ (© Bitstream, Inc.)
+ttf/Terminus-Bold.ttf -> https://en.wikipedia.org/wiki/SIL_Open_Font_License (© Dimitar Zhekov (& Tilman Blumenbach))
 wav/ -> http://en.wikipedia.org/wiki/Abandonware (© Jordan Mechner/Ubisoft)
 png/ -> When it comes to images from the games: see above.
 png/controller/ -> The Xbox icons in images are by Jeff Jenkins, CC BY 3.0.

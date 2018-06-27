@@ -1,4 +1,4 @@
-/* apoplexy v3.3 (April 2018)
+/* apoplexy v3.4 (June 2018)
  * Copyright (C) 2008-2018 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,7 +56,7 @@
 #define SCREEN_HEIGHT 380 + 75
 #define SCREEN_BPP 16
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.3 (April 2018)"
+#define EDITOR_VERSION "v3.4 (June 2018)"
 #define COPYRIGHT "Copyright (C) 2018 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.18.1, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
@@ -346,6 +346,8 @@ SDL_Color color_g8 = {0x88, 0x88, 0x88, 255};
 SDL_Color color_gb = {0xbb, 0xbb, 0xbb, 255};
 SDL_Color color_f4 = {0xf4, 0xf4, 0xf4, 255};
 SDL_Color color_tooltip = {0xc7, 0xff, 0xc7, 255};
+SDL_Color color_cc = {0xcc, 0xcc, 0xcc, 255};
+SDL_Color color_melrose = {0x99, 0x99, 0xff, 255};
 SDL_Rect offset;
 SDL_Surface *message;
 SDL_Texture *messaget;
@@ -536,6 +538,7 @@ TTF_Font *font1;
 TTF_Font *font2;
 TTF_Font *font3;
 TTF_Font *font4;
+TTF_Font *font5;
 SDL_Window *window;
 SDL_Window *windowmap;
 unsigned int iWindowID;
@@ -635,6 +638,7 @@ int iMod3Hi, iMod4Hi, iModHi, iTempHi;
 SDL_Cursor *curArrow;
 SDL_Cursor *curWait;
 SDL_Cursor *curHand;
+SDL_Cursor *curText;
 int iEditNote;
 int iEditGuardNr;
 int iEditGuardDir;
@@ -663,6 +667,10 @@ int iFoundSDLPoP, iOnSDLPoP;
 int iFoundMININIM, iOnMININIM;
 int iPlaytest;
 int iAutoUse, iAutoUseChk;
+int iTextSave;
+char arTextS[10 + 2][30 + 2][MAX_DATA + 2];
+int iTextTab;
+int iTextHover;
 
 /*** controller ***/
 SDL_GameController *controller;
@@ -832,6 +840,219 @@ static const int arDefaultGuardD1[][12] = {
 	{ 255, 200, 200, 200, 255, 255, 200, 0, 0, 255, 100, 100 },
 	{ 20, 20, 20, 20, 10, 10, 10, 10, 0, 10, 0, 0 },
 	{ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }
+};
+
+static const char *arTextTab[][30] = {
+	{
+		" In the Sultan's absence the   ",
+		" Grand Vizier JAFFAR rules with",
+		" an iron fist of tyranny.",
+		"",
+		" Only one obstacle remains     ",
+		" between Jaffar and the throne,",
+		" the Sultan's beautiful young  ",
+		" daughter...",
+		"",
+		" An adventurer from a foreign  ",
+		" land has won the Princess's   ",
+		" heart.",
+		"",
+		"  On Jaffar's orders, he is    ",
+		"  arrested and thrown into the ",
+		"  Sultan's dungeons.",
+		"",
+		" Jaffar gives her a choice and ",
+		" two hours to decide.          ",
+		" Marry him ... or die.         ",
+		"",
+		" Locked in her room high in    ",
+		" the palace tower,the Princess ",
+		" rests all her hopes on the    ",
+		" brave youth she loves.",
+		"",
+		"  Little does she know that   ",
+		"  he is already a prisoner in ",
+		"  Jaffar's dungeons...",
+		""
+	},
+	{
+		" The tyrant Jaffar lies        ",
+		" defeated, his power shattered.",
+		" Throughout the land the people",
+		" of Persia hail their Princess ",
+		" ... and the brave youth who   ",
+		" saved her from the force of   ",
+		" darkness.",
+		" No longer a stranger,he shall ",
+		" from this day forth be known  ",
+		" as ... PRINCE OF PERSIA.",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""
+	},
+	{
+		"           Producer",
+		"       Keiichi Onogi",
+		"",
+		"           Director",
+		"       Keisuke Yasaka",
+		"",
+		"          Programming",
+		"       Seiichi Ikiuo",
+		"                (Arsys)",
+		"     Katsunori Yoshimura",
+		"                (Arsys)",
+		"", "", "", "",
+		"      Art and Animations",
+		"      Takaharu Matsuo",
+		"                (Arsys)",
+		"       Kenichi Yaguchi",
+		"                (Arsys)",
+		"",
+		"             Music",
+		"       Toshiya Yamanaka",
+		"                (Arsys)",
+		"       Tetsuya Nakano",
+		"                (Arsys)",
+		"", "", "", ""
+	},
+	{
+		"         Thanks to ....",
+		"          Akio Matsuda",
+		"         Taiji Hida",
+		"   and all staffs of ",
+		"",
+		"",
+		"     Nippon Imageworks Inc.",
+		"",
+		"            Marketing",
+		"        Masaki Uchida",
+		"        Kyohko Katagiri",
+		"       Yasuaki Yokoe",
+		"           Jun Mimura",
+		"", "",
+		"       Exective Producer",
+		"      Yasumasa Shirakura",
+		"",
+		"         Original Game",
+		"        Jordan Mechner",
+		"", "", "", "", "", "", "", "", "", ""
+	},
+	{
+		"   MENU",
+		" GAME START",
+		" CONTINUE",
+		" TRAINING",
+		" BEST TIME",
+		" OPTION",
+		"",
+		"   MENU   ",
+		" BEST TIME",
+		" PASSWORD ",
+		" GAME END ",
+		" OPTION   ",
+		"", "", "",
+		" STATUS  ",
+		"LV  TIME ",
+		"00 ---:--",
+		"", "", "", "", "", "", "", "", "", "", "", ""
+	},
+	{
+		"   ENTER PASSWORD",
+		"  PASSWORD:        ",
+		"  1 2 3 4 5 6 7 8 9",
+		"  B C D F G H J K L",
+		"  M N P Q R S T V W",
+		"  X Y Z + ! - - - -",
+		" CANCEL  OK",
+		"", "", "", "", "", "", "", "",
+		"123456789BCDFGHJKLMNPQRSTVWXYZ+!----",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", ""
+	},
+	{
+		"     BEST TIME     ",
+		"LV  TIME  LV  TIME ",
+		" 1 ---:-- 11 ---:--",
+		" 2 ---:-- 12 ---:--",
+		" 3 ---:-- 13 ---:--",
+		" 4 ---:-- 14 ---:--",
+		" 5 ---:-- 15 ---:--",
+		" 6 ---:-- 16 ---:--",
+		" 7 ---:-- 17 ---:--",
+		" 8 ---:-- 18 ---:--",
+		" 9 ---:-- 19 ---:--",
+		"10 ---:-- 20 ---:--",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""
+	},
+	{
+		"        OPTION",
+		"      SOUND ",
+		"     REPEAT ",
+		" OK  CANCEL  INITIALIZE",
+		"",
+		"------------",
+		"CROUCH      ",
+		"SPECIAL     ",
+		"JUMP FORWARD",
+		"HANG        ",
+		"TIME        ",
+		"KILL        ",
+		"", "", "",
+		"------",
+		"STRIKE",
+		"BLOCK ",
+		"STEREO",
+		"MONO  ",
+		"",
+		"ON ",
+		"OFF",
+		"", "", "", "", "", "", ""
+	},
+	{
+		"SPCCMD!",
+		"",
+		" LEVEL SELECT",
+		" SOUND SELECT",
+		" BOOST METER",
+		"",
+		" LEVEL ",
+		"",
+		" SOUND ",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""
+	},
+	{
+		"LEVEL ",
+		"TRAINING ",
+		"",
+		"TRAINING !!",
+		"",
+		"TRAINING MODE !!",
+		"",
+		"Press button to continue",
+		"",
+		"TIME UP",
+		"",
+		"GAME OVER",
+		"",
+		"CLEAR TIME  ---:--",
+		"PASSWORD   ",
+		"",
+		"PASSWORD  ",
+		"",
+		"PRINCE OF PERSIA      ",
+		"", "", "", "", "", "", "", "", "", "", ""
+	}
+};
+
+static const int arTextOffsets[][30] = {
+	{ 0x18258, 0x18279, 0x1829A, 0x00, 0x182B6, 0x182D7, 0x182F8, 0x18319, 0x00, 0x18659, 0x1867A, 0x1869B, 0x00, 0x189C9, 0x189EA, 0x18A0B, 0x00, 0x194AC, 0x194CD, 0x194EE, 0x00, 0x19511, 0x19532, 0x19553, 0x19574, 0x00, 0x1958E, 0x195AE, 0x195CE, 0x00 },
+	{ 0x1BD36, 0x1BD58, 0x1BD7A, 0x1BD9C, 0x1BDBE, 0x1BDE0, 0x1BE02, 0x1BE0F, 0x1BE31, 0x1BE53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x1B863, 0x1B87A, 0x00, 0x1B896, 0x1B8AD, 0x00, 0x1B8CA, 0x1B8E3, 0x1B8F9, 0x1B914, 0x1B92E, 0x00, 0x00, 0x00, 0x00, 0x1B94D, 0x1B969, 0x1B980, 0x1B99B, 0x1B9B3, 0x00, 0x1B9D2, 0x1B9E8, 0x1BA01, 0x1BA1C, 0x1BA33, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x1BA52, 0x1BA6D, 0x1BA87, 0x1BA9E, 0x00, 0x00, 0x1BAC7, 0x00, 0x1BAEA, 0x1BB03, 0x1BB1C, 0x1BB37, 0x1BB4F, 0x00, 0x00, 0x1BB6C, 0x1BB88, 0x00, 0x1BBA6, 0x1BBC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x125F, 0x1269, 0x1277, 0x1283, 0x128F, 0x129C, 0x00, 0x1109, 0x1116, 0x1123, 0x1130, 0x113D, 0x00, 0x00, 0x00, 0x10A5, 0x10B1, 0x10BD, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x154DA, 0x154EE, 0x1551A, 0x15530, 0x15546, 0x1555C, 0x15577, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x15583, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x156DF, 0x156F5, 0x1570B, 0x15721, 0x15737, 0x1574D, 0x15763, 0x15779, 0x1578F, 0x157A5, 0x157BB, 0x157D1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x161E0, 0x1621F, 0x1622E, 0x1623D, 0x00, 0x16255, 0x16262, 0x1626F, 0x1627C, 0x16289, 0x16296, 0x162A3, 0x00, 0x00, 0x00, 0x162B0, 0x162B7, 0x162BE, 0x162C8, 0x162D2, 0x00, 0x162DC, 0x162E3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x15497, 0x00, 0x16615, 0x16625, 0x16635, 0x00, 0x16768, 0x00, 0x16966, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0xCAE8, 0xCAEF, 0x00, 0xCA2F, 0x00, 0x10F5, 0x00, 0xCB1D, 0x00, 0xCA27, 0x00, 0x14B9A, 0x00, 0x15D0E, 0x15D23, 0x00, 0x15D7F, 0x00, 0x7FC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
 
 /*** Used with CurTypeBlocks(). ***/
@@ -1540,6 +1761,11 @@ SDL_Texture *imgdownload3[2 + 2];
 SDL_Texture *imgdownloads[2 + 2];
 SDL_Texture *imgdownloadm[2 + 2];
 
+/*** text ***/
+SDL_Texture *imgtext;
+SDL_Texture *imgtextnone;
+SDL_Texture *imgtexthover;
+
 int iMinX, iMaxX, iMinY, iMaxY, iStartRoomsX, iStartRoomsY;
 int iDone[32 + 2]; /*** PoP1 only uses 24. ***/
 
@@ -1768,6 +1994,7 @@ int OnKid (int iKOld);
 void GiveAnimationGroups (void);
 void UpdateStatusBar1 (void);
 void UpdateStatusBar3 (void);
+void UpdateStatusBar3T (void);
 int OnLevelBar (void);
 void AlwaysJumpThroughMirror (void);
 void StringToLower (char *sInput, char *sOutput);
@@ -1804,6 +2031,10 @@ void Playtest (int iLevel);
 void ShowPlaytest (void);
 void CheckPlaytestFiles (void);
 void AutoUse (int iLevel);
+void Text (void);
+void TextLoadSNES (void);
+void TextSaveSNES (void);
+void ShowText (void);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -10425,6 +10656,15 @@ void ShowImageBasic (SDL_Texture *img, int iX, int iY, char *sImageInfo,
 	}
 	dest.w = iWidth * fMultiply;
 	dest.h = iHeight * fMultiply;
+
+	/*** This is for the animation. ***/
+	if (strcmp (sImageInfo, "imgstatusbarsprite") == 0)
+	{
+		loc.x = (iStatusBarFrame - 1) * 20;
+		loc.w = loc.w / 18;
+		dest.w = dest.w / 18;
+	}
+
 	if (SDL_RenderCopy (screen, img, &loc, &dest) != 0)
 	{
 		printf ("[ WARN ] SDL_RenderCopy (%s): %s\n", sImageInfo, SDL_GetError());
@@ -11072,6 +11312,7 @@ void InitScreen (void)
 	curArrow = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_ARROW);
 	curWait = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_WAIT);
 	curHand = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_HAND);
+	curText = SDL_CreateSystemCursor (SDL_SYSTEM_CURSOR_IBEAM);
 
 	if (iNoAudio != 1)
 	{
@@ -12911,6 +13152,11 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "grid_fragment.png", &imggrid);
 	}
 
+	/*** text ***/
+	PreLoad (PNG_VARIOUS, "text.png", &imgtext);
+	PreLoad (PNG_VARIOUS, "text_none.png", &imgtextnone);
+	PreLoad (PNG_VARIOUS, "text_hover.png", &imgtexthover);
+
 	if (iDebug == 1)
 		{ printf ("[ INFO ] Preloaded images: %i\n", iPreLoaded); }
 
@@ -13226,6 +13472,22 @@ void InitScreen (void)
 											POP1_EXECUTABLE);
 									} else {
 										EXE();
+									}
+								}
+							}
+							break;
+						case SDLK_F3:
+							if (iScreen == 1)
+							{
+								if (iEditPoP == 3)
+								{
+									if ((strcmp (sEXEType, "US") == 0) ||
+										(strcmp (sEXEType, "EU") == 0))
+									{
+										Text();
+									} else {
+										printf ("[ INFO ] %s has an incompatible"
+											" executable type.\n", sSNESFile);
 									}
 								}
 							}
@@ -13727,9 +13989,14 @@ void InitScreen (void)
 						case SDLK_m:
 							if (iEditPoP == 1) /*** && (iScreen == 2) ***/
 							{
-								if ((iMapOpen == 0) && (iBrokenRoomLinks == 0))
+								if (iBrokenRoomLinks == 0)
 								{
-									MapShow();
+									if (iMapOpen == 0)
+									{
+										MapShow();
+									} else {
+										SDL_RaiseWindow (windowmap);
+									}
 								}
 							}
 							break;
@@ -15091,6 +15358,7 @@ void Quit (void)
 	TTF_CloseFont (font2);
 	TTF_CloseFont (font3);
 	TTF_CloseFont (font4);
+	TTF_CloseFont (font5);
 	TTF_Quit();
 	SDL_Quit();
 	exit (EXIT_NORMAL);
@@ -24709,7 +24977,9 @@ void LoadFonts (void)
 		FONT_SIZE_20 * iScale);
 	font4 = TTF_OpenFont ("ttf/Bitstream-Vera-Sans-Bold.ttf",
 		FONT_SIZE_11); /*** No iScale. ***/
-	if ((font1 == NULL) || (font2 == NULL) || (font3 == NULL) || (font4 == NULL))
+	font5 = TTF_OpenFont ("ttf/Terminus-Bold.ttf", 14 * iScale);
+	if ((font1 == NULL) || (font2 == NULL) || (font3 == NULL) ||
+		(font4 == NULL) || (font5 == NULL))
 	{
 		printf ("[FAILED] TTF_OpenFont() failed!\n");
 		exit (EXIT_ERROR);
@@ -27119,6 +27389,7 @@ void Zoom (int iToggleFull)
 	TTF_CloseFont (font2);
 	TTF_CloseFont (font3);
 	TTF_CloseFont (font4);
+	TTF_CloseFont (font5);
 	LoadFonts();
 }
 /*****************************************************************************/
@@ -32222,7 +32493,7 @@ void UpdateStatusBar1 (void)
 		(InArea (241, 240, 332, 375) == 1))
 	{
 		snprintf (sStatus, MAX_STATUS, "%s",
-			"G = guard | F = fat | S = shadow | J = Jaffar | M = mirror |"
+			"G = guard | F = fat | S = skeleton | J = Jaffar | M = mirror |"
 			" N = no enemies");
 	}
 	if (InArea (42, 128, 332, 144) == 1) /*** Allow triggering of any tile ***/
@@ -32344,6 +32615,65 @@ void UpdateStatusBar3 (void)
 		}
 	}
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE(); }
+}
+/*****************************************************************************/
+void UpdateStatusBar3T (void)
+/*****************************************************************************/
+{
+	int iTextX, iTextY;
+
+	/*** Used for looping. ***/
+	int iLoopText;
+
+	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+
+	if (InArea (19, -11 + (1 * 30), 19 + 14, -11 + (1 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Intro"); }
+	if (InArea (19, -11 + (2 * 30), 19 + 14, -11 + (2 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Outro"); }
+	if (InArea (19, -11 + (3 * 30), 19 + 14, -11 + (3 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Credits (I)"); }
+	if (InArea (19, -11 + (4 * 30), 19 + 14, -11 + (4 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Credits (II)"); }
+	if (InArea (19, -11 + (5 * 30), 19 + 14, -11 + (5 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Menus"); }
+	if (InArea (19, -11 + (6 * 30), 19 + 14, -11 + (6 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Continue"); }
+	if (InArea (19, -11 + (7 * 30), 19 + 14, -11 + (7 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Best"); }
+	if (InArea (19, -11 + (8 * 30), 19 + 14, -11 + (8 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Option"); }
+	if (InArea (19, -11 + (9 * 30), 19 + 14, -11 + (9 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Cheat"); }
+	if (InArea (19, -11 + (10 * 30), 19 + 14, -11 + (10 * 30) + 14) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Various"); }
+
+	for (iLoopText = 1; iLoopText <= 30; iLoopText++)
+	{
+		if (iLoopText > 15)
+		{
+			iTextX = 362;
+			iTextY = 12 + ((iLoopText - 15) * 23);
+		} else {
+			iTextX = 59;
+			iTextY = 12 + (iLoopText * 23);
+		}
+		if (arTextOffsets[iTextTab - 1][iLoopText - 1] != 0x00)
+		{
+			if (InArea (iTextX, iTextY, iTextX + 295, iTextY + 15) == 1)
+			{
+				snprintf (sStatus, MAX_STATUS, "\"%s\"",
+					arTextTab[iTextTab - 1][iLoopText - 1]);
+			}
+		}
+	}
+
+	if (InArea (590, 405, 674, 436) == 1)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Saves the strings of ALL ten"
+			" screens."); }
+
+	if (strcmp (sStatus, sStatusOld) != 0) { ShowText(); }
 }
 /*****************************************************************************/
 int OnLevelBar (void)
@@ -34458,5 +34788,406 @@ void AutoUse (int iLevel)
 		case 2: RunLevelS (iLevel); break;
 		case 3: RunLevelM (iLevel); break;
 	}
+}
+/*****************************************************************************/
+void Text (void)
+/*****************************************************************************/
+{
+	int iText;
+	SDL_Event event;
+	int iHoverX, iHoverY;
+	char cAdd;
+	char sTempLine[MAX_DATA + 2];
+
+	/*** Used for looping. ***/
+	int iLoopHover;
+	int iLoopTab;
+
+	iText = 1;
+	iStatusBarFrame = 1;
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+	iTextTab = 1;
+
+	TextLoadSNES();
+
+	PlaySound ("wav/popup.wav");
+	ShowText();
+	while (iText == 1)
+	{
+		if (iNoAnim == 0)
+		{
+			/*** We use the global REFRESH. No need for newticks/oldticks. ***/
+			iStatusBarFrame++;
+			if (iStatusBarFrame == 19) { iStatusBarFrame = 1; }
+			ShowText();
+		}
+
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_A:
+							TextSaveSNES();
+							iText = 0; break;
+						case SDL_CONTROLLER_BUTTON_B:
+						case SDL_CONTROLLER_BUTTON_BACK:
+							iText = 0; break;
+					}
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							iText = 0; break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+						case SDLK_s:
+							if (iTextHover == 0)
+							{
+								TextSaveSNES();
+								iText = 0;
+							}
+							break;
+						case SDLK_1: case SDLK_KP_1:
+							if (iTextHover == 0) { iTextTab = 1; }
+							break;
+						case SDLK_2: case SDLK_KP_2:
+							if (iTextHover == 0) { iTextTab = 2; }
+							break;
+						case SDLK_3: case SDLK_KP_3:
+							if (iTextHover == 0) { iTextTab = 3; }
+							break;
+						case SDLK_4: case SDLK_KP_4:
+							if (iTextHover == 0) { iTextTab = 4; }
+							break;
+						case SDLK_5: case SDLK_KP_5:
+							if (iTextHover == 0) { iTextTab = 5; }
+							break;
+						case SDLK_6: case SDLK_KP_6:
+							if (iTextHover == 0) { iTextTab = 6; }
+							break;
+						case SDLK_7: case SDLK_KP_7:
+							if (iTextHover == 0) { iTextTab = 7; }
+							break;
+						case SDLK_8: case SDLK_KP_8:
+							if (iTextHover == 0) { iTextTab = 8; }
+							break;
+						case SDLK_9: case SDLK_KP_9:
+							if (iTextHover == 0) { iTextTab = 9; }
+							break;
+						case SDLK_0: case SDLK_KP_0:
+							if (iTextHover == 0) { iTextTab = 10; }
+							break;
+						case SDLK_TAB:
+						case SDLK_KP_TAB:
+							do {
+								iTextHover++;
+								/*** Do NOT move straight to 1. ***/
+								if (iTextHover == 31) { iTextHover = 0; }
+							} while ((iTextHover != 0) &&
+								(arTextOffsets[iTextTab - 1][iTextHover - 1] == 0x00));
+							/*** stop/start input ***/
+							if (iTextHover == 0)
+							{
+								SDL_SetCursor (curArrow);
+								SDL_StopTextInput();
+							} else {
+								SDL_SetCursor (curText);
+								SDL_StartTextInput();
+							}
+							break;
+						case SDLK_BACKSPACE:
+							if ((iTextHover != 0) &&
+								(strlen (arTextS[iTextTab][iTextHover]) > 0))
+							{
+								arTextS[iTextTab][iTextHover]
+									[strlen (arTextS[iTextTab][iTextHover]) - 1] = '\0';
+								PlaySound ("wav/hum_adj.wav");
+							}
+							break;
+					}
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+
+					iTextHover = 0;
+					for (iLoopHover = 1; iLoopHover <= 30; iLoopHover++)
+					{
+						if (arTextOffsets[iTextTab - 1][iLoopHover - 1] != 0x00)
+						{
+							if (iLoopHover > 15)
+							{
+								iHoverX = 362;
+								iHoverY = iLoopHover - 15;
+							} else {
+								iHoverX = 59;
+								iHoverY = iLoopHover;
+							}
+							if (InArea (iHoverX, 12 + (iHoverY * 23),
+								iHoverX + 295, 12 + (iHoverY * 23) + 15) == 1)
+								{ iTextHover = iLoopHover; }
+						}
+					}
+					/*** stop/start input ***/
+					if (iTextHover == 0)
+					{
+						SDL_SetCursor (curArrow);
+						SDL_StopTextInput();
+					} else {
+						SDL_SetCursor (curText);
+						SDL_StartTextInput();
+					}
+
+					UpdateStatusBar3T();
+					ShowText();
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == 1)
+					{
+						if (InArea (590, 405, 674, 436) == 1) /*** Save ***/
+						{
+							if (iTextSave != 1) { iTextSave = 1; }
+							ShowText();
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iTextSave = 0;
+					if (event.button.button == 1) /*** left mouse button ***/
+					{
+						/*** Save ***/
+						if (InArea (590, 405, 674, 436) == 1)
+						{
+							TextSaveSNES();
+							iText = 0;
+						}
+
+						/*** tab ***/
+						for (iLoopTab = 1; iLoopTab <= 10; iLoopTab++)
+						{
+							if (InArea (19, -11 + (iLoopTab * 30),
+								19 + 14, -11 + (iLoopTab * 30) + 14) == 1)
+								{ iTextTab = iLoopTab; }
+						}
+					}
+					ShowText(); break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowText(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+				case SDL_TEXTINPUT:
+					if ((iTextHover != 0) &&
+						(strlen (arTextS[iTextTab][iTextHover]) <
+						strlen (arTextTab[iTextTab - 1][iTextHover - 1])))
+					{
+						cAdd = event.text.text[0];
+						if (((cAdd >= 'a') && (cAdd <= 'z')) ||
+							((cAdd >= 'A') && (cAdd <= 'Z')) ||
+							((cAdd >= '0') && (cAdd <= '9')) ||
+							(cAdd == ' ') || (cAdd == ',') ||
+							(cAdd == '.') || (cAdd == '!') ||
+							(cAdd == '\'') || (cAdd == ':') ||
+							(cAdd == '+') || (cAdd == '-') ||
+							(cAdd == '(') || (cAdd == ')'))
+						{
+							snprintf (sTempLine, MAX_DATA, "%s",
+								arTextS[iTextTab][iTextHover]);
+							snprintf (arTextS[iTextTab][iTextHover], MAX_DATA, "%s%c",
+								sTempLine, cAdd);
+							PlaySound ("wav/hum_adj.wav");
+						}
+					}
+					ShowText();
+					break;
+			}
+		}
+
+		/*** prevent CPU eating ***/
+		gamespeed = REFRESH;
+		while ((SDL_GetTicks() - looptime) < gamespeed)
+		{
+			SDL_Delay (10);
+		}
+		looptime = SDL_GetTicks();
+	}
+	PlaySound ("wav/popup_close.wav");
+	SDL_SetCursor (curArrow);
+	SDL_StopTextInput();
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void TextLoadSNES (void)
+/*****************************************************************************/
+{
+	int iFdText;
+
+	/*** Used for looping. ***/
+	int iLoopTab;
+	int iLoopText;
+
+	iFdText = open (sSNESFile, O_RDONLY|O_BINARY);
+
+	for (iLoopTab = 1; iLoopTab <= 10; iLoopTab++)
+	{
+		for (iLoopText = 1; iLoopText <= 30; iLoopText++)
+		{
+			if (arTextOffsets[iLoopTab - 1][iLoopText - 1] != 0x00)
+			{
+				LSeek (iFdText, arTextOffsets[iLoopTab - 1][iLoopText - 1]);
+				ReadFromFile (iFdText, "",
+					strlen (arTextTab[iLoopTab - 1][iLoopText - 1]),
+					(unsigned char*)arTextS[iLoopTab][iLoopText]);
+			} else {
+				arTextS[iLoopTab][iLoopText][0] = '\0';
+			}
+		}
+	}
+
+	close (iFdText);
+}
+/*****************************************************************************/
+void TextSaveSNES (void)
+/*****************************************************************************/
+{
+	int iFdText;
+
+	/*** Used for looping. ***/
+	int iLoopTab;
+	int iLoopText;
+	int iLoopSpace;
+
+	iFdText = open (sSNESFile, O_RDWR|O_BINARY);
+
+	for (iLoopTab = 1; iLoopTab <= 10; iLoopTab++)
+	{
+		for (iLoopText = 1; iLoopText <= 30; iLoopText++)
+		{
+			if (arTextOffsets[iLoopTab - 1][iLoopText - 1] != 0x00)
+			{
+				LSeek (iFdText, arTextOffsets[iLoopTab - 1][iLoopText - 1]);
+				WriteCharByChar (iFdText, (unsigned char*)arTextS[iLoopTab][iLoopText],
+					strlen (arTextS[iLoopTab][iLoopText]));
+				for (iLoopSpace = (strlen (arTextTab[iLoopTab - 1][iLoopText - 1])) -
+					(strlen (arTextS[iLoopTab][iLoopText]));
+					iLoopSpace > 0; iLoopSpace--)
+				{
+					write (iFdText, " ", 1);
+				}
+			}
+		}
+	}
+
+	close (iFdText);
+
+	PlaySound ("wav/save.wav");
+}
+/*****************************************************************************/
+void ShowText (void)
+/*****************************************************************************/
+{
+	int iCheckX, iCheckY;
+	int iTextX, iTextY;
+	SDL_Color color;
+
+	/*** Used for looping. ***/
+	int iLoopText;
+
+	/*** background ***/
+	ShowImageBasic (imgtext, 0, 0, "imgtext", ascreen, iScale, 1);
+
+	/*** status bar ***/
+	if (strcmp (sStatus, "") != 0)
+	{
+		/*** bulb ***/
+		ShowImageBasic (imgstatusbarsprite, 23, 411, "imgstatusbarsprite",
+			ascreen, iScale, 1);
+		/*** text ***/
+		DisplayTextLine (50, 415, sStatus, font2, color_bl, color_f4, 0);
+	} else {
+		DisplayTextLine (104, 415, "Type (characters, Backspace) while the mouse"
+			" cursor is on text.", font2, color_g8, color_f4, 0);
+	}
+
+	/*** save ***/
+	switch (iTextSave)
+	{
+		case 0:
+			/*** Save off ***/
+			ShowImageBasic (imgsave[1], 590, 405, "imgsave[1]",
+				ascreen, iScale, 1); break;
+		case 1:
+			/*** Save on ***/
+			ShowImageBasic (imgsave[2], 590, 405, "imgsave[2]",
+				ascreen, iScale, 1); break;
+	}
+
+	/*** check ***/
+	iCheckX = 19;
+	iCheckY = -11 + (iTextTab * 30);
+	ShowImageBasic (imgsrc, iCheckX, iCheckY, "imgsrc", ascreen, iScale, 1);
+
+	/*** text ***/
+	for (iLoopText = 1; iLoopText <= 30; iLoopText++)
+	{
+		if (iLoopText > 15)
+		{
+			iTextX = 362;
+			iTextY = 12 + ((iLoopText - 15) * 23);
+		} else {
+			iTextX = 59;
+			iTextY = 12 + (iLoopText * 23);
+		}
+		if (arTextOffsets[iTextTab - 1][iLoopText - 1] != 0x00)
+		{
+			if (strlen (arTextS[iTextTab][iLoopText]) > 0)
+			{
+				if (strcmp (arTextS[iTextTab][iLoopText],
+					arTextTab[iTextTab - 1][iLoopText - 1]) == 0)
+					{ color = color_cc; } else { color = color_melrose; }
+				DisplayTextLine (iTextX, iTextY, arTextS[iTextTab][iLoopText],
+					font5, color_bl, color, 0);
+			}
+		} else {
+			ShowImageBasic (imgtextnone, iTextX - 1, iTextY - 1,
+				"imgtextnone", ascreen, iScale, 1);
+		}
+	}
+
+	/*** hover ***/
+	if (iTextHover > 0)
+	{
+		if (arTextOffsets[iTextTab - 1][iTextHover - 1] != 0x00)
+		{
+			if (iTextHover > 15)
+			{
+				ShowImageBasic (imgtexthover, 362, 11 + ((iTextHover - 15) * 23),
+					"imgtexthover", ascreen, iScale, 1);
+			} else {
+				ShowImageBasic (imgtexthover, 58, 11 + (iTextHover * 23),
+					"imgtexthover", ascreen, iScale, 1);
+			}
+		}
+	}
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
 }
 /*****************************************************************************/
