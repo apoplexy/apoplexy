@@ -1,4 +1,4 @@
-# Makefile for apoplexy 3.4 by The apoplexy Team (see credits.txt)
+# Makefile for apoplexy 3.5 by The apoplexy Team (see credits.txt)
 #
 # (May take hours.) cppcheck --language=c --std=c99 --verbose apoplexy.c
 # Also try the line below with clang instead of gcc.

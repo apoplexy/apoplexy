@@ -5,6 +5,10 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.5 (March 21, 2019) - Norbert de Jonge
+--------------------
++ Updated SDLPoP support to v1.19, with 6-bit RGB torch flames.
+
 v3.4 (June 27, 2018) - Norbert de Jonge
 --------------------
 + Most PoP1 for SNES (US/EU) in-game texts can now be modified (F3).
