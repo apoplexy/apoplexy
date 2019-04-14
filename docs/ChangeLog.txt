@@ -5,6 +5,10 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.6 (April 14, 2019) - Norbert de Jonge
+--------------------
++ PoP1 for SNES automatic prince moves can now be modified (F4).
+
 v3.5 (March 21, 2019) - Norbert de Jonge
 --------------------
 + Updated SDLPoP support to v1.19, with 6-bit RGB torch flames.

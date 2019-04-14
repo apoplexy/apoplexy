@@ -1,4 +1,4 @@
-/* apoplexy v3.5 (March 2019)
+/* apoplexy v3.6 (April 2019)
  * Copyright (C) 2008-2019 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -55,7 +55,7 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.5 (March 2019)"
+#define EDITOR_VERSION "v3.6 (April 2019)"
 #define COPYRIGHT "Copyright (C) 2019 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.19, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
@@ -82,6 +82,7 @@
 #define MAX_INFO 200
 #define MAX_LOCATION 500
 #define MAX_ERROR 100
+#define AUTOMATIC_SNES 459
 
 /*** Map window ***/
 #define MAP_BIG_AREA_W 1225
@@ -252,6 +253,7 @@
 #define PNG_PLAYTEST "png\\playtest\\"
 #define PNG_MINI1 "png\\mini_pop1\\"
 #define PNG_SIXBITRGB "png\\six_bit_rgb\\"
+#define PNG_AUTOMATIC "png\\automatic\\"
 #else
 #define DEVNULL "/dev/null"
 #define COPY "cp"
@@ -328,6 +330,7 @@
 #define PNG_PLAYTEST "png/playtest/"
 #define PNG_MINI1 "png/mini_pop1/"
 #define PNG_SIXBITRGB "png/six_bit_rgb/"
+#define PNG_AUTOMATIC "png/automatic/"
 #endif
 /*========== Defines ==========*/
 
@@ -674,6 +677,8 @@ int iTextSave;
 char arTextS[10 + 2][30 + 2][MAX_DATA + 2];
 int iTextTab;
 int iTextHover;
+int iAutomaticSave;
+int iAutomaticSel;
 
 /*** controller ***/
 SDL_GameController *controller;
@@ -1056,6 +1061,124 @@ static const int arTextOffsets[][30] = {
 	{ 0x161E0, 0x1621F, 0x1622E, 0x1623D, 0x00, 0x16255, 0x16262, 0x1626F, 0x1627C, 0x16289, 0x16296, 0x162A3, 0x00, 0x00, 0x00, 0x162B0, 0x162B7, 0x162BE, 0x162C8, 0x162D2, 0x00, 0x162DC, 0x162E3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	{ 0x15497, 0x00, 0x16615, 0x16625, 0x16635, 0x00, 0x16768, 0x00, 0x16966, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	{ 0xCAE8, 0xCAEF, 0x00, 0xCA2F, 0x00, 0x10F5, 0x00, 0xCB1D, 0x00, 0xCA27, 0x00, 0x14B9A, 0x00, 0x15D0E, 0x15D23, 0x00, 0x15D7F, 0x00, 0x7FC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+};
+
+/*** automatic ***/
+int iAutomaticSNESKeys[459 + 2];
+int iAutomaticSNESFrames[459 + 2];
+static const int arAutomaticXY[][2] = {
+	              {  49,  26 }, {  75,  26 }, { 101,  26 }, { 127,  26 },
+	{ 153,  26 }, { 179,  26 }, { 205,  26 }, { 231,  26 }, { 257,  26 },
+	{ 283,  26 }, { 309,  26 }, { 335,  26 }, { 361,  26 }, { 387,  26 },
+	{ 413,  26 }, { 439,  26 }, { 465,  26 }, { 491,  26 }, { 517,  26 },
+	{ 543,  26 }, { 569,  26 }, { 595,  26 }, { 621,  26 }, { 647,  26 },
+
+	{  23,  46 }, {  49,  46 }, {  75,  46 }, { 101,  46 }, { 127,  46 },
+	{ 153,  46 }, { 179,  46 }, { 205,  46 }, { 231,  46 }, { 257,  46 },
+	{ 283,  46 }, { 309,  46 }, { 335,  46 }, { 361,  46 }, { 387,  46 },
+	{ 413,  46 }, { 439,  46 }, { 465,  46 }, { 491,  46 }, { 517,  46 },
+	{ 543,  46 }, { 569,  46 }, { 595,  46 }, { 621,  46 }, { 647,  46 },
+
+	{  23,  66 }, {  49,  66 }, {  75,  66 }, { 101,  66 }, { 127,  66 },
+	{ 153,  66 }, { 179,  66 }, { 205,  66 }, { 231,  66 }, { 257,  66 },
+	{ 283,  66 }, { 309,  66 }, { 335,  66 }, { 361,  66 }, { 387,  66 },
+	{ 413,  66 }, { 439,  66 }, { 465,  66 }, { 491,  66 }, { 517,  66 },
+	{ 543,  66 }, { 569,  66 }, { 595,  66 }, { 621,  66 }, { 647,  66 },
+
+	{  23,  86 }, {  49,  86 }, {  75,  86 }, { 101,  86 }, { 127,  86 },
+	{ 153,  86 }, { 179,  86 }, { 205,  86 }, { 231,  86 }, { 257,  86 },
+	{ 283,  86 }, { 309,  86 }, { 335,  86 }, { 361,  86 }, { 387,  86 },
+	{ 413,  86 }, { 439,  86 }, { 465,  86 }, { 491,  86 }, { 517,  86 },
+	{ 543,  86 }, { 569,  86 }, { 595,  86 }, { 621,  86 }, { 647,  86 },
+
+	{  23, 106 }, {  49, 106 }, {  75, 106 }, { 101, 106 }, { 127, 106 },
+	{ 153, 106 }, { 179, 106 }, { 205, 106 }, { 231, 106 }, { 257, 106 },
+	{ 283, 106 }, { 309, 106 }, { 335, 106 }, { 361, 106 }, { 387, 106 },
+	{ 413, 106 }, { 439, 106 }, { 465, 106 }, { 491, 106 }, { 517, 106 },
+	{ 543, 106 }, { 569, 106 }, { 595, 106 }, { 621, 106 }, { 647, 106 },
+
+	{  23, 126 }, {  49, 126 }, {  75, 126 }, { 101, 126 }, { 127, 126 },
+	{ 153, 126 }, { 179, 126 }, { 205, 126 }, { 231, 126 }, { 257, 126 },
+	{ 283, 126 }, { 309, 126 }, { 335, 126 }, { 361, 126 }, { 387, 126 },
+	{ 413, 126 }, { 439, 126 }, { 465, 126 }, { 491, 126 }, { 517, 126 },
+	{ 543, 126 }, { 569, 126 }, { 595, 126 }, { 621, 126 }, { 647, 126 },
+
+	{  23, 146 }, {  49, 146 }, {  75, 146 }, { 101, 146 }, { 127, 146 },
+	{ 153, 146 }, { 179, 146 }, { 205, 146 }, { 231, 146 }, { 257, 146 },
+	{ 283, 146 }, { 309, 146 }, { 335, 146 }, { 361, 146 }, { 387, 146 },
+	{ 413, 146 }, { 439, 146 }, { 465, 146 }, { 491, 146 }, { 517, 146 },
+	{ 543, 146 }, { 569, 146 }, { 595, 146 }, { 621, 146 }, { 647, 146 },
+
+	{  23, 166 }, {  49, 166 }, {  75, 166 }, { 101, 166 }, { 127, 166 },
+	{ 153, 166 }, { 179, 166 }, { 205, 166 }, { 231, 166 }, { 257, 166 },
+	{ 283, 166 }, { 309, 166 }, { 335, 166 }, { 361, 166 }, { 387, 166 },
+	{ 413, 166 }, { 439, 166 }, { 465, 166 }, { 491, 166 }, { 517, 166 },
+	{ 543, 166 }, { 569, 166 }, { 595, 166 }, { 621, 166 }, { 647, 166 },
+
+	{  23, 186 }, {  49, 186 }, {  75, 186 }, { 101, 186 }, { 127, 186 },
+	{ 153, 186 }, { 179, 186 }, { 205, 186 }, { 231, 186 }, { 257, 186 },
+	{ 283, 186 }, { 309, 186 }, { 335, 186 }, { 361, 186 }, { 387, 186 },
+	{ 413, 186 }, { 439, 186 }, { 465, 186 }, { 491, 186 }, { 517, 186 },
+	{ 543, 186 }, { 569, 186 }, { 595, 186 }, { 621, 186 }, { 647, 186 },
+
+	{  23, 206 }, {  49, 206 }, {  75, 206 }, { 101, 206 }, { 127, 206 },
+	{ 153, 206 }, { 179, 206 }, { 205, 206 }, { 231, 206 }, { 257, 206 },
+	{ 283, 206 }, { 309, 206 }, { 335, 206 }, { 361, 206 }, { 387, 206 },
+	{ 413, 206 }, { 439, 206 }, { 465, 206 }, { 491, 206 }, { 517, 206 },
+	{ 543, 206 }, { 569, 206 }, { 595, 206 }, { 621, 206 }, { 647, 206 },
+
+	{  23, 226 }, {  49, 226 }, {  75, 226 }, { 101, 226 }, { 127, 226 },
+	{ 153, 226 }, { 179, 226 }, { 205, 226 }, { 231, 226 }, { 257, 226 },
+	{ 283, 226 }, { 309, 226 }, { 335, 226 }, { 361, 226 }, { 387, 226 },
+	{ 413, 226 }, { 439, 226 }, { 465, 226 }, { 491, 226 }, { 517, 226 },
+	{ 543, 226 }, { 569, 226 }, { 595, 226 }, { 621, 226 }, { 647, 226 },
+
+	{  23, 246 }, {  49, 246 }, {  75, 246 }, { 101, 246 }, { 127, 246 },
+	{ 153, 246 }, { 179, 246 }, { 205, 246 }, { 231, 246 }, { 257, 246 },
+	{ 283, 246 }, { 309, 246 }, { 335, 246 }, { 361, 246 }, { 387, 246 },
+	{ 413, 246 }, { 439, 246 }, { 465, 246 }, { 491, 246 }, { 517, 246 },
+	{ 543, 246 }, { 569, 246 }, { 595, 246 }, { 621, 246 }, { 647, 246 },
+
+	{  23, 266 }, {  49, 266 }, {  75, 266 }, { 101, 266 }, { 127, 266 },
+	{ 153, 266 }, { 179, 266 }, { 205, 266 }, { 231, 266 }, { 257, 266 },
+	{ 283, 266 }, { 309, 266 }, { 335, 266 }, { 361, 266 }, { 387, 266 },
+	{ 413, 266 }, { 439, 266 }, { 465, 266 }, { 491, 266 }, { 517, 266 },
+	{ 543, 266 }, { 569, 266 }, { 595, 266 }, { 621, 266 }, { 647, 266 },
+
+	{  23, 286 }, {  49, 286 }, {  75, 286 }, { 101, 286 }, { 127, 286 },
+	{ 153, 286 }, { 179, 286 }, { 205, 286 }, { 231, 286 }, { 257, 286 },
+	{ 283, 286 }, { 309, 286 }, { 335, 286 }, { 361, 286 }, { 387, 286 },
+	{ 413, 286 }, { 439, 286 }, { 465, 286 }, { 491, 286 }, { 517, 286 },
+	{ 543, 286 }, { 569, 286 }, { 595, 286 }, { 621, 286 }, { 647, 286 },
+
+	{  23, 306 }, {  49, 306 }, {  75, 306 },               { 127, 306 },
+	{ 153, 306 }, { 179, 306 }, { 205, 306 }, { 231, 306 },
+	{ 283, 306 }, { 309, 306 }, { 335, 306 }, { 361, 306 }, { 387, 306 },
+	{ 413, 306 },               { 465, 306 }, { 491, 306 }, { 517, 306 },
+	{ 543, 306 }, { 569, 306 }, { 595, 306 }, { 621, 306 }, { 647, 306 },
+
+	{  23, 326 }, {  49, 326 }, {  75, 326 }, { 101, 326 }, { 127, 326 },
+	{ 153, 326 },               { 205, 326 }, { 231, 326 },
+	{ 283, 326 }, { 309, 326 }, { 335, 326 }, { 361, 326 }, { 387, 326 },
+	{ 413, 326 }, { 439, 326 }, { 465, 326 }, { 491, 326 }, { 517, 326 },
+	{ 543, 326 }, { 569, 326 }, { 595, 326 }, { 621, 326 }, { 647, 326 },
+
+	{  23, 346 }, {  49, 346 }, {  75, 346 }, { 101, 346 }, { 127, 346 },
+	{ 153, 346 },               { 205, 346 }, { 231, 346 }, { 257, 346 },
+	{ 283, 346 }, { 309, 346 }, { 335, 346 }, { 361, 346 }, { 387, 346 },
+	{ 413, 346 }, { 439, 346 }, { 465, 346 },               { 517, 346 },
+	{ 543, 346 }, { 569, 346 }, { 595, 346 }, { 621, 346 }, { 647, 346 },
+
+	{  23, 366 }, {  49, 366 }, {  75, 366 }, { 101, 366 }, { 127, 366 },
+	{ 153, 366 }, { 179, 366 }, { 205, 366 }, { 231, 366 }, { 257, 366 },
+	              { 309, 366 }, { 335, 366 }, { 361, 366 }, { 387, 366 },
+	{ 413, 366 }, { 439, 366 }, { 465, 366 }, { 491, 366 }, { 517, 366 },
+	{ 543, 366 }, { 569, 366 }, { 595, 366 }, { 621, 366 }, { 647, 366 },
+
+	{  23, 386 }, {  49, 386 },               { 101, 386 }, { 127, 386 },
+	{ 153, 386 }, { 179, 386 }, { 205, 386 }, { 231, 386 }, { 257, 386 },
+	{ 283, 386 }, { 309, 386 }, { 335, 386 }, { 361, 386 }, { 387, 386 },
+	{ 413, 386 }, { 439, 386 },               { 491, 386 }, { 517, 386 }
 };
 
 /*** Used with CurTypeBlocks(). ***/
@@ -1672,6 +1795,8 @@ SDL_Texture *imgumberb, *imgmarbleb, *imghallwayb, *imgjaffarb, *imgintrob;
 SDL_Texture *imgsnestemp, *imgtemp_0, *imgtemp_1, *imgcolor_0, *imgcolor_1;
 SDL_Texture *imgtempb, *imgtempf, *imgtemps, *imgtempl, *imgtempg;
 SDL_Texture *imgtempu, *imgtempm, *imgtemph, *imgtempj, *imgtempi;
+SDL_Texture *imgautomatic, *imgautomaticsel;
+SDL_Texture *imgautof[15 + 2], *imgautok[255 + 2], *imgautokunk;
 
 /*** the rooms ***/
 SDL_Texture *imgroom1, *imgroom2, *imgroom3, *imgroom4, *imgroom5, *imgroom6;
@@ -2048,6 +2173,11 @@ void Text (void);
 void TextLoadSNES (void);
 void TextSaveSNES (void);
 void ShowText (void);
+void AutomaticLoadSNES (void);
+void AutomaticSaveSNES (void);
+void AutomaticAction (char *sAction);
+void Automatic (void);
+void ShowAutomatic (void);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -2101,6 +2231,7 @@ int main (int argc, char *argv[])
 	iMapShowNumbers = 0;
 	iAutoUse = 0;
 	iNativeColor = 0x01;
+	iAutomaticSel = 1;
 
 	CheckSSE();
 
@@ -11319,6 +11450,7 @@ void InitScreen (void)
 
 	/*** Used for looping. ***/
 	int iSixBitLoop;
+	int iLoopFrame;
 
 	if (SDL_Init (SDL_INIT_AUDIO|SDL_INIT_VIDEO|
 		SDL_INIT_GAMECONTROLLER|SDL_INIT_HAPTIC) < 0)
@@ -11544,9 +11676,9 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 712; break;
-		case 2: iNrToPreLoad = 858; break;
-		case 3: iNrToPreLoad = 4806; break;
+		case 1: iNrToPreLoad = 791; break;
+		case 2: iNrToPreLoad = 861; break;
+		case 3: iNrToPreLoad = 4847; break;
 	}
 
 	/*** locations; dungeon ***/
@@ -13024,6 +13156,34 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "kid_f.png", &imgkcolorsf);
 		PreLoad (PNG_VARIOUS, "guard_sprites_gray.png", &imggs[1]);
 		PreLoad (PNG_VARIOUS, "guard_sprites_blue.png", &imggs[2]);
+		/***/
+		PreLoad (PNG_VARIOUS, "automatic_snes.png", &imgautomatic);
+		PreLoad (PNG_VARIOUS, "sel_automatic_snes.png", &imgautomaticsel);
+		for (iLoopFrame = 0; iLoopFrame <= 15; iLoopFrame++)
+		{
+			snprintf (sFileName, MAX_FILE, "f_%i.png", iLoopFrame);
+			PreLoad (PNG_AUTOMATIC, sFileName, &imgautof[iLoopFrame]);
+		}
+		PreLoad (PNG_AUTOMATIC, "k_0.png", &imgautok[0]);
+		PreLoad (PNG_AUTOMATIC, "k_1.png", &imgautok[1]);
+		PreLoad (PNG_AUTOMATIC, "k_2.png", &imgautok[2]);
+		PreLoad (PNG_AUTOMATIC, "k_4.png", &imgautok[4]);
+		PreLoad (PNG_AUTOMATIC, "k_5.png", &imgautok[5]);
+		PreLoad (PNG_AUTOMATIC, "k_6.png", &imgautok[6]);
+		PreLoad (PNG_AUTOMATIC, "k_8.png", &imgautok[8]);
+		PreLoad (PNG_AUTOMATIC, "k_9.png", &imgautok[9]);
+		PreLoad (PNG_AUTOMATIC, "k_10.png", &imgautok[10]);
+		PreLoad (PNG_AUTOMATIC, "k_32.png", &imgautok[32]);
+		PreLoad (PNG_AUTOMATIC, "k_33.png", &imgautok[33]);
+		PreLoad (PNG_AUTOMATIC, "k_34.png", &imgautok[34]);
+		PreLoad (PNG_AUTOMATIC, "k_36.png", &imgautok[36]);
+		PreLoad (PNG_AUTOMATIC, "k_37.png", &imgautok[37]);
+		PreLoad (PNG_AUTOMATIC, "k_38.png", &imgautok[38]);
+		PreLoad (PNG_AUTOMATIC, "k_40.png", &imgautok[40]);
+		PreLoad (PNG_AUTOMATIC, "k_41.png", &imgautok[41]);
+		PreLoad (PNG_AUTOMATIC, "k_42.png", &imgautok[42]);
+		PreLoad (PNG_AUTOMATIC, "k_255.png", &imgautok[255]);
+		PreLoad (PNG_AUTOMATIC, "k_unknown.png", &imgautokunk);
 	}
 	if (iEditPoP != 2)
 	{
@@ -13571,6 +13731,12 @@ void InitScreen (void)
 											" executable type.\n", sSNESFile);
 									}
 								}
+							}
+							break;
+						case SDLK_F4:
+							if (iScreen == 1)
+							{
+								if (iEditPoP == 3) { Automatic(); }
 							}
 							break;
 						case SDLK_LEFTBRACKET:
@@ -35387,6 +35553,493 @@ void ShowText (void)
 			} else {
 				ShowImageBasic (imgtexthover, 58, 11 + (iTextHover * 23),
 					"imgtexthover", ascreen, iScale, 1);
+			}
+		}
+	}
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+void AutomaticLoadSNES (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	unsigned char sData[MAX_DATA + 2];
+
+	/*** Used for looping. ***/
+	int iLoopAutomatic;
+
+	iFdEXE = open (sSNESFile, O_RDONLY|O_BINARY);
+
+	LSeek (iFdEXE, 0xE49B);
+	for (iLoopAutomatic = 1; iLoopAutomatic <= AUTOMATIC_SNES; iLoopAutomatic++)
+	{
+		ReadFromFile (iFdEXE, "", 1, sData);
+		iAutomaticSNESKeys[iLoopAutomatic] = BytesAsLU (sData, 1);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		iAutomaticSNESFrames[iLoopAutomatic] = BytesAsLU (sData, 1);
+	}
+
+	close (iFdEXE);
+}
+/*****************************************************************************/
+void AutomaticSaveSNES (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	unsigned char sBytes[1 + 2];
+
+	/*** Used for looping. ***/
+	int iLoopAutomatic;
+
+	iFdEXE = open (sSNESFile, O_RDWR|O_BINARY);
+
+	LSeek (iFdEXE, 0xE49B);
+	for (iLoopAutomatic = 1; iLoopAutomatic <= AUTOMATIC_SNES; iLoopAutomatic++)
+	{
+		sBytes[0] = iAutomaticSNESKeys[iLoopAutomatic];
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		sBytes[0] = iAutomaticSNESFrames[iLoopAutomatic];
+		WriteCharByChar (iFdEXE, sBytes, 1);
+	}
+
+	close (iFdEXE);
+
+	PlaySound ("wav/save.wav");
+}
+/*****************************************************************************/
+void AutomaticAction (char *sAction)
+/*****************************************************************************/
+{
+	int iKeys;
+
+	iKeys = iAutomaticSNESKeys[iAutomaticSel];
+
+	if (strcmp (sAction, "right") == 0)
+	{
+		if (iKeys == 255)
+		{
+			iAutomaticSNESKeys[iAutomaticSel] = 0;
+			iAutomaticSNESFrames[iAutomaticSel] = 0;
+			iKeys = 0;
+		}
+		if (iKeys & (1 << 0)) /*** 1 ***/
+		{
+			iAutomaticSNESKeys[iAutomaticSel]-=1;
+		} else {
+			iAutomaticSNESKeys[iAutomaticSel]+=1;
+		}
+		PlaySound ("wav/check_box.wav");
+	}
+
+	if (strcmp (sAction, "left") == 0)
+	{
+		if (iKeys == 255)
+		{
+			iAutomaticSNESKeys[iAutomaticSel] = 0;
+			iAutomaticSNESFrames[iAutomaticSel] = 0;
+			iKeys = 0;
+		}
+		if (iKeys & (1 << 1)) /*** 2 ***/
+		{
+			iAutomaticSNESKeys[iAutomaticSel]-=2;
+		} else {
+			iAutomaticSNESKeys[iAutomaticSel]+=2;
+		}
+		PlaySound ("wav/check_box.wav");
+	}
+
+	if (strcmp (sAction, "down") == 0)
+	{
+		if (iKeys == 255)
+		{
+			iAutomaticSNESKeys[iAutomaticSel] = 0;
+			iAutomaticSNESFrames[iAutomaticSel] = 0;
+			iKeys = 0;
+		}
+		if (iKeys & (1 << 2)) /*** 4 ***/
+		{
+			iAutomaticSNESKeys[iAutomaticSel]-=4;
+		} else {
+			iAutomaticSNESKeys[iAutomaticSel]+=4;
+		}
+		PlaySound ("wav/check_box.wav");
+	}
+
+	if (strcmp (sAction, "up") == 0)
+	{
+		if (iKeys == 255)
+		{
+			iAutomaticSNESKeys[iAutomaticSel] = 0;
+			iAutomaticSNESFrames[iAutomaticSel] = 0;
+			iKeys = 0;
+		}
+		if (iKeys & (1 << 3)) /*** 8 ***/
+		{
+			iAutomaticSNESKeys[iAutomaticSel]-=8;
+		} else {
+			iAutomaticSNESKeys[iAutomaticSel]+=8;
+		}
+		PlaySound ("wav/check_box.wav");
+	}
+
+	if (strcmp (sAction, "a") == 0)
+	{
+		if (iKeys == 255)
+		{
+			iAutomaticSNESKeys[iAutomaticSel] = 0;
+			iAutomaticSNESFrames[iAutomaticSel] = 0;
+			iKeys = 0;
+		}
+		if (iKeys & (1 << 5)) /*** 32 ***/
+		{
+			iAutomaticSNESKeys[iAutomaticSel]-=32;
+		} else {
+			iAutomaticSNESKeys[iAutomaticSel]+=32;
+		}
+		PlaySound ("wav/check_box.wav");
+	}
+
+	if (strcmp (sAction, "end") == 0)
+	{
+		if (iKeys == 255)
+		{
+			iAutomaticSNESKeys[iAutomaticSel] = 0;
+			iAutomaticSNESFrames[iAutomaticSel] = 0;
+		} else {
+			iAutomaticSNESKeys[iAutomaticSel] = 255;
+			iAutomaticSNESFrames[iAutomaticSel] = 255;
+		}
+		PlaySound ("wav/check_box.wav");
+	}
+
+	if (strcmp (sAction, "prev") == 0)
+	{
+		iAutomaticSel--;
+		if (iAutomaticSel == 0) { iAutomaticSel = AUTOMATIC_SNES; }
+		PlaySound ("wav/extras.wav");
+	}
+
+	if (strcmp (sAction, "next") == 0)
+	{
+		iAutomaticSel++;
+		if (iAutomaticSel == (AUTOMATIC_SNES + 1)) { iAutomaticSel = 1; }
+		PlaySound ("wav/extras.wav");
+	}
+}
+/*****************************************************************************/
+void Automatic (void)
+/*****************************************************************************/
+{
+	int iAutomatic;
+	SDL_Event event;
+
+	/*** Used for looping. ***/
+	int iLoopAutomatic;
+
+	iAutomatic = 1;
+	AutomaticLoadSNES();
+	PlaySound ("wav/popup.wav");
+	ShowAutomatic();
+	while (iAutomatic == 1)
+	{
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_B:
+							iAutomatic = 0; break;
+						case SDL_CONTROLLER_BUTTON_A:
+							AutomaticSaveSNES();
+							iAutomatic = 0; break;
+						case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+							AutomaticAction ("left"); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+							AutomaticAction ("right"); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_UP:
+							AutomaticAction ("up"); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+							AutomaticAction ("down"); break;
+						case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+							AutomaticAction ("prev"); break;
+						case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+							AutomaticAction ("next"); break;
+						case SDL_CONTROLLER_BUTTON_BACK:
+							AutomaticAction ("end"); break;
+						case SDL_CONTROLLER_BUTTON_Y:
+							AutomaticAction ("a"); break;
+					}
+					ShowAutomatic();
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							iAutomatic = 0; break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+						case SDLK_s:
+							AutomaticSaveSNES();
+							iAutomatic = 0; break;
+						case SDLK_LEFT:
+							if ((event.key.keysym.mod & KMOD_LSHIFT) ||
+								(event.key.keysym.mod & KMOD_RSHIFT))
+							{
+								if (iAutomaticSNESFrames[iAutomaticSel] != 0)
+								{
+									iAutomaticSNESFrames[iAutomaticSel]--;
+									if (iAutomaticSNESFrames[iAutomaticSel] < 0)
+										{ iAutomaticSNESFrames[iAutomaticSel] = 0; }
+									PlaySound ("wav/plus_minus.wav");
+								}
+							} else if ((event.key.keysym.mod & KMOD_LCTRL) ||
+								(event.key.keysym.mod & KMOD_RCTRL))
+							{
+								if (iAutomaticSNESFrames[iAutomaticSel] != 0)
+								{
+									iAutomaticSNESFrames[iAutomaticSel]-=10;
+									if (iAutomaticSNESFrames[iAutomaticSel] < 0)
+										{ iAutomaticSNESFrames[iAutomaticSel] = 0; }
+									PlaySound ("wav/plus_minus.wav");
+								}
+							} else {
+								AutomaticAction ("left");
+							}
+							break;
+						case SDLK_RIGHT:
+							if ((event.key.keysym.mod & KMOD_LSHIFT) ||
+								(event.key.keysym.mod & KMOD_RSHIFT))
+							{
+								if (iAutomaticSNESFrames[iAutomaticSel] != 255)
+								{
+									iAutomaticSNESFrames[iAutomaticSel]++;
+									if (iAutomaticSNESFrames[iAutomaticSel] > 255)
+										{ iAutomaticSNESFrames[iAutomaticSel] = 255; }
+									PlaySound ("wav/plus_minus.wav");
+								}
+							} else if ((event.key.keysym.mod & KMOD_LCTRL) ||
+								(event.key.keysym.mod & KMOD_RCTRL))
+							{
+								if (iAutomaticSNESFrames[iAutomaticSel] != 255)
+								{
+									iAutomaticSNESFrames[iAutomaticSel]+=10;
+									if (iAutomaticSNESFrames[iAutomaticSel] > 255)
+										{ iAutomaticSNESFrames[iAutomaticSel] = 255; }
+									PlaySound ("wav/plus_minus.wav");
+								}
+							} else {
+								AutomaticAction ("right");
+							}
+							break;
+						case SDLK_DOWN:
+							AutomaticAction ("down"); break;
+						case SDLK_UP:
+							AutomaticAction ("up"); break;
+						case SDLK_a:
+							AutomaticAction ("a"); break;
+						case SDLK_PERIOD: case SDLK_KP_PERIOD:
+							AutomaticAction ("end"); break;
+						case SDLK_MINUS: case SDLK_KP_MINUS:
+							AutomaticAction ("prev"); break;
+						case SDLK_KP_PLUS: case SDLK_EQUALS:
+							AutomaticAction ("next"); break;
+						default: break;
+					}
+					ShowAutomatic();
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == 1)
+					{
+						if (InArea (590, 405, 674, 436) == 1) /*** Save ***/
+						{
+							if (iAutomaticSave != 1) { iAutomaticSave = 1; }
+							ShowAutomatic();
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iAutomaticSave = 0;
+					if (event.button.button == 1) /*** left mouse button ***/
+					{
+						/*** Save ***/
+						if (InArea (590, 405, 674, 436) == 1)
+						{ 
+							AutomaticSaveSNES();
+							iAutomatic = 0;
+						}
+
+						/*** frames ***/
+						PlusMinus (&iAutomaticSNESFrames[iAutomaticSel],
+							333, 409, 0, 255, -10, 0);
+						PlusMinus (&iAutomaticSNESFrames[iAutomaticSel],
+							348, 409, 0, 255, -1, 0);
+						PlusMinus (&iAutomaticSNESFrames[iAutomaticSel],
+							418, 409, 0, 255, +1, 0);
+						PlusMinus (&iAutomaticSNESFrames[iAutomaticSel],
+							433, 409, 0, 255, +10, 0);
+
+						for (iLoopAutomatic = 1; iLoopAutomatic <= AUTOMATIC_SNES;
+							iLoopAutomatic++)
+						{
+							if (InArea (arAutomaticXY[iLoopAutomatic - 1][0],
+								arAutomaticXY[iLoopAutomatic - 1][1],
+								arAutomaticXY[iLoopAutomatic - 1][0] + 23,
+								arAutomaticXY[iLoopAutomatic - 1][1] + 17) == 1)
+							{
+								if (iAutomaticSel != iLoopAutomatic)
+								{
+									iAutomaticSel = iLoopAutomatic;
+									PlaySound ("wav/extras.wav");
+								}
+							}
+						}
+
+						if (InArea (28, 412, 28 + 14, 412 + 14) == 1)
+							{ AutomaticAction ("right"); }
+						if (InArea (68, 412, 68 + 14, 412 + 14) == 1)
+							{ AutomaticAction ("left"); }
+						if (InArea (108, 412, 108 + 14, 412 + 14) == 1)
+							{ AutomaticAction ("down"); }
+						if (InArea (148, 412, 148 + 14, 412 + 14) == 1)
+							{ AutomaticAction ("up"); }
+						if (InArea (188, 412, 188 + 14, 412 + 14) == 1)
+							{ AutomaticAction ("a"); }
+						if (InArea (228, 412, 228 + 14, 412 + 14) == 1)
+							{ AutomaticAction ("end"); }
+					}
+					ShowAutomatic(); break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowAutomatic(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+			}
+		}
+
+		/*** prevent CPU eating ***/
+		gamespeed = REFRESH;
+		while ((SDL_GetTicks() - looptime) < gamespeed)
+		{
+			SDL_Delay (10);
+		}
+		looptime = SDL_GetTicks();
+	}
+	PlaySound ("wav/popup_close.wav");
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void ShowAutomatic (void)
+/*****************************************************************************/
+{
+	SDL_Texture *imgshow;
+	int iKeys;
+
+	/*** Used for looping. ***/
+	int iLoopAutomatic;
+
+	/*** automatic ***/
+	ShowImageBasic (imgautomatic, 0, 0, "imgautomatic", ascreen, iScale, 1);
+
+	/*** save ***/
+	switch (iAutomaticSave)
+	{
+		case 0: /*** Save off ***/
+			ShowImageBasic (imgsave[1], 590, 405, "imgsave[1]",
+				ascreen, iScale, 1); break;
+		case 1: /*** Save on ***/
+			ShowImageBasic (imgsave[2], 590, 405, "imgsave[2]",
+				ascreen, iScale, 1); break;
+	}
+
+	for (iLoopAutomatic = 1; iLoopAutomatic <= AUTOMATIC_SNES; iLoopAutomatic++)
+	{
+		/*** keys ***/
+		switch (iAutomaticSNESKeys[iLoopAutomatic])
+		{
+			case 0: case 1: case 2: case 4: case 5:
+			case 6: case 8: case 9: case 10: case 32:
+			case 33: case 34: case 36: case 37: case 38:
+			case 40: case 41: case 42: case 255:
+				imgshow = imgautok[iAutomaticSNESKeys[iLoopAutomatic]]; break;
+			default:
+				imgshow = imgautokunk; break;
+		}
+		ShowImageBasic (imgshow, arAutomaticXY[iLoopAutomatic - 1][0] + 1,
+			arAutomaticXY[iLoopAutomatic - 1][1] + 1, "imgshow",
+			ascreen, iScale, 1);
+
+		/*** frames ***/
+		switch (iAutomaticSNESFrames[iLoopAutomatic])
+		{
+			case 0: case 1: case 2: case 3: case 4:
+			case 5: case 6: case 7: case 8: case 9:
+			case 10: case 11: case 12: case 13: case 14:
+			case 15:
+				imgshow = imgautof[iAutomaticSNESFrames[iLoopAutomatic]]; break;
+			default:
+				imgshow = imgautof[15]; break;
+		}
+		ShowImageBasic (imgshow, arAutomaticXY[iLoopAutomatic - 1][0] + 14,
+			arAutomaticXY[iLoopAutomatic - 1][1] + 1, "imgshow",
+			ascreen, iScale, 1);
+
+		/*** selected ***/
+		if (iLoopAutomatic == iAutomaticSel)
+		{
+			ShowImageBasic (imgautomaticsel,
+				arAutomaticXY[iLoopAutomatic - 1][0] - 2,
+				arAutomaticXY[iLoopAutomatic - 1][1] - 2,
+				"imgautomaticsel", ascreen, iScale, 1);
+
+			CenterNumber (ascreen, iAutomaticSNESFrames[iLoopAutomatic],
+				361, 409, color_bl, color_wh, 0);
+
+			iKeys = iAutomaticSNESKeys[iLoopAutomatic];
+			if (iKeys == 255)
+			{
+				ShowImageBasic (imgsell, 228, 412, "imgsell", ascreen, iScale, 1);
+			} else {
+				if (iKeys & (1 << 5)) /*** 32 ***/
+				{
+					ShowImageBasic (imgsell, 188, 412, "imgsell", ascreen, iScale, 1);
+				}
+				if (iKeys & (1 << 3)) /*** 8 ***/
+				{
+					ShowImageBasic (imgsell, 148, 412, "imgsell", ascreen, iScale, 1);
+				}
+				if (iKeys & (1 << 2)) /*** 4 ***/
+				{
+					ShowImageBasic (imgsell, 108, 412, "imgsell", ascreen, iScale, 1);
+				}
+				if (iKeys & (1 << 1)) /*** 2 ***/
+				{
+					ShowImageBasic (imgsell, 68, 412, "imgsell", ascreen, iScale, 1);
+				}
+				if (iKeys & (1 << 0)) /*** 1 ***/
+				{
+					ShowImageBasic (imgsell, 28, 412, "imgsell", ascreen, iScale, 1);
+				}
 			}
 		}
 	}
