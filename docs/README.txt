@@ -10,7 +10,7 @@
 
 ===[1 - ABOUT]=================================================================
 
-apoplexy v3.6 (April 2019)
+apoplexy v3.7 (December 2019)
 Copyright (C) 2008-2019 The apoplexy Team (see credits.txt)
 
 A level editor of Prince of Persia 1 (for DOS and SNES) and 2 (for DOS).
@@ -29,10 +29,10 @@ You should have received a copy of the GNU General Public License along with thi
 -----
 IMPORTANT: Files in the following directories are licensed differently.
 -----
-pr/ -> http://sourceforge.net/projects/princed/files/PR - Graphic_Sound Editor/
-ttf/Bitstream-Vera-Sans-Bold.ttf -> http://www.gnome.org/fonts/ (© Bitstream, Inc.)
+pr/ -> https://sourceforge.net/projects/princed/files/PR%20-%20Graphic_Sound%20Editor/
+ttf/Bitstream-Vera-Sans-Bold.ttf -> https://www.gnome.org/fonts/ (© Bitstream, Inc.)
 ttf/Terminus-Bold.ttf -> https://en.wikipedia.org/wiki/SIL_Open_Font_License (© Dimitar Zhekov (& Tilman Blumenbach))
-wav/ -> http://en.wikipedia.org/wiki/Abandonware (© Jordan Mechner/Ubisoft)
+wav/ -> https://en.wikipedia.org/wiki/Abandonware (© Jordan Mechner/Ubisoft)
 png/ -> When it comes to images from the games: see above.
 png/controller/ -> The Xbox icons in images are by Jeff Jenkins, CC BY 3.0.
 upack/ -> https://en.wikipedia.org/wiki/Freeware (© Fabrice Bellard)
@@ -84,13 +84,13 @@ Thanks: David from the Princed Forum
 If apoplexy crashes, gets compilation errors or crashes while building, send an e-mail to [ info@apoplexy.org ]. Make sure to describe exactly what actions triggered the bug and the precise symptoms of the bug. Also include: 'uname -a', 'gcc -v', 'sdl2-config --version', and 'apoplexy --version'.
 
 Our forum board:
-http://forum.princed.org/viewforum.php?f=112
+https://forum.princed.org/viewforum.php?f=112
 
 ===[6 - DID YOU CREATE NEW LEVELS?]============================================
 
 Feel free to share your work:
-- http://forum.princed.org/viewforum.php?f=73 (New Levels and Mods For DOS)
-- http://forum.princed.org/viewforum.php?f=116 (New Levels and Mods For SNES)
+- https://forum.princed.org/viewforum.php?f=73 (New Levels and Mods For DOS)
+- https://forum.princed.org/viewforum.php?f=116 (New Levels and Mods For SNES)
 
 ===[7 - (RE)COMPILING]=========================================================
 

@@ -15,9 +15,9 @@ The following instructions are to compile 32-bit.
 
 1.1 Download
 
-http://sourceforge.net/projects/orwelldevcpp/files/Setup%20Releases/
+https://sourceforge.net/projects/orwelldevcpp/files/Setup%20Releases/
 or
-http://downloads.sourceforge.net/project/orwelldevcpp/Setup%20Releases/
+https://downloads.sourceforge.net/project/orwelldevcpp/Setup%20Releases/
   Dev-Cpp%205.11%20TDM-GCC%204.9.2%20Setup.exe
 
 1.2 Install
@@ -28,11 +28,11 @@ Simply run the executable.
 
 2.1 Download
 
-http://libsdl.org/release/
+https://libsdl.org/release/
   SDL2-devel-2.0.7-mingw.tar.gz
-http://libsdl.org/projects/SDL_ttf/release/
+https://libsdl.org/projects/SDL_ttf/release/
   SDL2_ttf-devel-2.0.14-mingw.tar.gz
-http://libsdl.org/projects/SDL_image/release/
+https://libsdl.org/projects/SDL_image/release/
   SDL2_image-devel-2.0.2-mingw.tar.gz
 
 2.2 Install

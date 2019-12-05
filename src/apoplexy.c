@@ -1,4 +1,4 @@
-/* apoplexy v3.6 (April 2019)
+/* apoplexy v3.7 (December 2019)
  * Copyright (C) 2008-2019 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -55,7 +55,7 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.6 (April 2019)"
+#define EDITOR_VERSION "v3.7 (December 2019)"
 #define COPYRIGHT "Copyright (C) 2019 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.19, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
@@ -408,9 +408,10 @@ unsigned char sUserData[USER_DATA + 2];
 unsigned char sLastRoom[1 + 2];
 unsigned char sJEFF[4 + 2];
 unsigned char sLevelTypeC[1 + 2];
-unsigned char sLevelNumberEvents[1 + 2];
+unsigned char sLevelInit[1 + 2];
 unsigned char sExtraImgResources[24 + 2];
-unsigned char sUnknownII[72 + 2]; /*** PoP2 is only 4. ***/
+unsigned char sUnknownII[72 + 2]; /*** PoP2 is only 3. ***/
+unsigned char sLevelGuardTypeC[1 + 2];
 unsigned char sStaticGuards[3712 + 2];
 unsigned char sCheckPoints[18 + 2];
 unsigned char sDynamicGuards[1088 + 2];
@@ -783,6 +784,14 @@ int iKidColorLava;
 int iKidColorFloat;
 /***/
 static const char *sSongNames[34] = { "Konami logo", "blue and training (levels 1-3 and 23-27)", "fawn (levels 4-6)", "silver (levels 7-9)", "lava with heat haze (level 10)", "lava without heat haze (levels 11 and 12)", "green (levels 13-15)", "umber without boss (levels 16 and 18)", "umber with boss (level 17)", "marble (level 19)", "hallway (level 20)", "kali idol battle", "guard battle", "boss battle", "jaffar (level 21)", "title screen", "menu", "princess", "ending", "memories", "credits", "death, by sword", "death, not by sword", "sword pickup", "life potion", "girl and shadow intro", "?", "level exit open", "level cleared", "guard defeated", "jaffar intro", "heal potion", "too late", "boss intro" };
+
+/*** exe, PoP2 ***/
+static const int arDefaultEnvPoP2[29] =
+	{ -1, 5, 1, 3, 3, 3, 4, 4, 4, 4, 2, 2, 2, 2, 6, 5, 1, 3, 3, 3, 4, 4, 4, 4, 2, 2, 2, 2, 6 };
+int iEXEEnvPoP2;
+static const int arDefaultGuardTypePoP2[29] =
+	{ -1, 0, 255, 2, 2, 2, 5, 5, 5, 5, 7, 7, 7, 7, 0, 0, 255, 2, 255, 2, 5, 5, 5, 5, 7, 7, 255, 255, 255 };
+int iEXEGuardTypePoP2;
 
 /*** smc ***/
 /*** The order is always: JP, US, EU ***/
@@ -1777,8 +1786,8 @@ SDL_Texture *imgoth, *imgcaverns, *imgruins, *imgruins_back;
 SDL_Texture *imgtemple, *imgtemple_back, *imgguards;
 SDL_Texture *imgguard_row, *imgguard_entry;
 SDL_Texture *imgfadeddg, *imgfadedsgl, *imgfadedsgr, *imgxtooltip, *imgl10warn;
-SDL_Texture *imggw_rooftops, *imggw_desert, *imggw_caverns;
-SDL_Texture *imggw_ruins, *imggw_temple, *imggw_final, *imggw_dynamic;
+SDL_Texture *imggw_255, *imggw_2;
+SDL_Texture *imggw_5, *imggw_7, *imggw_0, *imggw_dynamic;
 SDL_Texture *imgsb, *imgsbs, *imghb, *imghc;
 SDL_Texture *imgincomingl[10 + 2], *imgincomingr[10 + 2];
 SDL_Texture *imgmusic_0, *imgmusic_1, *imgmusic, *imgmusic_note;
@@ -2040,8 +2049,10 @@ void ShowHelp (void);
 unsigned long BytesAsLU (unsigned char *sData, int iBytes);
 void EXECheckbox (int iX, int iY17, int *iChange, int iTo);
 void EXELoad (void);
+void EXELoadPoP2 (void);
 void EXELoadSNES (void);
 void EXESave (void);
+void EXESavePoP2 (void);
 void EXESaveSNES (void);
 void EXE (void);
 void ShowEXE (void);
@@ -2359,6 +2370,12 @@ int main (int argc, char *argv[])
 				if (strcmp (sEXEType, "u3") == 0) { iEXEType = 3; iEXEPacked = 0; }
 				if (strcmp (sEXEType, "p4") == 0) { iEXEType = 4; iEXEPacked = 1; }
 				if (strcmp (sEXEType, "u4") == 0) { iEXEType = 5; iEXEPacked = 0; }
+				/*** PoP2 for DOS ***/
+				if (strcmp (sEXEType, "F0") == 0) { iEXEType = 0; iEXEPacked = 0; }
+				if (strcmp (sEXEType, "F1") == 0) { iEXEType = 1; iEXEPacked = 0; }
+				if (strcmp (sEXEType, "IR") == 0) { iEXEType = 2; iEXEPacked = 0; }
+				if (strcmp (sEXEType, "D0") == 0) { iEXEType = 3; iEXEPacked = 0; }
+				if (strcmp (sEXEType, "D1") == 0) { iEXEType = 4; iEXEPacked = 0; }
 				/*** PoP1 for SNES ***/
 				if (strcmp (sEXEType, "JP") == 0) { iEXEType = 0; iEXEPacked = 0; }
 				if (strcmp (sEXEType, "US") == 0) { iEXEType = 1; iEXEPacked = 0; }
@@ -2829,7 +2846,7 @@ void LoadPLV (char *sFileName)
 		ReadFromFile (iFd, "JEFF", 4, sJEFF);
 		ReadFromFile (iFd, "Level Type", 1, sLevelTypeC);
 		ReadFromFile (iFd, "Unknown I", 1, sUnknownI);
-		ReadFromFile (iFd, "Level Number Events", 1, sLevelNumberEvents);
+		ReadFromFile (iFd, "Level Number Events", 1, sLevelInit);
 		ReadFromFile (iFd, "Extra Resources", 24, sExtraImgResources);
 
 		if (iDebug == 1)
@@ -2896,7 +2913,8 @@ void LoadPLV (char *sFileName)
 		ReadFromFile (iFd, "Guard Colors", iRooms, sGuardColors);
 		ReadFromFile (iFd, "Unknown IVd", 16, sUnknownIVd);
 	} else {
-		ReadFromFile (iFd, "Unknown II", 4, sUnknownII);
+		ReadFromFile (iFd, "Unknown II", 3, sUnknownII);
+		ReadFromFile (iFd, "Level Guard Type", 1, sLevelGuardTypeC);
 		ReadFromFile (iFd, "Static Guards", iRooms * 116, sStaticGuards);
 		ReadFromFile (iFd, "Check Points", 18, sCheckPoints);
 		ReadFromFile (iFd, "Dynamic Guards", iRooms * 34, sDynamicGuards);
@@ -5437,8 +5455,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			if (iEditPoP == 2)
 			{
 				/*** rooftops, desert, final ***/
-				if ((luLevelNr == 1) || (luLevelNr == 2) ||
-					((luLevelNr >= 14) && (luLevelNr <= 16)) || (luLevelNr == 28))
+				if (cCurType == 'o')
 				{
 					/*** 1.5 row ***/
 					if (iTile == 0)
@@ -5581,8 +5598,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 					else { iIsCustom = 1; }
 				}
 				/*** caverns ***/
-				if (((luLevelNr >= 3) && (luLevelNr <= 5)) ||
-					((luLevelNr >= 17) && (luLevelNr <= 19)))
+				if (cCurType == 'c')
 				{
 					/*** first row ***/
 					if ((iTile == 0) && (iMod1 == 0))
@@ -5909,8 +5925,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 					else { iIsCustom = 1; }
 				}
 				/*** ruins ***/
-				if (((luLevelNr >= 6) && (luLevelNr <= 9)) ||
-					((luLevelNr >= 20) && (luLevelNr <= 23)))
+				if (cCurType == 'r')
 				{
 					/*** first row ***/
 					if (iTile == 0)
@@ -6218,8 +6233,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 					else { iIsCustom = 1; }
 				}
 				/*** temple ***/
-				if (((luLevelNr >= 10) && (luLevelNr <= 13)) ||
-					((luLevelNr >= 24) && (luLevelNr <= 27)))
+				if (cCurType == 't')
 				{
 					/*** first row ***/
 					if (iTile == 0)
@@ -7960,23 +7974,21 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			case 46:
 				CustomRenderCopy (imgprincew, "imgprincew", &loc,
 					screen, &dest); break;
-			case 47:
-				CustomRenderCopy (imggw_rooftops, "imggw_rooftops", &loc,
-					screen, &dest); break;
+			case 47: break; /*** Was imggw_rooftops. ***/
 			case 48:
-				CustomRenderCopy (imggw_desert, "imggw_desert", &loc,
+				CustomRenderCopy (imggw_255, "imggw_255", &loc,
 					screen, &dest); break;
 			case 49:
-				CustomRenderCopy (imggw_caverns, "imggw_caverns", &loc,
+				CustomRenderCopy (imggw_2, "imggw_2", &loc,
 					screen, &dest); break;
 			case 50:
-				CustomRenderCopy (imggw_ruins, "imggw_ruins", &loc,
+				CustomRenderCopy (imggw_5, "imggw_5", &loc,
 					screen, &dest); break;
 			case 51:
-				CustomRenderCopy (imggw_temple, "imggw_temple", &loc,
+				CustomRenderCopy (imggw_7, "imggw_7", &loc,
 					screen, &dest); break;
 			case 52:
-				CustomRenderCopy (imggw_final, "imggw_final", &loc,
+				CustomRenderCopy (imggw_0, "imggw_0", &loc,
 					screen, &dest); break;
 			case 53:
 				CustomRenderCopy (imggw_dynamic, "imggw_dynamic", &loc,
@@ -11339,16 +11351,17 @@ void InitScreenAction (char *sAction)
 				}
 				break;
 			case 2:
-/***
-				switch (cCurType)
+				switch (iEXEEnvPoP2)
 				{
-					case 'o': cCurType = 'c'; break;
-					case 'c': cCurType = 'r'; break;
-					case 'r': cCurType = 't'; break;
-					case 't': cCurType = 'o'; break;
+					case 0x01: iEXEEnvPoP2 = 0x02; cCurType = 't'; break;
+					case 0x02: iEXEEnvPoP2 = 0x03; cCurType = 'c'; break;
+					case 0x03: iEXEEnvPoP2 = 0x04; cCurType = 'r'; break;
+					case 0x04: iEXEEnvPoP2 = 0x05; cCurType = 'o'; break;
+					case 0x05: iEXEEnvPoP2 = 0x06; cCurType = 'o'; break;
+					case 0x06: iEXEEnvPoP2 = 0x01; cCurType = 'o'; break;
 				}
+				iChanged++;
 				PlaySound ("wav/extras.wav");
-***/
 				break;
 			case 3:
 				EXELoadSNES();
@@ -11447,6 +11460,7 @@ void InitScreen (void)
 	int iButton;
 	char sFileName[MAX_FILE + 2];
 	char sSixBit[7 + 2];
+	char sEXELoc[MAX_FILE + 2];
 
 	/*** Used for looping. ***/
 	int iSixBitLoop;
@@ -12402,12 +12416,11 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "faded_static_guard_right.png", &imgfadedsgr);
 		PreLoad (PNG_VARIOUS, "X-coordinate_tooltip.png", &imgxtooltip);
 		PreLoad (PNG_VARIOUS, "level_10_warning.png", &imgl10warn);
-		PreLoad (PNG_VARIOUS, "guardwarn_rooftops.png", &imggw_rooftops);
-		PreLoad (PNG_VARIOUS, "guardwarn_desert.png", &imggw_desert);
-		PreLoad (PNG_VARIOUS, "guardwarn_caverns.png", &imggw_caverns);
-		PreLoad (PNG_VARIOUS, "guardwarn_ruins.png", &imggw_ruins);
-		PreLoad (PNG_VARIOUS, "guardwarn_temple.png", &imggw_temple);
-		PreLoad (PNG_VARIOUS, "guardwarn_final.png", &imggw_final);
+		PreLoad (PNG_VARIOUS, "guardwarn_255.png", &imggw_255);
+		PreLoad (PNG_VARIOUS, "guardwarn_2.png", &imggw_2);
+		PreLoad (PNG_VARIOUS, "guardwarn_5.png", &imggw_5);
+		PreLoad (PNG_VARIOUS, "guardwarn_7.png", &imggw_7);
+		PreLoad (PNG_VARIOUS, "guardwarn_0.png", &imggw_0);
 		PreLoad (PNG_VARIOUS, "guardwarn_dynamic.png", &imggw_dynamic);
 		PreLoad (PNG_VARIOUS, "sel_back.png", &imgsb);
 		PreLoad (PNG_VARIOUS, "hi_back.png", &imghb);
@@ -13138,6 +13151,10 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "exe_guard_details.png", &imgexedetails);
 		PreLoad (PNG_VARIOUS, "exe_packed2.png", &imgexepacked2);
 	}
+	if (iEditPoP == 2)
+	{
+		PreLoad (PNG_VARIOUS, "exe_pop2.png", &imgexe);
+	}
 	if (iEditPoP == 3)
 	{
 		PreLoad (PNG_VARIOUS, "exe_snes.png", &imgexe);
@@ -13691,7 +13708,7 @@ void InitScreen (void)
 					}
 					ShowScreen (iScreen, ascreen);
 					break;
-				case SDL_KEYDOWN: /*** http://wiki.libsdl.org/SDL_Keycode ***/
+				case SDL_KEYDOWN: /*** https://wiki.libsdl.org/SDL_Keycode ***/
 					switch (event.key.keysym.sym)
 					{
 						case SDLK_F1:
@@ -13705,15 +13722,18 @@ void InitScreen (void)
 							{
 								if (iEditPoP != 2)
 								{
-									if (strcmp (sEXEType, "missing") == 0)
-									{
-										printf ("[ INFO ] %s does not exist.\n", POP1_EXECUTABLE);
-									} else if (strcmp (sEXEType, "unknown") == 0) {
-										printf ("[ INFO ] %s has an unknown executable type.\n",
-											POP1_EXECUTABLE);
-									} else {
-										EXE();
-									}
+									snprintf (sEXELoc, MAX_FILE, "%s", POP1_EXECUTABLE);
+								} else {
+									snprintf (sEXELoc, MAX_FILE, "%s", POP2_EXECUTABLE);
+								}
+								if (strcmp (sEXEType, "missing") == 0)
+								{
+									printf ("[ INFO ] %s does not exist.\n", sEXELoc);
+								} else if (strcmp (sEXEType, "unknown") == 0) {
+									printf ("[ INFO ] %s has an unknown executable type.\n",
+										sEXELoc);
+								} else {
+									EXE();
 								}
 							}
 							break;
@@ -14783,14 +14803,20 @@ void InitScreen (void)
 							}
 
 							/*** 10 ***/
-							if ((InArea (650, 13, 659, 22) == 1) && (iEditPoP != 2))
+							if (InArea (650, 13, 659, 22) == 1)
 							{
+								if (iEditPoP != 2)
+								{
+									snprintf (sEXELoc, MAX_FILE, "%s", POP1_EXECUTABLE);
+								} else {
+									snprintf (sEXELoc, MAX_FILE, "%s", POP2_EXECUTABLE);
+								}
 								if (strcmp (sEXEType, "missing") == 0)
 								{
-									printf ("[ INFO ] %s does not exist.\n", POP1_EXECUTABLE);
+									printf ("[ INFO ] %s does not exist.\n", sEXELoc);
 								} else if (strcmp (sEXEType, "unknown") == 0) {
 									printf ("[ INFO ] %s has an unknown executable type.\n",
-										POP1_EXECUTABLE);
+										sEXELoc);
 								} else {
 									EXE();
 								}
@@ -15640,50 +15666,59 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 		/*** PoP2 backgrounds ***/
 		if (iEditPoP == 2)
 		{
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 1))
-				ShowImage (-14, (int[]){1, 1, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 2))
-				ShowImage (-14, (int[]){1, 2, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 3))
-				ShowImage (-14, (int[]){1, 3, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 4))
-				ShowImage (-14, (int[]){1, 4, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 5))
-				ShowImage (-14, (int[]){1, 5, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 10))
-				ShowImage (-14, (int[]){1, 10, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 11))
-				ShowImage (-14, (int[]){1, 11, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 12))
-				ShowImage (-14, (int[]){1, 12, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 15))
-				ShowImage (-14, (int[]){1, 15, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 16))
-				ShowImage (-14, (int[]){1, 16, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 1) || (luLevelNr == 15)) && (iCurRoom == 19))
-				ShowImage (-14, (int[]){1, 19, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 2) || (luLevelNr == 16)) && (iCurRoom == 1))
-				ShowImage (-14, (int[]){2, 1, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 2) || (luLevelNr == 16)) && (iCurRoom == 2))
-				ShowImage (-14, (int[]){2, 2, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 2) || (luLevelNr == 16)) && (iCurRoom == 3))
-				ShowImage (-14, (int[]){2, 3, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 1))
-				ShowImage (-14, (int[]){14, 1, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 2))
-				ShowImage (-14, (int[]){14, 2, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 3))
-				ShowImage (-14, (int[]){14, 3, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 4))
-				ShowImage (-14, (int[]){14, 4, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 5))
-				ShowImage (-14, (int[]){14, 5, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 6))
-				ShowImage (-14, (int[]){14, 6, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 7))
-				ShowImage (-14, (int[]){14, 7, 0, 0}, screen, 42, 0, 0, 642, 380);
-			if (((luLevelNr == 14) || (luLevelNr == 28)) && (iCurRoom == 8))
-				ShowImage (-14, (int[]){14, 8, 0, 0}, screen, 42, 0, 0, 642, 380);
+			if (iEXEEnvPoP2 == 0x05) /*** rooftops ***/
+			{
+				if (iCurRoom == 1)
+					ShowImage (-14, (int[]){1, 1, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 2)
+					ShowImage (-14, (int[]){1, 2, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 3)
+					ShowImage (-14, (int[]){1, 3, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 4)
+					ShowImage (-14, (int[]){1, 4, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 5)
+					ShowImage (-14, (int[]){1, 5, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 10)
+					ShowImage (-14, (int[]){1, 10, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 11)
+					ShowImage (-14, (int[]){1, 11, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 12)
+					ShowImage (-14, (int[]){1, 12, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 15)
+					ShowImage (-14, (int[]){1, 15, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 16)
+					ShowImage (-14, (int[]){1, 16, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 19)
+					ShowImage (-14, (int[]){1, 19, 0, 0}, screen, 42, 0, 0, 642, 380);
+			}
+			if (iEXEEnvPoP2 == 0x01) /*** desert ***/
+			{
+				if (iCurRoom == 1)
+					ShowImage (-14, (int[]){2, 1, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 2)
+					ShowImage (-14, (int[]){2, 2, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 3)
+					ShowImage (-14, (int[]){2, 3, 0, 0}, screen, 42, 0, 0, 642, 380);
+			}
+			if (iEXEEnvPoP2 == 0x06) /*** final ***/
+			{
+				if (iCurRoom == 1)
+					ShowImage (-14, (int[]){14, 1, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 2)
+					ShowImage (-14, (int[]){14, 2, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 3)
+					ShowImage (-14, (int[]){14, 3, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 4)
+					ShowImage (-14, (int[]){14, 4, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 5)
+					ShowImage (-14, (int[]){14, 5, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 6)
+					ShowImage (-14, (int[]){14, 6, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 7)
+					ShowImage (-14, (int[]){14, 7, 0, 0}, screen, 42, 0, 0, 642, 380);
+				if (iCurRoom == 8)
+					ShowImage (-14, (int[]){14, 8, 0, 0}, screen, 42, 0, 0, 642, 380);
+			}
 			if (((luLevelNr == 6) || (luLevelNr == 20)) && (iCurRoom == 27))
 				ShowImage (-14, (int[]){6, 27, 0, 0}, screen, 42, 0, 0, 642, 380);
 			if (((luLevelNr == 9) || (luLevelNr == 23)) && (iCurRoom == 2))
@@ -16338,20 +16373,14 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 		if (luLevelNr > 14)
 			{ snprintf (sGamePlay, MAX_TEXT, "%s", "; gameplay"); }
 				else { snprintf (sGamePlay, MAX_TEXT, "%s", ""); }
-		switch (luLevelNr)
+		switch (iEXEEnvPoP2)
 		{
-			case 1: case 15:
-				snprintf (sLevelType, MAX_TEXT, "%s", "rooftops"); break;
-			case 2: case 16:
-				snprintf (sLevelType, MAX_TEXT, "%s", "desert"); break;
-			case 3: case 4: case 5: case 17: case 18: case 19:
-				snprintf (sLevelType, MAX_TEXT, "%s", "caverns"); break;
-			case 6: case 7: case 8: case 9: case 20: case 21: case 22: case 23:
-				snprintf (sLevelType, MAX_TEXT, "%s", "ruins"); break;
-			case 10: case 11: case 12: case 13: case 24: case 25: case 26: case 27:
-				snprintf (sLevelType, MAX_TEXT, "%s", "temple"); break;
-			case 14: case 28:
-				snprintf (sLevelType, MAX_TEXT, "%s", "final"); break;
+			case 0x01: snprintf (sLevelType, MAX_TEXT, "%s", "desert"); break;
+			case 0x02: snprintf (sLevelType, MAX_TEXT, "%s", "temple"); break;
+			case 0x03: snprintf (sLevelType, MAX_TEXT, "%s", "caverns"); break;
+			case 0x04: snprintf (sLevelType, MAX_TEXT, "%s", "ruins"); break;
+			case 0x05: snprintf (sLevelType, MAX_TEXT, "%s", "rooftops"); break;
+			case 0x06: snprintf (sLevelType, MAX_TEXT, "%s", "final"); break;
 		}
 		snprintf (sTemp, MAX_TEXT, "level %lu (%s%s),",
 			luLevelNr, sLevelType, sGamePlay);
@@ -16712,7 +16741,7 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 		fOffsetY = fOffsetY * ZoomGet();
 
 		iThing = iThingA[iRoom][iTileLoop - 1];
-		if (iThing > 31) { iThing-=32; }
+		if (iThing > 31) { iThing = iThing % 32; }
 		iMod = iModifierA[iRoom][iTileLoop - 1][1];
 		switch (iThing)
 		{
@@ -23641,38 +23670,28 @@ void ShowChangeGuards (SDL_Renderer *screen)
 	/************/
 
 	/*** guard warning static ***/
-	if ((luLevelNr == 1) || (luLevelNr == 15))
-	{
-		ShowImage (-12, (int[]){47, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
-	}
-	if ((luLevelNr == 2) || (luLevelNr == 16))
-	{
-		ShowImage (-12, (int[]){48, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
-	}
-	if (((luLevelNr >= 3) && (luLevelNr <= 5)) ||
-		((luLevelNr >= 17) && (luLevelNr <= 19)))
-	{
-		ShowImage (-12, (int[]){49, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
-	}
-	if (((luLevelNr >= 6) && (luLevelNr <= 9)) ||
-		((luLevelNr >= 20) && (luLevelNr <= 23)))
-	{
-		ShowImage (-12, (int[]){50, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
-	}
-	if (((luLevelNr >= 10) && (luLevelNr <= 13)) ||
-		((luLevelNr >= 24) && (luLevelNr <= 27)))
-	{
-		ShowImage (-12, (int[]){51, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
-	}
-	if ((luLevelNr == 14) || (luLevelNr == 28))
+	if (iEXEGuardTypePoP2 == 0x00)
 	{
 		ShowImage (-12, (int[]){52, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
 	}
+	if (iEXEGuardTypePoP2 == 0xff)
+	{
+		ShowImage (-12, (int[]){48, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
+	}
+	if (iEXEGuardTypePoP2 == 0x02)
+	{
+		ShowImage (-12, (int[]){49, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
+	}
+	if (iEXEGuardTypePoP2 == 0x05)
+	{
+		ShowImage (-12, (int[]){50, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
+	}
+	if (iEXEGuardTypePoP2 == 0x07)
+	{
+		ShowImage (-12, (int[]){51, 0, 0, 0}, screen, 124, 0, 0, 203, 373);
+	}
 	/*** guard warning dynamic ***/
-	if ((luLevelNr == 2) || (luLevelNr == 16) ||
-		(luLevelNr == 14) || (luLevelNr == 28) ||
-		((luLevelNr >= 6) && (luLevelNr <= 9)) ||
-		((luLevelNr >= 20) && (luLevelNr <= 23)))
+	if ((iEXEGuardTypePoP2 == 0x05) || (iEXEGuardTypePoP2 == 0xff))
 	{
 		ShowImage (-12, (int[]){53, 0, 0, 0}, screen, 126, 0, 0, 347, 137);
 	}
@@ -24405,53 +24424,51 @@ int ChecksumOrWrite (int iFd)
 		if (iFd == -1)
 			{ for (iSC = 0; iSC < 4; iSC++) { lSum+=sJEFF[iSC]; } }
 				else { WriteCharByChar (iFd, sJEFF, 4); }
+		snprintf (sToWrite, MAX_TOWRITE, "%c", iEXEEnvPoP2);
 		if (iFd == -1)
-			{ lSum+=sLevelTypeC[0]; }
-				else { write (iFd, sLevelTypeC, 1); }
+			{ lSum+=sToWrite[0]; }
+				else { write (iFd, sToWrite, 1); }
 		if (iFd == -1)
 			{ lSum+=sUnknownI[0]; }
 				else { write (iFd, sUnknownI, 1); }
 
-		/*** Instead of saving sLevelNumberEvents; fixes gameplay 2 problem. ***/
+		/*** Instead of saving sLevelInit; fixes gameplay lv2 problem. ***/
 		if (iFd == -1)
 			{ lSum+=sLevelNumber[0]; }
 				else { write (iFd, sLevelNumber, 1); }
 
 		/*** Instead of saving sExtraImgResources; enable more resources. ***/
-		if ((luLevelNr == 1) || (luLevelNr == 15))
+		if (iEXEEnvPoP2 == 0x05)
 		{
 			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c%c"
 				"%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0);
 		}
-		if ((luLevelNr == 2) || (luLevelNr == 16))
+		if (iEXEEnvPoP2 == 0x01)
 		{
 			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c%c"
 				"%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		}
-		if (((luLevelNr >= 3) && (luLevelNr <= 5)) ||
-			((luLevelNr >= 17) && (luLevelNr <= 19)))
+		if (iEXEEnvPoP2 == 0x03)
 		{
 			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c%c"
 				"%c%c%c%c%c%c%c%c%c%c%c%c", 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0,
 				0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0);
 		}
-		if (((luLevelNr >= 6) && (luLevelNr <= 9)) ||
-			((luLevelNr >= 20) && (luLevelNr <= 23)))
+		if (iEXEEnvPoP2 == 0x04)
 		{
 			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c%c"
 				"%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0);
 		}
-		if (((luLevelNr >= 10) && (luLevelNr <= 13)) ||
-			((luLevelNr >= 24) && (luLevelNr <= 27)))
+		if (iEXEEnvPoP2 == 0x02)
 		{
 			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c%c"
 				"%c%c%c%c%c%c%c%c%c%c%c%c", 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0,
 				1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0);
 		}
-		if ((luLevelNr == 14) || (luLevelNr == 28))
+		if (iEXEEnvPoP2 == 0x06)
 		{
 			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c%c"
 				"%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -24536,8 +24553,12 @@ int ChecksumOrWrite (int iFd)
 				else { WriteCharByChar (iFd, sUnknownIVd, 16); }
 	} else {
 		if (iFd == -1)
-			{ for (iSC = 0; iSC < 4; iSC++) { lSum+=sUnknownII[iSC]; } }
-				else { WriteCharByChar (iFd, sUnknownII, 4); }
+			{ for (iSC = 0; iSC < 3; iSC++) { lSum+=sUnknownII[iSC]; } }
+				else { WriteCharByChar (iFd, sUnknownII, 3); }
+		snprintf (sToWrite, MAX_TOWRITE, "%c", iEXEGuardTypePoP2);
+		if (iFd == -1)
+			{ lSum+=sToWrite[0]; }
+				else { write (iFd, sToWrite, 1); }
 		for (iTemp = 0; iTemp < iRooms; iTemp++)
 		{
 			snprintf (sToWrite, MAX_TOWRITE, "%c", iStaticGuards_Amount[iTemp]);
@@ -24847,6 +24868,7 @@ void ShowUsage (void)
 		" availability\n\n");
 	printf ("Types:\n");
 	printf ("  p0, u0, p3, u3, p4, u4      (PoP1 for DOS)\n");
+	printf ("  F0, F1, IR, D0, D1          (PoP2 for DOS)\n");
 	printf ("  JP, US, EU                  (PoP1 for SNES)\n\n");
 	printf ("Envs:\n");
 	printf ("  b, f, g, h, i, j, l, m, s, u\n\n");
@@ -25420,13 +25442,13 @@ void Help (void)
 						if (InArea (171, 38, 521, 61) == 1)
 							{ OpenURL ("https://www.apoplexy.org/"); }
 						if (InArea (38, 108, 654, 131) == 1)
-							{ OpenURL ("http://forum.princed.org/viewforum.php?f=112"); }
+							{ OpenURL ("https://forum.princed.org/viewforum.php?f=112"); }
 						if (InArea (52, 178, 640, 201) == 1)
-							{ OpenURL ("http://www.youtube.com/watch?v=dtZiAb180ds"); }
+							{ OpenURL ("https://www.youtube.com/watch?v=dtZiAb180ds"); }
 						if (InArea (45, 248, 647, 271) == 1)
-							{ OpenURL ("http://forum.princed.org/viewforum.php?f=73"); }
+							{ OpenURL ("https://forum.princed.org/viewforum.php?f=73"); }
 						if (InArea (38, 318, 654, 341) == 1)
-							{ OpenURL ("http://forum.princed.org/viewforum.php?f=116"); }
+							{ OpenURL ("https://forum.princed.org/viewforum.php?f=116"); }
 					}
 					ShowHelp(); break;
 				case SDL_WINDOWEVENT:
@@ -25618,6 +25640,12 @@ void EXELoad (void)
 	}
 
 	close (iFdEXE);
+}
+/*****************************************************************************/
+void EXELoadPoP2 (void)
+/*****************************************************************************/
+{
+	/*** Nothing for now. ***/
 }
 /*****************************************************************************/
 void EXELoadSNES (void)
@@ -25972,6 +26000,14 @@ void EXESave (void)
 	PlaySound ("wav/save.wav");
 }
 /*****************************************************************************/
+void EXESavePoP2 (void)
+/*****************************************************************************/
+{
+	/*** Nothing for now. ***/
+
+	PlaySound ("wav/save.wav");
+}
+/*****************************************************************************/
 void EXESaveSNES (void)
 /*****************************************************************************/
 {
@@ -26147,11 +26183,11 @@ void EXE (void)
 	iStatusBarFrame = 1;
 	snprintf (sStatus, MAX_STATUS, "%s", "");
 
-	if (iEditPoP != 3)
+	switch (iEditPoP)
 	{
-		EXELoad();
-	} else {
-		EXELoadSNES();
+		case 1: EXELoad(); break;
+		case 2: EXELoadPoP2(); break;
+		case 3: EXELoadSNES(); break;
 	}
 
 	PlaySound ("wav/popup.wav");
@@ -26178,11 +26214,11 @@ void EXE (void)
 					switch (event.cbutton.button)
 					{
 						case SDL_CONTROLLER_BUTTON_A:
-							if (iEditPoP != 3)
+							switch (iEditPoP)
 							{
-								EXESave();
-							} else {
-								EXESaveSNES();
+								case 1: EXESave(); break;
+								case 2: EXESavePoP2(); break;
+								case 3: EXESaveSNES(); break;
 							}
 							iEXE = 0; break;
 					}
@@ -26196,11 +26232,11 @@ void EXE (void)
 						case SDLK_RETURN:
 						case SDLK_SPACE:
 						case SDLK_s:
-							if (iEditPoP != 3)
+							switch (iEditPoP)
 							{
-								EXESave();
-							} else {
-								EXESaveSNES();
+								case 1: EXESave(); break;
+								case 2: EXESavePoP2(); break;
+								case 3: EXESaveSNES(); break;
 							}
 							iEXE = 0; break;
 						default: break;
@@ -26253,11 +26289,11 @@ void EXE (void)
 						/*** Save ***/
 						if (InArea (590, 405, 674, 436) == 1)
 						{
-							if (iEditPoP != 3)
+							switch (iEditPoP)
 							{
-								EXESave();
-							} else {
-								EXESaveSNES();
+								case 1: EXESave(); break;
+								case 2: EXESavePoP2(); break;
+								case 3: EXESaveSNES(); break;
 							}
 							iEXE = 0;
 						}
@@ -26585,12 +26621,96 @@ void EXE (void)
 							}
 						}
 
+						if (iEditPoP == 2)
+						{
+							/*** Current level type. ***/
+							if ((InArea (35, 99, 35 + 14, 99 + 14) == 1) &&
+								(iEXEEnvPoP2 != 0x01)) /*** desert ***/
+							{
+								iEXEEnvPoP2 = 0x01; cCurType = 'o';
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (35, 120, 35 + 14, 120 + 14) == 1) &&
+								(iEXEEnvPoP2 != 0x02)) /*** temple ***/
+							{
+								iEXEEnvPoP2 = 0x02; cCurType = 't';
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (35, 141, 35 + 14, 141 + 14) == 1) &&
+								(iEXEEnvPoP2 != 0x03)) /*** caverns ***/
+							{
+								iEXEEnvPoP2 = 0x03; cCurType = 'c';
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (35, 162, 35 + 14, 162 + 14) == 1) &&
+								(iEXEEnvPoP2 != 0x04)) /*** ruins ***/
+							{
+								iEXEEnvPoP2 = 0x04; cCurType = 'r';
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (35, 183, 35 + 14, 183 + 14) == 1) &&
+								(iEXEEnvPoP2 != 0x05)) /*** rooftops ***/
+							{
+								iEXEEnvPoP2 = 0x05; cCurType = 'o';
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (35, 204, 35 + 14, 204 + 14) == 1) &&
+								(iEXEEnvPoP2 != 0x06)) /*** final ***/
+							{
+								iEXEEnvPoP2 = 0x06; cCurType = 'o';
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+
+							/*** Current level guards. ***/
+							if ((InArea (164, 99, 164 + 14, 99 + 14) == 1) &&
+								(iEXEGuardTypePoP2 != 0x00)) /*** guards, sword ***/
+							{
+								iEXEGuardTypePoP2 = 0x00;
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (164, 120, 164 + 14, 120 + 14) == 1) &&
+								(iEXEGuardTypePoP2 != 0x02)) /*** skeletons, sword ***/
+							{
+								iEXEGuardTypePoP2 = 0x02;
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (164, 141, 164 + 14, 141 + 14) == 1) &&
+								(iEXEGuardTypePoP2 != 0x05)) /*** heads, snake ***/
+							{
+								iEXEGuardTypePoP2 = 0x05;
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (164, 162, 164 + 14, 162 + 14) == 1) &&
+								(iEXEGuardTypePoP2 != 0x07)) /*** birdman, sword ***/
+							{
+								iEXEGuardTypePoP2 = 0x07;
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+							if ((InArea (164, 183, 164 + 14, 183 + 14) == 1) &&
+								(iEXEGuardTypePoP2 != 0xff)) /*** sword ***/
+							{
+								iEXEGuardTypePoP2 = 0xff;
+								PlaySound ("wav/check_box.wav");
+								iChanged++;
+							}
+						}
+
 						if (iEditPoP == 3)
 						{
 							/*** thread ***/
 							if (InArea (614, 35, 655, 51) == 1)
 							{
-								OpenURL ("http://forum.princed.org/viewtopic.php?t=3099");
+								OpenURL ("https://forum.princed.org/viewtopic.php?t=3099");
 							}
 
 							/*** strike prob. ***/
@@ -27057,6 +27177,46 @@ void ShowEXE (void)
 				{ clr = color_bl; } else { clr = color_blue; }
 			CenterNumber (ascreen, iEXEGuardD[iEXETab][12],
 				574, 196, clr, color_wh, 0);
+		}
+	}
+
+	if (iEditPoP == 2)
+	{
+		/*** Current level type. ***/
+		switch (iEXEEnvPoP2)
+		{
+			case 0x01: iX = 35; iY = 99; break;
+			case 0x02: iX = 35; iY = 120; break;
+			case 0x03: iX = 35; iY = 141; break;
+			case 0x04: iX = 35; iY = 162; break;
+			case 0x05: iX = 35; iY = 183; break;
+			case 0x06: iX = 35; iY = 204; break;
+			default:
+				printf ("[ WARN ] Unknown level type: %i\n", iEXEEnvPoP2);
+				iX = 35; iY = 99; break; /*** Fallback. ***/
+		}
+		ShowImageBasic (imgsell, iX, iY, "imgsell", ascreen, iScale, 1);
+		if (iEXEEnvPoP2 != arDefaultEnvPoP2[luLevelNr])
+		{
+			ShowImageBasic (imgsrs, iX, iY, "imgsrs", ascreen, iScale, 1);
+		}
+
+		/*** Current level guards. ***/
+		switch (iEXEGuardTypePoP2)
+		{
+			case 0x00: iX = 164; iY = 99; break;
+			case 0x02: iX = 164; iY = 120; break;
+			case 0x05: iX = 164; iY = 141; break;
+			case 0x07: iX = 164; iY = 162; break;
+			case 0xff: iX = 164; iY = 183; break;
+			default:
+				printf ("[ WARN ] Unknown level guards: %i\n", iEXEGuardTypePoP2);
+				iX = 164; iY = 99; break; /*** Fallback. ***/
+		}
+		ShowImageBasic (imgsell, iX, iY, "imgsell", ascreen, iScale, 1);
+		if (iEXEGuardTypePoP2 != arDefaultGuardTypePoP2[luLevelNr])
+		{
+			ShowImageBasic (imgsrs, iX, iY, "imgsrs", ascreen, iScale, 1);
 		}
 	}
 
@@ -28055,34 +28215,45 @@ void LoadLevel (int iLevel)
 	} else if (iEditPoP == 2) {
 		switch (iLevel)
 		{
-			case 1: LoadPLV (IN_DIR_POP2 "____02000.plv"); cCurType = 'o'; break;
-			case 2: LoadPLV (IN_DIR_POP2 "____02001.plv"); cCurType = 'o'; break;
-			case 3: LoadPLV (IN_DIR_POP2 "____02002.plv"); cCurType = 'c'; break;
-			case 4: LoadPLV (IN_DIR_POP2 "____02003.plv"); cCurType = 'c'; break;
-			case 5: LoadPLV (IN_DIR_POP2 "____02004.plv"); cCurType = 'c'; break;
-			case 6: LoadPLV (IN_DIR_POP2 "____02005.plv"); cCurType = 'r'; break;
-			case 7: LoadPLV (IN_DIR_POP2 "____02006.plv"); cCurType = 'r'; break;
-			case 8: LoadPLV (IN_DIR_POP2 "____02007.plv"); cCurType = 'r'; break;
-			case 9: LoadPLV (IN_DIR_POP2 "____02008.plv"); cCurType = 'r'; break;
-			case 10: LoadPLV (IN_DIR_POP2 "____02009.plv"); cCurType = 't'; break;
-			case 11: LoadPLV (IN_DIR_POP2 "____02010.plv"); cCurType = 't'; break;
-			case 12: LoadPLV (IN_DIR_POP2 "____02011.plv"); cCurType = 't'; break;
-			case 13: LoadPLV (IN_DIR_POP2 "____02012.plv"); cCurType = 't'; break;
-			case 14: LoadPLV (IN_DIR_POP2 "____02013.plv"); cCurType = 'o'; break;
-			case 15: LoadPLV (IN_DIR_POP2 "____02020.plv"); cCurType = 'o'; break;
-			case 16: LoadPLV (IN_DIR_POP2 "____02021.plv"); cCurType = 'o'; break;
-			case 17: LoadPLV (IN_DIR_POP2 "____02022.plv"); cCurType = 'c'; break;
-			case 18: LoadPLV (IN_DIR_POP2 "____02023.plv"); cCurType = 'c'; break;
-			case 19: LoadPLV (IN_DIR_POP2 "____02024.plv"); cCurType = 'c'; break;
-			case 20: LoadPLV (IN_DIR_POP2 "____02025.plv"); cCurType = 'r'; break;
-			case 21: LoadPLV (IN_DIR_POP2 "____02026.plv"); cCurType = 'r'; break;
-			case 22: LoadPLV (IN_DIR_POP2 "____02027.plv"); cCurType = 'r'; break;
-			case 23: LoadPLV (IN_DIR_POP2 "____02028.plv"); cCurType = 'r'; break;
-			case 24: LoadPLV (IN_DIR_POP2 "____02029.plv"); cCurType = 't'; break;
-			case 25: LoadPLV (IN_DIR_POP2 "____02030.plv"); cCurType = 't'; break;
-			case 26: LoadPLV (IN_DIR_POP2 "____02031.plv"); cCurType = 't'; break;
-			case 27: LoadPLV (IN_DIR_POP2 "____02032.plv"); cCurType = 't'; break;
-			case 28: LoadPLV (IN_DIR_POP2 "____02033.plv"); cCurType = 'o'; break;
+			case 1: LoadPLV (IN_DIR_POP2 "____02000.plv"); break;
+			case 2: LoadPLV (IN_DIR_POP2 "____02001.plv"); break;
+			case 3: LoadPLV (IN_DIR_POP2 "____02002.plv"); break;
+			case 4: LoadPLV (IN_DIR_POP2 "____02003.plv"); break;
+			case 5: LoadPLV (IN_DIR_POP2 "____02004.plv"); break;
+			case 6: LoadPLV (IN_DIR_POP2 "____02005.plv"); break;
+			case 7: LoadPLV (IN_DIR_POP2 "____02006.plv"); break;
+			case 8: LoadPLV (IN_DIR_POP2 "____02007.plv"); break;
+			case 9: LoadPLV (IN_DIR_POP2 "____02008.plv"); break;
+			case 10: LoadPLV (IN_DIR_POP2 "____02009.plv"); break;
+			case 11: LoadPLV (IN_DIR_POP2 "____02010.plv"); break;
+			case 12: LoadPLV (IN_DIR_POP2 "____02011.plv"); break;
+			case 13: LoadPLV (IN_DIR_POP2 "____02012.plv"); break;
+			case 14: LoadPLV (IN_DIR_POP2 "____02013.plv"); break;
+			case 15: LoadPLV (IN_DIR_POP2 "____02020.plv"); break;
+			case 16: LoadPLV (IN_DIR_POP2 "____02021.plv"); break;
+			case 17: LoadPLV (IN_DIR_POP2 "____02022.plv"); break;
+			case 18: LoadPLV (IN_DIR_POP2 "____02023.plv"); break;
+			case 19: LoadPLV (IN_DIR_POP2 "____02024.plv"); break;
+			case 20: LoadPLV (IN_DIR_POP2 "____02025.plv"); break;
+			case 21: LoadPLV (IN_DIR_POP2 "____02026.plv"); break;
+			case 22: LoadPLV (IN_DIR_POP2 "____02027.plv"); break;
+			case 23: LoadPLV (IN_DIR_POP2 "____02028.plv"); break;
+			case 24: LoadPLV (IN_DIR_POP2 "____02029.plv"); break;
+			case 25: LoadPLV (IN_DIR_POP2 "____02030.plv"); break;
+			case 26: LoadPLV (IN_DIR_POP2 "____02031.plv"); break;
+			case 27: LoadPLV (IN_DIR_POP2 "____02032.plv"); break;
+			case 28: LoadPLV (IN_DIR_POP2 "____02033.plv"); break;
+		}
+		iEXEEnvPoP2 = sLevelTypeC[0];
+		iEXEGuardTypePoP2 = sLevelGuardTypeC[0];
+		switch (iEXEEnvPoP2)
+		{
+			case 0x01: cCurType = 'o'; break;
+			case 0x02: cCurType = 't'; break;
+			case 0x03: cCurType = 'c'; break;
+			case 0x04: cCurType = 'r'; break;
+			case 0x05: cCurType = 'o'; break;
+			case 0x06: cCurType = 'o'; break;
 		}
 	} else {
 		/*** Set cCurType. ***/
@@ -28094,9 +28265,7 @@ void LoadLevel (int iLevel)
 		LoadSMC (iLevel);
 	}
 
-	if ((iEditPoP == 2) && ((iLevel == 1) || (iLevel == 2) ||
-		(iLevel == 14) || (iLevel == 15) ||
-		(iLevel == 16) || (iLevel == 28)))
+	if ((iEditPoP == 2) && (cCurType == 'o'))
 	{
 		iOnTile = 17;
 	} else {
@@ -30175,6 +30344,8 @@ void PoP1Basics (void)
 void PoP2Basics (void)
 /*****************************************************************************/
 {
+	struct stat stStatus;
+
 	if (system (PR_EXECUTABLE " -xlevels2 -f --resource=" PR_POP2
 		" " PRINCE_DAT " > " DEVNULL) == -1)
 	{
@@ -30185,6 +30356,37 @@ void PoP2Basics (void)
 	iRoomLinks = 32 * 4;
 	iTileW = 116; iTileH = 154;
 	if ((iStartLevel < 1) || (iStartLevel > 28)) { iStartLevel = 1; }
+
+	/*** Figure out the executable's type. ***/
+	if (strcmp (sEXEType, "") == 0)
+	{
+		if (access (POP2_EXECUTABLE, R_OK|W_OK) == -1)
+		{
+			snprintf (sEXEType, MAX_EXETYPE, "%s", "missing");
+		} else {
+			stat (POP2_EXECUTABLE, &stStatus);
+			switch ((int)stStatus.st_size)
+			{
+				case 292865:
+					snprintf (sEXEType, MAX_EXETYPE, "%s", "F0");
+					iEXEType = 0; iEXEPacked = 0; break;
+				case 259583:
+					snprintf (sEXEType, MAX_EXETYPE, "%s", "F1");
+					iEXEType = 1; iEXEPacked = 0; break;
+				case 290415:
+					snprintf (sEXEType, MAX_EXETYPE, "%s", "IR");
+					iEXEType = 2; iEXEPacked = 0; break;
+				case 257567:
+					snprintf (sEXEType, MAX_EXETYPE, "%s", "D0");
+					iEXEType = 3; iEXEPacked = 0; break;
+				case 229961:
+					snprintf (sEXEType, MAX_EXETYPE, "%s", "D1");
+					iEXEType = 4; iEXEPacked = 0; break;
+				default:
+					snprintf (sEXEType, MAX_EXETYPE, "%s", "unknown"); break;
+			}
+		}
+	}
 
 	iTTP1 = TTPD_1; iTTPO = TTPD_O; iDX = DD_X; iDY = DD_Y;
 	iHor0 = (iDX * -1) + OFFSETD_X; iHor1 = (iDX * 0) + OFFSETD_X;
@@ -32832,7 +33034,7 @@ void UpdateStatusBar3 (void)
 	if (InArea (614, 35, 655, 51) == 1) /*** thread ***/
 	{
 		snprintf (sStatus, MAX_STATUS, "%s",
-			"http://forum.princed.org/viewtopic.php?t=3099");
+			"https://forum.princed.org/viewtopic.php?t=3099");
 	}
 	if (InArea (102, 246, 332, 262) == 1) /*** sword ***/
 	{

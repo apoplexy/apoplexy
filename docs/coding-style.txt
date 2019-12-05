@@ -1,4 +1,4 @@
-Do not worry too much about the coding style. Just write code. We can help you by reformatting it where necessary. Questions about our coding style may be emailed to info@apoplexy.org, or discussed at [ http://forum.princed.org/viewforum.php?f=112 ].
+Do not worry too much about the coding style. Just write code. We can help you by reformatting it where necessary. Questions about our coding style may be emailed to info@apoplexy.org, or discussed at [ https://forum.princed.org/viewforum.php?f=112 ].
 
 All contributions MUST be GPL3+ compatible. Contributions are GPL3+ licensed unless explicitly stated otherwise. If you contribute, you MUST add yourself to credits.txt; you may omit all but your name (N) and contributions (C).
 
@@ -21,4 +21,4 @@ Feel free to use PrIfDe() to give the user additional information. (If they choo
 
 Make sure to test with a zoomed main window ("z"). And remember, this program can edit three games; depending on where in the code you are working, you may need to check against iEditPoP.
 
-The seven fonts used are: Akzidenz Grotesk CE, Andagii, Bitstream Vera Sans Bold, Nimbus Sans L Bold Condensed, Sans, Terminus, and URW Gothic L Semi-Bold.
+The seven fonts used are: Akzidenz Grotesk CE, Andagii, Bitstream Vera Sans Bold, Nimbus Sans L Bold Condensed, Sans, Terminus (Bold), and URW Gothic L Semi-Bold.

@@ -11,7 +11,7 @@ m                                    [PoP1 for DOS] Open the Map screen.
 q (and Escape)                       Quit the application.
 r                                    Go to the room links screen.
 s                                    Save the level.
-t                                    [PoP1] Switch between environments.
+t                                    Switch between environments.
 v                                    Flip the room vertically.
 x                                    [PoP1 for DOS] Go to the native tiles.
 z                                    Change the interface size.
@@ -33,7 +33,7 @@ Shift + scroll wheel                 Scroll horizontally.
 '                                    Re-use the last used tile.
 "                                    Sprinkle the level with dec.
 F1                                   Go to the help screen.
-F2                                   [PoP1] Go to the executable screen.
+F2                                   Go to the executable screen.
 F3                                   [PoP1 for SNES] Go to the texts screen.
 F4                                   [PoP1 for SNES] Modify automatic moves.
 Ctrl+c                               Copy the room.
