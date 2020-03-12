@@ -1,5 +1,5 @@
-/* apoplexy v3.7 (December 2019)
- * Copyright (C) 2008-2019 The apoplexy Team (see credits.txt)
+/* apoplexy v3.8 (March 2020)
+ * Copyright (C) 2008-2020 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -55,8 +55,8 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.7 (December 2019)"
-#define COPYRIGHT "Copyright (C) 2019 The apoplexy Team"
+#define EDITOR_VERSION "v3.8 (March 2020)"
+#define COPYRIGHT "Copyright (C) 2020 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.19, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
 #define MAX_FILE 600
@@ -83,6 +83,7 @@
 #define MAX_LOCATION 500
 #define MAX_ERROR 100
 #define AUTOMATIC_SNES 459
+#define MAX_WARNING 500
 
 /*** Map window ***/
 #define MAP_BIG_AREA_W 1225
@@ -680,6 +681,8 @@ int iTextTab;
 int iTextHover;
 int iAutomaticSave;
 int iAutomaticSel;
+int iJumpToRoom;
+int iJumpSel;
 
 /*** controller ***/
 SDL_GameController *controller;
@@ -784,6 +787,17 @@ int iKidColorLava;
 int iKidColorFloat;
 /***/
 static const char *sSongNames[34] = { "Konami logo", "blue and training (levels 1-3 and 23-27)", "fawn (levels 4-6)", "silver (levels 7-9)", "lava with heat haze (level 10)", "lava without heat haze (levels 11 and 12)", "green (levels 13-15)", "umber without boss (levels 16 and 18)", "umber with boss (level 17)", "marble (level 19)", "hallway (level 20)", "kali idol battle", "guard battle", "boss battle", "jaffar (level 21)", "title screen", "menu", "princess", "ending", "memories", "credits", "death, by sword", "death, not by sword", "sword pickup", "life potion", "girl and shadow intro", "?", "level exit open", "level cleared", "guard defeated", "jaffar intro", "heal potion", "too late", "boss intro" };
+
+/*** exe, F3 ***/
+static const unsigned long arLooseDelayA[6] =
+	{ 0X9536, 0XABE6, 0X00000, 0X00000, 0X00000, 0X00000 };
+static const unsigned long arLooseDelayB[6] =
+	{ 0XAE1D, 0XC4CD, 0XB2C9, 0XBA09, 0XAD85, 0XBEB5 };
+int iEXELooseDelayA;
+int iEXELooseDelayB;
+static const unsigned long arLooseClimbing[6] =
+	{ 0X7E4D, 0X94FD, 0X82F1, 0X8A31, 0X7DAD, 0X8EDD };
+int iEXELooseClimbing;
 
 /*** exe, PoP2 ***/
 static const int arDefaultEnvPoP2[29] =
@@ -1771,7 +1785,7 @@ SDL_Texture *imgfadedl, *imgfadeds, *imgpopup, *imgok[2 + 2], *imgsave[2 + 2];
 SDL_Texture *imgpopup_yn, *imgyes[2 + 2], *imgno[2 + 2], *imghelp, *imgexe;
 SDL_Texture *imgexepacked, *imgexemusicyes, *imgexemusicno;
 SDL_Texture *imgexehazeyes, *imgexehazeno, *imgexeskeldis, *imgexetab;
-SDL_Texture *imgexedetails, *imgexepacked2;
+SDL_Texture *imgexedetails, *imgexepacked2, *imgexef3;
 SDL_Texture *imgnomarker, *imgredp, *imgkcolors, *imgkcolorsb, *imgkcolorsw;
 SDL_Texture *imgkcolorsr, *imgkcolorsl, *imgkcolorsf;
 SDL_Texture *imgdungeon, *imgpalace, *imgclose_0, *imgclose_1;
@@ -1806,6 +1820,7 @@ SDL_Texture *imgtempb, *imgtempf, *imgtemps, *imgtempl, *imgtempg;
 SDL_Texture *imgtempu, *imgtempm, *imgtemph, *imgtempj, *imgtempi;
 SDL_Texture *imgautomatic, *imgautomaticsel;
 SDL_Texture *imgautof[15 + 2], *imgautok[255 + 2], *imgautokunk;
+SDL_Texture *imgjump, *imgjumpdis, *imgseljump;
 
 /*** the rooms ***/
 SDL_Texture *imgroom1, *imgroom2, *imgroom3, *imgroom4, *imgroom5, *imgroom6;
@@ -2049,13 +2064,17 @@ void ShowHelp (void);
 unsigned long BytesAsLU (unsigned char *sData, int iBytes);
 void EXECheckbox (int iX, int iY17, int *iChange, int iTo);
 void EXELoad (void);
+void EXELoad_F3 (void);
 void EXELoadPoP2 (void);
 void EXELoadSNES (void);
 void EXESave (void);
+void EXESave_F3 (void);
 void EXESavePoP2 (void);
 void EXESaveSNES (void);
 void EXE (void);
 void ShowEXE (void);
+void EXE_F3 (void);
+void ShowEXE_F3 (void);
 void KidColorsLoad (void);
 void KidColorsSave (void);
 void KidColors (void);
@@ -2141,6 +2160,7 @@ void ForceSpecialsToMatchEnv (void);
 int OnKid (int iKOld);
 void GiveAnimationGroups (void);
 void UpdateStatusBar1 (void);
+void UpdateStatusBar1_F3 (void);
 void UpdateStatusBar3 (void);
 void UpdateStatusBar3T (void);
 int OnLevelBar (void);
@@ -2173,7 +2193,7 @@ void ZoomIncrease (void);
 void ZoomDecrease (void);
 int RelatedToHover (int iRoom, int iTile);
 size_t WriteData (void *ptr, size_t size, size_t nmemb, FILE *stream);
-int DownloadAndUnzipTo (char *sURL, char *sDir);
+int DownloadAndUnzipTo (char *sURLBase, char *sURLFile, char *sDir);
 void CreateDir (char *sDir);
 void PlaytestAction (char *sAction, int iLevel);
 void Playtest (int iLevel);
@@ -2189,6 +2209,10 @@ void AutomaticSaveSNES (void);
 void AutomaticAction (char *sAction);
 void Automatic (void);
 void ShowAutomatic (void);
+void JumpToRoomAction (char *sAction);
+void JumpToRoom (void);
+void ShowJumpToRoom (void);
+int JumpRoomLoc (int iRoom, int iAxis);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -2243,6 +2267,7 @@ int main (int argc, char *argv[])
 	iAutoUse = 0;
 	iNativeColor = 0x01;
 	iAutomaticSel = 1;
+	iJumpSel = 1;
 
 	CheckSSE();
 
@@ -11690,9 +11715,9 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 791; break;
-		case 2: iNrToPreLoad = 861; break;
-		case 3: iNrToPreLoad = 4847; break;
+		case 1: iNrToPreLoad = 795; break;
+		case 2: iNrToPreLoad = 863; break;
+		case 3: iNrToPreLoad = 4850; break;
 	}
 
 	/*** locations; dungeon ***/
@@ -13147,6 +13172,7 @@ void InitScreen (void)
 	if (iEditPoP == 1)
 	{
 		PreLoad (PNG_VARIOUS, "exe.png", &imgexe);
+		PreLoad (PNG_VARIOUS, "exe_F3.png", &imgexef3);
 		PreLoad (PNG_VARIOUS, "exe_packed.png", &imgexepacked);
 		PreLoad (PNG_VARIOUS, "exe_guard_details.png", &imgexedetails);
 		PreLoad (PNG_VARIOUS, "exe_packed2.png", &imgexepacked2);
@@ -13414,6 +13440,14 @@ void InitScreen (void)
 	PreLoad (PNG_VARIOUS, "text.png", &imgtext);
 	PreLoad (PNG_VARIOUS, "text_none.png", &imgtextnone);
 	PreLoad (PNG_VARIOUS, "text_hover.png", &imgtexthover);
+
+	/*** jump to room ***/
+	PreLoad (PNG_VARIOUS, "jump_to_room.png", &imgjump);
+	if (iEditPoP != 2)
+	{
+		PreLoad (PNG_VARIOUS, "jump_disable_25-32.png", &imgjumpdis);
+	}
+	PreLoad (PNG_VARIOUS, "sel_jump.png", &imgseljump);
 
 	if (iDebug == 1)
 		{ printf ("[ INFO ] Preloaded images: %i\n", iPreLoaded); }
@@ -13740,6 +13774,16 @@ void InitScreen (void)
 						case SDLK_F3:
 							if (iScreen == 1)
 							{
+								if (iEditPoP == 1)
+								{
+									if ((strcmp (sEXEType, "missing") != 0) &&
+										(strcmp (sEXEType, "unknown") != 0))
+									{
+										EXE_F3();
+									} else {
+										printf ("[ INFO ] Missing or unknown executable.\n");
+									}
+								}
 								if (iEditPoP == 3)
 								{
 									if ((strcmp (sEXEType, "US") == 0) ||
@@ -14266,6 +14310,9 @@ void InitScreen (void)
 									}
 								}
 							}
+							break;
+						case SDLK_j:
+							JumpToRoom();
 							break;
 						default: break;
 					}
@@ -16424,7 +16471,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 	if (iEditPoP == 1) { ShowMap(); }
 
 	/*** refresh screen ***/
-	if (iPlaytest != 1)
+	if ((iPlaytest != 1) && (iJumpToRoom != 1))
 		{ SDL_RenderPresent (screen); }
 }
 /*****************************************************************************/
@@ -25642,6 +25689,47 @@ void EXELoad (void)
 	close (iFdEXE);
 }
 /*****************************************************************************/
+void EXELoad_F3 (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	unsigned char sData[MAX_DATA + 2];
+
+	iFdEXE = open (POP1_EXECUTABLE, O_RDONLY|O_BINARY);
+	if (iFdEXE == -1)
+	{
+		printf ("[FAILED] Error opening %s: %s!\n", POP1_EXECUTABLE,
+			strerror (errno));
+		exit (EXIT_ERROR);
+	}
+
+	/*** Loose floor delay. ***/
+	LSeek (iFdEXE, arLooseDelayA[iEXEType]);
+	ReadFromFile (iFdEXE, "", 1, sData);
+	iEXELooseDelayA = BytesAsLU (sData, 1);
+	LSeek (iFdEXE, arLooseDelayB[iEXEType]);
+	ReadFromFile (iFdEXE, "", 2, sData);
+	iEXELooseDelayB = BytesAsLU (sData, 2);
+	if (((iEXELooseDelayA == 11) && (iEXELooseDelayB != 3956)) ||
+		((iEXELooseDelayA != 11) && (iEXELooseDelayB != 37008)))
+		{ printf ("[ WARN ] Strange loose floor delay values!\n"); }
+
+	/*** Allow loose floor climbing. ***/
+	LSeek (iFdEXE, arLooseClimbing[iEXEType]);
+	ReadFromFile (iFdEXE, "", 2, sData);
+	if ((sData[0] == 0x75) && (sData[1] == 0xD3))
+	{
+		iEXELooseClimbing = 0;
+	} else if ((sData[0] == 0x90) && (sData[1] == 0x90)) {
+		iEXELooseClimbing = 1;
+	} else {
+		printf ("[ WARN ] Strange loose climbing value!\n");
+		iEXELooseClimbing = 0; /*** As a fallback. ***/
+	}
+
+	close (iFdEXE);
+}
+/*****************************************************************************/
 void EXELoadPoP2 (void)
 /*****************************************************************************/
 {
@@ -25994,6 +26082,35 @@ void EXESave (void)
 			}
 		}
 	}
+
+	close (iFdEXE);
+
+	PlaySound ("wav/save.wav");
+}
+/*****************************************************************************/
+void EXESave_F3 (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	unsigned char sBytes[2 + 2];
+
+	iFdEXE = open (POP1_EXECUTABLE, O_RDWR|O_BINARY);
+
+	/*** Loose floor delay. ***/
+	LSeek (iFdEXE, arLooseDelayA[iEXEType]);
+	sBytes[0] = iEXELooseDelayA;
+	WriteCharByChar (iFdEXE, sBytes, 1);
+	LSeek (iFdEXE, arLooseDelayB[iEXEType]);
+	sBytes[0] = (iEXELooseDelayB >> 0) & 0xFF;
+	sBytes[1] = (iEXELooseDelayB >> 8) & 0xFF;
+	WriteCharByChar (iFdEXE, sBytes, 2);
+
+	/*** Allow loose floor climbing. ***/
+	LSeek (iFdEXE, arLooseClimbing[iEXEType]);
+	if (iEXELooseClimbing == 0)
+		{ sBytes[0] = 0x75; sBytes[1] = 0xD3; }
+			else { sBytes[0] = 0x90; sBytes[1] = 0x90; }
+	WriteCharByChar (iFdEXE, sBytes, 2);
 
 	close (iFdEXE);
 
@@ -27381,6 +27498,194 @@ void ShowEXE (void)
 		ShowImage (-12, (int[]){12, 0, 0, 0}, ascreen, 200, 0, 0, 14, 14);
 		if ((iEXEWarpCol != 0x01) || (iEXEWarpRow != 0x01))
 			{ ShowImage (-7, (int[]){1, 0, 0, 0}, ascreen, 200, 0, 0, 14, 14); }
+	}
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+void EXE_F3 (void)
+/*****************************************************************************/
+{
+	int iEXE;
+	SDL_Event event;
+
+	iEXE = 1;
+	iStatusBarFrame = 1;
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+
+	EXELoad_F3();
+
+	PlaySound ("wav/popup.wav");
+	ShowEXE_F3();
+	while (iEXE == 1)
+	{
+		if (iNoAnim == 0)
+		{
+			/*** We use the global REFRESH. No need for newticks/oldticks. ***/
+			iStatusBarFrame++;
+			if (iStatusBarFrame == 19) { iStatusBarFrame = 1; }
+			ShowEXE_F3();
+		}
+
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_A:
+							EXESave_F3();
+							iEXE = 0; break;
+					}
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							iEXE = 0; break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+						case SDLK_s:
+							EXESave_F3();
+							iEXE = 0; break;
+						default: break;
+					}
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+					if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
+					{
+						SDL_SetCursor (curHand);
+					} else {
+						SDL_SetCursor (curArrow);
+					}
+					UpdateStatusBar1_F3();
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == 1)
+					{
+						if (InArea (590, 405, 674, 436) == 1) /*** Save ***/
+						{
+							if (iEXESave != 1) { iEXESave = 1; }
+							ShowEXE_F3();
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iEXESave = 0;
+					if (event.button.button == 1) /*** left mouse button ***/
+					{
+						/*** Save ***/
+						if (InArea (590, 405, 674, 436) == 1)
+						{
+							EXESave_F3(); iEXE = 0;
+						}
+
+						/*** CusPop ***/
+						if (InArea (608, 35, 656, 51) == 1)
+						{
+							OpenURL ("https://www.popot.org/other_useful_tools.php?"
+								"tool=CusPop");
+						}
+
+						/*** Loose floor delay. ***/
+						PlusMinus (&iEXELooseDelayA, 219, 76 + (0 * 24), 0, 127, -10, 0);
+						PlusMinus (&iEXELooseDelayA, 234, 76 + (0 * 24), 0, 127, -1, 0);
+						PlusMinus (&iEXELooseDelayA, 304, 76 + (0 * 24), 0, 127, +1, 0);
+						PlusMinus (&iEXELooseDelayA, 319, 76 + (0 * 24), 0, 127, +10, 0);
+						if (iEXELooseDelayA == 11) { iEXELooseDelayB = 3956; }
+							else { iEXELooseDelayB = 37008; }
+
+						/*** Allow loose floor climbing. ***/
+						if ((InArea (261, 105, 261 + 14, 105 + 14) == 1) &&
+							(iEXELooseClimbing == 1))
+							{ iEXELooseClimbing = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (276, 105, 276 + 14, 105 + 14) == 1) &&
+							(iEXELooseClimbing == 0))
+							{ iEXELooseClimbing = 1; PlaySound ("wav/check_box.wav"); }
+					}
+					ShowEXE_F3(); break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowEXE_F3(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+			}
+		}
+
+		/*** prevent CPU eating ***/
+		gamespeed = REFRESH;
+		while ((SDL_GetTicks() - looptime) < gamespeed)
+		{
+			SDL_Delay (10);
+		}
+		looptime = SDL_GetTicks();
+	}
+	PlaySound ("wav/popup_close.wav");
+	SDL_SetCursor (curArrow);
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void ShowEXE_F3 (void)
+/*****************************************************************************/
+{
+	char arText[9 + 2][MAX_TEXT + 2];
+	SDL_Color clr;
+
+	ShowImageBasic (imgexef3, 0, 0, "imgexef3", ascreen, iScale, 1);
+
+	/*** status bar ***/
+	if (strcmp (sStatus, "") != 0)
+	{
+		/*** bulb ***/
+		ShowImage (-9, (int[]){25, 0, 0, 0}, ascreen, 209, 0, 0, 20, 20);
+		/*** text ***/
+		DisplayTextLine (50, 415, sStatus, font2, color_bl, color_f4, 0);
+	}
+
+	/*** save ***/
+	switch (iEXESave)
+	{
+		case 0:
+			/*** Save off ***/
+			ShowImage (-9, (int[]){12, 0, 0, 0}, ascreen, 43, 0, 0, 85, 32); break;
+		case 1:
+			/*** Save on ***/
+			ShowImage (-9, (int[]){13, 0, 0, 0}, ascreen, 43, 0, 0, 85, 32); break;
+	}
+
+	/*** type text ***/
+	snprintf (arText[0], MAX_TEXT, "Executable type is: %s (%i)",
+		sEXEType, iEXEType);
+	DisplayText (33, 32, FONT_SIZE_15, arText, 1, font1);
+
+	/*** Loose floor delay. ***/
+	if (iEXELooseDelayA == 11) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXELooseDelayA, 247, 76, clr, color_wh, 0);
+
+	/*** Allow loose floor climbing. ***/
+	if (iEXELooseClimbing == 0)
+	{
+		ShowImageBasic (imgsell, 261, 105, "imgsell", ascreen, iScale, 1);
+	} else {
+		ShowImageBasic (imgsell, 276, 105, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgsrs, 276, 105, "imgsrs", ascreen, iScale, 1);
 	}
 
 	/*** refresh screen ***/
@@ -28952,7 +29257,7 @@ void PoP1OrPoP2Action (char *sAction)
 		} else {
 			/*** 1 Download ***/
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
-				"software/PoP1.zip", POP1_DIR);
+				"software/", "PoP1.zip", POP1_DIR);
 			CheckRequiredFiles();
 		}
 	}
@@ -28966,7 +29271,7 @@ void PoP1OrPoP2Action (char *sAction)
 		} else {
 			/*** 2 Download ***/
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
-				"software/PoP2.zip", POP2_DIR);
+				"software/", "PoP2.zip", POP2_DIR);
 			CheckRequiredFiles();
 		}
 	}
@@ -28980,7 +29285,7 @@ void PoP1OrPoP2Action (char *sAction)
 		} else {
 			/*** 3 Download ***/
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
-				"software/PoP1_SNES.zip", SNES_DIR);
+				"software/", "PoP1_SNES.zip", SNES_DIR);
 			CheckRequiredFiles();
 		}
 	}
@@ -32972,6 +33277,19 @@ void UpdateStatusBar1 (void)
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE(); }
 }
 /*****************************************************************************/
+void UpdateStatusBar1_F3 (void)
+/*****************************************************************************/
+{
+	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+	if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s",
+			"https://www.popot.org/other_useful_tools.php?tool=CusPop");
+	}
+	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F3(); }
+}
+/*****************************************************************************/
 void UpdateStatusBar3 (void)
 /*****************************************************************************/
 {
@@ -34701,7 +35019,7 @@ size_t WriteData (void *ptr, size_t size, size_t nmemb, FILE *stream)
 	return (written);
 }
 /*****************************************************************************/
-int DownloadAndUnzipTo (char *sURL, char *sDir)
+int DownloadAndUnzipTo (char *sURLBase, char *sURLFile, char *sDir)
 /*****************************************************************************/
 {
 	struct zip *zip;
@@ -34721,6 +35039,8 @@ int DownloadAndUnzipTo (char *sURL, char *sDir)
 	char sBuffer[100];
 	int iDeleted;
 	char sError[MAX_ERROR + 2];
+	char sURL[500 + 2];
+	char sWarning[MAX_WARNING + 2];
 
 	/*** Used for looping. ***/
 	int iFileLoop;
@@ -34737,6 +35057,7 @@ int DownloadAndUnzipTo (char *sURL, char *sDir)
 		return (0);
 	} else {
 		fFile = fopen ("temp.zip", "wb");
+		snprintf (sURL, 500, "%s%s", sURLBase, sURLFile);
 		curl_easy_setopt (curl, CURLOPT_URL, sURL);
 		curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, WriteData);
 		curl_easy_setopt (curl, CURLOPT_WRITEDATA, fFile);
@@ -34746,13 +35067,20 @@ int DownloadAndUnzipTo (char *sURL, char *sDir)
 		 * the (old?) cURL version.
 		 */
 		curl_easy_setopt (curl, CURLOPT_SSL_VERIFYPEER, 0);
+		/*** Without this, the connect timeout will be 300 seconds. ***/
+		curl_easy_setopt (curl, CURLOPT_CONNECTTIMEOUT, 5L);
 		res = curl_easy_perform (curl);
 		curl_easy_cleanup (curl);
 		fclose (fFile);
 		if (res != CURLE_OK)
 		{
-			printf ("[ WARN ] Could not download \"%s\": %s!\n",
-				sURL, curl_easy_strerror (res));
+			snprintf (sWarning, MAX_WARNING, "Could not download \"%s\": %s!\n"
+				"Perhaps Popot.org is down?\n"
+				"Try again later, or manually unzip %s to %s.",
+				sURLFile, curl_easy_strerror (res), sURLFile, sDir);
+			printf ("[ WARN ] %s\n", sWarning);
+			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR,
+				"Warning", sWarning, NULL);
 		}
 	}
 
@@ -34851,7 +35179,7 @@ void PlaytestAction (char *sAction, int iLevel)
 		} else {
 			/*** s Download ***/
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
-				"software/SDLPoP/SDLPoP-latest.zip", SDLPOP_DIR);
+				"software/SDLPoP/", "SDLPoP-latest.zip", SDLPOP_DIR);
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
 #else
 chmod (SDLPOP_DIR SLASH "prince", 0700);
@@ -34870,7 +35198,7 @@ chmod (SDLPOP_DIR SLASH "prince", 0700);
 		} else {
 			/*** m Download ***/
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
-				"software/MININIM/mininim-latest.zip", MININIM_DIR);
+				"software/MININIM/", "mininim-latest.zip", MININIM_DIR);
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
 #else
 chmod (MININIM_DIR SLASH "mininim", 0700);
@@ -36248,5 +36576,336 @@ void ShowAutomatic (void)
 
 	/*** refresh screen ***/
 	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+void JumpToRoomAction (char *sAction)
+/*****************************************************************************/
+{
+	/*** Used for looping. ***/
+	int iLoopRoom;
+
+	if (strcmp (sAction, "left") == 0)
+	{
+		switch (iJumpSel)
+		{
+			case 1: iJumpSel = 8; break;
+			case 9: iJumpSel = 16; break;
+			case 17: iJumpSel = 24; break;
+			case 25: iJumpSel = 32; break;
+			default: iJumpSel--; break;
+		}
+	}
+
+	if (strcmp (sAction, "right") == 0)
+	{
+		switch (iJumpSel)
+		{
+			case 8: iJumpSel = 1; break;
+			case 16: iJumpSel = 9; break;
+			case 24: iJumpSel = 17; break;
+			case 32: iJumpSel = 25; break;
+			default: iJumpSel++; break;
+		}
+	}
+
+	if (strcmp (sAction, "up") == 0)
+	{
+		switch (iJumpSel)
+		{
+			case 1: if (iRooms == 24) { iJumpSel = 17; }
+				else { iJumpSel = 25; } break;
+			case 2: if (iRooms == 24) { iJumpSel = 18; }
+				else { iJumpSel = 26; } break;
+			case 3: if (iRooms == 24) { iJumpSel = 19; }
+				else { iJumpSel = 27; } break;
+			case 4: if (iRooms == 24) { iJumpSel = 20; }
+				else { iJumpSel = 28; } break;
+			case 5: if (iRooms == 24) { iJumpSel = 21; }
+				else { iJumpSel = 29; } break;
+			case 6: if (iRooms == 24) { iJumpSel = 22; }
+				else { iJumpSel = 30; } break;
+			case 7: if (iRooms == 24) { iJumpSel = 23; }
+				else { iJumpSel = 31; } break;
+			case 8: if (iRooms == 24) { iJumpSel = 24; }
+				else { iJumpSel = 32; } break;
+			default: iJumpSel-=8; break;
+		}
+	}
+
+	if (strcmp (sAction, "down") == 0)
+	{
+		if (iRooms == 24)
+		{
+			switch (iJumpSel)
+			{
+				case 17: iJumpSel = 1; break;
+				case 18: iJumpSel = 2; break;
+				case 19: iJumpSel = 3; break;
+				case 20: iJumpSel = 4; break;
+				case 21: iJumpSel = 5; break;
+				case 22: iJumpSel = 6; break;
+				case 23: iJumpSel = 7; break;
+				case 24: iJumpSel = 8; break;
+				default: iJumpSel+=8; break;
+			}
+		} else {
+			switch (iJumpSel)
+			{
+				case 25: iJumpSel = 1; break;
+				case 26: iJumpSel = 2; break;
+				case 27: iJumpSel = 3; break;
+				case 28: iJumpSel = 4; break;
+				case 29: iJumpSel = 5; break;
+				case 30: iJumpSel = 6; break;
+				case 31: iJumpSel = 7; break;
+				case 32: iJumpSel = 8; break;
+				default: iJumpSel+=8; break;
+			}
+		}
+	}
+
+	if (strcmp (sAction, "apply") == 0)
+	{
+		for (iLoopRoom = 1; iLoopRoom <= iRooms; iLoopRoom++)
+		{
+			if (InArea (JumpRoomLoc (iLoopRoom, 1),
+				JumpRoomLoc (iLoopRoom, 2),
+				JumpRoomLoc (iLoopRoom, 1) + 40,
+				JumpRoomLoc (iLoopRoom, 2) + 40) == 1)
+			{
+				iCurRoom = iJumpSel;
+				iJumpToRoom = 0;
+			}
+		}
+	}
+}
+/*****************************************************************************/
+void JumpToRoom (void)
+/*****************************************************************************/
+{
+	SDL_Event event;
+	int iOnRoom;
+
+	/*** Used for looping. ***/
+	int iLoopRoom;
+
+	iJumpToRoom = 1;
+
+	PlaySound ("wav/popup.wav");
+	ShowJumpToRoom();
+	while (iJumpToRoom == 1)
+	{
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_A:
+						case SDL_CONTROLLER_BUTTON_START:
+							/*** Do not use JumpToRoomAction(). ***/
+							iCurRoom = iJumpSel;
+							iJumpToRoom = 0;
+							break;
+						case SDL_CONTROLLER_BUTTON_B:
+						case SDL_CONTROLLER_BUTTON_BACK:
+							iJumpToRoom = 0; break;
+						case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+							JumpToRoomAction ("left"); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+							JumpToRoomAction ("right"); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_UP:
+							JumpToRoomAction ("up"); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+							JumpToRoomAction ("down"); break;
+					}
+					ShowJumpToRoom();
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							iJumpToRoom = 0; break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+							/*** Do not use JumpToRoomAction(). ***/
+							iCurRoom = iJumpSel;
+							iJumpToRoom = 0;
+							break;
+						case SDLK_LEFT:
+							JumpToRoomAction ("left");
+							break;
+						case SDLK_RIGHT:
+							JumpToRoomAction ("right");
+							break;
+						case SDLK_UP:
+							JumpToRoomAction ("up");
+							break;
+						case SDLK_DOWN:
+							JumpToRoomAction ("down");
+							break;
+						case SDLK_1: case SDLK_KP_1: iCurRoom = 1; iJumpToRoom = 0; break;
+						case SDLK_2: case SDLK_KP_2: iCurRoom = 2; iJumpToRoom = 0; break;
+						case SDLK_3: case SDLK_KP_3: iCurRoom = 3; iJumpToRoom = 0; break;
+						case SDLK_4: case SDLK_KP_4: iCurRoom = 4; iJumpToRoom = 0; break;
+						case SDLK_5: case SDLK_KP_5: iCurRoom = 5; iJumpToRoom = 0; break;
+						case SDLK_6: case SDLK_KP_6: iCurRoom = 6; iJumpToRoom = 0; break;
+						case SDLK_7: case SDLK_KP_7: iCurRoom = 7; iJumpToRoom = 0; break;
+						case SDLK_8: case SDLK_KP_8: iCurRoom = 8; iJumpToRoom = 0; break;
+						case SDLK_9: case SDLK_KP_9: iCurRoom = 9; iJumpToRoom = 0; break;
+						case SDLK_a: iCurRoom = 10; iJumpToRoom = 0; break;
+						case SDLK_b: iCurRoom = 11; iJumpToRoom = 0; break;
+						case SDLK_c: iCurRoom = 12; iJumpToRoom = 0; break;
+						case SDLK_d: iCurRoom = 13; iJumpToRoom = 0; break;
+						case SDLK_e: iCurRoom = 14; iJumpToRoom = 0; break;
+						case SDLK_f: iCurRoom = 15; iJumpToRoom = 0; break;
+						case SDLK_g: iCurRoom = 16; iJumpToRoom = 0; break;
+						case SDLK_h: iCurRoom = 17; iJumpToRoom = 0; break;
+						case SDLK_i: iCurRoom = 18; iJumpToRoom = 0; break;
+						case SDLK_j: iCurRoom = 19; iJumpToRoom = 0; break;
+						case SDLK_k: iCurRoom = 20; iJumpToRoom = 0; break;
+						case SDLK_l: iCurRoom = 21; iJumpToRoom = 0; break;
+						case SDLK_m: iCurRoom = 22; iJumpToRoom = 0; break;
+						case SDLK_n: iCurRoom = 23; iJumpToRoom = 0; break;
+						case SDLK_o: iCurRoom = 24; iJumpToRoom = 0; break;
+						case SDLK_p: if (iRooms == 32)
+							{ iCurRoom = 25; iJumpToRoom = 0; } break;
+						case SDLK_q: if (iRooms == 32)
+							{ iCurRoom = 26; iJumpToRoom = 0; } break;
+						case SDLK_r: if (iRooms == 32)
+							{ iCurRoom = 27; iJumpToRoom = 0; } break;
+						case SDLK_s: if (iRooms == 32)
+							{ iCurRoom = 28; iJumpToRoom = 0; } break;
+						case SDLK_t: if (iRooms == 32)
+							{ iCurRoom = 29; iJumpToRoom = 0; } break;
+						case SDLK_u: if (iRooms == 32)
+							{ iCurRoom = 30; iJumpToRoom = 0; } break;
+						case SDLK_v: if (iRooms == 32)
+							{ iCurRoom = 31; iJumpToRoom = 0; } break;
+						case SDLK_w: if (iRooms == 32)
+							{ iCurRoom = 32; iJumpToRoom = 0; } break;
+						default: break;
+					}
+					ShowJumpToRoom();
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+					iOnRoom = 0;
+					for (iLoopRoom = 1; iLoopRoom <= iRooms; iLoopRoom++)
+					{
+						if (InArea (JumpRoomLoc (iLoopRoom, 1),
+							JumpRoomLoc (iLoopRoom, 2),
+							JumpRoomLoc (iLoopRoom, 1) + 40,
+							JumpRoomLoc (iLoopRoom, 2) + 40) == 1)
+						{
+							iOnRoom = iLoopRoom;
+						}
+					}
+					if (iOnRoom != 0)
+					{
+						SDL_SetCursor (curHand);
+						iJumpSel = iOnRoom;
+					} else {
+						SDL_SetCursor (curArrow);
+					}
+					ShowJumpToRoom();
+					break;
+				case SDL_MOUSEBUTTONUP:
+					if (event.button.button == 1)
+					{
+						JumpToRoomAction ("apply");
+					}
+					break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowJumpToRoom(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+			}
+		}
+
+		/*** prevent CPU eating ***/
+		gamespeed = REFRESH;
+		while ((SDL_GetTicks() - looptime) < gamespeed)
+		{
+			SDL_Delay (10);
+		}
+		looptime = SDL_GetTicks();
+	}
+	PlaySound ("wav/popup_close.wav");
+	SDL_SetCursor (curArrow);
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void ShowJumpToRoom (void)
+/*****************************************************************************/
+{
+	ShowScreen (iScreen, ascreen);
+
+	/*** faded background ***/
+	ShowImageBasic (imgfadedl, 0, 0, "imgfadedl", ascreen, iScale, 1);
+
+	/*** jump to room background ***/
+	ShowImageBasic (imgjump, 100, 100, "imgjump", ascreen, iScale, 1);
+
+	if (iEditPoP != 2)
+	{
+		ShowImageBasic (imgjumpdis, 120, 297, "imgjumpdis", ascreen, iScale, 1);
+	}
+
+	ShowImageBasic (imgseljump, JumpRoomLoc (iJumpSel, 1),
+		JumpRoomLoc (iJumpSel, 2), "imgseljump", ascreen, iScale, 1);
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+int JumpRoomLoc (int iRoom, int iAxis)
+/*****************************************************************************/
+{
+	if (iAxis == 1) /*** x ***/
+	{
+		if ((iRoom == 1) || (iRoom == 9) || (iRoom == 17) || (iRoom == 25))
+			{ return (120); }
+		if ((iRoom == 2) || (iRoom == 10) || (iRoom == 18) || (iRoom == 26))
+			{ return (168); }
+		if ((iRoom == 3) || (iRoom == 11) || (iRoom == 19) || (iRoom == 27))
+			{ return (216); }
+		if ((iRoom == 4) || (iRoom == 12) || (iRoom == 20) || (iRoom == 28))
+			{ return (264); }
+		if ((iRoom == 5) || (iRoom == 13) || (iRoom == 21) || (iRoom == 29))
+			{ return (312); }
+		if ((iRoom == 6) || (iRoom == 14) || (iRoom == 22) || (iRoom == 30))
+			{ return (360); }
+		if ((iRoom == 7) || (iRoom == 15) || (iRoom == 23) || (iRoom == 31))
+			{ return (408); }
+		if ((iRoom == 8) || (iRoom == 16) || (iRoom == 24) || (iRoom == 32))
+			{ return (456); }
+	}
+	if (iAxis == 2) /*** y ***/
+	{
+		if ((iRoom >= 1) && (iRoom <= 8)) { return (153); }
+		if ((iRoom >= 9) && (iRoom <= 16)) { return (201); }
+		if ((iRoom >= 17) && (iRoom <= 24)) { return (249); }
+		if ((iRoom >= 25) && (iRoom <= 32)) { return (297); }
+	}
+
+	printf ("[ WARN ] Unknown room: %i\n", iRoom);
+	return (153); /*** Fallback. ***/
 }
 /*****************************************************************************/

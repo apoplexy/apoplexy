@@ -5,6 +5,12 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.8 (March 12, 2020) - Norbert de Jonge
+--------------------
++ It's now possible to quickly jump to rooms ("j").
++ Added PoP1 for DOS loose floor settings (F3).
++ Proper warning if downloading from Popot.org fails.
+
 v3.7 (December 5, 2019) - Norbert de Jonge
 --------------------
 + PoP2 for DOS level and guard types can now be modified.
