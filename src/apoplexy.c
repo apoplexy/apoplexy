@@ -1,4 +1,4 @@
-/* apoplexy v3.8 (March 2020)
+/* apoplexy v3.9 (August 2020)
  * Copyright (C) 2008-2020 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -55,9 +55,9 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.8 (March 2020)"
+#define EDITOR_VERSION "v3.9 (August 2020)"
 #define COPYRIGHT "Copyright (C) 2020 The apoplexy Team"
-#define COMPATIBLE_NATIVE "SDLPoP 1.19, MININIM 0.10"
+#define COMPATIBLE_NATIVE "SDLPoP 1.20, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
 #define MAX_FILE 600
 #define MAX_ADJ 10
@@ -84,6 +84,8 @@
 #define MAX_ERROR 100
 #define AUTOMATIC_SNES 459
 #define MAX_WARNING 500
+#define END_SHADOW 65534
+#define END_PRINCE 65535
 
 /*** Map window ***/
 #define MAP_BIG_AREA_W 1225
@@ -798,6 +800,25 @@ int iEXELooseDelayB;
 static const unsigned long arLooseClimbing[6] =
 	{ 0X7E4D, 0X94FD, 0X82F1, 0X8A31, 0X7DAD, 0X8EDD };
 int iEXELooseClimbing;
+/***/
+static const unsigned long arShadowStart[6] =
+	{ 0X1B8B8, 0X1D47A, 0X1C6D5, 0X1D36C, 0X18AA7, 0X19D16 };
+int iEXEShadowStartF5, iEXEShadowStartF6, iEXEShadowStartF12;
+int iEXEShadowStartX5, iEXEShadowStartX6, iEXEShadowStartX12;
+int iEXEShadowStartY5, iEXEShadowStartY6, iEXEShadowStartY12;
+int iEXEShadowStartD5, iEXEShadowStartD6, iEXEShadowStartD12;
+int iEXEShadowStartC5, iEXEShadowStartC6, iEXEShadowStartC12;
+int iEXEShadowStartR5, iEXEShadowStartR6, iEXEShadowStartR12;
+int iEXEShadowStartA5, iEXEShadowStartA6, iEXEShadowStartA12;
+int iEXEShadowStartN5, iEXEShadowStartN6, iEXEShadowStartN12;
+static const unsigned long arShadowMoves[6] =
+	{ 0X1DB82, 0X1D496, 0X1C6EF, 0X1D388, 0X18AC1, 0X19D32 };
+int iEXEShadowMovesTime[7 + 2];
+int iEXEShadowMovesAction[7 + 2];
+static const unsigned long arPrinceMoves[6] =
+	{ 0X1B8F2, 0X1D4B6, 0X1C70F, 0X1D3A8, 0X18AE1, 0X19D52 };
+int iEXEPrinceMovesTime[24 + 2];
+int iEXEPrinceMovesAction[24 + 2];
 
 /*** exe, PoP2 ***/
 static const int arDefaultEnvPoP2[29] =
@@ -1785,7 +1806,10 @@ SDL_Texture *imgfadedl, *imgfadeds, *imgpopup, *imgok[2 + 2], *imgsave[2 + 2];
 SDL_Texture *imgpopup_yn, *imgyes[2 + 2], *imgno[2 + 2], *imghelp, *imgexe;
 SDL_Texture *imgexepacked, *imgexemusicyes, *imgexemusicno;
 SDL_Texture *imgexehazeyes, *imgexehazeno, *imgexeskeldis, *imgexetab;
-SDL_Texture *imgexedetails, *imgexepacked2, *imgexef3;
+SDL_Texture *imgexedetails, *imgexepacked2, *imgexef3, *imgexepacked3;
+SDL_Texture *imgexeactionr, *imgexeactionf, *imgexeactionb;
+SDL_Texture *imgexeactionu, *imgexeactiond, *imgexeactionj;
+SDL_Texture *imgexeactions, *imgexeactionh, *imgexeactione;
 SDL_Texture *imgnomarker, *imgredp, *imgkcolors, *imgkcolorsb, *imgkcolorsw;
 SDL_Texture *imgkcolorsr, *imgkcolorsl, *imgkcolorsf;
 SDL_Texture *imgdungeon, *imgpalace, *imgclose_0, *imgclose_1;
@@ -2213,6 +2237,8 @@ void JumpToRoomAction (char *sAction);
 void JumpToRoom (void);
 void ShowJumpToRoom (void);
 int JumpRoomLoc (int iRoom, int iAxis);
+void ShowAction (int iAction, int iX, int iY);
+void Move (int *iTime, int *iAction, int iX, int iY, int iEnd);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -11715,7 +11741,7 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 795; break;
+		case 1: iNrToPreLoad = 805; break;
 		case 2: iNrToPreLoad = 863; break;
 		case 3: iNrToPreLoad = 4850; break;
 	}
@@ -13176,6 +13202,16 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "exe_packed.png", &imgexepacked);
 		PreLoad (PNG_VARIOUS, "exe_guard_details.png", &imgexedetails);
 		PreLoad (PNG_VARIOUS, "exe_packed2.png", &imgexepacked2);
+		PreLoad (PNG_VARIOUS, "exe_packed3.png", &imgexepacked3);
+		PreLoad (PNG_VARIOUS, "exe_action_R.png", &imgexeactionr);
+		PreLoad (PNG_VARIOUS, "exe_action_F.png", &imgexeactionf);
+		PreLoad (PNG_VARIOUS, "exe_action_B.png", &imgexeactionb);
+		PreLoad (PNG_VARIOUS, "exe_action_U.png", &imgexeactionu);
+		PreLoad (PNG_VARIOUS, "exe_action_D.png", &imgexeactiond);
+		PreLoad (PNG_VARIOUS, "exe_action_J.png", &imgexeactionj);
+		PreLoad (PNG_VARIOUS, "exe_action_S.png", &imgexeactions);
+		PreLoad (PNG_VARIOUS, "exe_action_H.png", &imgexeactionh);
+		PreLoad (PNG_VARIOUS, "exe_action_E.png", &imgexeactione);
 	}
 	if (iEditPoP == 2)
 	{
@@ -25695,6 +25731,9 @@ void EXELoad_F3 (void)
 	int iFdEXE;
 	unsigned char sData[MAX_DATA + 2];
 
+	/*** Used for looping. ***/
+	int iLoopMoves;
+
 	iFdEXE = open (POP1_EXECUTABLE, O_RDONLY|O_BINARY);
 	if (iFdEXE == -1)
 	{
@@ -25725,6 +25764,54 @@ void EXELoad_F3 (void)
 	} else {
 		printf ("[ WARN ] Strange loose climbing value!\n");
 		iEXELooseClimbing = 0; /*** As a fallback. ***/
+	}
+
+	/*** Shadow start. ***/
+	LSeek (iFdEXE, arShadowStart[iEXEType]);
+	ReadFromFile (iFdEXE, "", 24, sData);
+	iEXEShadowStartF6 = sData[0]; /*** Yes, 6 before 5. ***/
+	iEXEShadowStartX6 = sData[1];
+	iEXEShadowStartY6 = sData[2];
+	iEXEShadowStartD6 = sData[3];
+	iEXEShadowStartC6 = sData[4];
+	iEXEShadowStartR6 = sData[5];
+	iEXEShadowStartA6 = sData[6];
+	iEXEShadowStartN6 = sData[7];
+	iEXEShadowStartF5 = sData[8];
+	iEXEShadowStartX5 = sData[9];
+	iEXEShadowStartY5 = sData[10];
+	iEXEShadowStartD5 = sData[11];
+	iEXEShadowStartC5 = sData[12];
+	iEXEShadowStartR5 = sData[13];
+	iEXEShadowStartA5 = sData[14];
+	iEXEShadowStartN5 = sData[15];
+	iEXEShadowStartF12 = sData[16];
+	iEXEShadowStartX12 = sData[17];
+	iEXEShadowStartY12 = sData[18];
+	iEXEShadowStartD12 = sData[19];
+	iEXEShadowStartC12 = sData[20];
+	iEXEShadowStartR12 = sData[21];
+	iEXEShadowStartA12 = sData[22];
+	iEXEShadowStartN12 = sData[23];
+
+	/*** Shadow moves. ***/
+	LSeek (iFdEXE, arShadowMoves[iEXEType]);
+	for (iLoopMoves = 1; iLoopMoves <= 7; iLoopMoves++)
+	{
+		ReadFromFile (iFdEXE, "", 2, sData);
+		iEXEShadowMovesTime[iLoopMoves] = BytesAsLU (sData, 2);
+		ReadFromFile (iFdEXE, "", 2, sData);
+		iEXEShadowMovesAction[iLoopMoves] = BytesAsLU (sData, 2);
+	}
+
+	/*** Prince moves. ***/
+	LSeek (iFdEXE, arPrinceMoves[iEXEType]);
+	for (iLoopMoves = 1; iLoopMoves <= 24; iLoopMoves++)
+	{
+		ReadFromFile (iFdEXE, "", 2, sData);
+		iEXEPrinceMovesTime[iLoopMoves] = BytesAsLU (sData, 2);
+		ReadFromFile (iFdEXE, "", 2, sData);
+		iEXEPrinceMovesAction[iLoopMoves] = BytesAsLU (sData, 2);
 	}
 
 	close (iFdEXE);
@@ -26092,7 +26179,10 @@ void EXESave_F3 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
-	unsigned char sBytes[2 + 2];
+	unsigned char sBytes[8 + 2];
+
+	/*** Used for looping. ***/
+	int iLoopMoves;
 
 	iFdEXE = open (POP1_EXECUTABLE, O_RDWR|O_BINARY);
 
@@ -26111,6 +26201,60 @@ void EXESave_F3 (void)
 		{ sBytes[0] = 0x75; sBytes[1] = 0xD3; }
 			else { sBytes[0] = 0x90; sBytes[1] = 0x90; }
 	WriteCharByChar (iFdEXE, sBytes, 2);
+
+	/*** Shadow start. ***/
+	LSeek (iFdEXE, arShadowStart[iEXEType]);
+	sBytes[0] = iEXEShadowStartF6; /*** Yes, 6 before 5. ***/
+	sBytes[1] = iEXEShadowStartX6;
+	sBytes[2] = iEXEShadowStartY6;
+	sBytes[3] = iEXEShadowStartD6;
+	sBytes[4] = iEXEShadowStartC6;
+	sBytes[5] = iEXEShadowStartR6;
+	sBytes[6] = iEXEShadowStartA6;
+	sBytes[7] = iEXEShadowStartN6;
+	WriteCharByChar (iFdEXE, sBytes, 8);
+	sBytes[0] = iEXEShadowStartF5;
+	sBytes[1] = iEXEShadowStartX5;
+	sBytes[2] = iEXEShadowStartY5;
+	sBytes[3] = iEXEShadowStartD5;
+	sBytes[4] = iEXEShadowStartC5;
+	sBytes[5] = iEXEShadowStartR5;
+	sBytes[6] = iEXEShadowStartA5;
+	sBytes[7] = iEXEShadowStartN5;
+	WriteCharByChar (iFdEXE, sBytes, 8);
+	sBytes[0] = iEXEShadowStartF12;
+	sBytes[1] = iEXEShadowStartX12;
+	sBytes[2] = iEXEShadowStartY12;
+	sBytes[3] = iEXEShadowStartD12;
+	sBytes[4] = iEXEShadowStartC12;
+	sBytes[5] = iEXEShadowStartR12;
+	sBytes[6] = iEXEShadowStartA12;
+	sBytes[7] = iEXEShadowStartN12;
+	WriteCharByChar (iFdEXE, sBytes, 8);
+
+	/*** Shadow moves. ***/
+	LSeek (iFdEXE, arShadowMoves[iEXEType]);
+	for (iLoopMoves = 1; iLoopMoves <= 7; iLoopMoves++)
+	{
+		sBytes[0] = (iEXEShadowMovesTime[iLoopMoves] >> 0) & 0xFF;
+		sBytes[1] = (iEXEShadowMovesTime[iLoopMoves] >> 8) & 0xFF;
+		WriteCharByChar (iFdEXE, sBytes, 2);
+		sBytes[0] = (iEXEShadowMovesAction[iLoopMoves] >> 0) & 0xFF;
+		sBytes[1] = (iEXEShadowMovesAction[iLoopMoves] >> 8) & 0xFF;
+		WriteCharByChar (iFdEXE, sBytes, 2);
+	}
+
+	/*** Prince moves. ***/
+	LSeek (iFdEXE, arPrinceMoves[iEXEType]);
+	for (iLoopMoves = 1; iLoopMoves <= 24; iLoopMoves++)
+	{
+		sBytes[0] = (iEXEPrinceMovesTime[iLoopMoves] >> 0) & 0xFF;
+		sBytes[1] = (iEXEPrinceMovesTime[iLoopMoves] >> 8) & 0xFF;
+		WriteCharByChar (iFdEXE, sBytes, 2);
+		sBytes[0] = (iEXEPrinceMovesAction[iLoopMoves] >> 0) & 0xFF;
+		sBytes[1] = (iEXEPrinceMovesAction[iLoopMoves] >> 8) & 0xFF;
+		WriteCharByChar (iFdEXE, sBytes, 2);
+	}
 
 	close (iFdEXE);
 
@@ -27611,6 +27755,255 @@ void EXE_F3 (void)
 						if ((InArea (276, 105, 276 + 14, 105 + 14) == 1) &&
 							(iEXELooseClimbing == 0))
 							{ iEXELooseClimbing = 1; PlaySound ("wav/check_box.wav"); }
+
+						/*** Shadow start level 5. ***/
+						PlusMinus (&iEXEShadowStartX5, 34, 146, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartX5, 49, 146, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartX5, 119, 146, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartX5, 134, 146, 0, 255, +10, 0);
+						/***/
+						PlusMinus (&iEXEShadowStartY5, 149, 146, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartY5, 164, 146, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartY5, 234, 146, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartY5, 249, 146, 0, 255, +10, 0);
+						/***/
+						PlusMinus (&iEXEShadowStartC5, 264, 146, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartC5, 279, 146, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartC5, 349, 146, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartC5, 364, 146, 0, 255, +10, 0);
+						/***/
+						if ((InArea (73, 178, 73 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartR5 != 0))
+							{ iEXEShadowStartR5 = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (88, 178, 88 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartR5 != 1))
+							{ iEXEShadowStartR5 = 1; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (103, 178, 103 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartR5 != 2))
+							{ iEXEShadowStartR5 = 2; PlaySound ("wav/check_box.wav"); }
+						/***/
+						if ((InArea (165, 178, 165 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartD5 != 255))
+							{ iEXEShadowStartD5 = 255; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (180, 178, 180 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartD5 != 0))
+							{ iEXEShadowStartD5 = 0; PlaySound ("wav/check_box.wav"); }
+						/***/
+						if ((InArea (242, 178, 242 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 0))
+							{ iEXEShadowStartA5 = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (257, 178, 257 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 1))
+							{ iEXEShadowStartA5 = 1; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (272, 178, 272 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 2))
+							{ iEXEShadowStartA5 = 2; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (287, 178, 287 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 3))
+							{ iEXEShadowStartA5 = 3; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (302, 178, 302 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 4))
+							{ iEXEShadowStartA5 = 4; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (317, 178, 317 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 5))
+							{ iEXEShadowStartA5 = 5; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (332, 178, 332 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 6))
+							{ iEXEShadowStartA5 = 6; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (347, 178, 347 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 7))
+							{ iEXEShadowStartA5 = 7; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (362, 178, 362 + 14, 178 + 14) == 1) &&
+							(iEXEShadowStartA5 != 99))
+							{ iEXEShadowStartA5 = 99; PlaySound ("wav/check_box.wav"); }
+
+						/*** Shadow start level 6. ***/
+						PlusMinus (&iEXEShadowStartX6, 34, 294, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartX6, 49, 294, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartX6, 119, 294, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartX6, 134, 294, 0, 255, +10, 0);
+						/***/
+						PlusMinus (&iEXEShadowStartY6, 149, 294, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartY6, 164, 294, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartY6, 234, 294, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartY6, 249, 294, 0, 255, +10, 0);
+						/***/
+						PlusMinus (&iEXEShadowStartC6, 264, 294, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartC6, 279, 294, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartC6, 349, 294, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartC6, 364, 294, 0, 255, +10, 0);
+						/***/
+						if ((InArea (73, 317, 73 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartR6 != 0))
+							{ iEXEShadowStartR6 = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (88, 317, 88 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartR6 != 1))
+							{ iEXEShadowStartR6 = 1; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (103, 317, 103 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartR6 != 2))
+							{ iEXEShadowStartR6 = 2; PlaySound ("wav/check_box.wav"); }
+						/***/
+						if ((InArea (165, 317, 165 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartD6 != 255))
+							{ iEXEShadowStartD6 = 255; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (180, 317, 180 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartD6 != 0))
+							{ iEXEShadowStartD6 = 0; PlaySound ("wav/check_box.wav"); }
+						/***/
+						if ((InArea (242, 317, 242 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 0))
+							{ iEXEShadowStartA6 = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (257, 317, 257 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 1))
+							{ iEXEShadowStartA6 = 1; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (272, 317, 272 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 2))
+							{ iEXEShadowStartA6 = 2; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (287, 317, 287 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 3))
+							{ iEXEShadowStartA6 = 3; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (302, 317, 302 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 4))
+							{ iEXEShadowStartA6 = 4; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (317, 317, 317 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 5))
+							{ iEXEShadowStartA6 = 5; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (332, 317, 332 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 6))
+							{ iEXEShadowStartA6 = 6; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (347, 317, 347 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 7))
+							{ iEXEShadowStartA6 = 7; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (362, 317, 362 + 14, 317 + 14) == 1) &&
+							(iEXEShadowStartA6 != 99))
+							{ iEXEShadowStartA6 = 99; PlaySound ("wav/check_box.wav"); }
+
+						/*** Shadow start level 12. ***/
+						PlusMinus (&iEXEShadowStartX12, 34, 337, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartX12, 49, 337, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartX12, 119, 337, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartX12, 134, 337, 0, 255, +10, 0);
+						/***/
+						PlusMinus (&iEXEShadowStartY12, 149, 337, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartY12, 164, 337, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartY12, 234, 337, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartY12, 249, 337, 0, 255, +10, 0);
+						/***/
+						PlusMinus (&iEXEShadowStartC12, 264, 337, 0, 255, -10, 0);
+						PlusMinus (&iEXEShadowStartC12, 279, 337, 0, 255, -1, 0);
+						PlusMinus (&iEXEShadowStartC12, 349, 337, 0, 255, +1, 0);
+						PlusMinus (&iEXEShadowStartC12, 364, 337, 0, 255, +10, 0);
+						/***/
+						if ((InArea (73, 360, 73 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartR12 != 0))
+							{ iEXEShadowStartR12 = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (88, 360, 88 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartR12 != 1))
+							{ iEXEShadowStartR12 = 1; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (103, 360, 103 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartR12 != 2))
+							{ iEXEShadowStartR12 = 2; PlaySound ("wav/check_box.wav"); }
+						/***/
+						if ((InArea (165, 360, 165 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartD12 != 255))
+							{ iEXEShadowStartD12 = 255; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (180, 360, 180 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartD12 != 0))
+							{ iEXEShadowStartD12 = 0; PlaySound ("wav/check_box.wav"); }
+						/***/
+						if ((InArea (242, 360, 242 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 0))
+							{ iEXEShadowStartA12 = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (257, 360, 257 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 1))
+							{ iEXEShadowStartA12 = 1; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (272, 360, 272 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 2))
+							{ iEXEShadowStartA12 = 2; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (287, 360, 287 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 3))
+							{ iEXEShadowStartA12 = 3; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (302, 360, 302 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 4))
+							{ iEXEShadowStartA12 = 4; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (317, 360, 317 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 5))
+							{ iEXEShadowStartA12 = 5; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (332, 360, 332 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 6))
+							{ iEXEShadowStartA12 = 6; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (347, 360, 347 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 7))
+							{ iEXEShadowStartA12 = 7; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (362, 360, 362 + 14, 360 + 14) == 1) &&
+							(iEXEShadowStartA12 != 99))
+							{ iEXEShadowStartA12 = 99; PlaySound ("wav/check_box.wav"); }
+
+						/*** Shadow moves. ***/
+						Move (&iEXEShadowMovesTime[1], &iEXEShadowMovesAction[1],
+							34, 197, END_SHADOW);
+						Move (&iEXEShadowMovesTime[2], &iEXEShadowMovesAction[2],
+							34, 221, END_SHADOW);
+						Move (&iEXEShadowMovesTime[3], &iEXEShadowMovesAction[3],
+							34, 245, END_SHADOW);
+						Move (&iEXEShadowMovesTime[4], &iEXEShadowMovesAction[4],
+							34, 269, END_SHADOW);
+						Move (&iEXEShadowMovesTime[5], &iEXEShadowMovesAction[5],
+							169, 197, END_SHADOW);
+						Move (&iEXEShadowMovesTime[6], &iEXEShadowMovesAction[6],
+							169, 221, END_SHADOW);
+						Move (&iEXEShadowMovesTime[7], &iEXEShadowMovesAction[7],
+							169, 245, END_SHADOW);
+
+						/*** Prince moves. ***/
+						Move (&iEXEPrinceMovesTime[1], &iEXEPrinceMovesAction[1],
+							393, 76, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[2], &iEXEPrinceMovesAction[2],
+							393, 100, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[3], &iEXEPrinceMovesAction[3],
+							393, 124, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[4], &iEXEPrinceMovesAction[4],
+							393, 148, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[5], &iEXEPrinceMovesAction[5],
+							393, 172, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[6], &iEXEPrinceMovesAction[6],
+							393, 196, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[7], &iEXEPrinceMovesAction[7],
+							393, 220, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[8], &iEXEPrinceMovesAction[8],
+							393, 244, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[9], &iEXEPrinceMovesAction[9],
+							393, 268, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[10], &iEXEPrinceMovesAction[10],
+							393, 292, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[11], &iEXEPrinceMovesAction[11],
+							393, 316, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[12], &iEXEPrinceMovesAction[12],
+							393, 340, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[13], &iEXEPrinceMovesAction[13],
+							528, 76, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[14], &iEXEPrinceMovesAction[14],
+							528, 100, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[15], &iEXEPrinceMovesAction[15],
+							528, 124, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[16], &iEXEPrinceMovesAction[16],
+							528, 148, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[17], &iEXEPrinceMovesAction[17],
+							528, 172, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[18], &iEXEPrinceMovesAction[18],
+							528, 196, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[19], &iEXEPrinceMovesAction[19],
+							528, 220, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[20], &iEXEPrinceMovesAction[20],
+							528, 244, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[21], &iEXEPrinceMovesAction[21],
+							528, 268, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[22], &iEXEPrinceMovesAction[22],
+							528, 292, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[23], &iEXEPrinceMovesAction[23],
+							528, 316, END_PRINCE);
+						Move (&iEXEPrinceMovesTime[24], &iEXEPrinceMovesAction[24],
+							528, 340, END_PRINCE);
 					}
 					ShowEXE_F3(); break;
 				case SDL_WINDOWEVENT:
@@ -27686,6 +28079,415 @@ void ShowEXE_F3 (void)
 	} else {
 		ShowImageBasic (imgsell, 276, 105, "imgsell", ascreen, iScale, 1);
 		ShowImageBasic (imgsrs, 276, 105, "imgsrs", ascreen, iScale, 1);
+	}
+
+	/*** Shadow start. ***/
+	if (iEXEShadowStartX5 == 55) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartX5, 62, 146, clr, color_wh, 0);
+	if (iEXEShadowStartY5 == 55) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartY5, 177, 146, clr, color_wh, 0);
+	if (iEXEShadowStartC5 == 255) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartC5, 292, 146, clr, color_wh, 0);
+	switch (iEXEShadowStartR5)
+	{
+		case 0: /*** top (default for 5) ***/
+			ShowImageBasic (imgsell, 73, 178, "imgsell", ascreen, iScale, 1);
+			break;
+		case 1: /*** middle ***/
+			ShowImageBasic (imgsell, 88, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 88, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 2: /*** bottom ***/
+			ShowImageBasic (imgsell, 103, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 103, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+	}
+	switch (iEXEShadowStartD5)
+	{
+		case 255: /*** left ***/
+			ShowImageBasic (imgsell, 165, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 165, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 0: /*** right (default for 5) ***/
+			ShowImageBasic (imgsell, 180, 178, "imgsell", ascreen, iScale, 1);
+			break;
+	}
+	switch (iEXEShadowStartA5)
+	{
+		case 0: /*** stand (default for 5) ***/
+			ShowImageBasic (imgsell, 242, 178, "imgsell", ascreen, iScale, 1);
+			break;
+		case 1: /*** run jump ***/
+			ShowImageBasic (imgsell, 257, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 257, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 2: /*** hang climb ***/
+			ShowImageBasic (imgsell, 272, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 272, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 3: /*** in midair ***/
+			ShowImageBasic (imgsell, 287, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 287, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 4: /*** in freefall ***/
+			ShowImageBasic (imgsell, 302, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 302, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 5: /*** bumped ***/
+			ShowImageBasic (imgsell, 317, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 317, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 6: /*** hang straight ***/
+			ShowImageBasic (imgsell, 332, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 332, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 7: /*** turn ***/
+			ShowImageBasic (imgsell, 347, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 347, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 99: /*** hurt ***/
+			ShowImageBasic (imgsell, 362, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 362, 178, "imgsrs", ascreen, iScale, 1);
+			break;
+	}
+	/***/
+	if (iEXEShadowStartX6 == 81) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartX6, 62, 294, clr, color_wh, 0);
+	if (iEXEShadowStartY6 == 118) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartY6, 177, 294, clr, color_wh, 0);
+	if (iEXEShadowStartC6 == 0) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartC6, 292, 294, clr, color_wh, 0);
+	switch (iEXEShadowStartR6)
+	{
+		case 0: /*** top ***/
+			ShowImageBasic (imgsell, 73, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 73, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 1: /*** middle (default for 6) ***/
+			ShowImageBasic (imgsell, 88, 317, "imgsell", ascreen, iScale, 1);
+			break;
+		case 2: /*** bottom ***/
+			ShowImageBasic (imgsell, 103, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 103, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+	}
+	switch (iEXEShadowStartD6)
+	{
+		case 255: /*** left ***/
+			ShowImageBasic (imgsell, 165, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 165, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 0: /*** right (default for 6) ***/
+			ShowImageBasic (imgsell, 180, 317, "imgsell", ascreen, iScale, 1);
+			break;
+	}
+	switch (iEXEShadowStartA6)
+	{
+		case 0: /*** stand (default for 6) ***/
+			ShowImageBasic (imgsell, 242, 317, "imgsell", ascreen, iScale, 1);
+			break;
+		case 1: /*** run jump ***/
+			ShowImageBasic (imgsell, 257, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 257, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 2: /*** hang climb ***/
+			ShowImageBasic (imgsell, 272, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 272, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 3: /*** in midair ***/
+			ShowImageBasic (imgsell, 287, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 287, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 4: /*** in freefall ***/
+			ShowImageBasic (imgsell, 302, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 302, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 5: /*** bumped ***/
+			ShowImageBasic (imgsell, 317, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 317, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 6: /*** hang straight ***/
+			ShowImageBasic (imgsell, 332, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 332, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 7: /*** turn ***/
+			ShowImageBasic (imgsell, 347, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 347, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 99: /*** hurt ***/
+			ShowImageBasic (imgsell, 362, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 362, 317, "imgsrs", ascreen, iScale, 1);
+			break;
+	}
+	/***/
+	if (iEXEShadowStartX12 == 81) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartX12, 62, 337, clr, color_wh, 0);
+	if (iEXEShadowStartY12 == 232) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartY12, 177, 337, clr, color_wh, 0);
+	if (iEXEShadowStartC12 == 0) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowStartC12, 292, 337, clr, color_wh, 0);
+	switch (iEXEShadowStartR12)
+	{
+		case 0: /*** top (default for 12) ***/
+			ShowImageBasic (imgsell, 73, 360, "imgsell", ascreen, iScale, 1);
+			break;
+		case 1: /*** middle ***/
+			ShowImageBasic (imgsell, 88, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 88, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 2: /*** bottom ***/
+			ShowImageBasic (imgsell, 103, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 103, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+	}
+	switch (iEXEShadowStartD12)
+	{
+		case 255: /*** left ***/
+			ShowImageBasic (imgsell, 165, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 165, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 0: /*** right (default for 12) ***/
+			ShowImageBasic (imgsell, 180, 360, "imgsell", ascreen, iScale, 1);
+			break;
+	}
+	switch (iEXEShadowStartA12)
+	{
+		case 0: /*** stand (default for 12) ***/
+			ShowImageBasic (imgsell, 242, 360, "imgsell", ascreen, iScale, 1);
+			break;
+		case 1: /*** run jump ***/
+			ShowImageBasic (imgsell, 257, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 257, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 2: /*** hang climb ***/
+			ShowImageBasic (imgsell, 272, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 272, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 3: /*** in midair ***/
+			ShowImageBasic (imgsell, 287, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 287, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 4: /*** in freefall ***/
+			ShowImageBasic (imgsell, 302, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 302, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 5: /*** bumped ***/
+			ShowImageBasic (imgsell, 317, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 317, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 6: /*** hang straight ***/
+			ShowImageBasic (imgsell, 332, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 332, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 7: /*** turn ***/
+			ShowImageBasic (imgsell, 347, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 347, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+		case 99: /*** hurt ***/
+			ShowImageBasic (imgsell, 362, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 362, 360, "imgsrs", ascreen, iScale, 1);
+			break;
+	}
+
+	/*** Shadow moves. ***/
+	if (iEXEShadowMovesTime[1] == 1)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowMovesTime[1], 62, 197, clr, color_wh, 0);
+	if (iEXEShadowMovesTime[2] == 14)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowMovesTime[2], 62, 221, clr, color_wh, 0);
+	if (iEXEShadowMovesTime[3] == 18)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowMovesTime[3], 62, 245, clr, color_wh, 0);
+	if (iEXEShadowMovesTime[4] == 29)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowMovesTime[4], 62, 269, clr, color_wh, 0);
+	if (iEXEShadowMovesTime[5] == 45)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowMovesTime[5], 197, 197, clr, color_wh, 0);
+	if (iEXEShadowMovesTime[6] == 49)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowMovesTime[6], 197, 221, clr, color_wh, 0);
+	if (iEXEShadowMovesTime[7] == 255)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEShadowMovesTime[7], 197, 245, clr, color_wh, 0);
+
+	/*** Shadow action. ***/
+	ShowAction (iEXEShadowMovesAction[1], 150, 200);
+	if (iEXEShadowMovesAction[1] != 1)
+		{ ShowImageBasic (imgsrs, 150, 200, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEShadowMovesAction[2], 150, 224);
+	if (iEXEShadowMovesAction[2] != 0)
+		{ ShowImageBasic (imgsrs, 150, 224, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEShadowMovesAction[3], 150, 248);
+	if (iEXEShadowMovesAction[3] != 6)
+		{ ShowImageBasic (imgsrs, 150, 248, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEShadowMovesAction[4], 150, 272);
+	if (iEXEShadowMovesAction[4] != 7)
+		{ ShowImageBasic (imgsrs, 150, 272, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEShadowMovesAction[5], 285, 200);
+	if (iEXEShadowMovesAction[5] != 2)
+		{ ShowImageBasic (imgsrs, 285, 200, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEShadowMovesAction[6], 285, 224);
+	if (iEXEShadowMovesAction[6] != 1)
+		{ ShowImageBasic (imgsrs, 285, 224, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEShadowMovesAction[7], 285, 248);
+	if (iEXEShadowMovesAction[7] != END_SHADOW)
+		{ ShowImageBasic (imgsrs, 285, 248, "imgsrs", ascreen, iScale, 1); }
+
+	/*** Prince moves. ***/
+	if (iEXEPrinceMovesTime[1] == 1)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[1], 421, 76, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[2] == 13)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[2], 421, 100, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[3] == 30)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[3], 421, 124, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[4] == 37)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[4], 421, 148, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[5] == 47)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[5], 421, 172, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[6] == 48)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[6], 421, 196, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[7] == 65)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[7], 421, 220, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[8] == 73)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[8], 421, 244, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[9] == 75)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[9], 421, 268, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[10] == 99)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[10], 421, 292, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[11] == 100)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[11], 421, 316, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[12] == 115)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[12], 421, 340, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[13] == 128)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[13], 556, 76, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[14] == 136)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[14], 556, 100, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[15] == 157)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[15], 556, 124, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[16] == 158)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[16], 556, 148, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[17] == 159)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[17], 556, 172, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[18] == 171)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[18], 556, 196, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[19] == 177)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[19], 556, 220, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[20] == 178)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[20], 556, 244, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[21] == 188)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[21], 556, 268, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[22] == 193)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[22], 556, 292, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[23] == 205)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[23], 556, 316, clr, color_wh, 0);
+	if (iEXEPrinceMovesTime[24] == 233)
+		{ clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEPrinceMovesTime[24], 556, 340, clr, color_wh, 0);
+
+	/*** Prince action. ***/
+	ShowAction (iEXEPrinceMovesAction[1], 509, 79);
+	if (iEXEPrinceMovesAction[1] != 1)
+		{ ShowImageBasic (imgsrs, 509, 79, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[2], 509, 103);
+	if (iEXEPrinceMovesAction[2] != 0)
+		{ ShowImageBasic (imgsrs, 509, 103, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[3], 509, 127);
+	if (iEXEPrinceMovesAction[3] != 1)
+		{ ShowImageBasic (imgsrs, 509, 127, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[4], 509, 151);
+	if (iEXEPrinceMovesAction[4] != 5)
+		{ ShowImageBasic (imgsrs, 509, 151, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[5], 509, 175);
+	if (iEXEPrinceMovesAction[5] != 0)
+		{ ShowImageBasic (imgsrs, 509, 175, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[6], 509, 199);
+	if (iEXEPrinceMovesAction[6] != 1)
+		{ ShowImageBasic (imgsrs, 509, 199, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[7], 509, 223);
+	if (iEXEPrinceMovesAction[7] != 0)
+		{ ShowImageBasic (imgsrs, 509, 223, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[8], 509, 247);
+	if (iEXEPrinceMovesAction[8] != 2)
+		{ ShowImageBasic (imgsrs, 509, 247, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[9], 509, 271);
+	if (iEXEPrinceMovesAction[9] != 0)
+		{ ShowImageBasic (imgsrs, 509, 271, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[10], 509, 295);
+	if (iEXEPrinceMovesAction[10] != 2)
+		{ ShowImageBasic (imgsrs, 509, 295, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[11], 509, 319);
+	if (iEXEPrinceMovesAction[11] != 0)
+		{ ShowImageBasic (imgsrs, 509, 319, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[12], 509, 343);
+	if (iEXEPrinceMovesAction[12] != 5)
+		{ ShowImageBasic (imgsrs, 509, 343, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[13], 644, 79);
+	if (iEXEPrinceMovesAction[13] != 6)
+		{ ShowImageBasic (imgsrs, 644, 79, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[14], 644, 103);
+	if (iEXEPrinceMovesAction[14] != 3)
+		{ ShowImageBasic (imgsrs, 644, 103, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[15], 644, 127);
+	if (iEXEPrinceMovesAction[15] != 7)
+		{ ShowImageBasic (imgsrs, 644, 127, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[16], 644, 151);
+	if (iEXEPrinceMovesAction[16] != 0)
+		{ ShowImageBasic (imgsrs, 644, 151, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[17], 644, 175);
+	if (iEXEPrinceMovesAction[17] != 1)
+		{ ShowImageBasic (imgsrs, 644, 175, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[18], 644, 199);
+	if (iEXEPrinceMovesAction[18] != 4)
+		{ ShowImageBasic (imgsrs, 644, 199, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[19], 644, 223);
+	if (iEXEPrinceMovesAction[19] != 0)
+		{ ShowImageBasic (imgsrs, 644, 223, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[20], 644, 247);
+	if (iEXEPrinceMovesAction[20] != 1)
+		{ ShowImageBasic (imgsrs, 644, 247, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[21], 644, 271);
+	if (iEXEPrinceMovesAction[21] != 0)
+		{ ShowImageBasic (imgsrs, 644, 271, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[22], 644, 295);
+	if (iEXEPrinceMovesAction[22] != 1)
+		{ ShowImageBasic (imgsrs, 644, 295, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[23], 644, 319);
+	if (iEXEPrinceMovesAction[23] != 0)
+		{ ShowImageBasic (imgsrs, 644, 319, "imgsrs", ascreen, iScale, 1); }
+	ShowAction (iEXEPrinceMovesAction[24], 644, 343);
+	if (iEXEPrinceMovesAction[24] != 65535)
+		{ ShowImageBasic (imgsrs, 644, 343, "imgsrs", ascreen, iScale, 1); }
+
+	/*** packed ***/
+	if (iEXEPacked != 0)
+	{
+		ShowImageBasic (imgexepacked3, 34, 337,
+			"imgexepacked3", ascreen, iScale, 1);
 	}
 
 	/*** refresh screen ***/
@@ -29805,7 +30607,7 @@ void CenterNumber (SDL_Renderer *screen, int iNumber, int iX, int iY,
 	{
 		snprintf (sText, MAX_TEXT, "%i", iNumber);
 	} else {
-		snprintf (sText, MAX_TEXT, "%02x", iNumber);
+		snprintf (sText, MAX_TEXT, "%02X", iNumber);
 	}
 	message = TTF_RenderText_Shaded (font3, sText, fore, back);
 	messaget = SDL_CreateTextureFromSurface (screen, message);
@@ -33287,6 +34089,30 @@ void UpdateStatusBar1_F3 (void)
 		snprintf (sStatus, MAX_STATUS, "%s",
 			"https://www.popot.org/other_useful_tools.php?tool=CusPop");
 	}
+	if ((InArea (241, 177, 241 + 136, 177 + 16) == 1) ||
+		(InArea (241, 316, 241 + 136, 316 + 16) == 1) ||
+		(InArea (241, 359, 241 + 136, 359 + 16) == 1))
+	{
+		snprintf (sStatus, MAX_STATUS, "%s",
+			"0=stand 1=rjump 2=hclimb 3=midair 4=freefall"
+			" 5=bump 6=hang 7=turn 99=hurt");
+	}
+	if ((InArea (34, 197, 34 + 113, 197 + 92) == 1) ||
+		(InArea (169, 197, 169 + 113, 197 + 68) == 1) ||
+		(InArea (393, 76, 393 + 113, 76 + 284) == 1) ||
+		(InArea (528, 76, 528 + 113, 76 + 284) == 1))
+	{
+		snprintf (sStatus, MAX_STATUS, "%s", "Time in ticks.");
+	}
+	if ((InArea (149, 199, 149 + 16, 199 + 88) == 1) ||
+		(InArea (284, 199, 284 + 16, 199 + 64) == 1) ||
+		(InArea (508, 78, 508 + 16, 78 + 280) == 1) ||
+		(InArea (643, 78, 643 + 16, 78 + 280) == 1))
+	{
+		snprintf (sStatus, MAX_STATUS, "%s",
+			"[R]elease-all [F]orw [B]ackw [U]p [D]own"
+			" [J]ump-forw [S]hift-dn s[H]ift-up [E]nd");
+	}
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F3(); }
 }
 /*****************************************************************************/
@@ -36406,7 +37232,7 @@ void Automatic (void)
 					{
 						/*** Save ***/
 						if (InArea (590, 405, 674, 436) == 1)
-						{ 
+						{
 							AutomaticSaveSNES();
 							iAutomatic = 0;
 						}
@@ -36907,5 +37733,70 @@ int JumpRoomLoc (int iRoom, int iAxis)
 
 	printf ("[ WARN ] Unknown room: %i\n", iRoom);
 	return (153); /*** Fallback. ***/
+}
+/*****************************************************************************/
+void ShowAction (int iAction, int iX, int iY)
+/*****************************************************************************/
+{
+	SDL_Texture *imgshow;
+
+	switch (iAction)
+	{
+		case 0: imgshow = imgexeactionr; break;
+		case 1: imgshow = imgexeactionf; break;
+		case 2: imgshow = imgexeactionb; break;
+		case 3: imgshow = imgexeactionu; break;
+		case 4: imgshow = imgexeactiond; break;
+		case 5: imgshow = imgexeactionj; break;
+		case 6: imgshow = imgexeactions; break;
+		case 7: imgshow = imgexeactionh; break;
+		case END_SHADOW: imgshow = imgexeactione; break;
+		case 65535: imgshow = imgexeactione; break;
+		default:
+			printf ("[ WARN ] Incorrect action value; %i!\n", iAction);
+			imgshow = imgexeactione; break; /*** Fallback. ***/
+	}
+	ShowImageBasic (imgshow, iX, iY, "imgshow", ascreen, iScale, 1);
+}
+/*****************************************************************************/
+void Move (int *iTime, int *iAction, int iX, int iY, int iEnd)
+/*****************************************************************************/
+{
+	PlusMinus (iTime, iX, iY, 1, 255, -10, 0);
+	PlusMinus (iTime, iX + 15, iY, 1, 255, -1, 0);
+	PlusMinus (iTime, iX + 85, iY, 1, 255, +1, 0);
+	PlusMinus (iTime, iX + 100, iY, 1, 255, +10, 0);
+	if (InArea (iX + 116, iY + 3, iX + 116 + 14, iY + 3 + 14) == 1)
+	{
+		if (iEnd == END_SHADOW)
+		{
+			switch (*iAction)
+			{
+				case 0: *iAction = 1; break;
+				case 1: *iAction = 2; break;
+				case 2: *iAction = 3; break;
+				case 3: *iAction = 4; break;
+				case 4: *iAction = 5; break;
+				case 5: *iAction = 6; break;
+				case 6: *iAction = 7; break;
+				case 7: *iAction = END_SHADOW; break;
+				case END_SHADOW: *iAction = 0; break;
+			}
+		} else {
+			switch (*iAction)
+			{
+				case 0: *iAction = 1; break;
+				case 1: *iAction = 2; break;
+				case 2: *iAction = 3; break;
+				case 3: *iAction = 4; break;
+				case 4: *iAction = 5; break;
+				case 5: *iAction = 6; break;
+				case 6: *iAction = 7; break;
+				case 7: *iAction = END_PRINCE; break;
+				case END_PRINCE: *iAction = 0; break;
+			}
+		}
+		PlaySound ("wav/check_box.wav");
+	}
 }
 /*****************************************************************************/

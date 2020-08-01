@@ -135,7 +135,7 @@ Set "Base compiler set:" to "TDM-GCC 4.9.2 32-bit Release".
 
 Go to: Project->Project Options...->Parameters
 In the C compiler field, add:
--m32 -O2 -Wno-unused-result -std=c99 -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -D_REENTRANT -lm -lcurl -lzip
+-m32 -O2 -Wno-unused-result -std=c99 -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -D_REENTRANT -lm -lcurl -lzip -Wno-format-truncation
 In the Linker field, add:
 -l"mingw32"
 -l"SDL2main"

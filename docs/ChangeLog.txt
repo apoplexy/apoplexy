@@ -5,6 +5,10 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.9 (August 1, 2020) - Norbert de Jonge
+--------------------
++ PoP1 for DOS shadow starting positions and (shadow and prince) automatic moves can now be modified (F3).
+
 v3.8 (March 12, 2020) - Norbert de Jonge
 --------------------
 + It's now possible to quickly jump to rooms ("j").
