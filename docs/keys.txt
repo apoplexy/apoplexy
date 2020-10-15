@@ -37,7 +37,8 @@ F1                                   Go to the help screen.
 F2                                   Go to the executable screen.
 F3*                                  [PoP1 for DOS] Second executable screen.
 F3*                                  [PoP1 for SNES] Go to the texts screen.
-F4                                   [PoP1 for SNES] Modify automatic moves.
+F4*                                  [PoP1 for DOS] Third executable screen.
+F4*                                  [PoP1 for SNES] Modify automatic moves.
 Ctrl+c                               Copy the room.
 Ctrl+v                               Paste the room.
 Ctrl+p                               [PoP1 for SNES] Print template data.

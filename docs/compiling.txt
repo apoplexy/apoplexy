@@ -85,7 +85,7 @@ On GNU/Linux, that is:
 $ 7z x mingw32-libzip-1.1.3-1.fc25.noarch.rpm
 $ cpio -idv < mingw32-libzip-1.1.3-1.fc25.noarch.cpio
 
-Copy its files from
+Copy its directories from
 usr/i686-w64-mingw32/sys-root/mingw/
 to
 Dev-Cpp/MinGW64/i686-w64-mingw32/
@@ -146,11 +146,11 @@ In the Linker field, add:
 -l"zip.dll"
 
 Go to: Project->Project Options...->Directories
+Select the tab: Library Directories
+Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\lib
 Select the tab: Include Directories
 Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\include\SDL2
 Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\include
-Select the tab: Library Directories
-Add: C:\Program Files (x86)\Dev-Cpp\MinGW64\i686-w64-mingw32\lib
 
 Go to: Tools->Compiler Options...->Directories
 Select the tab: Binaries

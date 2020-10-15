@@ -1,4 +1,4 @@
-/* apoplexy v3.9 (August 2020)
+/* apoplexy v3.10 (October 2020)
  * Copyright (C) 2008-2020 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -55,9 +55,9 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.9 (August 2020)"
+#define EDITOR_VERSION "v3.10 (October 2020)"
 #define COPYRIGHT "Copyright (C) 2020 The apoplexy Team"
-#define COMPATIBLE_NATIVE "SDLPoP 1.20, MININIM 0.10"
+#define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
 #define MAX_FILE 600
 #define MAX_ADJ 10
@@ -86,6 +86,7 @@
 #define MAX_WARNING 500
 #define END_SHADOW 65534
 #define END_PRINCE 65535
+#define URL_CUSPOP "https://www.popot.org/other_useful_tools.php?tool=CusPop"
 
 /*** Map window ***/
 #define MAP_BIG_AREA_W 1225
@@ -819,6 +820,17 @@ static const unsigned long arPrinceMoves[6] =
 	{ 0X1B8F2, 0X1D4B6, 0X1C70F, 0X1D3A8, 0X18AE1, 0X19D52 };
 int iEXEPrinceMovesTime[24 + 2];
 int iEXEPrinceMovesAction[24 + 2];
+
+/*** exe, F4 ***/
+static const unsigned long arDemoPlayable[6] =
+	{ 0X7BAA, 0X925A, 0X804E, 0X878E, 0X7B0A, 0X8C3A };
+int iEXEDemoPlayable;
+static const unsigned long arDemoPrinceHP[6] =
+	{ 0X4C28, 0X62D8, 0X50B0, 0X57F0, 0X4B6C, 0X5C9C };
+int iEXEDemoPrinceHP;
+static const unsigned long arDemoEndingRoom[6] =
+	{ 0XB40, 0X21F0, 0XC25, 0X1365, 0XBE9, 0X1D19 };
+int iEXEDemoEndingRoom;
 
 /*** exe, PoP2 ***/
 static const int arDefaultEnvPoP2[29] =
@@ -1807,6 +1819,7 @@ SDL_Texture *imgpopup_yn, *imgyes[2 + 2], *imgno[2 + 2], *imghelp, *imgexe;
 SDL_Texture *imgexepacked, *imgexemusicyes, *imgexemusicno;
 SDL_Texture *imgexehazeyes, *imgexehazeno, *imgexeskeldis, *imgexetab;
 SDL_Texture *imgexedetails, *imgexepacked2, *imgexef3, *imgexepacked3;
+SDL_Texture *imgexef4;
 SDL_Texture *imgexeactionr, *imgexeactionf, *imgexeactionb;
 SDL_Texture *imgexeactionu, *imgexeactiond, *imgexeactionj;
 SDL_Texture *imgexeactions, *imgexeactionh, *imgexeactione;
@@ -2018,8 +2031,8 @@ void SetMapHover (int iRoom, int iX, int iY);
 void ShowRoomsMap (int iRoom, int iX, int iY);
 void InitPopUp (void);
 void ShowPopUp (void);
-void InitPopUpSave (void);
-void ShowPopUpSave (void);
+int InitPopUpYN (int iYNText);
+void ShowPopUpYN (int iYNText);
 void DisplayText (int iStartX, int iStartY, int iFontSize,
 	char arText[9 + 2][MAX_TEXT + 2], int iLines, TTF_Font *font);
 void DisplayTextLine (int iStartX, int iStartY, char sText[MAX_TEXT + 2],
@@ -2089,16 +2102,20 @@ unsigned long BytesAsLU (unsigned char *sData, int iBytes);
 void EXECheckbox (int iX, int iY17, int *iChange, int iTo);
 void EXELoad (void);
 void EXELoad_F3 (void);
+void EXELoad_F4 (void);
 void EXELoadPoP2 (void);
 void EXELoadSNES (void);
 void EXESave (void);
 void EXESave_F3 (void);
+void EXESave_F4 (void);
 void EXESavePoP2 (void);
 void EXESaveSNES (void);
 void EXE (void);
 void ShowEXE (void);
 void EXE_F3 (void);
 void ShowEXE_F3 (void);
+void EXE_F4 (void);
+void ShowEXE_F4 (void);
 void KidColorsLoad (void);
 void KidColorsSave (void);
 void KidColors (void);
@@ -2185,6 +2202,7 @@ int OnKid (int iKOld);
 void GiveAnimationGroups (void);
 void UpdateStatusBar1 (void);
 void UpdateStatusBar1_F3 (void);
+void UpdateStatusBar1_F4 (void);
 void UpdateStatusBar3 (void);
 void UpdateStatusBar3T (void);
 int OnLevelBar (void);
@@ -6530,7 +6548,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 				dest.x = 88; dest.y = 158;
 			}
 			break;
-		case 93: dest.x = 610; dest.y = 3; break; /*** extras ***/
+		case 93: dest.x = 459; dest.y = 3; break; /*** extras ***/
 		case 94: dest.x = 17; dest.y = 17; break; /*** PoP1, problems ***/
 		case 95: dest.x = 241; dest.y = 17; break; /*** PoP2 ***/
 		case 96: /*** background button ***/
@@ -11512,6 +11530,7 @@ void InitScreen (void)
 	char sFileName[MAX_FILE + 2];
 	char sSixBit[7 + 2];
 	char sEXELoc[MAX_FILE + 2];
+	int iYesNo;
 
 	/*** Used for looping. ***/
 	int iSixBitLoop;
@@ -11741,7 +11760,7 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 805; break;
+		case 1: iNrToPreLoad = 806; break;
 		case 2: iNrToPreLoad = 863; break;
 		case 3: iNrToPreLoad = 4850; break;
 	}
@@ -13199,6 +13218,7 @@ void InitScreen (void)
 	{
 		PreLoad (PNG_VARIOUS, "exe.png", &imgexe);
 		PreLoad (PNG_VARIOUS, "exe_F3.png", &imgexef3);
+		PreLoad (PNG_VARIOUS, "exe_F4.png", &imgexef4);
 		PreLoad (PNG_VARIOUS, "exe_packed.png", &imgexepacked);
 		PreLoad (PNG_VARIOUS, "exe_guard_details.png", &imgexedetails);
 		PreLoad (PNG_VARIOUS, "exe_packed2.png", &imgexepacked2);
@@ -13645,15 +13665,25 @@ void InitScreen (void)
 						case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
 							if ((int)luLevelNr != 1)
 							{
-								if (iChanged != 0) { InitPopUpSave(); }
-								Prev ((int)luLevelNr);
+								if ((iChanged != 0) && (iNoSave == 0))
+									{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+								if (iYesNo != 0)
+								{
+									if (iYesNo == 2) { CallSave (0); }
+									Prev ((int)luLevelNr);
+								}
 							}
 							break;
 						case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
 							if (((int)luLevelNr != 0) && ((int)luLevelNr != 28))
 							{
-								if (iChanged != 0) { InitPopUpSave(); }
-								Next ((int)luLevelNr);
+								if ((iChanged != 0) && (iNoSave == 0))
+									{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+								if (iYesNo != 0)
+								{
+									if (iYesNo == 2) { CallSave (0); }
+									Next ((int)luLevelNr);
+								}
 							}
 							break;
 						case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
@@ -13836,6 +13866,16 @@ void InitScreen (void)
 						case SDLK_F4:
 							if (iScreen == 1)
 							{
+								if (iEditPoP == 1)
+								{
+									if ((strcmp (sEXEType, "missing") != 0) &&
+										(strcmp (sEXEType, "unknown") != 0))
+									{
+										EXE_F4();
+									} else {
+										printf ("[ INFO ] Missing or unknown executable.\n");
+									}
+								}
 								if (iEditPoP == 3) { Automatic(); }
 							}
 							break;
@@ -13860,15 +13900,19 @@ void InitScreen (void)
 							if (iScreen == 1)
 							{
 								/*** Randomize the entire level. ***/
-								for (iTemp2 = 1; iTemp2 <= iRooms; iTemp2++)
+								iYesNo = InitPopUpYN (2);
+								if (iYesNo == 2)
 								{
-									for (iTemp = 1; iTemp <= 30; iTemp++)
+									for (iTemp2 = 1; iTemp2 <= iRooms; iTemp2++)
 									{
-										UseTile (-1, iTemp, iTemp2, 0);
+										for (iTemp = 1; iTemp <= 30; iTemp++)
+										{
+											UseTile (-1, iTemp, iTemp2, 0);
+										}
 									}
+									iChanged++;
+									PlaySound ("wav/ok_close.wav");
 								}
-								iChanged++;
-								PlaySound ("wav/ok_close.wav");
 							}
 							break;
 						case SDLK_KP_ENTER:
@@ -14018,16 +14062,26 @@ void InitScreen (void)
 						case SDLK_KP_MINUS:
 							if ((int)luLevelNr != 1)
 							{
-								if (iChanged != 0) { InitPopUpSave(); }
-								Prev ((int)luLevelNr);
+								if ((iChanged != 0) && (iNoSave == 0))
+									{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+								if (iYesNo != 0)
+								{
+									if (iYesNo == 2) { CallSave (0); }
+									Prev ((int)luLevelNr);
+								}
 							}
 							break;
 						case SDLK_KP_PLUS:
 						case SDLK_EQUALS:
 							if (((int)luLevelNr != 0) && ((int)luLevelNr != 28))
 							{
-								if (iChanged != 0) { InitPopUpSave(); }
-								Next ((int)luLevelNr);
+								if ((iChanged != 0) && (iNoSave == 0))
+									{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+								if (iYesNo != 0)
+								{
+									if (iYesNo == 2) { CallSave (0); }
+									Next ((int)luLevelNr);
+								}
 							}
 							break;
 						case SDLK_r:
@@ -14079,9 +14133,13 @@ void InitScreen (void)
 								if ((event.key.keysym.mod & KMOD_LSHIFT) ||
 									(event.key.keysym.mod & KMOD_RSHIFT))
 								{
-									Sprinkle();
-									PlaySound ("wav/extras.wav");
-									iChanged++;
+									iYesNo = InitPopUpYN (3);
+									if (iYesNo == 2)
+									{
+										Sprinkle();
+										PlaySound ("wav/extras.wav");
+										iChanged++;
+									}
 								} else {
 									if (iEditPoP != 3)
 									{
@@ -14748,21 +14806,27 @@ void InitScreen (void)
 						}
 						if (InArea (0, 0, 25, 25) == 1) /*** previous ***/
 						{
-							if (iChanged != 0)
+							if ((iChanged != 0) && (iNoSave == 0))
+								{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+							if (iYesNo != 0)
 							{
-								InitPopUpSave();
+								if (iYesNo == 2) { CallSave (0); }
+								Prev ((int)luLevelNr);
+								ShowScreen (iScreen, ascreen);
 							}
-							Prev ((int)luLevelNr);
-							ShowScreen (iScreen, ascreen); break;
+							break; /*** Stop processing SDL_MOUSEBUTTONUP. ***/
 						}
 						if (InArea (667, 0, 692, 25) == 1) /*** next ***/
 						{
-							if (iChanged != 0)
+							if ((iChanged != 0) && (iNoSave == 0))
+								{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+							if (iYesNo != 0)
 							{
-								InitPopUpSave();
+								if (iYesNo == 2) { CallSave (0); }
+								Next ((int)luLevelNr);
+								ShowScreen (iScreen, ascreen);
 							}
-							Next ((int)luLevelNr);
-							ShowScreen (iScreen, ascreen); break;
+							break; /*** Stop processing SDL_MOUSEBUTTONUP. ***/
 						}
 						if (OnLevelBar() == 1) /*** level bar ***/
 						{
@@ -14843,9 +14907,13 @@ void InitScreen (void)
 							/*** 6 ***/
 							if (InArea (610, 13, 619, 22) == 1)
 							{
-								Sprinkle();
-								PlaySound ("wav/extras.wav");
-								iChanged++;
+								iYesNo = InitPopUpYN (3);
+								if (iYesNo == 2)
+								{
+									Sprinkle();
+									PlaySound ("wav/extras.wav");
+									iChanged++;
+								}
 							}
 
 							/*** 8 ***/
@@ -15155,19 +15223,24 @@ void InitScreen (void)
 					{
 						if (iScreen == 1) { ClearRoom(); }
 					}
-					if (event.button.button == 3) /*** right mouse button, randomize ***/
+					if (event.button.button == 3) /*** right mouse button ***/
 					{
 						if (iScreen == 1)
 						{
-							for (iTemp2 = 1; iTemp2 <= iRooms; iTemp2++)
+							/*** Randomize the entire level. ***/
+							iYesNo = InitPopUpYN (2);
+							if (iYesNo == 2)
 							{
-								for (iTemp = 1; iTemp <= 30; iTemp++)
+								for (iTemp2 = 1; iTemp2 <= iRooms; iTemp2++)
 								{
-									UseTile (-1, iTemp, iTemp2, 0);
+									for (iTemp = 1; iTemp <= 30; iTemp++)
+									{
+										UseTile (-1, iTemp, iTemp2, 0);
+									}
 								}
+								PlaySound ("wav/ok_close.wav");
+								iChanged++;
 							}
-							PlaySound ("wav/ok_close.wav");
-							iChanged++;
 						}
 						if (iScreen == 2)
 						{
@@ -15708,16 +15781,23 @@ int UPack (void *unused)
 void Quit (void)
 /*****************************************************************************/
 {
-	if (iChanged != 0) { InitPopUpSave(); }
-	if (iModified == 1) { ModifyBack(); }
-	TTF_CloseFont (font1);
-	TTF_CloseFont (font2);
-	TTF_CloseFont (font3);
-	TTF_CloseFont (font4);
-	TTF_CloseFont (font5);
-	TTF_Quit();
-	SDL_Quit();
-	exit (EXIT_NORMAL);
+	int iYesNo;
+
+	if ((iChanged != 0) && (iNoSave == 0))
+		{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+	if (iYesNo != 0)
+	{
+		if (iYesNo == 2) { CallSave (0); }
+		if (iModified == 1) { ModifyBack(); }
+		TTF_CloseFont (font1);
+		TTF_CloseFont (font2);
+		TTF_CloseFont (font3);
+		TTF_CloseFont (font4);
+		TTF_CloseFont (font5);
+		TTF_Quit();
+		SDL_Quit();
+		exit (EXIT_NORMAL);
+	}
 }
 /*****************************************************************************/
 void ShowScreen (int iScreenS, SDL_Renderer *screen)
@@ -16485,7 +16565,8 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 	{
 		case 1:
 			snprintf (sText, MAX_TEXT, "%s room %i", sTemp, iCurRoom);
-			ShowImage (-5, (int[]){iExtras + 10, 0, 0, 0}, screen, 93, 0, 0, 49, 19);
+			ShowImage (-5, (int[]){iExtras + 10, 0, 0, 0}, screen,
+				93, 0, 0, 200, 70);
 			break;
 		case 2:
 			snprintf (sText, MAX_TEXT, "%s room links", sTemp); break;
@@ -17091,18 +17172,18 @@ void ShowPopUp (void)
 	SDL_RenderPresent (ascreen);
 }
 /*****************************************************************************/
-void InitPopUpSave (void)
+int InitPopUpYN (int iYNText)
 /*****************************************************************************/
 {
 	SDL_Event event;
 	int iPopUp;
+	int iReturn;
 
-	if (iNoSave == 1) { return; }
-
+	iReturn = 0; /*** Cancelled. ***/
 	iPopUp = 1;
 
 	PlaySound ("wav/popup_yn.wav");
-	ShowPopUpSave();
+	ShowPopUpYN (iYNText);
 	SDL_RaiseWindow (window);
 
 	while (iPopUp == 1)
@@ -17118,11 +17199,16 @@ void InitPopUpSave (void)
 				case SDL_CONTROLLERBUTTONUP:
 					switch (event.cbutton.button)
 					{
-						case SDL_CONTROLLER_BUTTON_A:
-							CallSave (0);
+						case SDL_CONTROLLER_BUTTON_B: /*** Cancelled. ***/
+							iReturn = 0;
 							iPopUp = 0;
 							break;
-						case SDL_CONTROLLER_BUTTON_B:
+						case SDL_CONTROLLER_BUTTON_X: /*** No (left) ***/
+							iReturn = 1;
+							iPopUp = 0;
+							break;
+						case SDL_CONTROLLER_BUTTON_Y: /*** Yes (right) ***/
+							iReturn = 2;
 							iPopUp = 0;
 							break;
 					}
@@ -17130,12 +17216,16 @@ void InitPopUpSave (void)
 				case SDL_KEYDOWN:
 					switch (event.key.keysym.sym)
 					{
-						case SDLK_ESCAPE:
-						case SDLK_n:
+						case SDLK_ESCAPE: /*** Cancelled. ***/
+							iReturn = 0;
 							iPopUp = 0;
 							break;
-						case SDLK_y:
-							CallSave (0);
+						case SDLK_n: /*** No (left) ***/
+							iReturn = 1;
+							iPopUp = 0;
+							break;
+						case SDLK_y: /*** Yes (right) ***/
+							iReturn = 2;
 							iPopUp = 0;
 							break;
 						default: break;
@@ -17148,15 +17238,15 @@ void InitPopUpSave (void)
 				case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == 1)
 					{
-						if (InArea (440, 317, 440 + 85, 317 + 32) == 1)
-						{ /*** Yes ***/
-							if (iYesOn != 1) { iYesOn = 1; }
-							ShowPopUpSave();
-						}
 						if (InArea (167, 317, 167 + 85, 317 + 32) == 1)
-						{ /*** No ***/
+						{ /*** No (left) ***/
 							if (iNoOn != 1) { iNoOn = 1; }
-							ShowPopUpSave();
+							ShowPopUpYN (iYNText);
+						}
+						if (InArea (440, 317, 440 + 85, 317 + 32) == 1)
+						{ /*** Yes (right) ***/
+							if (iYesOn != 1) { iYesOn = 1; }
+							ShowPopUpYN (iYNText);
 						}
 					}
 					break;
@@ -17165,22 +17255,23 @@ void InitPopUpSave (void)
 					iNoOn = 0;
 					if (event.button.button == 1)
 					{
-						if (InArea (440, 317, 440 + 85, 317 + 32) == 1)
-						{ /*** Yes ***/
-							CallSave (0);
+						if (InArea (167, 317, 167 + 85, 317 + 32) == 1)
+						{ /*** No (left) ***/
+							iReturn = 1;
 							iPopUp = 0;
 						}
-						if (InArea (167, 317, 167 + 85, 317 + 32) == 1)
-						{ /*** No ***/
+						if (InArea (440, 317, 440 + 85, 317 + 32) == 1)
+						{ /*** Yes (right) ***/
+							iReturn = 2;
 							iPopUp = 0;
 						}
 					}
-					ShowPopUpSave(); break;
+					ShowPopUpYN (iYNText); break;
 				case SDL_WINDOWEVENT:
 					switch (event.window.event)
 					{
 						case SDL_WINDOWEVENT_EXPOSED:
-							ShowScreen (iScreen, ascreen); ShowPopUpSave(); break;
+							ShowScreen (iScreen, ascreen); ShowPopUpYN (iYNText); break;
 						case SDL_WINDOWEVENT_CLOSE:
 							Quit(); break;
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
@@ -17202,9 +17293,11 @@ void InitPopUpSave (void)
 	}
 	PlaySound ("wav/popup_close.wav");
 	ShowScreen (iScreen, ascreen);
+
+	return (iReturn);
 }
 /*****************************************************************************/
-void ShowPopUpSave (void)
+void ShowPopUpYN (int iYNText)
 /*****************************************************************************/
 {
 	char arText[9 + 2][MAX_TEXT + 2];
@@ -17232,13 +17325,26 @@ void ShowPopUpSave (void)
 			ShowImage (-9, (int[]){9, 0, 0, 0}, ascreen, 86, 0, 0, 85, 32); break;
 	}
 
-	if (iChanged == 1)
+	switch (iYNText)
 	{
-		snprintf (arText[0], MAX_TEXT, "%s", "You made an unsaved change.");
-		snprintf (arText[1], MAX_TEXT, "%s", "Do you want to save it?");
-	} else {
-		snprintf (arText[0], MAX_TEXT, "There are unsaved changes.");
-		snprintf (arText[1], MAX_TEXT, "%s", "Do you wish to save these?");
+		case 1:
+			if (iChanged == 1)
+			{
+				snprintf (arText[0], MAX_TEXT, "%s", "You made an unsaved change.");
+				snprintf (arText[1], MAX_TEXT, "%s", "Do you want to save it?");
+			} else {
+				snprintf (arText[0], MAX_TEXT, "There are unsaved changes.");
+				snprintf (arText[1], MAX_TEXT, "%s", "Do you wish to save these?");
+			}
+			break;
+		case 2:
+			snprintf (arText[0], MAX_TEXT, "%s", "Randomize the entire level?");
+			snprintf (arText[1], MAX_TEXT, "%s", "");
+			break;
+		case 3:
+			snprintf (arText[0], MAX_TEXT, "%s", "Sprinkle the level with");
+			snprintf (arText[1], MAX_TEXT, "%s", "decorations?");
+			break;
 	}
 
 	DisplayText (180, 118, FONT_SIZE_15, arText, 2, font1);
@@ -25817,6 +25923,46 @@ void EXELoad_F3 (void)
 	close (iFdEXE);
 }
 /*****************************************************************************/
+void EXELoad_F4 (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	unsigned char sData[MAX_DATA + 2];
+
+	iFdEXE = open (POP1_EXECUTABLE, O_RDONLY|O_BINARY);
+	if (iFdEXE == -1)
+	{
+		printf ("[FAILED] Error opening %s: %s!\n", POP1_EXECUTABLE,
+			strerror (errno));
+		exit (EXIT_ERROR);
+	}
+
+	/*** (Demo level) Playable. ***/
+	LSeek (iFdEXE, arDemoPlayable[iEXEType]);
+	ReadFromFile (iFdEXE, "", 1, sData);
+	if (sData[0] == 0x75)
+	{
+		iEXEDemoPlayable = 0;
+	} else if (sData[0] == 0xEB) {
+		iEXEDemoPlayable = 1;
+	} else {
+		printf ("[ WARN ] Strange playable value!\n");
+		iEXEDemoPlayable = 0; /*** Fallback. ***/
+	}
+
+	/*** (Demo level) Prince HP. ***/
+	LSeek (iFdEXE, arDemoPrinceHP[iEXEType]);
+	ReadFromFile (iFdEXE, "", 1, sData);
+	iEXEDemoPrinceHP = BytesAsLU (sData, 1);
+
+	/*** (Demo level) Ending room. ***/
+	LSeek (iFdEXE, arDemoEndingRoom[iEXEType]);
+	ReadFromFile (iFdEXE, "", 1, sData);
+	iEXEDemoEndingRoom = BytesAsLU (sData, 1);
+
+	close (iFdEXE);
+}
+/*****************************************************************************/
 void EXELoadPoP2 (void)
 /*****************************************************************************/
 {
@@ -26261,6 +26407,36 @@ void EXESave_F3 (void)
 	PlaySound ("wav/save.wav");
 }
 /*****************************************************************************/
+void EXESave_F4 (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	unsigned char sBytes[8 + 2];
+
+	iFdEXE = open (POP1_EXECUTABLE, O_RDWR|O_BINARY);
+
+	/*** (Demo level) Playable. ***/
+	LSeek (iFdEXE, arDemoPlayable[iEXEType]);
+	if (iEXEDemoPlayable == 0)
+		{ sBytes[0] = 0x75; }
+			else { sBytes[0] = 0xEB; }
+	WriteCharByChar (iFdEXE, sBytes, 1);
+
+	/*** (Demo level) Prince HP. ***/
+	LSeek (iFdEXE, arDemoPrinceHP[iEXEType]);
+	sBytes[0] = iEXEDemoPrinceHP;
+	WriteCharByChar (iFdEXE, sBytes, 1);
+
+	/*** (Demo level) Ending room. ***/
+	LSeek (iFdEXE, arDemoEndingRoom[iEXEType]);
+	sBytes[0] = iEXEDemoEndingRoom;
+	WriteCharByChar (iFdEXE, sBytes, 1);
+
+	close (iFdEXE);
+
+	PlaySound ("wav/save.wav");
+}
+/*****************************************************************************/
 void EXESavePoP2 (void)
 /*****************************************************************************/
 {
@@ -26564,8 +26740,7 @@ void EXE (void)
 							/*** CusPop ***/
 							if (InArea (608, 35, 656, 51) == 1)
 							{
-								OpenURL ("https://www.popot.org/other_useful_tools.php?"
-									"tool=CusPop");
+								OpenURL (URL_CUSPOP);
 							}
 
 							/*** Starting minutes left. ***/
@@ -27736,8 +27911,7 @@ void EXE_F3 (void)
 						/*** CusPop ***/
 						if (InArea (608, 35, 656, 51) == 1)
 						{
-							OpenURL ("https://www.popot.org/other_useful_tools.php?"
-								"tool=CusPop");
+							OpenURL (URL_CUSPOP);
 						}
 
 						/*** Loose floor delay. ***/
@@ -28480,7 +28654,7 @@ void ShowEXE_F3 (void)
 	if (iEXEPrinceMovesAction[23] != 0)
 		{ ShowImageBasic (imgsrs, 644, 319, "imgsrs", ascreen, iScale, 1); }
 	ShowAction (iEXEPrinceMovesAction[24], 644, 343);
-	if (iEXEPrinceMovesAction[24] != 65535)
+	if (iEXEPrinceMovesAction[24] != END_PRINCE)
 		{ ShowImageBasic (imgsrs, 644, 343, "imgsrs", ascreen, iScale, 1); }
 
 	/*** packed ***/
@@ -28489,6 +28663,201 @@ void ShowEXE_F3 (void)
 		ShowImageBasic (imgexepacked3, 34, 337,
 			"imgexepacked3", ascreen, iScale, 1);
 	}
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+void EXE_F4 (void)
+/*****************************************************************************/
+{
+	int iEXE;
+	SDL_Event event;
+
+	iEXE = 1;
+	iStatusBarFrame = 1;
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+
+	EXELoad_F4();
+
+	PlaySound ("wav/popup.wav");
+	ShowEXE_F4();
+	while (iEXE == 1)
+	{
+		if (iNoAnim == 0)
+		{
+			/*** We use the global REFRESH. No need for newticks/oldticks. ***/
+			iStatusBarFrame++;
+			if (iStatusBarFrame == 19) { iStatusBarFrame = 1; }
+			ShowEXE_F4();
+		}
+
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_A:
+							EXESave_F4();
+							iEXE = 0; break;
+					}
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							iEXE = 0; break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+						case SDLK_s:
+							EXESave_F4();
+							iEXE = 0; break;
+						default: break;
+					}
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+					if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
+					{
+						SDL_SetCursor (curHand);
+					} else {
+						SDL_SetCursor (curArrow);
+					}
+					UpdateStatusBar1_F4();
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == 1)
+					{
+						if (InArea (590, 405, 674, 436) == 1) /*** Save ***/
+						{
+							if (iEXESave != 1) { iEXESave = 1; }
+							ShowEXE_F4();
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iEXESave = 0;
+					if (event.button.button == 1) /*** left mouse button ***/
+					{
+						/*** Save ***/
+						if (InArea (590, 405, 674, 436) == 1)
+						{
+							EXESave_F4(); iEXE = 0;
+						}
+
+						/*** CusPop ***/
+						if (InArea (608, 35, 656, 51) == 1)
+						{
+							OpenURL (URL_CUSPOP);
+						}
+
+						/*** (Demo level) Playable. ***/
+						if ((InArea (261, 105, 261 + 14, 105 + 14) == 1) &&
+							(iEXEDemoPlayable == 1))
+							{ iEXEDemoPlayable = 0; PlaySound ("wav/check_box.wav"); }
+						if ((InArea (276, 105, 276 + 14, 105 + 14) == 1) &&
+							(iEXEDemoPlayable == 0))
+							{ iEXEDemoPlayable = 1; PlaySound ("wav/check_box.wav"); }
+
+						/*** (Demo level) Prince HP. ***/
+						PlusMinus (&iEXEDemoPrinceHP, 219, 124, 0, 255, -10, 0);
+						PlusMinus (&iEXEDemoPrinceHP, 234, 124, 0, 255, -1, 0);
+						PlusMinus (&iEXEDemoPrinceHP, 304, 124, 0, 255, +1, 0);
+						PlusMinus (&iEXEDemoPrinceHP, 319, 124, 0, 255, +10, 0);
+
+						/*** (Demo level) Ending room. ***/
+						PlusMinus (&iEXEDemoEndingRoom, 219, 148, 1, 24, -10, 0);
+						PlusMinus (&iEXEDemoEndingRoom, 234, 148, 1, 24, -1, 0);
+						PlusMinus (&iEXEDemoEndingRoom, 304, 148, 1, 24, +1, 0);
+						PlusMinus (&iEXEDemoEndingRoom, 319, 148, 1, 24, +10, 0);
+					}
+					ShowEXE_F4(); break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowEXE_F4(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+			}
+		}
+
+		/*** prevent CPU eating ***/
+		gamespeed = REFRESH;
+		while ((SDL_GetTicks() - looptime) < gamespeed)
+		{
+			SDL_Delay (10);
+		}
+		looptime = SDL_GetTicks();
+	}
+	PlaySound ("wav/popup_close.wav");
+	SDL_SetCursor (curArrow);
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void ShowEXE_F4 (void)
+/*****************************************************************************/
+{
+	char arText[9 + 2][MAX_TEXT + 2];
+	SDL_Color clr;
+
+	ShowImageBasic (imgexef4, 0, 0, "imgexef4", ascreen, iScale, 1);
+
+	/*** status bar ***/
+	if (strcmp (sStatus, "") != 0)
+	{
+		/*** bulb ***/
+		ShowImage (-9, (int[]){25, 0, 0, 0}, ascreen, 209, 0, 0, 20, 20);
+		/*** text ***/
+		DisplayTextLine (50, 415, sStatus, font2, color_bl, color_f4, 0);
+	}
+
+	/*** save ***/
+	switch (iEXESave)
+	{
+		case 0:
+			/*** Save off ***/
+			ShowImage (-9, (int[]){12, 0, 0, 0}, ascreen, 43, 0, 0, 85, 32); break;
+		case 1:
+			/*** Save on ***/
+			ShowImage (-9, (int[]){13, 0, 0, 0}, ascreen, 43, 0, 0, 85, 32); break;
+	}
+
+	/*** type text ***/
+	snprintf (arText[0], MAX_TEXT, "Executable type is: %s (%i)",
+		sEXEType, iEXEType);
+	DisplayText (33, 32, FONT_SIZE_15, arText, 1, font1);
+
+	/*** (Demo level) Playable. ***/
+	if (iEXEDemoPlayable == 0)
+	{
+		ShowImageBasic (imgsell, 261, 105, "imgsell", ascreen, iScale, 1);
+	} else {
+		ShowImageBasic (imgsell, 276, 105, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgsrs, 276, 105, "imgsrs", ascreen, iScale, 1);
+	}
+
+	/*** (Demo level) Prince HP. ***/
+	if (iEXEDemoPrinceHP == 4) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEDemoPrinceHP, 247, 124, clr, color_wh, 0);
+
+	/*** (Demo level) Ending room. ***/
+	if (iEXEDemoEndingRoom == 24) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEDemoEndingRoom, 247, 148, clr, color_wh, 0);
 
 	/*** refresh screen ***/
 	SDL_RenderPresent (ascreen);
@@ -30058,8 +30427,10 @@ void PoP1OrPoP2Action (char *sAction)
 			iPoP1OrPoP2 = 0;
 		} else {
 			/*** 1 Download ***/
+			SDL_SetCursor (curWait);
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
 				"software/", "PoP1.zip", POP1_DIR);
+			SDL_SetCursor (curArrow);
 			CheckRequiredFiles();
 		}
 	}
@@ -30072,8 +30443,10 @@ void PoP1OrPoP2Action (char *sAction)
 			iPoP1OrPoP2 = 0;
 		} else {
 			/*** 2 Download ***/
+			SDL_SetCursor (curWait);
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
 				"software/", "PoP2.zip", POP2_DIR);
+			SDL_SetCursor (curArrow);
 			CheckRequiredFiles();
 		}
 	}
@@ -30086,8 +30459,10 @@ void PoP1OrPoP2Action (char *sAction)
 			iPoP1OrPoP2 = 0;
 		} else {
 			/*** 3 Download ***/
+			SDL_SetCursor (curWait);
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
 				"software/", "PoP1_SNES.zip", SNES_DIR);
+			SDL_SetCursor (curArrow);
 			CheckRequiredFiles();
 		}
 	}
@@ -34034,8 +34409,7 @@ void UpdateStatusBar1 (void)
 	}
 	if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
 	{
-		snprintf (sStatus, MAX_STATUS, "%s",
-			"https://www.popot.org/other_useful_tools.php?tool=CusPop");
+		snprintf (sStatus, MAX_STATUS, "%s", URL_CUSPOP);
 	}
 	if (InArea (102, 152, 332, 168) == 1) /*** sword ***/
 	{
@@ -34086,8 +34460,7 @@ void UpdateStatusBar1_F3 (void)
 	snprintf (sStatus, MAX_STATUS, "%s", "");
 	if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
 	{
-		snprintf (sStatus, MAX_STATUS, "%s",
-			"https://www.popot.org/other_useful_tools.php?tool=CusPop");
+		snprintf (sStatus, MAX_STATUS, "%s", URL_CUSPOP);
 	}
 	if ((InArea (241, 177, 241 + 136, 177 + 16) == 1) ||
 		(InArea (241, 316, 241 + 136, 316 + 16) == 1) ||
@@ -34114,6 +34487,18 @@ void UpdateStatusBar1_F3 (void)
 			" [J]ump-forw [S]hift-dn s[H]ift-up [E]nd");
 	}
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F3(); }
+}
+/*****************************************************************************/
+void UpdateStatusBar1_F4 (void)
+/*****************************************************************************/
+{
+	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+	if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s", URL_CUSPOP);
+	}
+	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F4(); }
 }
 /*****************************************************************************/
 void UpdateStatusBar3 (void)
@@ -36004,8 +36389,10 @@ void PlaytestAction (char *sAction, int iLevel)
 			RunLevelS (iLevel);
 		} else {
 			/*** s Download ***/
+			SDL_SetCursor (curWait);
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
 				"software/SDLPoP/", "SDLPoP-latest.zip", SDLPOP_DIR);
+			SDL_SetCursor (curArrow);
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
 #else
 chmod (SDLPOP_DIR SLASH "prince", 0700);
@@ -36023,8 +36410,10 @@ chmod (SDLPOP_DIR SLASH "prince", 0700);
 			RunLevelM (iLevel);
 		} else {
 			/*** m Download ***/
+			SDL_SetCursor (curWait);
 			DownloadAndUnzipTo ("https://www.popot.org/get_the_games/"
 				"software/MININIM/", "mininim-latest.zip", MININIM_DIR);
+			SDL_SetCursor (curArrow);
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
 #else
 chmod (MININIM_DIR SLASH "mininim", 0700);
@@ -37751,7 +38140,7 @@ void ShowAction (int iAction, int iX, int iY)
 		case 6: imgshow = imgexeactions; break;
 		case 7: imgshow = imgexeactionh; break;
 		case END_SHADOW: imgshow = imgexeactione; break;
-		case 65535: imgshow = imgexeactione; break;
+		case END_PRINCE: imgshow = imgexeactione; break;
 		default:
 			printf ("[ WARN ] Incorrect action value; %i!\n", iAction);
 			imgshow = imgexeactione; break; /*** Fallback. ***/
@@ -37796,7 +38185,7 @@ void Move (int *iTime, int *iAction, int iX, int iY, int iEnd)
 				case END_PRINCE: *iAction = 0; break;
 			}
 		}
-		PlaySound ("wav/check_box.wav");
+		PlaySound ("wav/hum_adj.wav");
 	}
 }
 /*****************************************************************************/
