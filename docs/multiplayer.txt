@@ -1,0 +1,89 @@
+PoP1 Legacy Multiplayer Standard
+Version: 0.1 (21 November 2020)
+
+As explained in "Prince of Persia Specifications of File Formats", LEVELS.DAT of PoP1 for DOS contains an "unknown I" block. The block was once used by Mechner's level editor, to store room coordinates, among other things. Of its 64 bytes (0-63), level editors set the first to 0x18 to force remapped variants (modifiers) in all rooms. The remaining 63 bytes are now used to store multiplayer information, that could theoretically be used by FOSS implementations (remakes) of Prince of Persia, such as SDLPoP or MININIM. This file documents the 63 bytes. Where it says "6-bit RGB clothes", value 0x3F is used to approximate the original game's kid (prince) color.
+
+As yet, this experimental standard is only for testing purposes.
+
+====================
+[Byte] Stores
+====================
+[01] Multiplayer (0x00 = no; 0x01 = yes; any other value assumes no)
+[02] Number of players (max. 8)
+-----
+[03] Player 8: 0xFF (= unused, for now)
+[04] Player 8: 0xFF (= unused, for now)
+[05] Player 8: 0xFF (= unused, for now)
+[06] Player 8: 0xFF (= unused, for now)
+[07] Player 8: 6-bit RGB clothes
+[08] Player 8: room
+[09] Player 8: tile
+[10] Player 8: direction
+-----
+[11] Player 7: 0xFF (= unused, for now)
+[12] Player 7: 0xFF (= unused, for now)
+[13] Player 7: 0xFF (= unused, for now)
+[14] Player 7: 0xFF (= unused, for now)
+[15] Player 7: 6-bit RGB clothes
+[16] Player 7: room
+[17] Player 7: tile
+[18] Player 7: direction
+-----
+[19] Player 6: 0xFF (= unused, for now)
+[20] Player 6: 0xFF (= unused, for now)
+[21] Player 6: 0xFF (= unused, for now)
+[22] Player 6: 0xFF (= unused, for now)
+[23] Player 6: 6-bit RGB clothes
+[24] Player 6: room
+[25] Player 6: tile
+[26] Player 6: direction
+-----
+[27] Player 5: 0xFF (= unused, for now)
+[28] Player 5: 0xFF (= unused, for now)
+[29] Player 5: 0xFF (= unused, for now)
+[30] Player 5: 0xFF (= unused, for now)
+[31] Player 5: 6-bit RGB clothes
+[32] Player 5: room
+[33] Player 5: tile
+[34] Player 5: direction
+-----
+[35] Player 4: 0xFF (= unused, for now)
+[36] Player 4: 0xFF (= unused, for now)
+[37] Player 4: 0xFF (= unused, for now)
+[38] Player 4: 0xFF (= unused, for now)
+[39] Player 4: 6-bit RGB clothes
+[40] Player 4: room
+[41] Player 4: tile
+[42] Player 4: direction
+-----
+[43] Player 3: 0xFF (= unused, for now)
+[44] Player 3: 0xFF (= unused, for now)
+[45] Player 3: 0xFF (= unused, for now)
+[46] Player 3: 0xFF (= unused, for now)
+[47] Player 3: 6-bit RGB clothes
+[48] Player 3: room
+[49] Player 3: tile
+[50] Player 3: direction
+-----
+[51] Player 2: 0xFF (= unused, for now)
+[52] Player 2: 0xFF (= unused, for now)
+[53] Player 2: 0xFF (= unused, for now)
+[54] Player 2: 0xFF (= unused, for now)
+[55] Player 2: 6-bit RGB clothes
+[56] Player 2: room
+[57] Player 2: tile
+[58] Player 2: direction
+-----
+[59] Player 1: 0xFF (= unused, for now)
+[60] Player 1: 0xFF (= unused, for now)
+[61] Player 1: 0xFF (= unused, for now)
+[62] Player 1: 0xFF (= unused, for now)
+[63] Player 1: 6-bit RGB clothes
+Player 1: room ("start position" after "unknown I")
+Player 1: tile ("start position" after "unknown I")
+Player 1: direction ("start position" after "unknown I")
+====================
+
+To discuss multiplayer, use the Princed forum.
+https://forum.princed.org/viewtopic.php?f=70&t=3216
+https://forum.princed.org/viewtopic.php?f=67&t=4501

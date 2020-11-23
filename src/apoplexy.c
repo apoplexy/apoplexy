@@ -1,4 +1,5 @@
-/* apoplexy v3.10 (October 2020)
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* apoplexy v3.11 (November 2020)
  * Copyright (C) 2008-2020 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -55,7 +56,7 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.10 (October 2020)"
+#define EDITOR_VERSION "v3.11 (November 2020)"
 #define COPYRIGHT "Copyright (C) 2020 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
@@ -493,6 +494,8 @@ int iCloseTemplateOn;
 int iBackgroundOn;
 int iTemplatesOn;
 int iColorsOn;
+int iKidOn;
+int iCloseKidOn;
 int iGuardsOn;
 int iCustomOn;
 int iCustomUseOn;
@@ -520,9 +523,16 @@ int iKidColorsSave;
 int iKidColorsBW;
 unsigned long luLevelSize;
 unsigned long luLevelNr;
-unsigned long luKidRoom;
-unsigned long luKidPos;
-unsigned long luKidDir;
+/***/
+int arKidU1[8 + 2];
+int arKidU2[8 + 2];
+int arKidU3[8 + 2];
+int arKidU4[8 + 2];
+int arKidClr[8 + 2];
+int arKidRoom[8 + 2];
+int arKidPos[8 + 2];
+int arKidDir[8 + 2];
+/***/
 unsigned long luNumberOfFields;
 int iRoomConnections[32 + 2][4 + 2]; /*** PoP1 only uses 24. ***/
 int iRoomConnectionsBroken[32 + 2][4 + 2]; /*** PoP1 only uses 24. ***/
@@ -700,6 +710,12 @@ Uint32 joydown;
 Uint32 trigleft;
 Uint32 trigright;
 
+/*** multiplayer ***/
+int iNrPlayers;
+int iKidHover;
+int arLiveX[8 + 2];
+int arLiveY[8 + 2];
+
 /*** exe ***/
 char sEXEType[MAX_EXETYPE + 2];
 int iEXEType;
@@ -762,7 +778,7 @@ int iEXEHazeSNESOnOff;
 static const unsigned long ulDefaultHazeValue = 0x09;
 static const unsigned long ulHitSNES = 0XED4B;
 static const unsigned long ulSwordSNES = 0XEE0D;
-int iEXEDemoPlayable;
+int iEXEDemoPlayableS;
 static const unsigned long ulMirrorLevelRoomChk = 0X9A79;
 static const unsigned long ulMirrorRowColumnChk = 0X9A87;
 /***/
@@ -822,9 +838,11 @@ int iEXEPrinceMovesTime[24 + 2];
 int iEXEPrinceMovesAction[24 + 2];
 
 /*** exe, F4 ***/
-static const unsigned long arDemoPlayable[6] =
+static const unsigned long arDemoPlayableD1[6] =
 	{ 0X7BAA, 0X925A, 0X804E, 0X878E, 0X7B0A, 0X8C3A };
-int iEXEDemoPlayable;
+static const unsigned long arDemoPlayableD2[6] =
+	{ 0X6E5, 0X1D95, 0X7B9, 0XEF9, 0X77D, 0X18AD };
+int iEXEDemoPlayableD;
 static const unsigned long arDemoPrinceHP[6] =
 	{ 0X4C28, 0X62D8, 0X50B0, 0X57F0, 0X4B6C, 0X5C9C };
 int iEXEDemoPrinceHP;
@@ -856,9 +874,9 @@ static const unsigned long arCurrentTraining[3] =
 ***/
 static const unsigned long arDemoLevel[3] =
 	{ 0X18072, 0X1806C, 0X1806C };
-static const unsigned long arDemoPlayable1[3] =
+static const unsigned long arDemoPlayableS1[3] =
 	{ 0X0A0A2, 0X0A0A2, 0X0A0A2 };
-static const unsigned long arDemoPlayable2[3] =
+static const unsigned long arDemoPlayableS2[3] =
 	{ 0X0E835, 0X0E835, 0X0E835 };
 
 /*** SNES guard defaults. ***/
@@ -1803,7 +1821,8 @@ SDL_Texture *imgunk[2 + 2], *imgup_0, *imgup_1, *imgdown_0, *imgdown_1;
 SDL_Texture *imgleft_0, *imgleft_1, *imgright_0, *imgright_1, *imgroomson_0;
 SDL_Texture *imgroomson_1, *imgroomsoff, *imgeventson_0, *imgeventson_1;
 SDL_Texture *imgeventsoff, *imgsaveoff, *imgsoffp, *imgsaveon_0, *imgsaveon_1;
-SDL_Texture *imgquit_0, *imgquit_1, *imgevents, *imgsele, *imgeventu, *imgsell;
+SDL_Texture *imgquit_0, *imgquit_1, *imgevents, *imgeventu;
+SDL_Texture *imgchkb, *imgchkg;
 SDL_Texture *imgblack, *imghourglass, *imgprevon_0, *imgprevon_1;
 SDL_Texture *imghourglasssprite, *imgsandsprite, *imgstatusbarsprite;
 SDL_Texture *imgnexton_0, *imgnexton_1, *imgbar;
@@ -1950,7 +1969,7 @@ SDL_Texture *imgarrowloff, *imgarrowlon_0, *imgarrowlon_1;
 SDL_Texture *imgarrowroff, *imgarrowron_0, *imgarrowron_1;
 SDL_Texture *imgarrowuoff, *imgarrowuon_0, *imgarrowuon_1;
 SDL_Texture *imgbmrooma, *imgbmroomh;
-SDL_Texture *imgsellm;
+SDL_Texture *imgchkbmap;
 
 /*** Download ***/
 SDL_Texture *imgdownload1[2 + 2];
@@ -1963,6 +1982,17 @@ SDL_Texture *imgdownloadm[2 + 2];
 SDL_Texture *imgtext;
 SDL_Texture *imgtextnone;
 SDL_Texture *imgtexthover;
+
+/*** kid button and screen ***/
+SDL_Texture *imgkid;
+SDL_Texture *imgkidp;
+SDL_Texture *imgkidf;
+SDL_Texture *imgkidfp1;
+SDL_Texture *imgkidb;
+SDL_Texture *imgkidbl;
+SDL_Texture *imgkidbb;
+SDL_Texture *imgkid0;
+SDL_Texture *imgkid1;
 
 int iMinX, iMaxX, iMinY, iMaxY, iStartRoomsX, iStartRoomsY;
 int iDone[32 + 2]; /*** PoP1 only uses 24. ***/
@@ -2257,6 +2287,11 @@ void ShowJumpToRoom (void);
 int JumpRoomLoc (int iRoom, int iAxis);
 void ShowAction (int iAction, int iX, int iY);
 void Move (int *iTime, int *iAction, int iX, int iY, int iEnd);
+void KidAction (char *sAction, int iLocation);
+int Kid (int iLocation, SDL_Renderer *screen);
+void ShowKid (SDL_Renderer *screen);
+void GetHorVer (int iLocation, int *iHor, int *iVer);
+int FixDir (int iDir);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -2639,6 +2674,9 @@ void LoadPLV (char *sFileName)
 	/*** The modifiers of the level. ***/
 	unsigned char sLevelModifier[3840 + 2]; /*** PoP1 only uses 720. ***/
 
+	/*** Used for looping. ***/
+	int iLoopPlayer;
+
 	iChanged = 0;
 
 	/*** Open file. ***/
@@ -2908,8 +2946,22 @@ void LoadPLV (char *sFileName)
 	{
 		/*** Load Unknown I. ***/
 		ReadFromFile (iFd, "Unknown I", 64, sUnknownI);
-		/*** I want remapped modifiers in all 24 rooms. ***/
+		/*** We want remapped modifiers in all 24 rooms. ***/
 		sUnknownI[0] = 0x18;
+
+		/*** number of players ***/
+		if (sUnknownI[1] == 0x01)
+		{
+			iNrPlayers = sUnknownI[2];
+			if ((iNrPlayers < 1) || (iNrPlayers > 8))
+			{
+				printf ("[ WARN ] Invalid # players: %i\n", iNrPlayers);
+				if (iNrPlayers < 1) { iNrPlayers = 1; }
+				if (iNrPlayers > 8) { iNrPlayers = 8; }
+			}
+		} else {
+			iNrPlayers = 1;
+		}
 	} else {
 		ReadFromFile (iFd, "Last Room", 1, sLastRoom);
 		ReadFromFile (iFd, "JEFF", 4, sJEFF);
@@ -2930,35 +2982,123 @@ void LoadPLV (char *sFileName)
 		}
 	}
 
-	/*** Load Start Position. ***/
+	/*** Load Start Position (P1). ***/
 	ReadFromFile (iFd, "Start Position", 3, sStartPosition);
-	snprintf (sString, MAX_DATA, "%02x", sStartPosition[0]);
-	luKidRoom = strtoul (sString, NULL, 16);
-	snprintf (sString, MAX_DATA, "%02x", sStartPosition[1]);
-	luKidPos = strtoul (sString, NULL, 16) + 1;
-	snprintf (sString, MAX_DATA, "%02x", sStartPosition[2]);
-	luKidDir = strtoul (sString, NULL, 16);
-	/*** 1 of 4 (DOS) ***/
-	if (iEditPoP == 1)
+
+	/*** player(s) ***/
+	for (iLoopPlayer = 1; iLoopPlayer <= 8; iLoopPlayer++)
 	{
-		if (((int)luLevelNr == 1) || ((int)luLevelNr == 13))
-		{
-			if (luKidDir == 0) { luKidDir = 255; } else { luKidDir = 0; }
-		}
-	} else {
+		arKidU1[iLoopPlayer] = 0xFF; /*** disabled ***/
+		arKidU2[iLoopPlayer] = 0xFF; /*** disabled ***/
+		arKidU3[iLoopPlayer] = 0xFF; /*** disabled ***/
+		arKidU4[iLoopPlayer] = 0xFF; /*** disabled ***/
+		arKidClr[iLoopPlayer] = 0x3F; /*** approx. ***/
+		arKidRoom[iLoopPlayer] = sStartPosition[0];
+		arKidPos[iLoopPlayer] = sStartPosition[1] + 1;
+		arKidDir[iLoopPlayer] = FixDir (sStartPosition[2]);
+	}
+	if (iNrPlayers == 8)
+	{
+		arKidU1[8] = sUnknownI[3];
+		arKidU2[8] = sUnknownI[4];
+		arKidU3[8] = sUnknownI[5];
+		arKidU4[8] = sUnknownI[6];
+		arKidClr[8] = sUnknownI[7];
+		arKidRoom[8] = sUnknownI[8];
+		arKidPos[8] = sUnknownI[9] + 1;
+		arKidDir[8] = FixDir (sUnknownI[10]);
+	}
+	if (iNrPlayers >= 7)
+	{
+		arKidU1[7] = sUnknownI[11];
+		arKidU2[7] = sUnknownI[12];
+		arKidU3[7] = sUnknownI[13];
+		arKidU4[7] = sUnknownI[14];
+		arKidClr[7] = sUnknownI[15];
+		arKidRoom[7] = sUnknownI[16];
+		arKidPos[7] = sUnknownI[17] + 1;
+		arKidDir[7] = FixDir (sUnknownI[18]);
+	}
+	if (iNrPlayers >= 6)
+	{
+		arKidU1[6] = sUnknownI[19];
+		arKidU2[6] = sUnknownI[20];
+		arKidU3[6] = sUnknownI[21];
+		arKidU4[6] = sUnknownI[22];
+		arKidClr[6] = sUnknownI[23];
+		arKidRoom[6] = sUnknownI[24];
+		arKidPos[6] = sUnknownI[25] + 1;
+		arKidDir[6] = FixDir (sUnknownI[26]);
+	}
+	if (iNrPlayers >= 5)
+	{
+		arKidU1[5] = sUnknownI[27];
+		arKidU2[5] = sUnknownI[28];
+		arKidU3[5] = sUnknownI[29];
+		arKidU4[5] = sUnknownI[30];
+		arKidClr[5] = sUnknownI[31];
+		arKidRoom[5] = sUnknownI[32];
+		arKidPos[5] = sUnknownI[33] + 1;
+		arKidDir[5] = FixDir (sUnknownI[34]);
+	}
+	if (iNrPlayers >= 4)
+	{
+		arKidU1[4] = sUnknownI[35];
+		arKidU2[4] = sUnknownI[36];
+		arKidU3[4] = sUnknownI[37];
+		arKidU4[4] = sUnknownI[38];
+		arKidClr[4] = sUnknownI[39];
+		arKidRoom[4] = sUnknownI[40];
+		arKidPos[4] = sUnknownI[41] + 1;
+		arKidDir[4] = FixDir (sUnknownI[42]);
+	}
+	if (iNrPlayers >= 3)
+	{
+		arKidU1[3] = sUnknownI[43];
+		arKidU2[3] = sUnknownI[44];
+		arKidU3[3] = sUnknownI[45];
+		arKidU4[3] = sUnknownI[46];
+		arKidClr[3] = sUnknownI[47];
+		arKidRoom[3] = sUnknownI[48];
+		arKidPos[3] = sUnknownI[49] + 1;
+		arKidDir[3] = FixDir (sUnknownI[50]);
+	}
+	if (iNrPlayers >= 2)
+	{
+		arKidU1[2] = sUnknownI[51];
+		arKidU2[2] = sUnknownI[52];
+		arKidU3[2] = sUnknownI[53];
+		arKidU4[2] = sUnknownI[54];
+		arKidClr[2] = sUnknownI[55];
+		arKidRoom[2] = sUnknownI[56];
+		arKidPos[2] = sUnknownI[57] + 1;
+		arKidDir[2] = FixDir (sUnknownI[58]);
+		/***/
+		arKidU1[1] = sUnknownI[59];
+		arKidU2[1] = sUnknownI[60];
+		arKidU3[1] = sUnknownI[61];
+		arKidU4[1] = sUnknownI[62];
+		arKidClr[1] = sUnknownI[63];
+	}
+	arKidRoom[1] = sStartPosition[0];
+	arKidPos[1] = sStartPosition[1] + 1;
+	arKidDir[1] = FixDir (sStartPosition[2]); /*** 1 of 4 (DOS) ***/
+
+	if (iEditPoP != 1)
+	{
 		if ((luLevelNr == 2) || (luLevelNr == 16) ||
-			(((luLevelNr == 1) || (luLevelNr == 15)) && (luKidRoom == 4)) ||
-			(((luLevelNr == 6) || (luLevelNr == 20)) && (luKidRoom == 27)) ||
-			(((luLevelNr == 10) || (luLevelNr == 24)) && (luKidRoom == 22)) ||
-			(((luLevelNr == 14) || (luLevelNr == 28)) && (luKidRoom == 1)))
+			(((luLevelNr == 1) || (luLevelNr == 15)) && (arKidRoom[1] == 4)) ||
+			(((luLevelNr == 6) || (luLevelNr == 20)) && (arKidRoom[1] == 27)) ||
+			(((luLevelNr == 10) || (luLevelNr == 24)) && (arKidRoom[1] == 22)) ||
+			(((luLevelNr == 14) || (luLevelNr == 28)) && (arKidRoom[1] == 1)))
 		{
-			if (luKidDir == 0) { luKidDir = 255; } else { luKidDir = 0; }
+			if (arKidDir[1] == 0) { arKidDir[1] = 255; } else { arKidDir[1] = 0; }
 		}
 	}
 	if (iDebug == 1)
 	{
-		printf ("[ INFO ] The kid starts in room: %lu, position: %lu, turned: "
-			"%c\n", luKidRoom, luKidPos, cShowDirection ((int)luKidDir));
+		printf ("[ INFO ] The kid starts in room: %i, position: %i, turned: "
+			"%c\n", arKidRoom[1], arKidPos[1], cShowDirection (arKidDir[1]));
 	}
 
 	PrIfDe ("[  OK  ] Checking for broken room links.\n");
@@ -3290,7 +3430,7 @@ void LoadPLV (char *sFileName)
 		printf ("[ WARN ] Please use PR 1.3.1 with apoplexy.\n");
 	}
 
-	iCurRoom = (int)luKidRoom;
+	iCurRoom = arKidRoom[1];
 	iMod3Hi = 0;
 	iMod4Hi = 0;
 	iLvlWarning = 0;
@@ -3495,19 +3635,19 @@ void LoadXML (char *sFileName)
 		if (strcmp (sTag, "prince") == 0)
 		{
 			XMLValue (sLine, "room", sValue);
-			luKidRoom = strtoul (sValue, NULL, 10);
+			arKidRoom[1] = strtoul (sValue, NULL, 10);
 			XMLValue (sLine, "location", sValue);
-			luKidPos = strtoul (sValue, NULL, 10);
+			arKidPos[1] = strtoul (sValue, NULL, 10);
 			XMLValue (sLine, "direction", sValue);
 			switch (atoi (sValue))
 			{
-				case 1: luKidDir = 0; break;
-				case 2: luKidDir = 255; break;
+				case 1: arKidDir[1] = 0; break;
+				case 2: arKidDir[1] = 255; break;
 			}
 			/*** 2 of 4 (DOS) ***/
 			if (((int)luLevelNr == 1) || ((int)luLevelNr == 13))
 			{
-				if (luKidDir == 0) { luKidDir = 255; } else { luKidDir = 0; }
+				if (arKidDir[1] == 0) { arKidDir[1] = 255; } else { arKidDir[1] = 0; }
 			}
 		}
 
@@ -3583,11 +3723,11 @@ void LoadXML (char *sFileName)
 	for (iTemp = 0; iTemp < 24; iTemp++) { sUnknownIVc[iTemp] = 0x00; }
 	for (iTemp = 0; iTemp < 16; iTemp++) { sUnknownIVd[iTemp] = 0x00; }
 
-	/*** I want remapped modifiers in all 24 rooms. ***/
+	/*** We want remapped modifiers in all 24 rooms. ***/
 	sUnknownI[0] = 0x18;
 
 	iBrokenRoomLinks = BrokenRoomLinks (1);
-	iCurRoom = (int)luKidRoom;
+	iCurRoom = arKidRoom[1];
 	iMod3Hi = 0;
 	iMod4Hi = 0;
 	iLvlWarning = 0;
@@ -3790,25 +3930,25 @@ void LoadSMC (int iLevel)
 
 	/*** Load Start Position. ***/
 	snprintf (sString, MAX_DATA, "%02x", sStartPosition[0]);
-	luKidRoom = strtoul (sString, NULL, 16) + 1;
+	arKidRoom[1] = strtoul (sString, NULL, 16) + 1;
 	snprintf (sString, MAX_DATA, "%02x", sStartPosition[1]);
-	luKidPos = strtoul (sString, NULL, 16) + 1;
+	arKidPos[1] = strtoul (sString, NULL, 16) + 1;
 	snprintf (sString, MAX_DATA, "%02x", sStartPosition[2]);
-	luKidDir = strtoul (sString, NULL, 16);
+	arKidDir[1] = strtoul (sString, NULL, 16);
 	/*** 1 of 2 (SNES) ***/
 	if (((int)luLevelNr == 10) || ((int)luLevelNr == 17))
 	{
-		if (luKidDir == 0) { luKidDir = 255; } else { luKidDir = 0; }
+		if (arKidDir[1] == 0) { arKidDir[1] = 255; } else { arKidDir[1] = 0; }
 	}
 	/*** jaffar ***/
-	if ((luKidRoom == 256) && (luKidPos == 256) && (luKidDir == 255))
+	if ((arKidRoom[1] == 256) && (arKidPos[1] == 256) && (arKidDir[1] == 255))
 	{
-		luKidRoom = 1; luKidPos = 28;
+		arKidRoom[1] = 1; arKidPos[1] = 28;
 	}
 	if (iDebug == 1)
 	{
-		printf ("[ INFO ] The kid starts in room: %lu, position: %lu, turned: "
-			"%c\n", luKidRoom, luKidPos, cShowDirection ((int)luKidDir));
+		printf ("[ INFO ] The kid starts in room: %i, position: %i, turned: "
+			"%c\n", arKidRoom[1], arKidPos[1], cShowDirection (arKidDir[1]));
 	}
 
 	/*** Load first and second door events. ***/
@@ -3876,7 +4016,7 @@ void LoadSMC (int iLevel)
 			iLevelAddress, iLevelAddress + iReadFromFile - 1);
 	}
 
-	iCurRoom = (int)luKidRoom;
+	iCurRoom = arKidRoom[1];
 	iModHi = 1;
 	iTempHi = 1;
 	iLvlWarning = 0;
@@ -4160,9 +4300,9 @@ void CreateVariousSNES (unsigned char *sVariousS)
 		luKidPosSave = 256;
 		luKidDirSave = 255;
 	} else {
-		luKidRoomSave = luKidRoom - 1;
-		luKidPosSave = luKidPos - 1;
-		luKidDirSave = luKidDir;
+		luKidRoomSave = arKidRoom[1] - 1;
+		luKidPosSave = arKidPos[1] - 1;
+		luKidDirSave = arKidDir[1];
 		/*** 2 of 2 (SNES) ***/
 		if (((int)luLevelNr == 10) || ((int)luLevelNr == 17))
 		{
@@ -4252,7 +4392,7 @@ void Decompress (int iFd, char *sWhat, int iNeed,
 
 	/*** You cannot use snprintf for this (\0 values). ***/
 	for (iTemp = 0; iTemp < iNeed; iTemp++) { sDecompressed[iTemp] = '\0'; }
-	/* I previously used:
+	/* Previously used:
 	 * for (iTemp = 0; iTemp < (int)strlen ((char *)sDecompressed); iTemp++)
 	 */
 
@@ -7432,7 +7572,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 		case 194: dest.x = TILESX1; dest.y = TILESY5; break; /*** SNES prince ***/
 		case 195: dest.x = 219; dest.y = 270; break; /*** JP ***/
 		case 196: /*** Intro (level 22) is playable. ***/
-			switch (iEXEDemoPlayable)
+			switch (iEXEDemoPlayableS)
 			{
 				case 0: dest.x = 261; break;
 				case 1: dest.x = 276; break;
@@ -7694,7 +7834,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 		}
 	}
 
-	/*** I set dest.w and dest.h in CustomRenderCopy. ***/
+	/*** We set dest.w and dest.h in CustomRenderCopy. ***/
 
 	if (iThing == -4)
 	{
@@ -7871,7 +8011,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 				CustomRenderCopy (imgevents, "imgevents", &loc,
 					screen, &dest); break;
 			case 1:
-				CustomRenderCopy (imgsele, "imgsele", &loc,
+				CustomRenderCopy (imgchkg, "imgchkg", &loc,
 					screen, &dest); break;
 			case 2:
 				CustomRenderCopy (imgeventu, "imgeventu", &loc,
@@ -7939,7 +8079,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 						screen, &dest);
 				break;
 			case 12:
-				CustomRenderCopy (imgsell, "imgsell", &loc,
+				CustomRenderCopy (imgchkb, "imgchkb", &loc,
 					screen, &dest); break;
 			case 13:
 				CustomRenderCopy (imgcustoma0, "imgcustoma0", &loc,
@@ -10302,7 +10442,7 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 				case 2: dest.y = dest.y + 52; break;
 				case 3: dest.y = dest.y + 26; break;
 			}
-			switch (luKidDir)
+			switch (arKidDir[iModifier[1]])
 			{
 				case 0: /*** looks right ***/
 					switch (iEditPoP)
@@ -11760,7 +11900,7 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 806; break;
+		case 1: iNrToPreLoad = 815; break;
 		case 2: iNrToPreLoad = 863; break;
 		case 3: iNrToPreLoad = 4850; break;
 	}
@@ -12670,9 +12810,9 @@ void InitScreen (void)
 			PreLoad (PNG_CONTROLLER, "events_pop2.png", &imgevents);
 		}
 	}
-	PreLoad (PNG_VARIOUS, "sel_event.png", &imgsele);
 	PreLoad (PNG_VARIOUS, "event_unused.png", &imgeventu);
-	PreLoad (PNG_VARIOUS, "sel_level.png", &imgsell);
+	PreLoad (PNG_VARIOUS, "chk_black.png", &imgchkb);
+	PreLoad (PNG_VARIOUS, "chk_green.png", &imgchkg);
 
 	/*** tiles screens ***/
 	if (iEditPoP == 1)
@@ -13473,7 +13613,7 @@ void InitScreen (void)
 		PreLoadMap (PNG_BUTTONS, "arrow_up_on_1.png", &imgarrowuon_1);
 		PreLoadMap (PNG_VARIOUS, "border_mroom_active.png", &imgbmrooma);
 		PreLoadMap (PNG_VARIOUS, "border_mroom_hover.png", &imgbmroomh);
-		PreLoadMap (PNG_VARIOUS, "sel_level.png", &imgsellm);
+		PreLoadMap (PNG_VARIOUS, "chk_black.png", &imgchkbmap);
 		if (iController != 1)
 		{
 			PreLoad (PNG_BUTTONS, "map_on_0.png", &imgmapon_0);
@@ -13504,6 +13644,20 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "jump_disable_25-32.png", &imgjumpdis);
 	}
 	PreLoad (PNG_VARIOUS, "sel_jump.png", &imgseljump);
+
+	/*** kid button and screen ***/
+	if (iEditPoP == 1)
+	{
+		PreLoad (PNG_VARIOUS, "kid.png", &imgkid);
+		PreLoad (PNG_VARIOUS, "kid_pos.png", &imgkidp);
+		PreLoad (PNG_VARIOUS, "faded_kid.png", &imgkidf);
+		PreLoad (PNG_VARIOUS, "faded_kid_P1.png", &imgkidfp1);
+		PreLoad (PNG_VARIOUS, "border_kid.png", &imgkidb);
+		PreLoad (PNG_VARIOUS, "border_kid_live.png", &imgkidbl);
+		PreLoad (PNG_VARIOUS, "border_kid_button.png", &imgkidbb);
+		PreLoad (PNG_BUTTONS, "kid_0.png", &imgkid0);
+		PreLoad (PNG_BUTTONS, "kid_1.png", &imgkid1);
+	}
 
 	if (iDebug == 1)
 		{ printf ("[ INFO ] Preloaded images: %i\n", iPreLoaded); }
@@ -13871,7 +14025,12 @@ void InitScreen (void)
 									if ((strcmp (sEXEType, "missing") != 0) &&
 										(strcmp (sEXEType, "unknown") != 0))
 									{
-										EXE_F4();
+										/* This if() prevents the program from reacting to the
+										 * closure of other windows, such as SDLPoP, with Alt+F4.
+										 */
+										if ((!(event.key.keysym.mod & KMOD_LALT)) &&
+											(!(event.key.keysym.mod & KMOD_RALT)))
+											{ EXE_F4(); }
 									} else {
 										printf ("[ INFO ] Missing or unknown executable.\n");
 									}
@@ -14426,7 +14585,7 @@ void InitScreen (void)
 
 					/*** Level 10 warning. ***/
 					if ((iEditPoP == 2) && ((luLevelNr == 10) ||
-						(luLevelNr == 24)) && ((int)luKidRoom == 22))
+						(luLevelNr == 24)) && (arKidRoom[1] == 22))
 					{
 						if (OnLevelBar() == 1)
 						{
@@ -15466,6 +15625,9 @@ void RunLevelS (int iLevel)
 	int iFd;
 	char sToWrite[MAX_TOWRITE + 2];
 	SDL_Thread *princethread;
+	char sMore1[MAX_DATA + 2];
+	char sMore2[MAX_DATA + 2];
+	char sMore[MAX_DATA + 2];
 
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
 iFd = open (POP1_DIR BATCH_FILE_NATIVE,
@@ -15487,8 +15649,18 @@ iFd = open (POP1_DIR BATCH_FILE_NATIVE,
 		printf ("[ WARN ] SDLPoP is available, but not for your OS?\n");
 		snprintf (sNativeFile[2], MAX_FILE, "%s", "prince"); /*** Fallback. ***/
 	}
-	snprintf (sToWrite, MAX_TOWRITE, "..%s%s%s %s %i\n",
-		SLASH, SDLPOP_DIR, sNativeFile[2], sCheat1, iLevel);
+
+	/*** sMore ***/
+	snprintf (sMore1, MAX_DATA, "%s", "");
+	if (iDebug == 1)
+		{ snprintf (sMore1, MAX_DATA, "%s", " debug"); }
+	snprintf (sMore2, MAX_DATA, "%s", "");
+	if (iNoAudio == 1)
+		{ snprintf (sMore2, MAX_DATA, "%s", " mute"); }
+	snprintf (sMore, MAX_DATA, "%s%s", sMore1, sMore2);
+
+	snprintf (sToWrite, MAX_TOWRITE, "..%s%s%s%s %s %i\n",
+		SLASH, SDLPOP_DIR, sNativeFile[2], sMore, sCheat1, iLevel);
 	write (iFd, sToWrite, strlen (sToWrite));
 
 	close (iFd);
@@ -15506,6 +15678,9 @@ void RunLevelM (int iLevel)
 	int iFd;
 	char sToWrite[MAX_TOWRITE + 2];
 	SDL_Thread *princethread;
+	char sMore1[MAX_DATA + 2];
+	char sMore2[MAX_DATA + 2];
+	char sMore[MAX_DATA + 2];
 
 	if ((iLevel != 15) && (iLevel != 0))
 	{
@@ -15534,8 +15709,18 @@ iFd = open (POP1_DIR BATCH_FILE_NATIVE,
 			printf ("[ WARN ] MININIM is available, but not for your OS?\n");
 			snprintf (sNativeFile[3], MAX_FILE, "%s", "mininim"); /*** Fallback. ***/
 		}
-		snprintf (sToWrite, MAX_TOWRITE, "..%s%s%s %s %i 2> %s\n",
-			SLASH, MININIM_DIR, sNativeFile[3], sCheat1, iLevel, DEVNULL);
+
+		/*** sMore ***/
+		snprintf (sMore1, MAX_DATA, "%s", "");
+		if (iDebug == 1)
+			{ snprintf (sMore1, MAX_DATA, "%s", " --immortal-mode=true"); }
+		snprintf (sMore2, MAX_DATA, "%s", "");
+		if (iNoAudio == 1)
+			{ snprintf (sMore2, MAX_DATA, "%s", " --sound=false"); }
+		snprintf (sMore, MAX_DATA, "%s%s", sMore1, sMore2);
+
+		snprintf (sToWrite, MAX_TOWRITE, "..%s%s%s%s %s %i\n",
+			SLASH, MININIM_DIR, sNativeFile[3], sMore, sCheat1, iLevel);
 		write (iFd, sToWrite, strlen (sToWrite));
 
 		close (iFd);
@@ -15711,16 +15896,22 @@ int StartGame (void *unused)
 /*****************************************************************************/
 {
 	char sSystem[200 + 2];
+	char sMute[200 + 2];
 
 	if (unused != NULL) { } /*** To prevent warnings. ***/
 
-	PlaySound ("wav/dosbox.wav");
+	PlaySound ("wav/playtest.wav");
+	snprintf (sMute, 200, "%s", "");
 	switch (iEditPoP)
 	{
 		case 1:
 			if (iUsesNative == 0)
 			{
-				if (system ("dosbox " BATCH_FILE " -noconsole > " DEVNULL) == -1)
+				if (iNoAudio == 1)
+					{ snprintf (sMute, 200, "%s", " -c \"mixer master 0\""); }
+				snprintf (sSystem, 200, "dosbox%s %s -noconsole > %s", sMute,
+					BATCH_FILE, DEVNULL);
+				if (system (sSystem) == -1)
 					{ printf ("[FAILED] Could not execute PoP1 batch file!\n"); }
 			} else {
 				if (system ("cd " POP1_DIR " && "
@@ -15729,11 +15920,19 @@ int StartGame (void *unused)
 			}
 			break;
 		case 2:
-			if (system ("dosbox " BATCH_FILE_POP2 " -noconsole > " DEVNULL) == -1)
+			if (iNoAudio == 1)
+				{ snprintf (sMute, 200, "%s", " -c \"mixer master 0\""); }
+			snprintf (sSystem, 200, "dosbox%s %s -noconsole > %s", sMute,
+				BATCH_FILE_POP2, DEVNULL);
+			if (system (sSystem) == -1)
 				{ printf ("[FAILED] Could not execute PoP2 batch file!\n"); }
 			break;
 		case 3:
-			snprintf (sSystem, 200, "zsnes \"%s\" > %s", sSNESFile, DEVNULL);
+			if (iNoAudio == 1)
+				{ snprintf (sMute, 200, "%s", " -ds"); }
+					else { snprintf (sMute, 200, "%s", " -s"); }
+			snprintf (sSystem, 200, "zsnes%s \"%s\" > %s", sMute,
+				sSNESFile, DEVNULL);
 			if (system (sSystem) == -1)
 				{ printf ("[FAILED] Could not execute ZSNES!\n"); }
 			if (iModified == 1) { ModifyBack(); }
@@ -15747,7 +15946,7 @@ int StartGameS (void *unused)
 {
 	if (unused != NULL) { } /*** To prevent warnings. ***/
 
-	PlaySound ("wav/dosbox.wav");
+	PlaySound ("wav/playtest.wav");
 	if (system ("cd " POP1_DIR " && "
 		HERE BATCH_FILE_NATIVE " > " DEVNULL) == -1)
 		{ printf ("[FAILED] Could not execute SDLPoP!\n"); }
@@ -15760,7 +15959,7 @@ int StartGameM (void *unused)
 {
 	if (unused != NULL) { } /*** To prevent warnings. ***/
 
-	PlaySound ("wav/dosbox.wav");
+	PlaySound ("wav/playtest.wav");
 	if (system ("cd " POP1_DIR " && "
 		HERE BATCH_FILE_NATIVE " > " DEVNULL) == -1)
 		{ printf ("[FAILED] Could not execute MININIM!\n"); }
@@ -15820,6 +16019,10 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 	int iEWidth, iEHeight;
 	int iThingOrRoom;
 	int iEventUnused;
+	int iHor, iVer;
+
+	/*** Used for looping. ***/
+	int iLoopPlayer;
 
 	/*** black background ***/
 	ShowImage (-4, (int[]){1, 0, 0, 0}, screen, 31, 0, 0, 692, 455);
@@ -15945,19 +16148,45 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 				iModifierA[iCurRoom][iLoc - 1][4]},
 				screen, iLoc, 0, 0, iTileW, iTileH);
 			/*** kid ***/
-			if ((iCurRoom == (int)luKidRoom) && (iLoc == (int)luKidPos))
+			if (iEditPoP == 1)
 			{
-				switch (iEditPoP)
+				for (iLoopPlayer = 1; iLoopPlayer <= iNrPlayers; iLoopPlayer++)
 				{
-					case 1:
-						ShowImage (-8, (int[]){1, 0, 0, 0}, screen, iLoc, 0, 0, 22, 84);
-						break;
-					case 2:
-						ShowImage (-8, (int[]){1, 0, 0, 0}, screen, iLoc, 0, 0, 24, 84);
-						break;
-					case 3:
-						ShowImage (-8, (int[]){1, 0, 0, 0}, screen, iLoc, 0, 0, 20, 86);
-						break;
+					if ((iCurRoom == arKidRoom[iLoopPlayer]) &&
+						(iLoc == arKidPos[iLoopPlayer]))
+					{
+						ShowImage (-8, (int[]){1, iLoopPlayer, 0, 0},
+							screen, iLoc, 0, 0, 22, 84);
+
+						/*** player number (Px) ***/
+						if (iNrPlayers != 1)
+						{
+							snprintf (sText, MAX_TEXT, "P%i", iLoopPlayer);
+							message = TTF_RenderText_Shaded
+								(font2, sText, color_bl, color_wh);
+							messaget = SDL_CreateTextureFromSurface (screen, message);
+							GetHorVer (iLoc, &iHor, &iVer);
+							offset.x = iHor + 7;
+							offset.y = iVer + 145 - (FONT_SIZE_11 * iLoopPlayer);
+							offset.w = message->w; offset.h = message->h;
+							CustomRenderCopy (messaget, "message", NULL, screen, &offset);
+							SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+						}
+					}
+				}
+			}
+			if (iEditPoP == 2)
+			{
+				if ((iCurRoom == arKidRoom[1]) && (iLoc == arKidPos[1]))
+				{
+					ShowImage (-8, (int[]){1, 0, 0, 0}, screen, iLoc, 0, 0, 24, 84);
+				}
+			}
+			if (iEditPoP == 3)
+			{
+				if ((iCurRoom == arKidRoom[1]) && (iLoc == arKidPos[1]))
+				{
+					ShowImage (-8, (int[]){1, 0, 0, 0}, screen, iLoc, 0, 0, 20, 86);
 				}
 			}
 			if (iEditPoP == 1)
@@ -16129,7 +16358,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 			{
 				iDone[iTemp] = 0;
 			}
-			ShowRooms ((int)luKidRoom, iStartRoomsX, iStartRoomsY, 1);
+			ShowRooms (arKidRoom[1], iStartRoomsX, iStartRoomsY, 1);
 			iUnusedRooms = 0;
 			for (iTemp = 1; iTemp <= iRooms; iTemp++)
 			{
@@ -16147,7 +16376,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 				{
 					ShowImage (-7, (int[]){0, 0, 0, 0}, screen, 83, 0, 0, 14, 14);
 				}
-				if ((int)luKidRoom == iMovingRoom)
+				if (arKidRoom[1] == iMovingRoom)
 				{
 					ShowImage (-7, (int[]){1, 0, 0, 0}, screen, 83, 0, 0, 14, 14);
 				}
@@ -16176,7 +16405,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 				}
 
 				/*** blue border ***/
-				if ((int)luKidRoom == iRoom)
+				if (arKidRoom[1] == iRoom)
 				{
 					ShowImage (-7, (int[]){1, 0, 0, 0}, screen,
 						BrokenRoomChange (iRoom, 0), 0, 0, 14, 14);
@@ -16661,7 +16890,7 @@ void WhereToStart (void)
 	{
 		iDone[iTemp] = 0;
 	}
-	CheckSides ((int)luKidRoom, 0, 0);
+	CheckSides (arKidRoom[1], 0, 0);
 
 	iStartRoomsX = round (12 - (((float)iMinX + (float)iMaxX) / 2));
 	iStartRoomsY = round (12 - (((float)iMinY + (float)iMaxY) / 2));
@@ -16735,7 +16964,7 @@ void ShowRooms (int iRoom, int iX, int iY, int iNext)
 			ShowImage (-7, (int[]){0, 0, 0, 0}, ascreen,
 				atoi (sOnGrid), 0, 0, 14, 14);
 		}
-		if ((int)luKidRoom == iRoom)
+		if (arKidRoom[1] == iRoom)
 		{
 			ShowImage (-7, (int[]){1, 0, 0, 0}, ascreen,
 				atoi (sOnGrid), 0, 0, 14, 14);
@@ -16955,7 +17184,7 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 		}
 
 		/*** prince ***/
-		if (((int)luKidRoom == iRoom) && ((int)luKidPos == iTileLoop))
+		if ((arKidRoom[1] == iRoom) && (arKidPos[1] == iTileLoop))
 		{
 			ShowImageBasic (imgminiprince, fRoomStartX + fOffsetX,
 				fRoomStartY + fOffsetY, "imgminiprince", mscreen, ZoomGet(), 0);
@@ -17547,6 +17776,7 @@ void ChangePosAction (char *sAction, int iLocation)
 					case 52: iOnTile = 65; break;
 					case 65: iOnTile = 78; break;
 					case 91: iOnTile = 109; break;
+					case 107: iOnTile = 105; break;
 				}
 			}
 			if (cCurType == 'o')
@@ -17630,6 +17860,7 @@ void ChangePosAction (char *sAction, int iLocation)
 					case 53: iOnTile = 40; break;
 					case 66: iOnTile = 53; break;
 					case 79: iOnTile = 66; break;
+					case 106: iOnTile = 108; break;
 					case 110: iOnTile = 92; break;
 				}
 			}
@@ -17713,7 +17944,7 @@ void ChangePosAction (char *sAction, int iLocation)
 				case 5: iOnTile = 100; break;
 				case 6: iOnTile = 102; break;
 				case 7: iOnTile = 104; break;
-				case 8: iOnTile = 106; break;
+				case 8: iOnTile = 105; break;
 				case 9: iOnTile = 108; break;
 				case 10: iOnTile = 109; break;
 				case 11: iOnTile = 109; break;
@@ -17733,8 +17964,6 @@ void ChangePosAction (char *sAction, int iLocation)
 				case 103: iOnTile = 71; break;
 				case 104: iOnTile = 72; break;
 				case 105: iOnTile = 72; break;
-				case 106: iOnTile = 73; break;
-				case 107: iOnTile = 73; break;
 				case 108: iOnTile = 74; break;
 				case 109: iOnTile = 74; break;
 				default: iOnTile-=13; break;
@@ -17892,7 +18121,7 @@ void ChangePosAction (char *sAction, int iLocation)
 				case 70: iOnTile = 100; break;
 				case 71: iOnTile = 102; break;
 				case 72: iOnTile = 104; break;
-				case 73: iOnTile = 106; break;
+				case 73: iOnTile = 105; break;
 				case 74: iOnTile = 108; break;
 				case 75: iOnTile = 109; break;
 				case 76: iOnTile = 109; break;
@@ -17912,8 +18141,6 @@ void ChangePosAction (char *sAction, int iLocation)
 				case 103: iOnTile = 6; break;
 				case 104: iOnTile = 7; break;
 				case 105: iOnTile = 7; break;
-				case 106: iOnTile = 8; break;
-				case 107: iOnTile = 8; break;
 				case 108: iOnTile = 9; break;
 				case 109: iOnTile = 9; break;
 				default: iOnTile+=13; break;
@@ -18274,6 +18501,12 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 							}
 							break;
 						case SDL_CONTROLLER_BUTTON_START:
+							if (iEditPoP == 1)
+							{
+								PlaySound ("wav/screen2or3.wav");
+								iChanging = Kid (iLocation, screen);
+								ShowChange (iLocation, ascreen); break;
+							}
 							if (iEditPoP == 2)
 							{
 								PlaySound ("wav/screen2or3.wav");
@@ -18633,6 +18866,12 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 							}
 							break;
 						case SDLK_s:
+							if ((cCurType == 'd') || (cCurType == 'p'))
+							{
+								PlaySound ("wav/screen2or3.wav");
+								iChanging = Kid (iLocation, screen);
+								ShowChange (iLocation, ascreen); break;
+							}
 							if (cCurType == 'c')
 							{
 								iChangeStal++;
@@ -18835,6 +19074,14 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 								ShowChange (iLocation, ascreen);
 							}
 						}
+						if (iEditPoP == 1)
+						{
+							if (InArea (354, 388, 354 + 48, 388 + 62) == 1) /*** kid ***/
+							{
+								if (iKidOn != 1) { iKidOn = 1; }
+								ShowChange (iLocation, ascreen);
+							}
+						}
 						if (iEditPoP == 2)
 						{
 							if (InArea (254, 388, 352, 450) == 1) /*** guards ***/
@@ -18873,6 +19120,7 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 					iBackgroundOn = 0;
 					iTemplatesOn = 0;
 					iColorsOn = 0;
+					iKidOn = 0;
 					iGuardsOn = 0;
 					iCustomOn = 0;
 					iMusicOn = 0;
@@ -18880,8 +19128,9 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 					/*** On tile or human. ***/
 					iUseTile = 0;
 					if (((cCurType == 'd') || (cCurType == 'p')) &&
-						((InArea (2, 2, 652, 386) == 1) ||
-						(InArea (2, 386, 454, 452) == 1))) { iUseTile = 1; }
+						((InArea (2, 2, 654, 388) == 1) ||
+						(InArea (2, 386, 354, 452) == 1) ||
+						(InArea (402, 386, 454, 452) == 1))) { iUseTile = 1; }
 					if ((cCurType == 'o') &&
 						((InArea (154, 48, 302, 110) == 1) ||
 						(InArea (454, 48, 652, 110) == 1) ||
@@ -18994,6 +19243,17 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 							PlaySound ("wav/screen2or3.wav");
 							iChanging = ChangePosCustom (iLocation, screen);
 							ShowChange (iLocation, ascreen); break;
+						}
+
+						if (iEditPoP == 1)
+						{
+							/*** kid button ***/
+							if (InArea (354, 388, 354 + 48, 388 + 62) == 1)
+							{
+								PlaySound ("wav/screen2or3.wav");
+								iChanging = Kid (iLocation, screen);
+								ShowChange (iLocation, ascreen); break;
+							}
 						}
 
 						if (iEditPoP == 2)
@@ -22051,27 +22311,27 @@ void UseTile (int iTile, int iLocation, int iRoom, int iTileUnderMe)
 		if (((iTile == 73) || (iTile == 74)) && (iCurGuard != 4)) { return; }
 	}
 
-	if (((iTile == 106) && (iEditPoP != 3)) || /*** kid, turned right ***/
+	if (((iTile == 106) && (iEditPoP == 2)) || /*** kid, turned right ***/
 		((iTile == 92) && (iEditPoP == 3)))
 	{
-		if (((int)luKidRoom != iCurRoom) || ((int)luKidPos != iLocation) ||
-			(luKidDir != 0))
+		if ((arKidRoom[1] != iCurRoom) || (arKidPos[1] != iLocation) ||
+			(arKidDir[1] != 0))
 		{
-			luKidRoom = iCurRoom;
-			luKidPos = iLocation;
-			luKidDir = 0;
+			arKidRoom[1] = iCurRoom;
+			arKidPos[1] = iLocation;
+			arKidDir[1] = 0;
 			PlaySound ("wav/hum_adj.wav");
 		}
 	}
-	if (((iTile == 107) && (iEditPoP != 3)) || /*** kid, turned left ***/
+	if (((iTile == 107) && (iEditPoP == 2)) || /*** kid, turned left ***/
 		((iTile == 93) && (iEditPoP == 3)))
 	{
-		if (((int)luKidRoom != iCurRoom) || ((int)luKidPos != iLocation) ||
-			(luKidDir != 255))
+		if ((arKidRoom[1] != iCurRoom) || (arKidPos[1] != iLocation) ||
+			(arKidDir[1] != 255))
 		{
-			luKidRoom = iCurRoom;
-			luKidPos = iLocation;
-			luKidDir = 255;
+			arKidRoom[1] = iCurRoom;
+			arKidPos[1] = iLocation;
+			arKidDir[1] = 255;
 			PlaySound ("wav/hum_adj.wav");
 		}
 	}
@@ -23114,6 +23374,9 @@ void ShowChange (int iLocation, SDL_Renderer *screen)
 	SDL_Color skcolor;
 	char sText[MAX_TEXT + 2];
 
+	/*** Used for looping. ***/
+	int iLoopPlayer;
+
 	switch (cCurType)
 	{
 		/*** PoP1 ***/
@@ -23158,6 +23421,19 @@ void ShowChange (int iLocation, SDL_Renderer *screen)
 			case 1: /*** on ***/
 				ShowImage (-12, (int[]){27, 0, 0, 0},
 					screen, 96, 0, 0, 148, 62); break;
+		}
+	}
+	if (iEditPoP == 1)
+	{
+		/*** kid button ***/
+		switch (iKidOn)
+		{
+			case 0: /*** off ***/
+				ShowImageBasic (imgkid0, 354, 388, "imgkid0", screen, iScale, 1);
+				break;
+			case 1: /*** on ***/
+				ShowImageBasic (imgkid1, 354, 388, "imgkid1", screen, iScale, 1);
+				break;
 		}
 	}
 	if (iEditPoP == 3)
@@ -23248,14 +23524,27 @@ void ShowChange (int iLocation, SDL_Renderer *screen)
 				ShowImage (-12, (int[]){16, 0, 0, 0}, screen, 88, 0, 0, 36, 68);
 			break;
 	}
-	if ((iCurRoom == (int)luKidRoom) && (iLocation == (int)luKidPos))
+	if (iEditPoP == 1)
 	{
-		switch ((int)luKidDir)
+		for (iLoopPlayer = 1; iLoopPlayer <= 8; iLoopPlayer++)
 		{
-			case 0:
-				ShowImage (-12, (int[]){10, 0, 0, 0}, screen, 57, 0, 0, 27, 66); break;
-			case 255:
-				ShowImage (-12, (int[]){10, 0, 0, 0}, screen, 58, 0, 0, 27, 66); break;
+			if ((iCurRoom == arKidRoom[iLoopPlayer]) &&
+				(iLocation == arKidPos[iLoopPlayer]))
+			{
+				ShowImageBasic (imgkidbb, 352, 386, "imgkidbb",
+					ascreen, iScale, 1);
+			}
+		}
+	} else {
+		if ((iCurRoom == arKidRoom[1]) && (iLocation == arKidPos[1]))
+		{
+			switch (arKidDir[1])
+			{
+				case 0: ShowImage (-12, (int[]){10, 0, 0, 0},
+					screen, 57, 0, 0, 27, 66); break;
+				case 255: ShowImage (-12, (int[]){10, 0, 0, 0},
+					screen, 58, 0, 0, 27, 66); break;
+			}
 		}
 	}
 
@@ -24311,8 +24600,8 @@ int OnTile (void)
 			{ return (105); }
 	}
 
-	/*** PoP1 and PoP2, prince ***/
-	if (iEditPoP != 3)
+	/*** PoP2, prince ***/
+	if (iEditPoP == 2)
 	{
 		/*** turned right ***/
 		if (InArea (4 + (25 * 14), 388, 2 + (25 * 15), 450) == 1)
@@ -24521,6 +24810,7 @@ int ChecksumOrWrite (int iFd)
 	int iAct1, iAct2;
 	int iGuardMod;
 	char sToWrite[MAX_TOWRITE + 2];
+	int iMP;
 
 	lSum = 0;
 
@@ -24600,9 +24890,37 @@ int ChecksumOrWrite (int iFd)
 
 	if (iEditPoP != 2)
 	{
+		/*** multiplayer ***/
+		if (iNrPlayers > 1) { iMP = 0x01; } else { iMP = 0x00; }
+		snprintf (sToWrite, MAX_TOWRITE, "%c%c%c"
+			"%c%c%c%c%c%c%c%c"
+			"%c%c%c%c%c%c%c%c"
+			"%c%c%c%c%c%c%c%c"
+			"%c%c%c%c%c%c%c%c"
+			"%c%c%c%c%c%c%c%c"
+			"%c%c%c%c%c%c%c%c"
+			"%c%c%c%c%c%c%c%c"
+			"%c%c%c%c%c",
+			0x18, iMP, iNrPlayers,
+			arKidU1[8], arKidU2[8], arKidU3[8], arKidU4[8],
+				arKidClr[8], arKidRoom[8], arKidPos[8] - 1, FixDir (arKidDir[8]),
+			arKidU1[7], arKidU2[7], arKidU3[7], arKidU4[7],
+				arKidClr[7], arKidRoom[7], arKidPos[7] - 1, FixDir (arKidDir[7]),
+			arKidU1[6], arKidU2[6], arKidU3[6], arKidU4[6],
+				arKidClr[6], arKidRoom[6], arKidPos[6] - 1, FixDir (arKidDir[6]),
+			arKidU1[5], arKidU2[5], arKidU3[5], arKidU4[5],
+				arKidClr[5], arKidRoom[5], arKidPos[5] - 1, FixDir (arKidDir[5]),
+			arKidU1[4], arKidU2[4], arKidU3[4], arKidU4[4],
+				arKidClr[4], arKidRoom[4], arKidPos[4] - 1, FixDir (arKidDir[4]),
+			arKidU1[3], arKidU2[3], arKidU3[3], arKidU4[3],
+				arKidClr[3], arKidRoom[3], arKidPos[3] - 1, FixDir (arKidDir[3]),
+			arKidU1[2], arKidU2[2], arKidU3[2], arKidU4[2],
+				arKidClr[2], arKidRoom[2], arKidPos[2] - 1, FixDir (arKidDir[2]),
+			arKidU1[1], arKidU2[1], arKidU3[1], arKidU4[1],
+				arKidClr[1]);
 		if (iFd == -1)
-			{ for (iSC = 0; iSC < 64; iSC++) { lSum+=sUnknownI[iSC]; } }
-				else { WriteCharByChar (iFd, sUnknownI, 64); }
+			{ for (iSC = 0; iSC < 64; iSC++) { lSum+=sToWrite[iSC]; } }
+				else { write (iFd, sToWrite, 64); }
 	} else {
 		/*** Instead of saving sLastRoom; always use 32. ***/
 		snprintf (sToWrite, MAX_TOWRITE, "%c", 32);
@@ -24670,31 +24988,25 @@ int ChecksumOrWrite (int iFd)
 
 /*** PoP1 = 2112; PoP2 = 6240 ***/
 
-	snprintf (sToWrite, MAX_TOWRITE, "%c", (int)luKidRoom);
+	snprintf (sToWrite, MAX_TOWRITE, "%c", arKidRoom[1]);
 	if (iFd == -1)
 		{ lSum+=sToWrite[0]; }
 			else { write (iFd, sToWrite, 1); }
-	snprintf (sToWrite, MAX_TOWRITE, "%c", (int)luKidPos - 1);
+	snprintf (sToWrite, MAX_TOWRITE, "%c", arKidPos[1] - 1);
 	if (iFd == -1)
 		{ lSum+=sToWrite[0]; }
 			else { write (iFd, sToWrite, 1); }
-	snprintf (sToWrite, MAX_TOWRITE, "%c", (int)luKidDir);
+	snprintf (sToWrite, MAX_TOWRITE, "%c", FixDir (arKidDir[1]));
 	/*** 3 of 4 (DOS) ***/
-	if (iEditPoP == 1)
+	if (iEditPoP != 1)
 	{
-		if (((int)luLevelNr == 1) || ((int)luLevelNr == 13))
-		{
-			if (luKidDir == 0) { snprintf (sToWrite, MAX_TOWRITE, "%c", 255); }
-				else { snprintf (sToWrite, MAX_TOWRITE, "%c", 0); }
-		}
-	} else {
 		if ((luLevelNr == 2) || (luLevelNr == 16) ||
-			(((luLevelNr == 1) || (luLevelNr == 15)) && (luKidRoom == 4)) ||
-			(((luLevelNr == 6) || (luLevelNr == 20)) && (luKidRoom == 27)) ||
-			(((luLevelNr == 10) || (luLevelNr == 24)) && (luKidRoom == 22)) ||
-			(((luLevelNr == 14) || (luLevelNr == 28)) && (luKidRoom == 1)))
+			(((luLevelNr == 1) || (luLevelNr == 15)) && (arKidRoom[1] == 4)) ||
+			(((luLevelNr == 6) || (luLevelNr == 20)) && (arKidRoom[1] == 27)) ||
+			(((luLevelNr == 10) || (luLevelNr == 24)) && (arKidRoom[1] == 22)) ||
+			(((luLevelNr == 14) || (luLevelNr == 28)) && (arKidRoom[1] == 1)))
 		{
-			if (luKidDir == 0) { snprintf (sToWrite, MAX_TOWRITE, "%c", 255); }
+			if (arKidDir[1] == 0) { snprintf (sToWrite, MAX_TOWRITE, "%c", 255); }
 				else { snprintf (sToWrite, MAX_TOWRITE, "%c", 0); }
 		}
 	}
@@ -25034,7 +25346,7 @@ void ShowUsage (void)
 		" exit\n");
 	printf ("  -y,        --import         import PoP1 for DOS levels as XML\n");
 	printf ("  -d,        --debug          also show levels on the console\n");
-	printf ("  -n,        --noaudio        do not play sound effects\n");
+	printf ("  -n,        --noaudio        mute editor and game audio\n");
 	printf ("  -q,        --quiteloud      chompers in-editor make noise\n");
 	printf ("  -i,        --improved       \"improved\" instead of"
 		" \"megahit\"\n");
@@ -25150,7 +25462,7 @@ int BrokenRoomLinks (int iPrint)
 		iRoomConnectionsBroken[iTemp][3] = 0;
 		iRoomConnectionsBroken[iTemp][4] = 0;
 	}
-	CheckSides ((int)luKidRoom, 0, 0);
+	CheckSides (arKidRoom[1], 0, 0);
 	iBroken = 0;
 
 	for (iTemp = 1; iTemp <= iRooms; iTemp++)
@@ -25601,11 +25913,11 @@ void Help (void)
 				case SDL_MOUSEMOTION:
 					iXPos = event.motion.x;
 					iYPos = event.motion.y;
-					if ((InArea (80, 38, 612, 61) == 1) ||
-						(InArea (38, 108, 654, 131) == 1) ||
-						(InArea (52, 178, 640, 201) == 1) ||
-						(InArea (45, 248, 647, 271) == 1) ||
-						(InArea (38, 318, 654, 341) == 1))
+					if ((InArea (171, 38, 521, 61) == 1) ||
+						(InArea (31, 108, 661, 131) == 1) ||
+						(InArea (45, 178, 647, 201) == 1) ||
+						(InArea (38, 248, 654, 271) == 1) ||
+						(InArea (31, 318, 661, 341) == 1))
 					{
 						SDL_SetCursor (curHand);
 					} else {
@@ -25630,13 +25942,13 @@ void Help (void)
 							{ iHelp = 0; }
 						if (InArea (171, 38, 521, 61) == 1)
 							{ OpenURL ("https://www.apoplexy.org/"); }
-						if (InArea (38, 108, 654, 131) == 1)
+						if (InArea (31, 108, 661, 131) == 1)
 							{ OpenURL ("https://forum.princed.org/viewforum.php?f=112"); }
-						if (InArea (52, 178, 640, 201) == 1)
+						if (InArea (45, 178, 647, 201) == 1)
 							{ OpenURL ("https://www.youtube.com/watch?v=dtZiAb180ds"); }
-						if (InArea (45, 248, 647, 271) == 1)
+						if (InArea (38, 248, 654, 271) == 1)
 							{ OpenURL ("https://forum.princed.org/viewforum.php?f=73"); }
-						if (InArea (38, 318, 654, 341) == 1)
+						if (InArea (31, 318, 661, 341) == 1)
 							{ OpenURL ("https://forum.princed.org/viewforum.php?f=116"); }
 					}
 					ShowHelp(); break;
@@ -25928,6 +26240,7 @@ void EXELoad_F4 (void)
 {
 	int iFdEXE;
 	unsigned char sData[MAX_DATA + 2];
+	unsigned char sData2[MAX_DATA + 2];
 
 	iFdEXE = open (POP1_EXECUTABLE, O_RDONLY|O_BINARY);
 	if (iFdEXE == -1)
@@ -25938,16 +26251,18 @@ void EXELoad_F4 (void)
 	}
 
 	/*** (Demo level) Playable. ***/
-	LSeek (iFdEXE, arDemoPlayable[iEXEType]);
+	LSeek (iFdEXE, arDemoPlayableD1[iEXEType]);
 	ReadFromFile (iFdEXE, "", 1, sData);
-	if (sData[0] == 0x75)
+	LSeek (iFdEXE, arDemoPlayableD2[iEXEType]);
+	ReadFromFile (iFdEXE, "", 1, sData2);
+	if ((sData[0] == 0x75) && (sData2[0] == 0x75)) /*** N ***/
 	{
-		iEXEDemoPlayable = 0;
-	} else if (sData[0] == 0xEB) {
-		iEXEDemoPlayable = 1;
+		iEXEDemoPlayableD = 0;
+	} else if ((sData[0] == 0xEB) && (sData2[0] == 0xEB)) { /*** Y ***/
+		iEXEDemoPlayableD = 1;
 	} else {
 		printf ("[ WARN ] Strange playable value!\n");
-		iEXEDemoPlayable = 0; /*** Fallback. ***/
+		iEXEDemoPlayableD = 0; /*** As a fallback. ***/
 	}
 
 	/*** (Demo level) Prince HP. ***/
@@ -26083,18 +26398,18 @@ void EXELoadSNES (void)
 	}
 
 	/*** Intro (level 22) is playable. ***/
-	LSeek (iFdEXE, arDemoPlayable1[iEXEType]);
+	LSeek (iFdEXE, arDemoPlayableS1[iEXEType]);
 	ReadFromFile (iFdEXE, "", 1, sData);
-	LSeek (iFdEXE, arDemoPlayable2[iEXEType]);
+	LSeek (iFdEXE, arDemoPlayableS2[iEXEType]);
 	ReadFromFile (iFdEXE, "", 1, sData2);
 	if ((sData[0] == 0x15) && (sData2[0] == 0x15)) /*** N ***/
 	{
-		iEXEDemoPlayable = 0;
+		iEXEDemoPlayableS = 0;
 	} else if ((sData[0] == 0xcc) && (sData2[0] == 0xcc)) { /*** Y ***/
-		iEXEDemoPlayable = 1;
+		iEXEDemoPlayableS = 1;
 	} else {
 		printf ("[ WARN ] Strange demo value!\n");
-		iEXEDemoPlayable = 0; /*** As a fallback. ***/
+		iEXEDemoPlayableS = 0; /*** As a fallback. ***/
 	}
 
 	/*** Warp potion. ***/
@@ -26416,10 +26731,19 @@ void EXESave_F4 (void)
 	iFdEXE = open (POP1_EXECUTABLE, O_RDWR|O_BINARY);
 
 	/*** (Demo level) Playable. ***/
-	LSeek (iFdEXE, arDemoPlayable[iEXEType]);
-	if (iEXEDemoPlayable == 0)
-		{ sBytes[0] = 0x75; }
-			else { sBytes[0] = 0xEB; }
+	LSeek (iFdEXE, arDemoPlayableD1[iEXEType]);
+	switch (iEXEDemoPlayableD)
+	{
+		case 0: sBytes[0] = 0x75; break; /*** N ***/
+		case 1: sBytes[0] = 0xEB; break; /*** Y ***/
+	}
+	WriteCharByChar (iFdEXE, sBytes, 1);
+	LSeek (iFdEXE, arDemoPlayableD2[iEXEType]);
+	switch (iEXEDemoPlayableD)
+	{
+		case 0: sBytes[0] = 0x75; break; /*** N ***/
+		case 1: sBytes[0] = 0xEB; break; /*** Y ***/
+	}
 	WriteCharByChar (iFdEXE, sBytes, 1);
 
 	/*** (Demo level) Prince HP. ***/
@@ -26532,15 +26856,15 @@ void EXESaveSNES (void)
 	WriteCharByChar (iFdEXE, sBytes, 5);
 
 	/*** Intro (level 22) is playable. ***/
-	LSeek (iFdEXE, arDemoPlayable1[iEXEType]);
-	switch (iEXEDemoPlayable)
+	LSeek (iFdEXE, arDemoPlayableS1[iEXEType]);
+	switch (iEXEDemoPlayableS)
 	{
 		case 0: sBytes[0] = 0x15; break; /*** N ***/
 		case 1: sBytes[0] = 0xcc; break; /*** Y ***/
 	}
 	WriteCharByChar (iFdEXE, sBytes, 1);
-	LSeek (iFdEXE, arDemoPlayable2[iEXEType]);
-	switch (iEXEDemoPlayable)
+	LSeek (iFdEXE, arDemoPlayableS2[iEXEType]);
+	switch (iEXEDemoPlayableS)
 	{
 		case 0: sBytes[0] = 0x15; break; /*** N ***/
 		case 1: sBytes[0] = 0xcc; break; /*** Y ***/
@@ -27280,11 +27604,11 @@ void EXE (void)
 
 							/*** Intro (level 22) is playable. ***/
 							if ((InArea (261, 271, 275, 285) == 1) &&
-								(iEXEDemoPlayable != 0))
-								{ iEXEDemoPlayable = 0; PlaySound ("wav/check_box.wav"); }
+								(iEXEDemoPlayableS != 0))
+								{ iEXEDemoPlayableS = 0; PlaySound ("wav/check_box.wav"); }
 							if ((InArea (276, 271, 290, 285) == 1) &&
-								(iEXEDemoPlayable != 1))
-								{ iEXEDemoPlayable = 1; PlaySound ("wav/check_box.wav"); }
+								(iEXEDemoPlayableS != 1))
+								{ iEXEDemoPlayableS = 1; PlaySound ("wav/check_box.wav"); }
 
 							/*** Warp potion. ***/
 							PlusMinus (&iEXEWarpRoom, 84, 355, 0, 23, -1, 0);
@@ -27631,7 +27955,7 @@ void ShowEXE (void)
 				printf ("[ WARN ] Unknown level type: %i\n", iEXEEnvPoP2);
 				iX = 35; iY = 99; break; /*** Fallback. ***/
 		}
-		ShowImageBasic (imgsell, iX, iY, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgchkb, iX, iY, "imgchkb", ascreen, iScale, 1);
 		if (iEXEEnvPoP2 != arDefaultEnvPoP2[luLevelNr])
 		{
 			ShowImageBasic (imgsrs, iX, iY, "imgsrs", ascreen, iScale, 1);
@@ -27649,7 +27973,7 @@ void ShowEXE (void)
 				printf ("[ WARN ] Unknown level guards: %i\n", iEXEGuardTypePoP2);
 				iX = 164; iY = 99; break; /*** Fallback. ***/
 		}
-		ShowImageBasic (imgsell, iX, iY, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgchkb, iX, iY, "imgchkb", ascreen, iScale, 1);
 		if (iEXEGuardTypePoP2 != arDefaultGuardTypePoP2[luLevelNr])
 		{
 			ShowImageBasic (imgsrs, iX, iY, "imgsrs", ascreen, iScale, 1);
@@ -27805,7 +28129,7 @@ void ShowEXE (void)
 
 		/*** Intro (level 22) is playable. ***/
 		ShowImage (-12, (int[]){12, 0, 0, 0}, ascreen, 196, 0, 0, 14, 14);
-		if (iEXEDemoPlayable != 0)
+		if (iEXEDemoPlayableS != 0)
 			{ ShowImage (-7, (int[]){1, 0, 0, 0}, ascreen, 196, 0, 0, 14, 14); }
 
 		/*** Warp potion. ***/
@@ -28249,9 +28573,9 @@ void ShowEXE_F3 (void)
 	/*** Allow loose floor climbing. ***/
 	if (iEXELooseClimbing == 0)
 	{
-		ShowImageBasic (imgsell, 261, 105, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgchkb, 261, 105, "imgchkb", ascreen, iScale, 1);
 	} else {
-		ShowImageBasic (imgsell, 276, 105, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgchkb, 276, 105, "imgchkb", ascreen, iScale, 1);
 		ShowImageBasic (imgsrs, 276, 105, "imgsrs", ascreen, iScale, 1);
 	}
 
@@ -28265,62 +28589,62 @@ void ShowEXE_F3 (void)
 	switch (iEXEShadowStartR5)
 	{
 		case 0: /*** top (default for 5) ***/
-			ShowImageBasic (imgsell, 73, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 73, 178, "imgchkb", ascreen, iScale, 1);
 			break;
 		case 1: /*** middle ***/
-			ShowImageBasic (imgsell, 88, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 88, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 88, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 2: /*** bottom ***/
-			ShowImageBasic (imgsell, 103, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 103, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 103, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 	}
 	switch (iEXEShadowStartD5)
 	{
 		case 255: /*** left ***/
-			ShowImageBasic (imgsell, 165, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 165, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 165, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 0: /*** right (default for 5) ***/
-			ShowImageBasic (imgsell, 180, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 180, 178, "imgchkb", ascreen, iScale, 1);
 			break;
 	}
 	switch (iEXEShadowStartA5)
 	{
 		case 0: /*** stand (default for 5) ***/
-			ShowImageBasic (imgsell, 242, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 242, 178, "imgchkb", ascreen, iScale, 1);
 			break;
 		case 1: /*** run jump ***/
-			ShowImageBasic (imgsell, 257, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 257, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 257, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 2: /*** hang climb ***/
-			ShowImageBasic (imgsell, 272, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 272, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 272, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 3: /*** in midair ***/
-			ShowImageBasic (imgsell, 287, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 287, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 287, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 4: /*** in freefall ***/
-			ShowImageBasic (imgsell, 302, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 302, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 302, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 5: /*** bumped ***/
-			ShowImageBasic (imgsell, 317, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 317, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 317, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 6: /*** hang straight ***/
-			ShowImageBasic (imgsell, 332, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 332, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 332, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 7: /*** turn ***/
-			ShowImageBasic (imgsell, 347, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 347, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 347, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 99: /*** hurt ***/
-			ShowImageBasic (imgsell, 362, 178, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 362, 178, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 362, 178, "imgsrs", ascreen, iScale, 1);
 			break;
 	}
@@ -28334,62 +28658,62 @@ void ShowEXE_F3 (void)
 	switch (iEXEShadowStartR6)
 	{
 		case 0: /*** top ***/
-			ShowImageBasic (imgsell, 73, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 73, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 73, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 1: /*** middle (default for 6) ***/
-			ShowImageBasic (imgsell, 88, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 88, 317, "imgchkb", ascreen, iScale, 1);
 			break;
 		case 2: /*** bottom ***/
-			ShowImageBasic (imgsell, 103, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 103, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 103, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 	}
 	switch (iEXEShadowStartD6)
 	{
 		case 255: /*** left ***/
-			ShowImageBasic (imgsell, 165, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 165, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 165, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 0: /*** right (default for 6) ***/
-			ShowImageBasic (imgsell, 180, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 180, 317, "imgchkb", ascreen, iScale, 1);
 			break;
 	}
 	switch (iEXEShadowStartA6)
 	{
 		case 0: /*** stand (default for 6) ***/
-			ShowImageBasic (imgsell, 242, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 242, 317, "imgchkb", ascreen, iScale, 1);
 			break;
 		case 1: /*** run jump ***/
-			ShowImageBasic (imgsell, 257, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 257, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 257, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 2: /*** hang climb ***/
-			ShowImageBasic (imgsell, 272, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 272, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 272, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 3: /*** in midair ***/
-			ShowImageBasic (imgsell, 287, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 287, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 287, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 4: /*** in freefall ***/
-			ShowImageBasic (imgsell, 302, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 302, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 302, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 5: /*** bumped ***/
-			ShowImageBasic (imgsell, 317, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 317, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 317, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 6: /*** hang straight ***/
-			ShowImageBasic (imgsell, 332, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 332, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 332, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 7: /*** turn ***/
-			ShowImageBasic (imgsell, 347, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 347, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 347, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 99: /*** hurt ***/
-			ShowImageBasic (imgsell, 362, 317, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 362, 317, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 362, 317, "imgsrs", ascreen, iScale, 1);
 			break;
 	}
@@ -28403,62 +28727,62 @@ void ShowEXE_F3 (void)
 	switch (iEXEShadowStartR12)
 	{
 		case 0: /*** top (default for 12) ***/
-			ShowImageBasic (imgsell, 73, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 73, 360, "imgchkb", ascreen, iScale, 1);
 			break;
 		case 1: /*** middle ***/
-			ShowImageBasic (imgsell, 88, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 88, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 88, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 2: /*** bottom ***/
-			ShowImageBasic (imgsell, 103, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 103, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 103, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 	}
 	switch (iEXEShadowStartD12)
 	{
 		case 255: /*** left ***/
-			ShowImageBasic (imgsell, 165, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 165, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 165, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 0: /*** right (default for 12) ***/
-			ShowImageBasic (imgsell, 180, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 180, 360, "imgchkb", ascreen, iScale, 1);
 			break;
 	}
 	switch (iEXEShadowStartA12)
 	{
 		case 0: /*** stand (default for 12) ***/
-			ShowImageBasic (imgsell, 242, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 242, 360, "imgchkb", ascreen, iScale, 1);
 			break;
 		case 1: /*** run jump ***/
-			ShowImageBasic (imgsell, 257, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 257, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 257, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 2: /*** hang climb ***/
-			ShowImageBasic (imgsell, 272, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 272, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 272, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 3: /*** in midair ***/
-			ShowImageBasic (imgsell, 287, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 287, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 287, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 4: /*** in freefall ***/
-			ShowImageBasic (imgsell, 302, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 302, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 302, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 5: /*** bumped ***/
-			ShowImageBasic (imgsell, 317, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 317, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 317, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 6: /*** hang straight ***/
-			ShowImageBasic (imgsell, 332, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 332, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 332, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 7: /*** turn ***/
-			ShowImageBasic (imgsell, 347, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 347, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 347, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 		case 99: /*** hurt ***/
-			ShowImageBasic (imgsell, 362, 360, "imgsell", ascreen, iScale, 1);
+			ShowImageBasic (imgchkb, 362, 360, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 362, 360, "imgsrs", ascreen, iScale, 1);
 			break;
 	}
@@ -28761,11 +29085,11 @@ void EXE_F4 (void)
 
 						/*** (Demo level) Playable. ***/
 						if ((InArea (261, 105, 261 + 14, 105 + 14) == 1) &&
-							(iEXEDemoPlayable == 1))
-							{ iEXEDemoPlayable = 0; PlaySound ("wav/check_box.wav"); }
+							(iEXEDemoPlayableD == 1))
+							{ iEXEDemoPlayableD = 0; PlaySound ("wav/check_box.wav"); }
 						if ((InArea (276, 105, 276 + 14, 105 + 14) == 1) &&
-							(iEXEDemoPlayable == 0))
-							{ iEXEDemoPlayable = 1; PlaySound ("wav/check_box.wav"); }
+							(iEXEDemoPlayableD == 0))
+							{ iEXEDemoPlayableD = 1; PlaySound ("wav/check_box.wav"); }
 
 						/*** (Demo level) Prince HP. ***/
 						PlusMinus (&iEXEDemoPrinceHP, 219, 124, 0, 255, -10, 0);
@@ -28843,11 +29167,11 @@ void ShowEXE_F4 (void)
 	DisplayText (33, 32, FONT_SIZE_15, arText, 1, font1);
 
 	/*** (Demo level) Playable. ***/
-	if (iEXEDemoPlayable == 0)
+	if (iEXEDemoPlayableD == 0)
 	{
-		ShowImageBasic (imgsell, 261, 105, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgchkb, 261, 105, "imgchkb", ascreen, iScale, 1);
 	} else {
-		ShowImageBasic (imgsell, 276, 105, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgchkb, 276, 105, "imgchkb", ascreen, iScale, 1);
 		ShowImageBasic (imgsrs, 276, 105, "imgsrs", ascreen, iScale, 1);
 	}
 
@@ -29842,15 +30166,15 @@ void FlipRoom (int iRoom, int iAxis)
 		}
 
 		/*** prince ***/
-		if ((int)luKidRoom == iRoom)
+		if (arKidRoom[1] == iRoom)
 		{
 			/*** looking direction ***/
-			if (luKidDir == 0) { luKidDir = 255; } else { luKidDir = 0; }
+			if (arKidDir[1] == 0) { arKidDir[1] = 255; } else { arKidDir[1] = 0; }
 			/*** horizontal position ***/
-			iKidPC = (int)luKidPos;
-			if ((iKidPC >= 1) && (iKidPC <= 10)) { luKidPos = 11 - iKidPC; }
-			if ((iKidPC >= 11) && (iKidPC <= 20)) { luKidPos = 31 - iKidPC; }
-			if ((iKidPC >= 21) && (iKidPC <= 30)) { luKidPos = 51 - iKidPC; }
+			iKidPC = arKidPos[1];
+			if ((iKidPC >= 1) && (iKidPC <= 10)) { arKidPos[1] = 11 - iKidPC; }
+			if ((iKidPC >= 11) && (iKidPC <= 20)) { arKidPos[1] = 31 - iKidPC; }
+			if ((iKidPC >= 21) && (iKidPC <= 30)) { arKidPos[1] = 51 - iKidPC; }
 		}
 
 		if (iEditPoP != 2)
@@ -29927,12 +30251,12 @@ void FlipRoom (int iRoom, int iAxis)
 		}
 
 		/*** prince ***/
-		if ((int)luKidRoom == iRoom)
+		if (arKidRoom[1] == iRoom)
 		{
 			/*** vertical position ***/
-			iKidPC = (int)luKidPos;
-			if ((iKidPC >= 1) && (iKidPC <= 10)) { luKidPos = iKidPC + 20; }
-			if ((iKidPC >= 21) && (iKidPC <= 30)) { luKidPos = iKidPC - 20; }
+			iKidPC = arKidPos[1];
+			if ((iKidPC >= 1) && (iKidPC <= 10)) { arKidPos[1] = iKidPC + 20; }
+			if ((iKidPC >= 21) && (iKidPC <= 30)) { arKidPos[1] = iKidPC - 20; }
 		}
 
 		if (iEditPoP != 2)
@@ -30369,22 +30693,22 @@ mkdir (XML_DIR, 0700);
 	write (iFd, "\t</events>\n", 11);
 
 	/*** prince ***/
-	switch ((int)luKidDir)
+	switch (arKidDir[1])
 	{
 		case 0: iKidDir = 1; break;
 		case 255: iKidDir = 2; break;
 		default:
-			printf ("[ WARN ] Impossible luKidDir value: %i!\n", (int)luKidDir);
+			printf ("[ WARN ] Impossible arKidDir[1] value: %i!\n", arKidDir[1]);
 			iKidDir = 1; break;
 	}
 	/*** 4 of 4 (DOS) ***/
 	if (((int)luLevelNr == 1) || ((int)luLevelNr == 13))
 	{
-		if (luKidDir == 0) { iKidDir = 2; } else { iKidDir = 1; }
+		if (arKidDir[1] == 0) { iKidDir = 2; } else { iKidDir = 1; }
 	}
 	snprintf (sToWrite, MAX_TOWRITE,
-		"\t<prince room=\"%lu\" location=\"%lu\" direction=\"%i\" />\n",
-		luKidRoom, luKidPos, iKidDir);
+		"\t<prince room=\"%i\" location=\"%i\" direction=\"%i\" />\n",
+		arKidRoom[1], arKidPos[1], iKidDir);
 	write (iFd, sToWrite, strlen (sToWrite));
 
 	/*** userdata ***/
@@ -31209,53 +31533,11 @@ void ShowBackground (int iModifier[], int iLoc)
 	char sText[MAX_TEXT + 2];
 	int iShow;
 
-	switch (iLoc)
+	if (((iLoc >= -14) && (iLoc <= -1)) ||
+		((iLoc >= 1) && (iLoc <= 30)))
 	{
-		case -1: dest.x = iHor0; dest.y = iVer1; break;
-		case -2: dest.x = iHor0; dest.y = iVer2; break;
-		case -3: dest.x = iHor0; dest.y = iVer3; break;
-		case -4: dest.x = iHor0; dest.y = iVer4; break;
-		case -5: dest.x = iHor1; dest.y = iVer4; break;
-		case -6: dest.x = iHor2; dest.y = iVer4; break;
-		case -7: dest.x = iHor3; dest.y = iVer4; break;
-		case -8: dest.x = iHor4; dest.y = iVer4; break;
-		case -9: dest.x = iHor5; dest.y = iVer4; break;
-		case -10: dest.x = iHor6; dest.y = iVer4; break;
-		case -11: dest.x = iHor7; dest.y = iVer4; break;
-		case -12: dest.x = iHor8; dest.y = iVer4; break;
-		case -13: dest.x = iHor9; dest.y = iVer4; break;
-		case -14: dest.x = iHor10; dest.y = iVer4; break;
-		case 1: dest.x = iHor1; dest.y = iVer1; break;
-		case 2: dest.x = iHor2; dest.y = iVer1; break;
-		case 3: dest.x = iHor3; dest.y = iVer1; break;
-		case 4: dest.x = iHor4; dest.y = iVer1; break;
-		case 5: dest.x = iHor5; dest.y = iVer1; break;
-		case 6: dest.x = iHor6; dest.y = iVer1; break;
-		case 7: dest.x = iHor7; dest.y = iVer1; break;
-		case 8: dest.x = iHor8; dest.y = iVer1; break;
-		case 9: dest.x = iHor9; dest.y = iVer1; break;
-		case 10: dest.x = iHor10; dest.y = iVer1; break;
-		case 11: dest.x = iHor1; dest.y = iVer2; break;
-		case 12: dest.x = iHor2; dest.y = iVer2; break;
-		case 13: dest.x = iHor3; dest.y = iVer2; break;
-		case 14: dest.x = iHor4; dest.y = iVer2; break;
-		case 15: dest.x = iHor5; dest.y = iVer2; break;
-		case 16: dest.x = iHor6; dest.y = iVer2; break;
-		case 17: dest.x = iHor7; dest.y = iVer2; break;
-		case 18: dest.x = iHor8; dest.y = iVer2; break;
-		case 19: dest.x = iHor9; dest.y = iVer2; break;
-		case 20: dest.x = iHor10; dest.y = iVer2; break;
-		case 21: dest.x = iHor1; dest.y = iVer3; break;
-		case 22: dest.x = iHor2; dest.y = iVer3; break;
-		case 23: dest.x = iHor3; dest.y = iVer3; break;
-		case 24: dest.x = iHor4; dest.y = iVer3; break;
-		case 25: dest.x = iHor5; dest.y = iVer3; break;
-		case 26: dest.x = iHor6; dest.y = iVer3; break;
-		case 27: dest.x = iHor7; dest.y = iVer3; break;
-		case 28: dest.x = iHor8; dest.y = iVer3; break;
-		case 29: dest.x = iHor9; dest.y = iVer3; break;
-		case 30: dest.x = iHor10; dest.y = iVer3; break;
-
+		GetHorVer (iLoc, &dest.x, &dest.y);
+	} else switch (iLoc) {
 		case 100: /*** change custom ***/
 			if (iEditPoP != 3)
 			{
@@ -35295,7 +35577,7 @@ void ShowNative (SDL_Renderer *screen)
 	ShowImage (-3, (int[]){iMod, iNativeTab, 0, 0},
 		screen, 137, 0, 0, 648, 318);
 
-	/*** 6-bit color ***/
+	/*** 6-bit color X ***/
 	if (iNativeTab == 2)
 	{
 		ShowImage (-12, (int[]){12, 0, 0, 0}, screen, 220, 0, 0, 14, 14);
@@ -35622,7 +35904,7 @@ int MapEvents (SDL_Event event)
 			}
 			break;
 		case SDL_QUIT:
-			/*** This event has no windowID, I think. ***/
+			/*** This event has no windowID, probably. ***/
 			if (iActiveWindowID == iWindowMapID)
 			{
 				Quit();
@@ -35953,11 +36235,11 @@ void ShowMap (void)
 	/*** Get hover. ***/
 	iMapHoverYes = 0;
 	for (iTemp = 1; iTemp <= iRooms; iTemp++) { iDone[iTemp] = 0; }
-	SetMapHover ((int)luKidRoom, iStartRoomsX, iStartRoomsY);
+	SetMapHover (arKidRoom[1], iStartRoomsX, iStartRoomsY);
 	if (iMapHoverYes == 0) { iMapHoverRoom = 0; }
 
 	for (iTemp = 1; iTemp <= iRooms; iTemp++) { iDone[iTemp] = 0; }
-	ShowRoomsMap ((int)luKidRoom, iStartRoomsX, iStartRoomsY);
+	ShowRoomsMap (arKidRoom[1], iStartRoomsX, iStartRoomsY);
 
 	ShowImageBasic (imgmap, 0, 0, "imgmap", mscreen, 1, 1);
 
@@ -36082,7 +36364,7 @@ void ShowMap (void)
 	/*** show room numbers ***/
 	if (iMapShowNumbers == 1)
 	{
-		ShowImageBasic (imgsellm, 636, 807, "imgsellm", mscreen, 1, 1);
+		ShowImageBasic (imgchkbmap, 636, 807, "imgchkbmap", mscreen, 1, 1);
 	}
 
 	/*** refresh screen ***/
@@ -36871,7 +37153,7 @@ void ShowPlaytest (void)
 	/*** checkbox ***/
 	if (iAutoUseChk == 1)
 	{
-		ShowImageBasic (imgsell, 121, 320, "imgsell", ascreen, iScale, 1);
+		ShowImageBasic (imgchkb, 121, 320, "imgchkb", ascreen, iScale, 1);
 	}
 
 	/*** refresh screen ***/
@@ -37763,27 +38045,27 @@ void ShowAutomatic (void)
 			iKeys = iAutomaticSNESKeys[iLoopAutomatic];
 			if (iKeys == 255)
 			{
-				ShowImageBasic (imgsell, 228, 412, "imgsell", ascreen, iScale, 1);
+				ShowImageBasic (imgchkb, 228, 412, "imgchkb", ascreen, iScale, 1);
 			} else {
 				if (iKeys & (1 << 5)) /*** 32 ***/
 				{
-					ShowImageBasic (imgsell, 188, 412, "imgsell", ascreen, iScale, 1);
+					ShowImageBasic (imgchkb, 188, 412, "imgchkb", ascreen, iScale, 1);
 				}
 				if (iKeys & (1 << 3)) /*** 8 ***/
 				{
-					ShowImageBasic (imgsell, 148, 412, "imgsell", ascreen, iScale, 1);
+					ShowImageBasic (imgchkb, 148, 412, "imgchkb", ascreen, iScale, 1);
 				}
 				if (iKeys & (1 << 2)) /*** 4 ***/
 				{
-					ShowImageBasic (imgsell, 108, 412, "imgsell", ascreen, iScale, 1);
+					ShowImageBasic (imgchkb, 108, 412, "imgchkb", ascreen, iScale, 1);
 				}
 				if (iKeys & (1 << 1)) /*** 2 ***/
 				{
-					ShowImageBasic (imgsell, 68, 412, "imgsell", ascreen, iScale, 1);
+					ShowImageBasic (imgchkb, 68, 412, "imgchkb", ascreen, iScale, 1);
 				}
 				if (iKeys & (1 << 0)) /*** 1 ***/
 				{
-					ShowImageBasic (imgsell, 28, 412, "imgsell", ascreen, iScale, 1);
+					ShowImageBasic (imgchkb, 28, 412, "imgchkb", ascreen, iScale, 1);
 				}
 			}
 		}
@@ -38187,5 +38469,880 @@ void Move (int *iTime, int *iAction, int iX, int iY, int iEnd)
 		}
 		PlaySound ("wav/hum_adj.wav");
 	}
+}
+/*****************************************************************************/
+void KidAction (char *sAction, int iLocation)
+/*****************************************************************************/
+{
+	if (strcmp (sAction, "right") == 0)
+	{
+		switch (iKidHover)
+		{
+			case 1: iKidHover = 2; break;
+			case 2: if (iNrPlayers >= 5) { iKidHover = 9; }
+				else { iKidHover = 1; } break;
+			case 3: iKidHover = 4; break;
+			case 4: if (iNrPlayers >= 6) { iKidHover = 11; }
+				else { iKidHover = 3; } break;
+			case 5: iKidHover = 6; break;
+			case 6: if (iNrPlayers >= 7) { iKidHover = 13; }
+				else { iKidHover = 5; } break;
+			case 7: iKidHover = 8; break;
+			case 8: if (iNrPlayers == 8) { iKidHover = 15; }
+				else { iKidHover = 7; } break;
+			case 9: iKidHover = 10; break;
+			case 10: iKidHover = 1; break;
+			case 11: iKidHover = 12; break;
+			case 12: iKidHover = 3; break;
+			case 13: iKidHover = 14; break;
+			case 14: iKidHover = 5; break;
+			case 15: iKidHover = 16; break;
+			case 16: iKidHover = 7; break;
+		}
+	}
+
+	if (strcmp (sAction, "left") == 0)
+	{
+		switch (iKidHover)
+		{
+			case 1: if (iNrPlayers >= 5) { iKidHover = 10; }
+				else { iKidHover = 2; } break;
+			case 2: iKidHover = 1; break;
+			case 3: if (iNrPlayers >= 6) { iKidHover = 12; }
+				else { iKidHover = 4; } break;
+			case 4: iKidHover = 3; break;
+			case 5: if (iNrPlayers >= 7) { iKidHover = 14; }
+				else { iKidHover = 6; } break;
+			case 6: iKidHover = 5; break;
+			case 7: if (iNrPlayers == 8) { iKidHover = 16; }
+				else { iKidHover = 8; } break;
+			case 8: iKidHover = 7; break;
+			case 9: iKidHover = 2; break;
+			case 10: iKidHover = 9; break;
+			case 11: iKidHover = 4; break;
+			case 12: iKidHover = 11; break;
+			case 13: iKidHover = 6; break;
+			case 14: iKidHover = 13; break;
+			case 15: iKidHover = 8; break;
+			case 16: iKidHover = 15; break;
+		}
+	}
+
+	if (strcmp (sAction, "up") == 0)
+	{
+		switch (iKidHover)
+		{
+			case 1:
+				switch (iNrPlayers)
+				{
+					case 1: /*** Do nothing. ***/ break;
+					case 2: iKidHover = 3; break;
+					case 3: iKidHover = 5; break;
+					default: iKidHover = 7; break;
+				}
+				break;
+			case 2:
+				switch (iNrPlayers)
+				{
+					case 1: /*** Do nothing. ***/ break;
+					case 2: iKidHover = 4; break;
+					case 3: iKidHover = 6; break;
+					default: iKidHover = 8; break;
+				}
+				break;
+			case 3: iKidHover = 1; break;
+			case 4: iKidHover = 2; break;
+			case 5: iKidHover = 3; break;
+			case 6: iKidHover = 4; break;
+			case 7: iKidHover = 5; break;
+			case 8: iKidHover = 6; break;
+			case 9:
+				switch (iNrPlayers)
+				{
+					case 6: iKidHover = 11; break;
+					case 7: iKidHover = 13; break;
+					case 8: iKidHover = 15; break;
+					default: /*** Do nothing. ***/ break;
+				}
+				break;
+			case 10:
+				switch (iNrPlayers)
+				{
+					case 6: iKidHover = 12; break;
+					case 7: iKidHover = 14; break;
+					case 8: iKidHover = 16; break;
+					default: /*** Do nothing. ***/ break;
+				}
+				break;
+			case 11: iKidHover = 9; break;
+			case 12: iKidHover = 10; break;
+			case 13: iKidHover = 11; break;
+			case 14: iKidHover = 12; break;
+			case 15: iKidHover = 13; break;
+			case 16: iKidHover = 14; break;
+		}
+	}
+
+	if (strcmp (sAction, "down") == 0)
+	{
+		switch (iKidHover)
+		{
+			case 1: if (iNrPlayers >= 2) { iKidHover = 3; } break;
+			case 2: if (iNrPlayers >= 2) { iKidHover = 4; } break;
+			case 3: if (iNrPlayers >= 3) { iKidHover = 5; }
+				else { iKidHover = 1; } break;
+			case 4: if (iNrPlayers >= 3) { iKidHover = 6; }
+				else { iKidHover = 2; } break;
+			case 5: if (iNrPlayers >= 4) { iKidHover = 7; }
+				else { iKidHover = 1; } break;
+			case 6: if (iNrPlayers >= 4) { iKidHover = 8; }
+				else { iKidHover = 2; } break;
+			case 7: iKidHover = 1; break;
+			case 8: iKidHover = 2; break;
+			case 9: if (iNrPlayers >= 6) { iKidHover = 11; } break;
+			case 10: if (iNrPlayers >= 6) { iKidHover = 12; } break;
+			case 11: if (iNrPlayers >= 7) { iKidHover = 13; }
+				else { iKidHover = 9; } break;
+			case 12: if (iNrPlayers >= 7) { iKidHover = 14; }
+				else { iKidHover = 10; } break;
+			case 13: if (iNrPlayers == 8) { iKidHover = 15; }
+				else { iKidHover = 9; } break;
+			case 14: if (iNrPlayers == 8) { iKidHover = 16; }
+				else { iKidHover = 10; } break;
+			case 15: iKidHover = 9; break;
+			case 16: iKidHover = 10; break;
+		}
+	}
+
+	if (strcmp (sAction, "apply") == 0)
+	{
+		if ((iKidHover == 1) || (iKidHover == 2))
+		{
+			arKidRoom[1] = iCurRoom;
+			arKidPos[1] = iLocation;
+			if (iKidHover == 1) { arKidDir[1] = 0; } else { arKidDir[1] = 255; }
+		}
+		if ((iKidHover == 3) || (iKidHover == 4))
+		{
+			arKidRoom[2] = iCurRoom;
+			arKidPos[2] = iLocation;
+			if (iKidHover == 3) { arKidDir[2] = 0; } else { arKidDir[2] = 255; }
+		}
+		if ((iKidHover == 5) || (iKidHover == 6))
+		{
+			arKidRoom[3] = iCurRoom;
+			arKidPos[3] = iLocation;
+			if (iKidHover == 5) { arKidDir[3] = 0; } else { arKidDir[3] = 255; }
+		}
+		if ((iKidHover == 7) || (iKidHover == 8))
+		{
+			arKidRoom[4] = iCurRoom;
+			arKidPos[4] = iLocation;
+			if (iKidHover == 7) { arKidDir[4] = 0; } else { arKidDir[4] = 255; }
+		}
+		if ((iKidHover == 9) || (iKidHover == 10))
+		{
+			arKidRoom[5] = iCurRoom;
+			arKidPos[5] = iLocation;
+			if (iKidHover == 9) { arKidDir[5] = 0; } else { arKidDir[5] = 255; }
+		}
+		if ((iKidHover == 11) || (iKidHover == 12))
+		{
+			arKidRoom[6] = iCurRoom;
+			arKidPos[6] = iLocation;
+			if (iKidHover == 11) { arKidDir[6] = 0; } else { arKidDir[6] = 255; }
+		}
+		if ((iKidHover == 13) || (iKidHover == 14))
+		{
+			arKidRoom[7] = iCurRoom;
+			arKidPos[7] = iLocation;
+			if (iKidHover == 13) { arKidDir[7] = 0; } else { arKidDir[7] = 255; }
+		}
+		if ((iKidHover == 15) || (iKidHover == 16))
+		{
+			arKidRoom[8] = iCurRoom;
+			arKidPos[8] = iLocation;
+			if (iKidHover == 15) { arKidDir[8] = 0; } else { arKidDir[8] = 255; }
+		}
+	}
+}
+/*****************************************************************************/
+int Kid (int iLocation, SDL_Renderer *screen)
+/*****************************************************************************/
+{
+	SDL_Event event;
+	int iKid;
+	int iChanging;
+	int iHoverSX, iHoverSY;
+	int iKidHoverOld;
+
+	/*** Used for looping. ***/
+	int iLoopPlayer;
+
+	/*** arLiveX and arLiveY; do NOT move to ShowKid() ***/
+	arLiveX[1] = 0; arLiveY[1] = 0;
+	if ((iCurRoom == arKidRoom[1]) && (iLocation == arKidPos[1]))
+	{
+		if (arKidDir[1] == 0)
+			{ arLiveX[1] = 52; arLiveY[1] = 50; } /*** facing right ***/
+				else { arLiveX[1] = 75; arLiveY[1] = 50; } /*** facing left ***/
+	}
+	arLiveX[2] = 0; arLiveY[2] = 0;
+	if ((iCurRoom == arKidRoom[2]) && (iLocation == arKidPos[2]))
+	{
+		if (arKidDir[2] == 0)
+			{ arLiveX[2] = 52; arLiveY[2] = 151; } /*** facing right ***/
+				else { arLiveX[2] = 75; arLiveY[2] = 151; } /*** facing left ***/
+	}
+	arLiveX[3] = 0; arLiveY[3] = 0;
+	if ((iCurRoom == arKidRoom[3]) && (iLocation == arKidPos[3]))
+	{
+		if (arKidDir[3] == 0)
+			{ arLiveX[3] = 52; arLiveY[3] = 252; } /*** facing right ***/
+				else { arLiveX[3] = 75; arLiveY[3] = 252; } /*** facing left ***/
+	}
+	arLiveX[4] = 0; arLiveY[4] = 0;
+	if ((iCurRoom == arKidRoom[4]) && (iLocation == arKidPos[4]))
+	{
+		if (arKidDir[4] == 0)
+			{ arLiveX[4] = 52; arLiveY[4] = 353; } /*** facing right ***/
+				else { arLiveX[4] = 75; arLiveY[4] = 353; } /*** facing left ***/
+	}
+	arLiveX[5] = 0; arLiveY[5] = 0;
+	if ((iCurRoom == arKidRoom[5]) && (iLocation == arKidPos[5]))
+	{
+		if (arKidDir[5] == 0)
+			{ arLiveX[5] = 372; arLiveY[5] = 50; } /*** facing right ***/
+				else { arLiveX[5] = 395; arLiveY[5] = 50; } /*** facing left ***/
+	}
+	arLiveX[6] = 0; arLiveY[6] = 0;
+	if ((iCurRoom == arKidRoom[6]) && (iLocation == arKidPos[6]))
+	{
+		if (arKidDir[6] == 0)
+			{ arLiveX[6] = 372; arLiveY[6] = 151; } /*** facing right ***/
+				else { arLiveX[6] = 395; arLiveY[6] = 151; } /*** facing left ***/
+	}
+	arLiveX[7] = 0; arLiveY[7] = 0;
+	if ((iCurRoom == arKidRoom[7]) && (iLocation == arKidPos[7]))
+	{
+		if (arKidDir[7] == 0)
+			{ arLiveX[7] = 372; arLiveY[7] = 252; } /*** facing right ***/
+				else { arLiveX[7] = 395; arLiveY[7] = 252; } /*** facing left ***/
+	}
+	arLiveX[8] = 0; arLiveY[8] = 0;
+	if ((iCurRoom == arKidRoom[8]) && (iLocation == arKidPos[8]))
+	{
+		if (arKidDir[8] == 0)
+			{ arLiveX[8] = 372; arLiveY[8] = 353; } /*** facing right ***/
+				else { arLiveX[8] = 395; arLiveY[8] = 353; } /*** facing left ***/
+	}
+
+	iChanging = 1;
+
+	iKid = 1;
+
+	iKidHover = 1;
+	ShowKid (screen);
+	while (iKid == 1)
+	{
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_B:
+							iKid = 0; break;
+						case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+							KidAction ("right", iLocation); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+							KidAction ("left", iLocation); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_UP:
+							KidAction ("up", iLocation); break;
+						case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+							KidAction ("down", iLocation); break;
+						case SDL_CONTROLLER_BUTTON_A:
+							KidAction ("apply", iLocation);
+							iChanged++; iKid = 0; iChanging = 0; break;
+					}
+					ShowKid (screen);
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_RIGHT: KidAction ("right", iLocation); break;
+						case SDLK_LEFT: KidAction ("left", iLocation); break;
+						case SDLK_UP: KidAction ("up", iLocation); break;
+						case SDLK_DOWN: KidAction ("down", iLocation); break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+							KidAction ("apply", iLocation);
+							iChanged++; iKid = 0; iChanging = 0;
+							break;
+						case SDLK_ESCAPE:
+							iKid = 0; break;
+						case SDLK_1:
+						case SDLK_KP_1:
+							if (iNrPlayers != 1)
+							{
+								iNrPlayers = 1;
+								if (iKidHover > 2) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						case SDLK_2:
+						case SDLK_KP_2:
+							if (iNrPlayers != 2)
+							{
+								iNrPlayers = 2;
+								if (iKidHover > 4) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						case SDLK_3:
+						case SDLK_KP_3:
+							if (iNrPlayers != 3)
+							{
+								iNrPlayers = 3;
+								if (iKidHover > 6) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						case SDLK_4:
+						case SDLK_KP_4:
+							if (iNrPlayers != 4)
+							{
+								iNrPlayers = 4;
+								if (iKidHover > 8) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						case SDLK_5:
+						case SDLK_KP_5:
+							if (iNrPlayers != 5)
+							{
+								iNrPlayers = 5;
+								if (iKidHover > 10) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						case SDLK_6:
+						case SDLK_KP_6:
+							if (iNrPlayers != 6)
+							{
+								iNrPlayers = 6;
+								if (iKidHover > 12) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						case SDLK_7:
+						case SDLK_KP_7:
+							if (iNrPlayers != 7)
+							{
+								iNrPlayers = 7;
+								if (iKidHover > 14) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						case SDLK_8:
+						case SDLK_KP_8:
+							if (iNrPlayers != 8)
+							{
+								iNrPlayers = 8;
+								if (iKidHover > 16) { iKidHover = 1; }
+								iChanged++;
+								PlaySound ("wav/check_box.wav");
+							}
+							break;
+						default: break;
+					}
+					ShowKid (screen);
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+
+					/*** hover ***/
+					iKidHoverOld = iKidHover;
+					if (InArea (52, 50, 52 + 21, 50 + 39) == 1) { iKidHover = 1; }
+					if (InArea (75, 50, 75 + 21, 50 + 39) == 1) { iKidHover = 2; }
+					if (iNrPlayers >= 2)
+					{
+						if (InArea (52, 151, 52 + 21, 151 + 39) == 1) { iKidHover = 3; }
+						if (InArea (75, 151, 75 + 21, 151 + 39) == 1) { iKidHover = 4; }
+					}
+					if (iNrPlayers >= 3)
+					{
+						if (InArea (52, 252, 52 + 21, 252 + 39) == 1) { iKidHover = 5; }
+						if (InArea (75, 252, 75 + 21, 252 + 39) == 1) { iKidHover = 6; }
+					}
+					if (iNrPlayers >= 4)
+					{
+						if (InArea (52, 353, 52 + 21, 353 + 39) == 1) { iKidHover = 7; }
+						if (InArea (75, 353, 75 + 21, 353 + 39) == 1) { iKidHover = 8; }
+					}
+					if (iNrPlayers >= 5)
+					{
+						if (InArea (372, 50, 372 + 21, 50 + 39) == 1) { iKidHover = 9; }
+						if (InArea (395, 50, 395 + 21, 50 + 39) == 1) { iKidHover = 10; }
+					}
+					if (iNrPlayers >= 6)
+					{
+						if (InArea (372, 151, 372 + 21, 151 + 39) == 1) { iKidHover = 11; }
+						if (InArea (395, 151, 395 + 21, 151 + 39) == 1) { iKidHover = 12; }
+					}
+					if (iNrPlayers >= 7)
+					{
+						if (InArea (372, 252, 372 + 21, 252 + 39) == 1) { iKidHover = 13; }
+						if (InArea (395, 252, 395 + 21, 252 + 39) == 1) { iKidHover = 14; }
+					}
+					if (iNrPlayers == 8)
+					{
+						if (InArea (372, 353, 372 + 21, 353 + 39) == 1) { iKidHover = 15; }
+						if (InArea (395, 353, 395 + 21, 353 + 39) == 1) { iKidHover = 16; }
+					}
+					if (iKidHoverOld != iKidHover) { ShowKid (screen); }
+
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == 1)
+					{
+						/*** CLOSE ***/
+						if (InArea (656, 0, 692, 455) == 1)
+						{
+							if (iCloseKidOn != 1) { iCloseKidOn = 1; }
+							ShowKid (screen);
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iCloseKidOn = 0;
+					if (event.button.button == 1) /*** left mouse button ***/
+					{
+						/*** number of players ***/
+						for (iLoopPlayer = 1; iLoopPlayer <= 8; iLoopPlayer++)
+						{
+							if (InArea (139 + (iLoopPlayer * 15), 13,
+								139 + (iLoopPlayer * 15) + 14, 13 + 14) == 1)
+							{
+								if (iNrPlayers != iLoopPlayer)
+								{
+									iNrPlayers = iLoopPlayer;
+									if (iKidHover > (iNrPlayers * 2)) { iKidHover = 1; }
+									iChanged++;
+									PlaySound ("wav/check_box.wav");
+								}
+							}
+						}
+
+						/*** hovering kid ***/
+						for (iLoopPlayer = 1; iLoopPlayer <= iNrPlayers; iLoopPlayer++)
+						{
+							switch (iLoopPlayer)
+							{
+								case 1: iHoverSX = 50; iHoverSY = 48; break;
+								case 2: iHoverSX = 50; iHoverSY = 149; break;
+								case 3: iHoverSX = 50; iHoverSY = 250; break;
+								case 4: iHoverSX = 50; iHoverSY = 351; break;
+								case 5: iHoverSX = 370; iHoverSY = 48; break;
+								case 6: iHoverSX = 370; iHoverSY = 149; break;
+								case 7: iHoverSX = 370; iHoverSY = 250; break;
+								case 8: iHoverSX = 370; iHoverSY = 351; break;
+							}
+							if (InArea (iHoverSX, iHoverSY,
+								iHoverSX + 48, iHoverSY + 43) == 1)
+							{
+								KidAction ("apply", iLocation);
+								iChanged++; iKid = 0; iChanging = 0;
+							}
+						}
+
+						/*** color ****/
+						if (iNrPlayers >= 2)
+						{
+							PlusMinus (&arKidClr[1], 50, 117, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[1], 65, 117, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[1], 135, 117, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[1], 150, 117, 0, 63, +10, 1);
+							/***/
+							PlusMinus (&arKidClr[2], 50, 218, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[2], 65, 218, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[2], 135, 218, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[2], 150, 218, 0, 63, +10, 1);
+						}
+						if (iNrPlayers >= 3)
+						{
+							PlusMinus (&arKidClr[3], 50, 319, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[3], 65, 319, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[3], 135, 319, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[3], 150, 319, 0, 63, +10, 1);
+						}
+						if (iNrPlayers >= 4)
+						{
+							PlusMinus (&arKidClr[4], 50, 420, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[4], 65, 420, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[4], 135, 420, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[4], 150, 420, 0, 63, +10, 1);
+						}
+						if (iNrPlayers >= 5)
+						{
+							PlusMinus (&arKidClr[5], 370, 117, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[5], 385, 117, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[5], 455, 117, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[5], 470, 117, 0, 63, +10, 1);
+						}
+						if (iNrPlayers >= 6)
+						{
+							PlusMinus (&arKidClr[6], 370, 218, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[6], 385, 218, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[6], 455, 218, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[6], 470, 218, 0, 63, +10, 1);
+						}
+						if (iNrPlayers >= 7)
+						{
+							PlusMinus (&arKidClr[7], 370, 319, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[7], 385, 319, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[7], 455, 319, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[7], 470, 319, 0, 63, +10, 1);
+						}
+						if (iNrPlayers == 8)
+						{
+							PlusMinus (&arKidClr[8], 370, 420, 0, 63, -10, 1);
+							PlusMinus (&arKidClr[8], 385, 420, 0, 63, -1, 1);
+							PlusMinus (&arKidClr[8], 455, 420, 0, 63, +1, 1);
+							PlusMinus (&arKidClr[8], 470, 420, 0, 63, +10, 1);
+						}
+
+						/*** CLOSE ***/
+						if (InArea (656, 0, 692, 455) == 1) { iKid = 0; }
+					}
+					ShowKid (screen);
+					break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowKid (screen); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+			}
+		}
+
+		/*** prevent CPU eating ***/
+		gamespeed = REFRESH;
+		while ((SDL_GetTicks() - looptime) < gamespeed)
+		{
+			SDL_Delay (10);
+		}
+		looptime = SDL_GetTicks();
+	}
+	if (iChanging == 1) { PlaySound ("wav/ok_close.wav"); }
+
+	return (iChanging);
+}
+/*****************************************************************************/
+void ShowKid (SDL_Renderer *screen)
+/*****************************************************************************/
+{
+	int iHoverSX, iHoverSY;
+	int iPosKX, iPosKY;
+
+	/*** Used for looping. ***/
+	int iLoopPlayer;
+
+	ShowImageBasic (imgkid, 0, 0, "imgkid", screen, iScale, 1);
+
+	switch (iCloseKidOn)
+	{
+		case 0: /*** off ***/
+			ShowImageBasic (imgclosebig_0, 656, 0, "imgclosebig_0",
+				screen, iScale, 1); break;
+		case 1: /*** on ***/
+			ShowImageBasic (imgclosebig_1, 656, 0, "imgclosebig_1",
+				screen, iScale, 1); break;
+	}
+
+	/*** number of players ***/
+	ShowImageBasic (imgchkg, 139 + (iNrPlayers * 15), 13, "imgchkg",
+		screen, iScale, 1);
+
+	/*** live ***/
+	for (iLoopPlayer = 1; iLoopPlayer <= 8; iLoopPlayer++)
+	{
+		if (arLiveX[iLoopPlayer] != 0)
+		{
+			ShowImageBasic (imgkidbl, arLiveX[iLoopPlayer] - 2,
+				arLiveY[iLoopPlayer] - 2, "imgkidbl", screen, iScale, 1);
+		}
+	}
+
+	/*** hover ***/
+	switch (iKidHover)
+	{
+		/*** P1 ***/
+		case 1: iHoverSX = 52; iHoverSY = 50; break; /*** facing right ***/
+		case 2: iHoverSX = 75; iHoverSY = 50; break; /*** facing left ***/
+		/*** P2 ***/
+		case 3: iHoverSX = 52; iHoverSY = 151; break; /*** facing right ***/
+		case 4: iHoverSX = 75; iHoverSY = 151; break; /*** facing left ***/
+		/*** P3 ***/
+		case 5: iHoverSX = 52; iHoverSY = 252; break; /*** facing right ***/
+		case 6: iHoverSX = 75; iHoverSY = 252; break; /*** facing left ***/
+		/*** P4 ***/
+		case 7: iHoverSX = 52; iHoverSY = 353; break; /*** facing right ***/
+		case 8: iHoverSX = 75; iHoverSY = 353; break; /*** facing left ***/
+		/*** P5 ***/
+		case 9: iHoverSX = 372; iHoverSY = 50; break; /*** facing right ***/
+		case 10: iHoverSX = 395; iHoverSY = 50; break; /*** facing left ***/
+		/*** P6 ***/
+		case 11: iHoverSX = 372; iHoverSY = 151; break; /*** facing right ***/
+		case 12: iHoverSX = 395; iHoverSY = 151; break; /*** facing left ***/
+		/*** P7 ***/
+		case 13: iHoverSX = 372; iHoverSY = 252; break; /*** facing right ***/
+		case 14: iHoverSX = 395; iHoverSY = 252; break; /*** facing left ***/
+		/*** P8 ***/
+		case 15: iHoverSX = 372; iHoverSY = 353; break; /*** facing right ***/
+		case 16: iHoverSX = 395; iHoverSY = 353; break; /*** facing left ***/
+		/***/
+		default:
+			printf ("[ WARN ] Invalid iKidHover: %i\n", iKidHover);
+			iKidHover = 1; iHoverSX = 52; iHoverSY = 50; break; /*** Fallback. ***/
+	}
+	ShowImageBasic (imgkidb, iHoverSX - 2, iHoverSY - 2, "imgkidb",
+		screen, iScale, 1);
+
+	/*** room ***/
+	CenterNumber (screen, arKidRoom[1], 78, 94, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidRoom[2], 78, 195, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidRoom[3], 78, 296, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidRoom[4], 78, 397, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidRoom[5], 398, 94, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidRoom[6], 398, 195, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidRoom[7], 398, 296, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidRoom[8], 398, 397, color_g8, color_bl, 0);
+
+	/*** pos ***/
+	for (iLoopPlayer = 1; iLoopPlayer <= 8; iLoopPlayer++)
+	{
+		switch (arKidPos[iLoopPlayer])
+		{
+			case 1: iPosKX = 1; iPosKY = 1; break;
+			case 2: iPosKX = 7; iPosKY = 1; break;
+			case 3: iPosKX = 13; iPosKY = 1; break;
+			case 4: iPosKX = 19; iPosKY = 1; break;
+			case 5: iPosKX = 25; iPosKY = 1; break;
+			case 6: iPosKX = 31; iPosKY = 1; break;
+			case 7: iPosKX = 37; iPosKY = 1; break;
+			case 8: iPosKX = 43; iPosKY = 1; break;
+			case 9: iPosKX = 49; iPosKY = 1; break;
+			case 10: iPosKX = 55; iPosKY = 1; break;
+			case 11: iPosKX = 1; iPosKY = 15; break;
+			case 12: iPosKX = 7; iPosKY = 15; break;
+			case 13: iPosKX = 13; iPosKY = 15; break;
+			case 14: iPosKX = 19; iPosKY = 15; break;
+			case 15: iPosKX = 25; iPosKY = 15; break;
+			case 16: iPosKX = 31; iPosKY = 15; break;
+			case 17: iPosKX = 37; iPosKY = 15; break;
+			case 18: iPosKX = 43; iPosKY = 15; break;
+			case 19: iPosKX = 49; iPosKY = 15; break;
+			case 20: iPosKX = 55; iPosKY = 15; break;
+			case 21: iPosKX = 1; iPosKY = 29; break;
+			case 22: iPosKX = 7; iPosKY = 29; break;
+			case 23: iPosKX = 13; iPosKY = 29; break;
+			case 24: iPosKX = 19; iPosKY = 29; break;
+			case 25: iPosKX = 25; iPosKY = 29; break;
+			case 26: iPosKX = 31; iPosKY = 29; break;
+			case 27: iPosKX = 37; iPosKY = 29; break;
+			case 28: iPosKX = 43; iPosKY = 29; break;
+			case 29: iPosKX = 49; iPosKY = 29; break;
+			case 30: iPosKX = 55; iPosKY = 29; break;
+			default:
+				printf ("[ WARN ] Strange pos: %i\n", arKidPos[iLoopPlayer]);
+				iPosKX = 1; iPosKY = 1; break; /*** Fallback. ***/
+		}
+		switch (iLoopPlayer)
+		{
+			case 1: iPosKX+=102; iPosKY+=48; break;
+			case 2: iPosKX+=102; iPosKY+=149; break;
+			case 3: iPosKX+=102; iPosKY+=250; break;
+			case 4: iPosKX+=102; iPosKY+=351; break;
+			case 5: iPosKX+=422; iPosKY+=48; break;
+			case 6: iPosKX+=422; iPosKY+=149; break;
+			case 7: iPosKX+=422; iPosKY+=250; break;
+			case 8: iPosKX+=422; iPosKY+=351; break;
+		}
+		ShowImageBasic (imgkidp, iPosKX, iPosKY, "imgkidp", screen, iScale, 1);
+	}
+
+	/*** color ***/
+	CenterNumber (screen, arKidClr[1], 78, 117, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[1] & 0x3F)], 15, 69,
+		"six_bit_rgb[...]", screen, iScale, 1);
+	CenterNumber (screen, arKidClr[2], 78, 218, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[2] & 0x3F)], 15, 170,
+		"six_bit_rgb[...]", screen, iScale, 1);
+	CenterNumber (screen, arKidClr[3], 78, 319, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[3] & 0x3F)], 15, 271,
+		"six_bit_rgb[...]", screen, iScale, 1);
+	CenterNumber (screen, arKidClr[4], 78, 420, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[4] & 0x3F)], 15, 372,
+		"six_bit_rgb[...]", screen, iScale, 1);
+	CenterNumber (screen, arKidClr[5], 398, 117, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[5] & 0x3F)], 335, 69,
+		"six_bit_rgb[...]", screen, iScale, 1);
+	CenterNumber (screen, arKidClr[6], 398, 218, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[6] & 0x3F)], 335, 170,
+		"six_bit_rgb[...]", screen, iScale, 1);
+	CenterNumber (screen, arKidClr[7], 398, 319, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[7] & 0x3F)], 335, 271,
+		"six_bit_rgb[...]", screen, iScale, 1);
+	CenterNumber (screen, arKidClr[8], 398, 420, color_wh, color_bl, 0);
+	ShowImageBasic (six_bit_rgb[(arKidClr[8] & 0x3F)], 335, 372,
+		"six_bit_rgb[...]", screen, iScale, 1);
+
+	/*** unused 1 ***/
+	CenterNumber (screen, arKidU1[1], 237, 48, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU1[2], 237, 149, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU1[3], 237, 250, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU1[4], 237, 351, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU1[5], 557, 48, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU1[6], 557, 149, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU1[7], 557, 250, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU1[8], 557, 351, color_g8, color_bl, 0);
+
+	/*** unused 2 ***/
+	CenterNumber (screen, arKidU2[1], 237, 71, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU2[2], 237, 172, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU2[3], 237, 273, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU2[4], 237, 374, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU2[5], 557, 71, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU2[6], 557, 172, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU2[7], 557, 273, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU2[8], 557, 374, color_g8, color_bl, 0);
+
+	/*** unused 3 ***/
+	CenterNumber (screen, arKidU3[1], 237, 94, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU3[2], 237, 195, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU3[3], 237, 296, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU3[4], 237, 397, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU3[5], 557, 94, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU3[6], 557, 195, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU3[7], 557, 296, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU3[8], 557, 397, color_g8, color_bl, 0);
+
+	/*** unused 4 ***/
+	CenterNumber (screen, arKidU4[1], 237, 117, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU4[2], 237, 218, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU4[3], 237, 319, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU4[4], 237, 420, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU4[5], 557, 117, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU4[6], 557, 218, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU4[7], 557, 319, color_g8, color_bl, 0);
+	CenterNumber (screen, arKidU4[8], 557, 420, color_g8, color_bl, 0);
+
+	/*** faded ***/
+	if (iNrPlayers == 1)
+		{ ShowImageBasic (imgkidfp1, 9, 43, "imgkidfp1", screen, iScale, 1); }
+	if (iNrPlayers < 2)
+		{ ShowImageBasic (imgkidf, 9, 144, "imgkidf", screen, iScale, 1); }
+	if (iNrPlayers < 3)
+		{ ShowImageBasic (imgkidf, 9, 245, "imgkidf", screen, iScale, 1); }
+	if (iNrPlayers < 4)
+		{ ShowImageBasic (imgkidf, 9, 346, "imgkidf", screen, iScale, 1); }
+	if (iNrPlayers < 5)
+		{ ShowImageBasic (imgkidf, 329, 43, "imgkidf", screen, iScale, 1); }
+	if (iNrPlayers < 6)
+		{ ShowImageBasic (imgkidf, 329, 144, "imgkidf", screen, iScale, 1); }
+	if (iNrPlayers < 7)
+		{ ShowImageBasic (imgkidf, 329, 245, "imgkidf", screen, iScale, 1); }
+	if (iNrPlayers < 8)
+		{ ShowImageBasic (imgkidf, 329, 346, "imgkidf", screen, iScale, 1); }
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (screen);
+}
+/*****************************************************************************/
+void GetHorVer (int iLocation, int *iHor, int *iVer)
+/*****************************************************************************/
+{
+	switch (iLocation)
+	{
+		case -1: *iHor = iHor0; *iVer = iVer1; break;
+		case -2: *iHor = iHor0; *iVer = iVer2; break;
+		case -3: *iHor = iHor0; *iVer = iVer3; break;
+		case -4: *iHor = iHor0; *iVer = iVer4; break;
+		case -5: *iHor = iHor1; *iVer = iVer4; break;
+		case -6: *iHor = iHor2; *iVer = iVer4; break;
+		case -7: *iHor = iHor3; *iVer = iVer4; break;
+		case -8: *iHor = iHor4; *iVer = iVer4; break;
+		case -9: *iHor = iHor5; *iVer = iVer4; break;
+		case -10: *iHor = iHor6; *iVer = iVer4; break;
+		case -11: *iHor = iHor7; *iVer = iVer4; break;
+		case -12: *iHor = iHor8; *iVer = iVer4; break;
+		case -13: *iHor = iHor9; *iVer = iVer4; break;
+		case -14: *iHor = iHor10; *iVer = iVer4; break;
+		case 1: *iHor = iHor1; *iVer = iVer1; break;
+		case 2: *iHor = iHor2; *iVer = iVer1; break;
+		case 3: *iHor = iHor3; *iVer = iVer1; break;
+		case 4: *iHor = iHor4; *iVer = iVer1; break;
+		case 5: *iHor = iHor5; *iVer = iVer1; break;
+		case 6: *iHor = iHor6; *iVer = iVer1; break;
+		case 7: *iHor = iHor7; *iVer = iVer1; break;
+		case 8: *iHor = iHor8; *iVer = iVer1; break;
+		case 9: *iHor = iHor9; *iVer = iVer1; break;
+		case 10: *iHor = iHor10; *iVer = iVer1; break;
+		case 11: *iHor = iHor1; *iVer = iVer2; break;
+		case 12: *iHor = iHor2; *iVer = iVer2; break;
+		case 13: *iHor = iHor3; *iVer = iVer2; break;
+		case 14: *iHor = iHor4; *iVer = iVer2; break;
+		case 15: *iHor = iHor5; *iVer = iVer2; break;
+		case 16: *iHor = iHor6; *iVer = iVer2; break;
+		case 17: *iHor = iHor7; *iVer = iVer2; break;
+		case 18: *iHor = iHor8; *iVer = iVer2; break;
+		case 19: *iHor = iHor9; *iVer = iVer2; break;
+		case 20: *iHor = iHor10; *iVer = iVer2; break;
+		case 21: *iHor = iHor1; *iVer = iVer3; break;
+		case 22: *iHor = iHor2; *iVer = iVer3; break;
+		case 23: *iHor = iHor3; *iVer = iVer3; break;
+		case 24: *iHor = iHor4; *iVer = iVer3; break;
+		case 25: *iHor = iHor5; *iVer = iVer3; break;
+		case 26: *iHor = iHor6; *iVer = iVer3; break;
+		case 27: *iHor = iHor7; *iVer = iVer3; break;
+		case 28: *iHor = iHor8; *iVer = iVer3; break;
+		case 29: *iHor = iHor9; *iVer = iVer3; break;
+		case 30: *iHor = iHor10; *iVer = iVer3; break;
+	}
+}
+/*****************************************************************************/
+int FixDir (int iDir)
+/*****************************************************************************/
+{
+	/* In some levels of PoP1 for DOS, the prince doesn't turn around
+	 * on start, because he does something else (1 = fall, 13 = run).
+	 */
+
+	if (((int)luLevelNr == 1) || ((int)luLevelNr == 13))
+	{
+		if (iDir == 0) { return (255); } else { return (0); }
+	} else { return (iDir); }
 }
 /*****************************************************************************/

@@ -112,6 +112,7 @@ p                                    [PoP2] Change % open.
 q (and Escape and c*)                Go to the main screen.
 r*                                   [PoP2 ruins] Change wall.
 r*                                   [PoP1 for SNES] Room templates.
+s*                                   [PoP1 for DOS] Go to the kid screen.
 s*                                   [PoP2 caverns] Change stalactite.
 s*                                   [PoP2 ruins] Change symbol.
 Enter (and Return and Space)         Use the selected tile.

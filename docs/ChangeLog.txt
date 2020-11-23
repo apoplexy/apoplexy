@@ -5,6 +5,11 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.11 (November 23, 2020) - Norbert de Jonge
+--------------------
++ A PoP1 for DOS kid screen was added, accessible from the tiles screen ("s"). As yet, it is of no practical use other than modifying P1, and is for testing purposes only. See docs/multiplayer.txt.
+* Minor improvements.
+
 v3.10 (October 15, 2020) - Norbert de Jonge
 --------------------
 + Added PoP1 for DOS demo level settings (F4).
