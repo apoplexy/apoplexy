@@ -5,6 +5,11 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.11.1 (December 30, 2020) - Norbert de Jonge
+--------------------
+* Fixed a visual bug that was introduced in v3.11 (kid dir).
+* Fixed the PoP1 for DOS demo level playability toggle.
+
 v3.11 (November 23, 2020) - Norbert de Jonge
 --------------------
 + A PoP1 for DOS kid screen was added, accessible from the tiles screen ("s"). As yet, it is of no practical use other than modifying P1, and is for testing purposes only. See docs/multiplayer.txt.

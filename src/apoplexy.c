@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.11 (November 2020)
+/* apoplexy v3.11.1 (December 2020)
  * Copyright (C) 2008-2020 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,7 +56,7 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.11 (November 2020)"
+#define EDITOR_VERSION "v3.11.1 (December 2020)"
 #define COPYRIGHT "Copyright (C) 2020 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
@@ -841,7 +841,7 @@ int iEXEPrinceMovesAction[24 + 2];
 static const unsigned long arDemoPlayableD1[6] =
 	{ 0X7BAA, 0X925A, 0X804E, 0X878E, 0X7B0A, 0X8C3A };
 static const unsigned long arDemoPlayableD2[6] =
-	{ 0X6E5, 0X1D95, 0X7B9, 0XEF9, 0X77D, 0X18AD };
+	{ 0X6E2, 0X1D92, 0X7B6, 0XEF6, 0X77A, 0X18AA };
 int iEXEDemoPlayableD;
 static const unsigned long arDemoPrinceHP[6] =
 	{ 0X4C28, 0X62D8, 0X50B0, 0X57F0, 0X4B6C, 0X5C9C };
@@ -16179,14 +16179,14 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 			{
 				if ((iCurRoom == arKidRoom[1]) && (iLoc == arKidPos[1]))
 				{
-					ShowImage (-8, (int[]){1, 0, 0, 0}, screen, iLoc, 0, 0, 24, 84);
+					ShowImage (-8, (int[]){1, 1, 0, 0}, screen, iLoc, 0, 0, 24, 84);
 				}
 			}
 			if (iEditPoP == 3)
 			{
 				if ((iCurRoom == arKidRoom[1]) && (iLoc == arKidPos[1]))
 				{
-					ShowImage (-8, (int[]){1, 0, 0, 0}, screen, iLoc, 0, 0, 20, 86);
+					ShowImage (-8, (int[]){1, 1, 0, 0}, screen, iLoc, 0, 0, 20, 86);
 				}
 			}
 			if (iEditPoP == 1)
@@ -26254,11 +26254,23 @@ void EXELoad_F4 (void)
 	LSeek (iFdEXE, arDemoPlayableD1[iEXEType]);
 	ReadFromFile (iFdEXE, "", 1, sData);
 	LSeek (iFdEXE, arDemoPlayableD2[iEXEType]);
-	ReadFromFile (iFdEXE, "", 1, sData2);
-	if ((sData[0] == 0x75) && (sData2[0] == 0x75)) /*** N ***/
+	ReadFromFile (iFdEXE, "", 3, sData2);
+	if ((sData[0] == 0x75) &&
+		((((iEXEType == 0) || (iEXEType == 1)) && (sData2[0] == 0xB8) &&
+			(sData2[1] == 0x42) && (sData2[2] == 0x00)) ||
+		(((iEXEType == 2) || (iEXEType == 3)) && (sData2[0] == 0xB2) &&
+			(sData2[1] == 0x44) && (sData2[2] == 0x00)) ||
+		(((iEXEType == 4) || (iEXEType == 5)) && (sData2[0] == 0x84) &&
+			(sData2[1] == 0x42) && (sData2[2] == 0x00)))) /*** N ***/
 	{
 		iEXEDemoPlayableD = 0;
-	} else if ((sData[0] == 0xEB) && (sData2[0] == 0xEB)) { /*** Y ***/
+	} else if ((sData[0] == 0xEB) &&
+		((((iEXEType == 0) || (iEXEType == 1)) && (sData2[0] == 0x9E) &&
+			(sData2[1] == 0x0F) && (sData2[2] == 0xFF)) ||
+		(((iEXEType == 2) || (iEXEType == 3)) && (sData2[0] == 0xB0) &&
+			(sData2[1] == 0x10) && (sData2[2] == 0xFF)) ||
+		(((iEXEType == 4) || (iEXEType == 5)) && (sData2[0] == 0xAA) &&
+			(sData2[1] == 0x10) && (sData2[2] == 0xFF)))) { /*** Y ***/
 		iEXEDemoPlayableD = 1;
 	} else {
 		printf ("[ WARN ] Strange playable value!\n");
@@ -26741,10 +26753,30 @@ void EXESave_F4 (void)
 	LSeek (iFdEXE, arDemoPlayableD2[iEXEType]);
 	switch (iEXEDemoPlayableD)
 	{
-		case 0: sBytes[0] = 0x75; break; /*** N ***/
-		case 1: sBytes[0] = 0xEB; break; /*** Y ***/
+		case 0: /*** N ***/
+			switch (iEXEType)
+			{
+				case 0: case 1:
+					sBytes[0] = 0xB8; sBytes[1] = 0x42; sBytes[2] = 0x00; break;
+				case 2: case 3:
+					sBytes[0] = 0xB2; sBytes[1] = 0x44; sBytes[2] = 0x00; break;
+				case 4: case 5:
+					sBytes[0] = 0x84; sBytes[1] = 0x42; sBytes[2] = 0x00; break;
+			}
+			break;
+		case 1: /*** Y ***/
+			switch (iEXEType)
+			{
+				case 0: case 1:
+					sBytes[0] = 0x9E; sBytes[1] = 0x0F; sBytes[2] = 0xFF; break;
+				case 2: case 3:
+					sBytes[0] = 0xB0; sBytes[1] = 0x10; sBytes[2] = 0xFF; break;
+				case 4: case 5:
+					sBytes[0] = 0xAA; sBytes[1] = 0x10; sBytes[2] = 0xFF; break;
+			}
+			break;
 	}
-	WriteCharByChar (iFdEXE, sBytes, 1);
+	WriteCharByChar (iFdEXE, sBytes, 3);
 
 	/*** (Demo level) Prince HP. ***/
 	LSeek (iFdEXE, arDemoPrinceHP[iEXEType]);

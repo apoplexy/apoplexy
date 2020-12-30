@@ -10,7 +10,7 @@
 
 ===[1 - ABOUT]=================================================================
 
-apoplexy v3.11 (November 2020)
+apoplexy v3.11.1 (December 2020)
 Copyright (C) 2008-2020 The apoplexy Team (see credits.txt)
 
 A level editor of Prince of Persia 1 (for DOS and SNES) and 2 (for DOS).
