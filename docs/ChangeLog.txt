@@ -5,6 +5,12 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.12 (January 29, 2021) - Norbert de Jonge
+--------------------
++ It's now possible to quickly jump to levels ("l").
++ On the PoP1 for DOS tiles screen, highlights drop and raise buttons when hovering over the event number.
++ If a newer version of the program exists (has been released), an 'upgrade available' notice is displayed on the game selection screen.
+
 v3.11.1 (December 30, 2020) - Norbert de Jonge
 --------------------
 * Fixed a visual bug that was introduced in v3.11 (kid dir).

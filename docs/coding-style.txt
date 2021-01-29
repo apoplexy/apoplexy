@@ -8,6 +8,7 @@ Comments MUST be formatted as either /*** ... ***/ or
 /* ...
  * ... (etc.)
  */
+The only exception being the SPDX-License-Identifier line.
 
 The names of variables MUST: a) relay their purpose (what they represent), and b) be prefixed by their data type. For example, iGuardType, is an integer that holds a guard type.
 

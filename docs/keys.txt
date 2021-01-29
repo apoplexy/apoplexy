@@ -8,6 +8,7 @@ f (and Alt + Enter/Return/Space)     Toggle fullscreen mode.
 h                                    Flip the room horizontally.
 i                                    Toggle tile information.
 j                                    Jump to a room.
+l                                    Jump to a level.
 m                                    [PoP1 for DOS] Open the Map screen.
 q (and Escape)                       Quit the application.
 r                                    Go to the room links screen.

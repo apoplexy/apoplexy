@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.11.1 (December 2020)
- * Copyright (C) 2008-2020 The apoplexy Team (see credits.txt)
+/* apoplexy v3.12 (January 2021)
+ * Copyright (C) 2008-2021 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -56,8 +56,11 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.11.1 (December 2020)"
-#define COPYRIGHT "Copyright (C) 2020 The apoplexy Team"
+#define EDITOR_VERSION "v3.12 (January 2021)"
+#define EDITOR_VERSION_MAJOR 3
+#define EDITOR_VERSION_MINOR 12
+#define EDITOR_VERSION_PATCH 0
+#define COPYRIGHT "Copyright (C) 2021 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
 #define MAX_FILE 600
@@ -88,6 +91,7 @@
 #define END_SHADOW 65534
 #define END_PRINCE 65535
 #define URL_CUSPOP "https://www.popot.org/other_useful_tools.php?tool=CusPop"
+#define URL_LATEST "https://www.apoplexy.org/latest_release.xml"
 
 /*** Map window ***/
 #define MAP_BIG_AREA_W 1225
@@ -694,8 +698,10 @@ int iTextTab;
 int iTextHover;
 int iAutomaticSave;
 int iAutomaticSel;
-int iJumpToRoom;
+int iJumpTo;
 int iJumpSel;
+char sLatest[MAX_TEXT + 2];
+int iEventHover;
 
 /*** controller ***/
 SDL_GameController *controller;
@@ -1844,7 +1850,7 @@ SDL_Texture *imgexeactionu, *imgexeactiond, *imgexeactionj;
 SDL_Texture *imgexeactions, *imgexeactionh, *imgexeactione;
 SDL_Texture *imgnomarker, *imgredp, *imgkcolors, *imgkcolorsb, *imgkcolorsw;
 SDL_Texture *imgkcolorsr, *imgkcolorsl, *imgkcolorsf;
-SDL_Texture *imgdungeon, *imgpalace, *imgclose_0, *imgclose_1;
+SDL_Texture *imgdungeon, *imgpalace, *imgeventh, *imgclose_0, *imgclose_1;
 SDL_Texture *imgback_0, *imgback_1, *imgguards_0, *imgguards_1;
 SDL_Texture *imgborderr, *imgborderb, *imgborders, *imgborderbl, *imgbordersl;
 SDL_Texture *imgdother, *imgdjaffar, *imgdguards, *imgprincew;
@@ -1876,7 +1882,8 @@ SDL_Texture *imgtempb, *imgtempf, *imgtemps, *imgtempl, *imgtempg;
 SDL_Texture *imgtempu, *imgtempm, *imgtemph, *imgtempj, *imgtempi;
 SDL_Texture *imgautomatic, *imgautomaticsel;
 SDL_Texture *imgautof[15 + 2], *imgautok[255 + 2], *imgautokunk;
-SDL_Texture *imgjump, *imgjumpdis, *imgseljump;
+SDL_Texture *imgjump, *imgjumpdis16, *imgjumpdis25, *imgjumpdis28;
+SDL_Texture *imgjumpdis29, *imgseljump;
 
 /*** the rooms ***/
 SDL_Texture *imgroom1, *imgroom2, *imgroom3, *imgroom4, *imgroom5, *imgroom6;
@@ -1891,6 +1898,7 @@ SDL_Texture *imgroom32;
 SDL_Texture *imgpop, *imgpop1dis, *imgpop1off, *imgpop1on;
 SDL_Texture *imgpop2dis, *imgpop2off, *imgpop2on, *imgprprob;
 SDL_Texture *imgcontroller, *imgpop1snesdis, *imgpop1snesoff, *imgpop1sneson;
+SDL_Texture *imgupgrade;
 
 /*** PoP2 backgrounds ***/
 SDL_Texture *backl1r1, *backl1r2, *backl1r3, *backl1r4, *backl1r5, *backl1r10;
@@ -2004,6 +2012,7 @@ struct sample {
 } sounds[NUM_SOUNDS];
 
 void CheckSSE (void);
+void CheckLatest (void);
 void CheckRequiredFiles (void);
 void LoadPLV (char *sFileName);
 void LoadXML (char *sFileName);
@@ -2281,10 +2290,12 @@ void AutomaticSaveSNES (void);
 void AutomaticAction (char *sAction);
 void Automatic (void);
 void ShowAutomatic (void);
-void JumpToRoomAction (char *sAction);
-void JumpToRoom (void);
-void ShowJumpToRoom (void);
-int JumpRoomLoc (int iRoom, int iAxis);
+void JumpToAction (int iType, char *sAction);
+void JumpTo (int iType);
+void ShowJumpTo (int iType);
+int JumpLoc (int iNr, int iAxis);
+int JumpAllowed (int iType, int iNr);
+void JumpDo (int iType, int iNr);
 void ShowAction (int iAction, int iX, int iY);
 void Move (int *iTime, int *iAction, int iX, int iY, int iEnd);
 void KidAction (char *sAction, int iLocation);
@@ -2347,8 +2358,10 @@ int main (int argc, char *argv[])
 	iNativeColor = 0x01;
 	iAutomaticSel = 1;
 	iJumpSel = 1;
+	iEventHover = 0;
 
 	CheckSSE();
+	CheckLatest();
 
 	if (argc > 1)
 	{
@@ -2545,6 +2558,88 @@ void CheckSSE (void)
 	{
 		printf ("[ WARN ] Your CPU has no Streaming SIMD"
 			" Extensions (SSE) features!\n");
+	}
+}
+/*****************************************************************************/
+void CheckLatest (void)
+/*****************************************************************************/
+{
+	/* After using this function, sLatest is either empty or - if a newer
+	 * version is available - contains the latest version number.
+	 */
+
+	CURL *curl;
+	CURLcode res;
+	FILE *fFile;
+	int iFd;
+	int iLine;
+	int iEOF;
+	char sLine[MAX_DATA + 2];
+	char sValue[MAX_DATA + 2];
+	int iMajor, iMinor, iPatch;
+
+	/*** Default. ***/
+	snprintf (sLatest, MAX_TEXT, "%s", "");
+
+	curl = curl_easy_init();
+	if (curl != NULL)
+	{
+		fFile = fopen ("latest_release.xml", "wb");
+		curl_easy_setopt (curl, CURLOPT_URL, URL_LATEST);
+		curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, WriteData);
+		curl_easy_setopt (curl, CURLOPT_WRITEDATA, fFile);
+		curl_easy_setopt (curl, CURLOPT_FAILONERROR, 1L);
+		/* Without this, the Windows port will say "Peer certificate cannot be
+		 * authenticated with given CA certificates!". This may be related to
+		 * the (old?) cURL version.
+		 */
+		curl_easy_setopt (curl, CURLOPT_SSL_VERIFYPEER, 0);
+		/*** Without this, the connect timeout will be 300 seconds. ***/
+		curl_easy_setopt (curl, CURLOPT_CONNECTTIMEOUT, 5L);
+		res = curl_easy_perform (curl);
+		curl_easy_cleanup (curl);
+		fclose (fFile);
+		if (res == CURLE_OK)
+		{
+			iFd = open ("latest_release.xml", O_RDONLY);
+			if (iFd != -1)
+			{
+				iLine = 0;
+				iMajor = 0; iMinor = 0; iPatch = 0; /*** Fallback. ***/
+				do {
+					iEOF = ReadLineFromFile (iFd, sLine, 1); iLine++;
+
+					switch (iLine)
+					{
+						case 5: /*** major ***/
+							substr (sLine, 7, strpos (sLine, "</major>", 0) - 7, sValue);
+							iMajor = atoi (sValue); break;
+						case 6: /*** minor ***/
+							substr (sLine, 7, strpos (sLine, "</minor>", 0) - 7, sValue);
+							iMinor = atoi (sValue); break;
+						case 7: /*** patch ***/
+							substr (sLine, 7, strpos (sLine, "</patch>", 0) - 7, sValue);
+							iPatch = atoi (sValue); break;
+					}
+				} while (iEOF == 0);
+				if ((iMajor > EDITOR_VERSION_MAJOR) ||
+					((iMajor == EDITOR_VERSION_MAJOR) &&
+					(iMinor > EDITOR_VERSION_MINOR)) ||
+					((iMajor == EDITOR_VERSION_MAJOR) &&
+					(iMinor == EDITOR_VERSION_MINOR) &&
+					(iPatch > EDITOR_VERSION_PATCH)))
+				{
+					/*** A newer version is available. ***/
+					if (iPatch == 0)
+					{
+						snprintf (sLatest, MAX_TEXT, "%i.%i", iMajor, iMinor);
+					} else {
+						snprintf (sLatest, MAX_TEXT, "%i.%i.%i", iMajor, iMinor, iPatch);
+					}
+				}
+			}
+		}
+		unlink ("latest_release.xml");
 	}
 }
 /*****************************************************************************/
@@ -11866,6 +11961,7 @@ void InitScreen (void)
 		} else {
 			PreLoad (PNG_VARIOUS, "controller_yes.png", &imgcontroller);
 		}
+		PreLoad (PNG_VARIOUS, "upgrade_available.png", &imgupgrade);
 		PoP1OrPoP2();
 		PlaySound ("wav/ok_close.wav");
 	}
@@ -11900,9 +11996,9 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 815; break;
-		case 2: iNrToPreLoad = 863; break;
-		case 3: iNrToPreLoad = 4850; break;
+		case 1: iNrToPreLoad = 817; break;
+		case 2: iNrToPreLoad = 864; break;
+		case 3: iNrToPreLoad = 4851; break;
 	}
 
 	/*** locations; dungeon ***/
@@ -12825,6 +12921,7 @@ void InitScreen (void)
 			PreLoad (PNG_CONTROLLER, "dungeon.png", &imgdungeon);
 			PreLoad (PNG_CONTROLLER, "palace.png", &imgpalace);
 		}
+		PreLoad (PNG_VARIOUS, "event_hover.png", &imgeventh);
 	} else if (iEditPoP == 2) {
 		if (iController != 1)
 		{
@@ -13638,10 +13735,22 @@ void InitScreen (void)
 	PreLoad (PNG_VARIOUS, "text_hover.png", &imgtexthover);
 
 	/*** jump to room ***/
-	PreLoad (PNG_VARIOUS, "jump_to_room.png", &imgjump);
+	PreLoad (PNG_VARIOUS, "jump_to.png", &imgjump);
 	if (iEditPoP != 2)
 	{
-		PreLoad (PNG_VARIOUS, "jump_disable_25-32.png", &imgjumpdis);
+		PreLoad (PNG_VARIOUS, "jump_disable_25-32.png", &imgjumpdis25);
+	}
+	switch (iEditPoP)
+	{
+		case 1:
+			PreLoad (PNG_VARIOUS, "jump_disable_16-32.png", &imgjumpdis16);
+			break;
+		case 2:
+			PreLoad (PNG_VARIOUS, "jump_disable_29-32.png", &imgjumpdis29);
+			break;
+		case 3:
+			PreLoad (PNG_VARIOUS, "jump_disable_28-32.png", &imgjumpdis28);
+			break;
 	}
 	PreLoad (PNG_VARIOUS, "sel_jump.png", &imgseljump);
 
@@ -14565,7 +14674,10 @@ void InitScreen (void)
 							}
 							break;
 						case SDLK_j:
-							JumpToRoom();
+							JumpTo (1);
+							break;
+						case SDLK_l:
+							JumpTo (2);
 							break;
 						default: break;
 					}
@@ -16817,7 +16929,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 	if (iEditPoP == 1) { ShowMap(); }
 
 	/*** refresh screen ***/
-	if ((iPlaytest != 1) && (iJumpToRoom != 1))
+	if ((iPlaytest != 1) && (iJumpTo != 1))
 		{ SDL_RenderPresent (screen); }
 }
 /*****************************************************************************/
@@ -19041,6 +19153,18 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 						if (InArea (4, 4, 652, 258) == 1) { iJaffarTooltip = 1; }
 						if (iJaffarTooltip != iJaffarTooltipOld)
 							{ ShowChange (iLocation, ascreen); }
+					}
+
+					if (iEditPoP == 1)
+					{
+						if (InArea (530, 420, 530 + 121, 420 + 29) == 1)
+						{
+							if (iEventHover == 0)
+								{ iEventHover = 1; ShowChange (iLocation, ascreen); }
+						} else {
+							if (iEventHover == 1)
+								{ iEventHover = 0; ShowChange (iLocation, ascreen); }
+						}
 					}
 
 					iNowOn = OnTile();
@@ -23840,6 +23964,12 @@ void ShowChange (int iLocation, SDL_Renderer *screen)
 	{
 		if (iJaffarTooltip == 1)
 			{ ShowImage (-18, (int[]){3, 0, 0, 0}, screen, 213, 0, 0, 656, 196); }
+	}
+
+	if (iEditPoP == 1)
+	{
+		if (iEventHover == 1)
+			{ ShowImageBasic (imgeventh, 502, 66, "imgeventh", ascreen, iScale, 1); }
 	}
 
 	/*** refresh screen ***/
@@ -31137,6 +31267,8 @@ void PoP1OrPoP2 (void)
 void ShowPoP1OrPoP2 (SDL_Renderer *screen)
 /*****************************************************************************/
 {
+	char arText[2 + 2][MAX_TEXT + 2];
+
 	/*** background ***/
 	ShowImage (-13, (int[]){1, 0, 0, 0}, screen, 31, 0, 0, 692, 455);
 
@@ -31207,8 +31339,17 @@ void ShowPoP1OrPoP2 (SDL_Renderer *screen)
 			ShowImage (-13, (int[]){13, 0, 0, 0}, screen, 144, 0, 0, 210, 420);
 		}
 
-		/*** controller ***/
-		ShowImage (-13, (int[]){10, 0, 0, 0}, screen, 138, 0, 0, 316, 51);
+		if (strcmp (sLatest, "") != 0)
+		{
+			ShowImageBasic (imgupgrade, 188, 394, "imgupgrade", screen, iScale, 1);
+			snprintf (arText[0], MAX_TEXT, "Version %s of %s is",
+				sLatest, EDITOR_NAME);
+			snprintf (arText[1], MAX_TEXT, "%s", "now available at Apoplexy.org.");
+			DisplayText (296, 405, FONT_SIZE_11, arText, 2, font2);
+		} else {
+			/*** controller ***/
+			ShowImage (-13, (int[]){10, 0, 0, 0}, screen, 138, 0, 0, 316, 51);
+		}
 	}
 
 	/*** refresh screen ***/
@@ -38107,122 +38248,109 @@ void ShowAutomatic (void)
 	SDL_RenderPresent (ascreen);
 }
 /*****************************************************************************/
-void JumpToRoomAction (char *sAction)
+void JumpToAction (int iType, char *sAction)
 /*****************************************************************************/
 {
+	int iLoopMax;
+
 	/*** Used for looping. ***/
-	int iLoopRoom;
+	int iLoopNr;
 
 	if (strcmp (sAction, "left") == 0)
 	{
-		switch (iJumpSel)
-		{
-			case 1: iJumpSel = 8; break;
-			case 9: iJumpSel = 16; break;
-			case 17: iJumpSel = 24; break;
-			case 25: iJumpSel = 32; break;
-			default: iJumpSel--; break;
-		}
+		do {
+			switch (iJumpSel)
+			{
+				case 1: iJumpSel = 8; break;
+				case 9: iJumpSel = 16; break;
+				case 17: iJumpSel = 24; break;
+				case 25: iJumpSel = 32; break;
+				default: iJumpSel--; break;
+			}
+		} while (JumpAllowed (iType, iJumpSel) == 0);
 	}
 
 	if (strcmp (sAction, "right") == 0)
 	{
-		switch (iJumpSel)
-		{
-			case 8: iJumpSel = 1; break;
-			case 16: iJumpSel = 9; break;
-			case 24: iJumpSel = 17; break;
-			case 32: iJumpSel = 25; break;
-			default: iJumpSel++; break;
-		}
+		do {
+			switch (iJumpSel)
+			{
+				case 8: iJumpSel = 1; break;
+				case 16: iJumpSel = 9; break;
+				case 24: iJumpSel = 17; break;
+				case 32: iJumpSel = 25; break;
+				default: iJumpSel++; break;
+			}
+		} while (JumpAllowed (iType, iJumpSel) == 0);
 	}
 
 	if (strcmp (sAction, "up") == 0)
 	{
-		switch (iJumpSel)
-		{
-			case 1: if (iRooms == 24) { iJumpSel = 17; }
-				else { iJumpSel = 25; } break;
-			case 2: if (iRooms == 24) { iJumpSel = 18; }
-				else { iJumpSel = 26; } break;
-			case 3: if (iRooms == 24) { iJumpSel = 19; }
-				else { iJumpSel = 27; } break;
-			case 4: if (iRooms == 24) { iJumpSel = 20; }
-				else { iJumpSel = 28; } break;
-			case 5: if (iRooms == 24) { iJumpSel = 21; }
-				else { iJumpSel = 29; } break;
-			case 6: if (iRooms == 24) { iJumpSel = 22; }
-				else { iJumpSel = 30; } break;
-			case 7: if (iRooms == 24) { iJumpSel = 23; }
-				else { iJumpSel = 31; } break;
-			case 8: if (iRooms == 24) { iJumpSel = 24; }
-				else { iJumpSel = 32; } break;
-			default: iJumpSel-=8; break;
-		}
+		do {
+			iJumpSel-=8;
+			if (iJumpSel < 1) { iJumpSel += (8 * 4); }
+		} while (JumpAllowed (iType, iJumpSel) == 0);
 	}
 
 	if (strcmp (sAction, "down") == 0)
 	{
-		if (iRooms == 24)
-		{
-			switch (iJumpSel)
-			{
-				case 17: iJumpSel = 1; break;
-				case 18: iJumpSel = 2; break;
-				case 19: iJumpSel = 3; break;
-				case 20: iJumpSel = 4; break;
-				case 21: iJumpSel = 5; break;
-				case 22: iJumpSel = 6; break;
-				case 23: iJumpSel = 7; break;
-				case 24: iJumpSel = 8; break;
-				default: iJumpSel+=8; break;
-			}
-		} else {
-			switch (iJumpSel)
-			{
-				case 25: iJumpSel = 1; break;
-				case 26: iJumpSel = 2; break;
-				case 27: iJumpSel = 3; break;
-				case 28: iJumpSel = 4; break;
-				case 29: iJumpSel = 5; break;
-				case 30: iJumpSel = 6; break;
-				case 31: iJumpSel = 7; break;
-				case 32: iJumpSel = 8; break;
-				default: iJumpSel+=8; break;
-			}
-		}
+		do {
+			iJumpSel+=8;
+			if (iJumpSel > 32) { iJumpSel -= (8 * 4); }
+		} while (JumpAllowed (iType, iJumpSel) == 0);
 	}
 
 	if (strcmp (sAction, "apply") == 0)
 	{
-		for (iLoopRoom = 1; iLoopRoom <= iRooms; iLoopRoom++)
+		switch (iType)
 		{
-			if (InArea (JumpRoomLoc (iLoopRoom, 1),
-				JumpRoomLoc (iLoopRoom, 2),
-				JumpRoomLoc (iLoopRoom, 1) + 40,
-				JumpRoomLoc (iLoopRoom, 2) + 40) == 1)
+			case 1: /*** room ***/
+				iLoopMax = iRooms;
+				break;
+			case 2: /*** level ***/
+				switch (iEditPoP)
+				{
+					case 1: iLoopMax = 15; break;
+					case 2: iLoopMax = 28; break;
+					case 3: iLoopMax = 27; break;
+					default:
+						printf ("[FAILED] Impossible iEditPoP value: %i!\n",
+						iEditPoP); exit (EXIT_ERROR); break;
+				}
+				break;
+			default: iLoopMax = 32; break; /*** Fallback. ***/
+		}
+		for (iLoopNr = 1; iLoopNr <= iLoopMax; iLoopNr++)
+		{
+			if (InArea (JumpLoc (iLoopNr, 1),
+				JumpLoc (iLoopNr, 2),
+				JumpLoc (iLoopNr, 1) + 40,
+				JumpLoc (iLoopNr, 2) + 40) == 1)
 			{
-				iCurRoom = iJumpSel;
-				iJumpToRoom = 0;
+				if (JumpAllowed (iType, iJumpSel) == 1)
+					{ JumpDo (iType, iJumpSel); iJumpTo = 0; }
 			}
 		}
 	}
 }
 /*****************************************************************************/
-void JumpToRoom (void)
+void JumpTo (int iType)
 /*****************************************************************************/
 {
 	SDL_Event event;
-	int iOnRoom;
+	int iOnNr;
+	int iLoopMax;
 
 	/*** Used for looping. ***/
-	int iLoopRoom;
+	int iLoopNr;
 
-	iJumpToRoom = 1;
+	if (JumpAllowed (iType, iJumpSel) == 0) { iJumpSel = 1; }
+
+	iJumpTo = 1;
 
 	PlaySound ("wav/popup.wav");
-	ShowJumpToRoom();
-	while (iJumpToRoom == 1)
+	ShowJumpTo (iType);
+	while (iJumpTo == 1)
 	{
 		while (SDL_PollEvent (&event))
 		{
@@ -38237,126 +38365,166 @@ void JumpToRoom (void)
 					{
 						case SDL_CONTROLLER_BUTTON_A:
 						case SDL_CONTROLLER_BUTTON_START:
-							/*** Do not use JumpToRoomAction(). ***/
-							iCurRoom = iJumpSel;
-							iJumpToRoom = 0;
-							break;
+							/*** Do not use JumpToAction(). ***/
+							if (JumpAllowed (iType, iJumpSel) == 1)
+								{ JumpDo (iType, iJumpSel); iJumpTo = 0; } break;
 						case SDL_CONTROLLER_BUTTON_B:
 						case SDL_CONTROLLER_BUTTON_BACK:
-							iJumpToRoom = 0; break;
+							iJumpTo = 0; break;
 						case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-							JumpToRoomAction ("left"); break;
+							JumpToAction (iType, "left"); break;
 						case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-							JumpToRoomAction ("right"); break;
+							JumpToAction (iType, "right"); break;
 						case SDL_CONTROLLER_BUTTON_DPAD_UP:
-							JumpToRoomAction ("up"); break;
+							JumpToAction (iType, "up"); break;
 						case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-							JumpToRoomAction ("down"); break;
+							JumpToAction (iType, "down"); break;
 					}
-					ShowJumpToRoom();
+					ShowJumpTo (iType);
 					break;
 				case SDL_KEYDOWN:
 					switch (event.key.keysym.sym)
 					{
 						case SDLK_ESCAPE:
-							iJumpToRoom = 0; break;
+							iJumpTo = 0; break;
 						case SDLK_KP_ENTER:
 						case SDLK_RETURN:
 						case SDLK_SPACE:
-							/*** Do not use JumpToRoomAction(). ***/
-							iCurRoom = iJumpSel;
-							iJumpToRoom = 0;
-							break;
+							/*** Do not use JumpToAction(). ***/
+							if (JumpAllowed (iType, iJumpSel) == 1)
+								{ JumpDo (iType, iJumpSel); iJumpTo = 0; } break;
 						case SDLK_LEFT:
-							JumpToRoomAction ("left");
+							JumpToAction (iType, "left");
 							break;
 						case SDLK_RIGHT:
-							JumpToRoomAction ("right");
+							JumpToAction (iType, "right");
 							break;
 						case SDLK_UP:
-							JumpToRoomAction ("up");
+							JumpToAction (iType, "up");
 							break;
 						case SDLK_DOWN:
-							JumpToRoomAction ("down");
+							JumpToAction (iType, "down");
 							break;
-						case SDLK_1: case SDLK_KP_1: iCurRoom = 1; iJumpToRoom = 0; break;
-						case SDLK_2: case SDLK_KP_2: iCurRoom = 2; iJumpToRoom = 0; break;
-						case SDLK_3: case SDLK_KP_3: iCurRoom = 3; iJumpToRoom = 0; break;
-						case SDLK_4: case SDLK_KP_4: iCurRoom = 4; iJumpToRoom = 0; break;
-						case SDLK_5: case SDLK_KP_5: iCurRoom = 5; iJumpToRoom = 0; break;
-						case SDLK_6: case SDLK_KP_6: iCurRoom = 6; iJumpToRoom = 0; break;
-						case SDLK_7: case SDLK_KP_7: iCurRoom = 7; iJumpToRoom = 0; break;
-						case SDLK_8: case SDLK_KP_8: iCurRoom = 8; iJumpToRoom = 0; break;
-						case SDLK_9: case SDLK_KP_9: iCurRoom = 9; iJumpToRoom = 0; break;
-						case SDLK_a: iCurRoom = 10; iJumpToRoom = 0; break;
-						case SDLK_b: iCurRoom = 11; iJumpToRoom = 0; break;
-						case SDLK_c: iCurRoom = 12; iJumpToRoom = 0; break;
-						case SDLK_d: iCurRoom = 13; iJumpToRoom = 0; break;
-						case SDLK_e: iCurRoom = 14; iJumpToRoom = 0; break;
-						case SDLK_f: iCurRoom = 15; iJumpToRoom = 0; break;
-						case SDLK_g: iCurRoom = 16; iJumpToRoom = 0; break;
-						case SDLK_h: iCurRoom = 17; iJumpToRoom = 0; break;
-						case SDLK_i: iCurRoom = 18; iJumpToRoom = 0; break;
-						case SDLK_j: iCurRoom = 19; iJumpToRoom = 0; break;
-						case SDLK_k: iCurRoom = 20; iJumpToRoom = 0; break;
-						case SDLK_l: iCurRoom = 21; iJumpToRoom = 0; break;
-						case SDLK_m: iCurRoom = 22; iJumpToRoom = 0; break;
-						case SDLK_n: iCurRoom = 23; iJumpToRoom = 0; break;
-						case SDLK_o: iCurRoom = 24; iJumpToRoom = 0; break;
-						case SDLK_p: if (iRooms == 32)
-							{ iCurRoom = 25; iJumpToRoom = 0; } break;
-						case SDLK_q: if (iRooms == 32)
-							{ iCurRoom = 26; iJumpToRoom = 0; } break;
-						case SDLK_r: if (iRooms == 32)
-							{ iCurRoom = 27; iJumpToRoom = 0; } break;
-						case SDLK_s: if (iRooms == 32)
-							{ iCurRoom = 28; iJumpToRoom = 0; } break;
-						case SDLK_t: if (iRooms == 32)
-							{ iCurRoom = 29; iJumpToRoom = 0; } break;
-						case SDLK_u: if (iRooms == 32)
-							{ iCurRoom = 30; iJumpToRoom = 0; } break;
-						case SDLK_v: if (iRooms == 32)
-							{ iCurRoom = 31; iJumpToRoom = 0; } break;
-						case SDLK_w: if (iRooms == 32)
-							{ iCurRoom = 32; iJumpToRoom = 0; } break;
+						case SDLK_1: case SDLK_KP_1: if (JumpAllowed (iType, 1) == 1)
+							{ JumpDo (iType, 1); iJumpTo = 0; } break;
+						case SDLK_2: case SDLK_KP_2: if (JumpAllowed (iType, 2) == 1)
+							{ JumpDo (iType, 2); iJumpTo = 0; } break;
+						case SDLK_3: case SDLK_KP_3: if (JumpAllowed (iType, 3) == 1)
+							{ JumpDo (iType, 3); iJumpTo = 0; } break;
+						case SDLK_4: case SDLK_KP_4: if (JumpAllowed (iType, 4) == 1)
+							{ JumpDo (iType, 4); iJumpTo = 0; } break;
+						case SDLK_5: case SDLK_KP_5: if (JumpAllowed (iType, 5) == 1)
+							{ JumpDo (iType, 5); iJumpTo = 0; } break;
+						case SDLK_6: case SDLK_KP_6: if (JumpAllowed (iType, 6) == 1)
+							{ JumpDo (iType, 6); iJumpTo = 0; } break;
+						case SDLK_7: case SDLK_KP_7: if (JumpAllowed (iType, 7) == 1)
+							{ JumpDo (iType, 7); iJumpTo = 0; } break;
+						case SDLK_8: case SDLK_KP_8: if (JumpAllowed (iType, 8) == 1)
+							{ JumpDo (iType, 8); iJumpTo = 0; } break;
+						case SDLK_9: case SDLK_KP_9: if (JumpAllowed (iType, 9) == 1)
+							{ JumpDo (iType, 9); iJumpTo = 0; } break;
+						case SDLK_a: if (JumpAllowed (iType, 10) == 1)
+							{ JumpDo (iType, 10); iJumpTo = 0; } break;
+						case SDLK_b: if (JumpAllowed (iType, 11) == 1)
+							{ JumpDo (iType, 11); iJumpTo = 0; } break;
+						case SDLK_c: if (JumpAllowed (iType, 12) == 1)
+							{ JumpDo (iType, 12); iJumpTo = 0; } break;
+						case SDLK_d: if (JumpAllowed (iType, 13) == 1)
+							{ JumpDo (iType, 13); iJumpTo = 0; } break;
+						case SDLK_e: if (JumpAllowed (iType, 14) == 1)
+							{ JumpDo (iType, 14); iJumpTo = 0; } break;
+						case SDLK_f: if (JumpAllowed (iType, 15) == 1)
+							{ JumpDo (iType, 15); iJumpTo = 0; } break;
+						case SDLK_g: if (JumpAllowed (iType, 16) == 1)
+							{ JumpDo (iType, 16); iJumpTo = 0; } break;
+						case SDLK_h: if (JumpAllowed (iType, 17) == 1)
+							{ JumpDo (iType, 17); iJumpTo = 0; } break;
+						case SDLK_i: if (JumpAllowed (iType, 18) == 1)
+							{ JumpDo (iType, 18); iJumpTo = 0; } break;
+						case SDLK_j: if (JumpAllowed (iType, 19) == 1)
+							{ JumpDo (iType, 19); iJumpTo = 0; } break;
+						case SDLK_k: if (JumpAllowed (iType, 20) == 1)
+							{ JumpDo (iType, 20); iJumpTo = 0; } break;
+						case SDLK_l: if (JumpAllowed (iType, 21) == 1)
+							{ JumpDo (iType, 21); iJumpTo = 0; } break;
+						case SDLK_m: if (JumpAllowed (iType, 22) == 1)
+							{ JumpDo (iType, 22); iJumpTo = 0; } break;
+						case SDLK_n: if (JumpAllowed (iType, 23) == 1)
+							{ JumpDo (iType, 23); iJumpTo = 0; } break;
+						case SDLK_o: if (JumpAllowed (iType, 24) == 1)
+							{ JumpDo (iType, 24); iJumpTo = 0; } break;
+						case SDLK_p: if (JumpAllowed (iType, 25) == 1)
+							{ JumpDo (iType, 25); iJumpTo = 0; } break;
+						case SDLK_q: if (JumpAllowed (iType, 26) == 1)
+							{ JumpDo (iType, 26); iJumpTo = 0; } break;
+						case SDLK_r: if (JumpAllowed (iType, 27) == 1)
+							{ JumpDo (iType, 27); iJumpTo = 0; } break;
+						case SDLK_s: if (JumpAllowed (iType, 28) == 1)
+							{ JumpDo (iType, 28); iJumpTo = 0; } break;
+						case SDLK_t: if (JumpAllowed (iType, 29) == 1)
+							{ JumpDo (iType, 29); iJumpTo = 0; } break;
+						case SDLK_u: if (JumpAllowed (iType, 30) == 1)
+							{ JumpDo (iType, 30); iJumpTo = 0; } break;
+						case SDLK_v: if (JumpAllowed (iType, 31) == 1)
+							{ JumpDo (iType, 31); iJumpTo = 0; } break;
+						case SDLK_w: if (JumpAllowed (iType, 32) == 1)
+							{ JumpDo (iType, 32); iJumpTo = 0; } break;
 						default: break;
 					}
-					ShowJumpToRoom();
+					ShowJumpTo (iType);
 					break;
 				case SDL_MOUSEMOTION:
 					iXPos = event.motion.x;
 					iYPos = event.motion.y;
-					iOnRoom = 0;
-					for (iLoopRoom = 1; iLoopRoom <= iRooms; iLoopRoom++)
+					iOnNr = 0;
+					switch (iType)
 					{
-						if (InArea (JumpRoomLoc (iLoopRoom, 1),
-							JumpRoomLoc (iLoopRoom, 2),
-							JumpRoomLoc (iLoopRoom, 1) + 40,
-							JumpRoomLoc (iLoopRoom, 2) + 40) == 1)
+						case 1: /*** room ***/
+							iLoopMax = iRooms;
+							break;
+						case 2: /*** level ***/
+							switch (iEditPoP)
+							{
+								case 1: iLoopMax = 15; break;
+								case 2: iLoopMax = 28; break;
+								case 3: iLoopMax = 27; break;
+								default:
+									printf ("[FAILED] Impossible iEditPoP value: %i!\n",
+									iEditPoP); exit (EXIT_ERROR); break;
+							}
+							break;
+						default: iLoopMax = 32; break; /*** Fallback. ***/
+					}
+					for (iLoopNr = 1; iLoopNr <= iLoopMax; iLoopNr++)
+					{
+						if (InArea (JumpLoc (iLoopNr, 1),
+							JumpLoc (iLoopNr, 2),
+							JumpLoc (iLoopNr, 1) + 40,
+							JumpLoc (iLoopNr, 2) + 40) == 1)
 						{
-							iOnRoom = iLoopRoom;
+							iOnNr = iLoopNr;
 						}
 					}
-					if (iOnRoom != 0)
+					if (iOnNr != 0)
 					{
 						SDL_SetCursor (curHand);
-						iJumpSel = iOnRoom;
+						iJumpSel = iOnNr;
 					} else {
 						SDL_SetCursor (curArrow);
 					}
-					ShowJumpToRoom();
+					ShowJumpTo (iType);
 					break;
 				case SDL_MOUSEBUTTONUP:
 					if (event.button.button == 1)
 					{
-						JumpToRoomAction ("apply");
+						JumpToAction (iType, "apply");
 					}
 					break;
 				case SDL_WINDOWEVENT:
 					switch (event.window.event)
 					{
 						case SDL_WINDOWEVENT_EXPOSED:
-							ShowJumpToRoom(); break;
+							ShowJumpTo (iType); break;
 						case SDL_WINDOWEVENT_CLOSE:
 							Quit(); break;
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
@@ -38381,7 +38549,7 @@ void JumpToRoom (void)
 	ShowScreen (iScreen, ascreen);
 }
 /*****************************************************************************/
-void ShowJumpToRoom (void)
+void ShowJumpTo (int iType)
 /*****************************************************************************/
 {
 	ShowScreen (iScreen, ascreen);
@@ -38389,53 +38557,121 @@ void ShowJumpToRoom (void)
 	/*** faded background ***/
 	ShowImageBasic (imgfadedl, 0, 0, "imgfadedl", ascreen, iScale, 1);
 
-	/*** jump to room background ***/
+	/*** background ***/
 	ShowImageBasic (imgjump, 100, 100, "imgjump", ascreen, iScale, 1);
 
-	if (iEditPoP != 2)
+	/*** text ***/
+	switch (iType)
 	{
-		ShowImageBasic (imgjumpdis, 120, 297, "imgjumpdis", ascreen, iScale, 1);
+		case 1: /*** room ***/
+			DisplayTextLine (258, 124, "Jump to which room?",
+				font1, color_bl, color_wh, 0);
+			if (iEditPoP != 2)
+			{
+				ShowImageBasic (imgjumpdis25, 120, 297, "imgjumpdis25",
+					ascreen, iScale, 1);
+			}
+			break;
+		case 2: /*** level ***/
+			DisplayTextLine (258, 124, "Jump to which level?",
+				font1, color_bl, color_wh, 0);
+			switch (iEditPoP)
+			{
+				case 1:
+					ShowImageBasic (imgjumpdis16, 120, 201, "imgjumpdis16",
+						ascreen, iScale, 1); break;
+				case 2:
+					ShowImageBasic (imgjumpdis29, 312, 297, "imgjumpdis29",
+						ascreen, iScale, 1); break;
+				case 3:
+					ShowImageBasic (imgjumpdis28, 264, 297, "imgjumpdis28",
+						ascreen, iScale, 1); break;
+			}
+			break;
 	}
 
-	ShowImageBasic (imgseljump, JumpRoomLoc (iJumpSel, 1),
-		JumpRoomLoc (iJumpSel, 2), "imgseljump", ascreen, iScale, 1);
+	ShowImageBasic (imgseljump, JumpLoc (iJumpSel, 1),
+		JumpLoc (iJumpSel, 2), "imgseljump", ascreen, iScale, 1);
 
 	/*** refresh screen ***/
 	SDL_RenderPresent (ascreen);
 }
 /*****************************************************************************/
-int JumpRoomLoc (int iRoom, int iAxis)
+int JumpLoc (int iNr, int iAxis)
 /*****************************************************************************/
 {
 	if (iAxis == 1) /*** x ***/
 	{
-		if ((iRoom == 1) || (iRoom == 9) || (iRoom == 17) || (iRoom == 25))
+		if ((iNr == 1) || (iNr == 9) || (iNr == 17) || (iNr == 25))
 			{ return (120); }
-		if ((iRoom == 2) || (iRoom == 10) || (iRoom == 18) || (iRoom == 26))
+		if ((iNr == 2) || (iNr == 10) || (iNr == 18) || (iNr == 26))
 			{ return (168); }
-		if ((iRoom == 3) || (iRoom == 11) || (iRoom == 19) || (iRoom == 27))
+		if ((iNr == 3) || (iNr == 11) || (iNr == 19) || (iNr == 27))
 			{ return (216); }
-		if ((iRoom == 4) || (iRoom == 12) || (iRoom == 20) || (iRoom == 28))
+		if ((iNr == 4) || (iNr == 12) || (iNr == 20) || (iNr == 28))
 			{ return (264); }
-		if ((iRoom == 5) || (iRoom == 13) || (iRoom == 21) || (iRoom == 29))
+		if ((iNr == 5) || (iNr == 13) || (iNr == 21) || (iNr == 29))
 			{ return (312); }
-		if ((iRoom == 6) || (iRoom == 14) || (iRoom == 22) || (iRoom == 30))
+		if ((iNr == 6) || (iNr == 14) || (iNr == 22) || (iNr == 30))
 			{ return (360); }
-		if ((iRoom == 7) || (iRoom == 15) || (iRoom == 23) || (iRoom == 31))
+		if ((iNr == 7) || (iNr == 15) || (iNr == 23) || (iNr == 31))
 			{ return (408); }
-		if ((iRoom == 8) || (iRoom == 16) || (iRoom == 24) || (iRoom == 32))
+		if ((iNr == 8) || (iNr == 16) || (iNr == 24) || (iNr == 32))
 			{ return (456); }
 	}
 	if (iAxis == 2) /*** y ***/
 	{
-		if ((iRoom >= 1) && (iRoom <= 8)) { return (153); }
-		if ((iRoom >= 9) && (iRoom <= 16)) { return (201); }
-		if ((iRoom >= 17) && (iRoom <= 24)) { return (249); }
-		if ((iRoom >= 25) && (iRoom <= 32)) { return (297); }
+		if ((iNr >= 1) && (iNr <= 8)) { return (153); }
+		if ((iNr >= 9) && (iNr <= 16)) { return (201); }
+		if ((iNr >= 17) && (iNr <= 24)) { return (249); }
+		if ((iNr >= 25) && (iNr <= 32)) { return (297); }
 	}
 
-	printf ("[ WARN ] Unknown room: %i\n", iRoom);
+	printf ("[ WARN ] Unknown iNr: %i\n", iNr);
 	return (153); /*** Fallback. ***/
+}
+/*****************************************************************************/
+int JumpAllowed (int iType, int iNr)
+/*****************************************************************************/
+{
+	/*** Returns 1 if allowed, 0 if NOT allowed. ***/
+
+	switch (iType)
+	{
+		case 1: /*** room ***/
+			if ((iNr >= 1) && (iNr <= iRooms)) { return (1); }
+			break;
+		case 2: /*** level ***/
+			if ((iEditPoP == 1) && (iNr >= 1) && (iNr <= 15)) { return (1); }
+			if ((iEditPoP == 2) && (iNr >= 1) && (iNr <= 28)) { return (1); }
+			if ((iEditPoP == 3) && (iNr >= 1) && (iNr <= 27)) { return (1); }
+			break;
+	}
+
+	return (0);
+}
+/*****************************************************************************/
+void JumpDo (int iType, int iNr)
+/*****************************************************************************/
+{
+	int iYesNo;
+
+	switch (iType)
+	{
+		case 1: /*** room ***/
+			iCurRoom = iNr;
+			break;
+		case 2: /*** level ***/
+			if ((iChanged != 0) && (iNoSave == 0))
+				{ iYesNo = InitPopUpYN (1); } else { iYesNo = 1; }
+			if (iYesNo != 0)
+			{
+				if (iYesNo == 2) { CallSave (0); }
+				LoadLevel (iNr);
+				/*** PlaySound ("wav/level_change.wav"); ***/
+			}
+			break;
+	}
 }
 /*****************************************************************************/
 void ShowAction (int iAction, int iX, int iY)
