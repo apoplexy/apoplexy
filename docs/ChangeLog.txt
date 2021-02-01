@@ -5,6 +5,11 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.13 (February 1, 2021) - Norbert de Jonge
+--------------------
++ PoP1 for DOS gameplay keys can be disabled (F4).
+* Fixed a minor visual bug (kid dir, again).
+
 v3.12 (January 29, 2021) - Norbert de Jonge
 --------------------
 + It's now possible to quickly jump to levels ("l").

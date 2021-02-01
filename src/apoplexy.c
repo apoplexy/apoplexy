@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.12 (January 2021)
+/* apoplexy v3.13 (February 2021)
  * Copyright (C) 2008-2021 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,9 +56,9 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.12 (January 2021)"
+#define EDITOR_VERSION "v3.13 (February 2021)"
 #define EDITOR_VERSION_MAJOR 3
-#define EDITOR_VERSION_MINOR 12
+#define EDITOR_VERSION_MINOR 13
 #define EDITOR_VERSION_PATCH 0
 #define COPYRIGHT "Copyright (C) 2021 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
@@ -855,6 +855,35 @@ int iEXEDemoPrinceHP;
 static const unsigned long arDemoEndingRoom[6] =
 	{ 0XB40, 0X21F0, 0XC25, 0X1365, 0XBE9, 0X1D19 };
 int iEXEDemoEndingRoom;
+/***/
+static const unsigned long arDisable2[6] =
+	{ 0X0, 0X2DD5, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisable2;
+static const unsigned long arDisable4[6] =
+	{ 0X0, 0X2DE1, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisable4;
+static const unsigned long arDisable5[6] =
+	{ 0X0, 0X2DCE, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisable5;
+static const unsigned long arDisable6[6] =
+	{ 0X0, 0X2DF6, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisable6;
+static const unsigned long arDisable7A[6] =
+	{ 0X0, 0X2DB9, 0X0, 0X0, 0X0, 0X0 };
+static const unsigned long arDisable7B[6] =
+	{ 0X0, 0X2DE8, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisable7;
+static const unsigned long arDisable8[6] =
+	{ 0X0, 0X2DB2, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisable8;
+static const unsigned long arDisable9A[6] =
+	{ 0X0, 0X2DC0, 0X0, 0X0, 0X0, 0X0 };
+static const unsigned long arDisable9B[6] =
+	{ 0X0, 0X2DFD, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisable9;
+static const unsigned long arDisableS[6] =
+	{ 0X0, 0X2E17, 0X0, 0X0, 0X0, 0X0 };
+int iEXEDisableS;
 
 /*** exe, PoP2 ***/
 static const int arDefaultEnvPoP2[29] =
@@ -26417,6 +26446,83 @@ void EXELoad_F4 (void)
 	ReadFromFile (iFdEXE, "", 1, sData);
 	iEXEDemoEndingRoom = BytesAsLU (sData, 1);
 
+	/*** Disable. ***/
+	if (iEXEType == 1)
+	{
+		LSeek (iFdEXE, arDisable2[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		switch (sData[0])
+		{
+			case 0xDC: iEXEDisable2 = 0; break;
+			case 0x8C: iEXEDisable2 = 1; break;
+			default: iEXEDisable2 = 0; break; /*** Fallback. ***/
+		}
+		LSeek (iFdEXE, arDisable4[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		switch (sData[0])
+		{
+			case 0xD7: iEXEDisable4 = 0; break;
+			case 0x8C: iEXEDisable4 = 1; break;
+			default: iEXEDisable4 = 0; break; /*** Fallback. ***/
+		}
+		LSeek (iFdEXE, arDisable5[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		switch (sData[0])
+		{
+			case 0xD8: iEXEDisable5 = 0; break;
+			case 0x8C: iEXEDisable5 = 1; break;
+			default: iEXEDisable5 = 0; break; /*** Fallback. ***/
+		}
+		LSeek (iFdEXE, arDisable6[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		switch (sData[0])
+		{
+			case 0xD9: iEXEDisable6 = 0; break;
+			case 0x8C: iEXEDisable6 = 1; break;
+			default: iEXEDisable6 = 0; break; /*** Fallback. ***/
+		}
+		LSeek (iFdEXE, arDisable7A[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		LSeek (iFdEXE, arDisable7B[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData2);
+		if ((sData[0] == 0xD3) && (sData2[0] == 0xD3))
+		{
+			iEXEDisable7 = 0;
+		} else if ((sData[0] == 0x8C) && (sData2[0] == 0x8C)) {
+			iEXEDisable7 = 1;
+		} else {
+			iEXEDisable7 = 0; /*** Fallback. ***/
+		}
+		LSeek (iFdEXE, arDisable8[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		switch (sData[0])
+		{
+			case 0xD4: iEXEDisable8 = 0; break;
+			case 0x8C: iEXEDisable8 = 1; break;
+			default: iEXEDisable8 = 0; break; /*** Fallback. ***/
+		}
+		LSeek (iFdEXE, arDisable9A[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		LSeek (iFdEXE, arDisable9B[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData2);
+		if ((sData[0] == 0xD5) && (sData2[0] == 0xD5))
+		{
+			iEXEDisable9 = 0;
+		} else if ((sData[0] == 0x8C) && (sData2[0] == 0x8C)) {
+			iEXEDisable9 = 1;
+		} else {
+			iEXEDisable9 = 0; /*** Fallback. ***/
+		}
+		LSeek (iFdEXE, arDisableS[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		switch (sData[0])
+		{
+			case 0x03: iEXEDisableS = 0; break;
+			case 0x00: iEXEDisableS = 1; break;
+			default: iEXEDisableS = 0; break; /*** Fallback. ***/
+		}
+	}
+
 	close (iFdEXE);
 }
 /*****************************************************************************/
@@ -26917,6 +27023,78 @@ void EXESave_F4 (void)
 	LSeek (iFdEXE, arDemoEndingRoom[iEXEType]);
 	sBytes[0] = iEXEDemoEndingRoom;
 	WriteCharByChar (iFdEXE, sBytes, 1);
+
+	/*** Disable. ***/
+	if (iEXEType == 1)
+	{
+		switch (iEXEDisable2)
+		{
+			case 0: sBytes[0] = 0xDC; break;
+			case 1: sBytes[0] = 0x8C; break;
+		}
+		LSeek (iFdEXE, arDisable2[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		/***/
+		switch (iEXEDisable4)
+		{
+			case 0: sBytes[0] = 0xD7; break;
+			case 1: sBytes[0] = 0x8C; break;
+		}
+		LSeek (iFdEXE, arDisable4[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		/***/
+		switch (iEXEDisable5)
+		{
+			case 0: sBytes[0] = 0xD8; break;
+			case 1: sBytes[0] = 0x8C; break;
+		}
+		LSeek (iFdEXE, arDisable5[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		/***/
+		switch (iEXEDisable6)
+		{
+			case 0: sBytes[0] = 0xD9; break;
+			case 1: sBytes[0] = 0x8C; break;
+		}
+		LSeek (iFdEXE, arDisable6[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		/***/
+		switch (iEXEDisable7)
+		{
+			case 0: sBytes[0] = 0xD3; break;
+			case 1: sBytes[0] = 0x8C; break;
+		}
+		LSeek (iFdEXE, arDisable7A[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		LSeek (iFdEXE, arDisable7B[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		/***/
+		switch (iEXEDisable8)
+		{
+			case 0: sBytes[0] = 0xD4; break;
+			case 1: sBytes[0] = 0x8C; break;
+		}
+		LSeek (iFdEXE, arDisable8[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		/***/
+		switch (iEXEDisable9)
+		{
+			case 0: sBytes[0] = 0xD5; break;
+			case 1: sBytes[0] = 0x8C; break;
+		}
+		LSeek (iFdEXE, arDisable9A[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		LSeek (iFdEXE, arDisable9B[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+		/***/
+		switch (iEXEDisableS)
+		{
+			case 0: sBytes[0] = 0x03; break;
+			case 1: sBytes[0] = 0x00; break;
+		}
+		LSeek (iFdEXE, arDisableS[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+	}
 
 	close (iFdEXE);
 
@@ -29264,6 +29442,59 @@ void EXE_F4 (void)
 						PlusMinus (&iEXEDemoEndingRoom, 234, 148, 1, 24, -1, 0);
 						PlusMinus (&iEXEDemoEndingRoom, 304, 148, 1, 24, +1, 0);
 						PlusMinus (&iEXEDemoEndingRoom, 319, 148, 1, 24, +10, 0);
+
+						/*** Disable. ***/
+						if (iEXEType == 1)
+						{
+							if (InArea (267, 238, 267 + 14, 238 + 14) == 1)
+							{
+								if (iEXEDisable2 == 0)
+									{ iEXEDisable2 = 1; } else { iEXEDisable2 = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+							if (InArea (232, 218, 232 + 14, 218 + 14) == 1)
+							{
+								if (iEXEDisable4 == 0)
+									{ iEXEDisable4 = 1; } else { iEXEDisable4 = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+							if (InArea (267, 218, 267 + 14, 218 + 14) == 1)
+							{
+								if (iEXEDisable5 == 0)
+									{ iEXEDisable5 = 1; } else { iEXEDisable5 = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+							if (InArea (302, 218, 302 + 14, 218 + 14) == 1)
+							{
+								if (iEXEDisable6 == 0)
+									{ iEXEDisable6 = 1; } else { iEXEDisable6 = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+							if (InArea (232, 198, 232 + 14, 198 + 14) == 1)
+							{
+								if (iEXEDisable7 == 0)
+									{ iEXEDisable7 = 1; } else { iEXEDisable7 = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+							if (InArea (267, 198, 267 + 14, 198 + 14) == 1)
+							{
+								if (iEXEDisable8 == 0)
+									{ iEXEDisable8 = 1; } else { iEXEDisable8 = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+							if (InArea (302, 198, 302 + 14, 198 + 14) == 1)
+							{
+								if (iEXEDisable9 == 0)
+									{ iEXEDisable9 = 1; } else { iEXEDisable9 = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+							if (InArea (232, 258, 232 + 14, 258 + 14) == 1)
+							{
+								if (iEXEDisableS == 0)
+									{ iEXEDisableS = 1; } else { iEXEDisableS = 0; }
+								PlaySound ("wav/check_box.wav");
+							}
+						}
 					}
 					ShowEXE_F4(); break;
 				case SDL_WINDOWEVENT:
@@ -29344,6 +29575,51 @@ void ShowEXE_F4 (void)
 	/*** (Demo level) Ending room. ***/
 	if (iEXEDemoEndingRoom == 24) { clr = color_bl; } else { clr = color_blue; }
 	CenterNumber (ascreen, iEXEDemoEndingRoom, 247, 148, clr, color_wh, 0);
+
+	/*** Disable. ***/
+	if (iEXEType == 1)
+	{
+		if (iEXEDisable2 == 1)
+		{
+			ShowImageBasic (imgchkb, 267, 238, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 267, 238, "imgsrs", ascreen, iScale, 1);
+		}
+		if (iEXEDisable4 == 1)
+		{
+			ShowImageBasic (imgchkb, 232, 218, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 232, 218, "imgsrs", ascreen, iScale, 1);
+		}
+		if (iEXEDisable5 == 1)
+		{
+			ShowImageBasic (imgchkb, 267, 218, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 267, 218, "imgsrs", ascreen, iScale, 1);
+		}
+		if (iEXEDisable6 == 1)
+		{
+			ShowImageBasic (imgchkb, 302, 218, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 302, 218, "imgsrs", ascreen, iScale, 1);
+		}
+		if (iEXEDisable7 == 1)
+		{
+			ShowImageBasic (imgchkb, 232, 198, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 232, 198, "imgsrs", ascreen, iScale, 1);
+		}
+		if (iEXEDisable8 == 1)
+		{
+			ShowImageBasic (imgchkb, 267, 198, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 267, 198, "imgsrs", ascreen, iScale, 1);
+		}
+		if (iEXEDisable9 == 1)
+		{
+			ShowImageBasic (imgchkb, 302, 198, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 302, 198, "imgsrs", ascreen, iScale, 1);
+		}
+		if (iEXEDisableS == 1)
+		{
+			ShowImageBasic (imgchkb, 232, 258, "imgchkb", ascreen, iScale, 1);
+			ShowImageBasic (imgsrs, 232, 258, "imgsrs", ascreen, iScale, 1);
+		}
+	}
 
 	/*** refresh screen ***/
 	SDL_RenderPresent (ascreen);
@@ -39608,7 +39884,7 @@ int FixDir (int iDir)
 	 * on start, because he does something else (1 = fall, 13 = run).
 	 */
 
-	if (((int)luLevelNr == 1) || ((int)luLevelNr == 13))
+	if ((iEditPoP == 1) && (((int)luLevelNr == 1) || ((int)luLevelNr == 13)))
 	{
 		if (iDir == 0) { return (255); } else { return (0); }
 	} else { return (iDir); }
