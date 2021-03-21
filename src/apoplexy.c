@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.13 (February 2021)
+/* apoplexy v3.14 (March 2021)
  * Copyright (C) 2008-2021 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,9 +56,9 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.13 (February 2021)"
+#define EDITOR_VERSION "v3.14 (March 2021)"
 #define EDITOR_VERSION_MAJOR 3
-#define EDITOR_VERSION_MINOR 13
+#define EDITOR_VERSION_MINOR 14
 #define EDITOR_VERSION_PATCH 0
 #define COPYRIGHT "Copyright (C) 2021 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
@@ -884,6 +884,12 @@ int iEXEDisable9;
 static const unsigned long arDisableS[6] =
 	{ 0X0, 0X2E17, 0X0, 0X0, 0X0, 0X0 };
 int iEXEDisableS;
+static const unsigned long arAutorun[6] =
+	{ 0X0, 0X2DE4, 0X0, 0X0, 0X0, 0X0 };
+int iEXEAutorun;
+static const unsigned long arQuicker[6] =
+	{ 0X0, 0X7818, 0X0, 0X0, 0X0, 0X0 };
+int iEXEQuicker;
 
 /*** exe, PoP2 ***/
 static const int arDefaultEnvPoP2[29] =
@@ -2624,7 +2630,7 @@ void CheckLatest (void)
 		 */
 		curl_easy_setopt (curl, CURLOPT_SSL_VERIFYPEER, 0);
 		/*** Without this, the connect timeout will be 300 seconds. ***/
-		curl_easy_setopt (curl, CURLOPT_CONNECTTIMEOUT, 5L);
+		curl_easy_setopt (curl, CURLOPT_CONNECTTIMEOUT, 3L);
 		res = curl_easy_perform (curl);
 		curl_easy_cleanup (curl);
 		fclose (fFile);
@@ -11957,10 +11963,6 @@ void InitScreen (void)
 			PreLoad (PNG_BUTTONS, "sel_Download2.png", &imgdownload2[2]);
 			PreLoad (PNG_BUTTONS, "Download3.png", &imgdownload3[1]);
 			PreLoad (PNG_BUTTONS, "sel_Download3.png", &imgdownload3[2]);
-			PreLoad (PNG_BUTTONS, "Downloads.png", &imgdownloads[1]);
-			PreLoad (PNG_BUTTONS, "sel_Downloads.png", &imgdownloads[2]);
-			PreLoad (PNG_BUTTONS, "Downloadm.png", &imgdownloadm[1]);
-			PreLoad (PNG_BUTTONS, "sel_Downloadm.png", &imgdownloadm[2]);
 		} else {
 			PreLoad (PNG_CONTROLLER, "PoP1_disabled.png", &imgpop1dis);
 			PreLoad (PNG_CONTROLLER, "PoP1_off.png", &imgpop1off);
@@ -11978,10 +11980,6 @@ void InitScreen (void)
 			PreLoad (PNG_CONTROLLER, "sel_Download2.png", &imgdownload2[2]);
 			PreLoad (PNG_CONTROLLER, "Download3.png", &imgdownload3[1]);
 			PreLoad (PNG_CONTROLLER, "sel_Download3.png", &imgdownload3[2]);
-			PreLoad (PNG_CONTROLLER, "Downloads.png", &imgdownloads[1]);
-			PreLoad (PNG_CONTROLLER, "sel_Downloads.png", &imgdownloads[2]);
-			PreLoad (PNG_CONTROLLER, "Downloadm.png", &imgdownloadm[1]);
-			PreLoad (PNG_CONTROLLER, "sel_Downloadm.png", &imgdownloadm[2]);
 		}
 		PreLoad (PNG_VARIOUS, "PR_problem.png", &imgprprob);
 		if (iController != 1)
@@ -12025,7 +12023,7 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 817; break;
+		case 1: iNrToPreLoad = 821; break;
 		case 2: iNrToPreLoad = 864; break;
 		case 3: iNrToPreLoad = 4851; break;
 	}
@@ -13657,10 +13655,18 @@ void InitScreen (void)
 			PreLoad (PNG_PLAYTEST, "DOSBox_key.png", &imgptdosboxkey);
 			PreLoad (PNG_PLAYTEST, "SDLPoP_key.png", &imgptsdlpopkey);
 			PreLoad (PNG_PLAYTEST, "MININIM_key.png", &imgptmininimkey);
+			PreLoad (PNG_BUTTONS, "Downloads.png", &imgdownloads[1]);
+			PreLoad (PNG_BUTTONS, "sel_Downloads.png", &imgdownloads[2]);
+			PreLoad (PNG_BUTTONS, "Downloadm.png", &imgdownloadm[1]);
+			PreLoad (PNG_BUTTONS, "sel_Downloadm.png", &imgdownloadm[2]);
 		} else {
 			PreLoad (PNG_CONTROLLER, "DOSBox_key.png", &imgptdosboxkey);
 			PreLoad (PNG_CONTROLLER, "SDLPoP_key.png", &imgptsdlpopkey);
 			PreLoad (PNG_CONTROLLER, "MININIM_key.png", &imgptmininimkey);
+			PreLoad (PNG_CONTROLLER, "Downloads.png", &imgdownloads[1]);
+			PreLoad (PNG_CONTROLLER, "sel_Downloads.png", &imgdownloads[2]);
+			PreLoad (PNG_CONTROLLER, "Downloadm.png", &imgdownloadm[1]);
+			PreLoad (PNG_CONTROLLER, "sel_Downloadm.png", &imgdownloadm[2]);
 		}
 	}
 
@@ -26466,12 +26472,23 @@ void EXELoad_F4 (void)
 			default: iEXEDisable4 = 0; break; /*** Fallback. ***/
 		}
 		LSeek (iFdEXE, arDisable5[iEXEType]);
-		ReadFromFile (iFdEXE, "", 1, sData);
-		switch (sData[0])
+		ReadFromFile (iFdEXE, "", 5, sData);
+		if ((sData[0] == 0xD8) && (sData[1] == 0x28) &&
+			(sData[2] == 0x00) && (sData[3] == 0x75) &&
+			(sData[4] == 0x07)) /*** Not disabled. ***/
 		{
-			case 0xD8: iEXEDisable5 = 0; break;
-			case 0x8C: iEXEDisable5 = 1; break;
-			default: iEXEDisable5 = 0; break; /*** Fallback. ***/
+			iEXEDisable5 = 0;
+		} else if ((sData[0] == 0x8C) && (sData[1] == 0x28) &&
+			(sData[2] == 0x00) && (sData[3] == 0x75) &&
+			(sData[4] == 0x07)) { /*** Disabled. ***/
+			iEXEDisable5 = 1;
+		} else if ((sData[0] == 0x4E) && (sData[1] == 0x59) &&
+			(sData[2] == 0x00) && (sData[3] == 0x74) &&
+			(sData[4] == 0x0C)) { /*** Disabled, but allow sheathing. ***/
+			iEXEDisable5 = 2;
+		} else {
+			printf ("[ WARN ] Strange disable value!\n");
+			iEXEDisable5 = 0; /*** As a fallback. ***/
 		}
 		LSeek (iFdEXE, arDisable6[iEXEType]);
 		ReadFromFile (iFdEXE, "", 1, sData);
@@ -26520,6 +26537,36 @@ void EXELoad_F4 (void)
 			case 0x03: iEXEDisableS = 0; break;
 			case 0x00: iEXEDisableS = 1; break;
 			default: iEXEDisableS = 0; break; /*** Fallback. ***/
+		}
+	}
+
+	/*** Autorun. ***/
+	if (iEXEType == 1)
+	{
+		LSeek (iFdEXE, arAutorun[iEXEType]);
+		ReadFromFile (iFdEXE, "", 2, sData);
+		if ((sData[0] == 0x75) && (sData[1] == 0x07))
+		{
+			iEXEAutorun = 0; /*** No autorun. ***/
+		} else if ((sData[0] == 0xEB) && (sData[1] == 0x07)) {
+			iEXEAutorun = 1; /*** Left. ***/
+		} else if ((sData[0] == 0xEB) && (sData[1] == 0x1C)) {
+			iEXEAutorun = 2; /*** Right. ***/
+		} else {
+			iEXEAutorun = 0; /*** Fallback. ***/
+		}
+	}
+
+	/*** Quicker painful falls. ***/
+	if (iEXEType == 1)
+	{
+		LSeek (iFdEXE, arQuicker[iEXEType]);
+		ReadFromFile (iFdEXE, "", 1, sData);
+		switch (sData[0])
+		{
+			case 0x14: iEXEQuicker = 0; break; /*** N ***/
+			case 0x11: iEXEQuicker = 1; break; /*** Y ***/
+			default: iEXEQuicker = 0; break; /*** Fallback. ***/
 		}
 	}
 
@@ -27045,11 +27092,18 @@ void EXESave_F4 (void)
 		/***/
 		switch (iEXEDisable5)
 		{
-			case 0: sBytes[0] = 0xD8; break;
-			case 1: sBytes[0] = 0x8C; break;
+			case 0: /*** Not disabled. ***/
+				sBytes[0] = 0xD8; sBytes[1] = 0x28; sBytes[2] = 0x00;
+				sBytes[3] = 0x75; sBytes[4] = 0x07; break;
+			case 1: /*** Disabled. ***/
+				sBytes[0] = 0x8C; sBytes[1] = 0x28; sBytes[2] = 0x00;
+				sBytes[3] = 0x75; sBytes[4] = 0x07; break;
+			case 2: /*** Disabled, but allow sheathing. ***/
+				sBytes[0] = 0x4E; sBytes[1] = 0x59; sBytes[2] = 0x00;
+				sBytes[3] = 0x74; sBytes[4] = 0x0C; break;
 		}
 		LSeek (iFdEXE, arDisable5[iEXEType]);
-		WriteCharByChar (iFdEXE, sBytes, 1);
+		WriteCharByChar (iFdEXE, sBytes, 5);
 		/***/
 		switch (iEXEDisable6)
 		{
@@ -27093,6 +27147,34 @@ void EXESave_F4 (void)
 			case 1: sBytes[0] = 0x00; break;
 		}
 		LSeek (iFdEXE, arDisableS[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 1);
+	}
+
+	/*** Autorun. ***/
+	if (iEXEType == 1)
+	{
+		switch (iEXEAutorun)
+		{
+			case 0: /*** No autorun. ***/
+				sBytes[0] = 0x75; sBytes[1] = 0x07; break;
+			case 1: /*** Left. ***/
+				sBytes[0] = 0xEB; sBytes[1] = 0x07; break;
+			case 2: /*** Right. ***/
+				sBytes[0] = 0xEB; sBytes[1] = 0x1C; break;
+		}
+		LSeek (iFdEXE, arAutorun[iEXEType]);
+		WriteCharByChar (iFdEXE, sBytes, 2);
+	}
+
+	/*** Quicker painful falls. ***/
+	if (iEXEType == 1)
+	{
+		switch (iEXEQuicker)
+		{
+			case 0: sBytes[0] = 0x14; break; /*** N ***/
+			case 1: sBytes[0] = 0x11; break; /*** Y ***/
+		}
+		LSeek (iFdEXE, arQuicker[iEXEType]);
 		WriteCharByChar (iFdEXE, sBytes, 1);
 	}
 
@@ -29449,7 +29531,12 @@ void EXE_F4 (void)
 							if (InArea (267, 238, 267 + 14, 238 + 14) == 1)
 							{
 								if (iEXEDisable2 == 0)
-									{ iEXEDisable2 = 1; } else { iEXEDisable2 = 0; }
+								{
+									iEXEDisable2 = 1;
+									if (iEXEDisable5 == 2) { iEXEDisable5 = 1; }
+								} else {
+									iEXEDisable2 = 0;
+								}
 								PlaySound ("wav/check_box.wav");
 							}
 							if (InArea (232, 218, 232 + 14, 218 + 14) == 1)
@@ -29460,8 +29547,15 @@ void EXE_F4 (void)
 							}
 							if (InArea (267, 218, 267 + 14, 218 + 14) == 1)
 							{
-								if (iEXEDisable5 == 0)
-									{ iEXEDisable5 = 1; } else { iEXEDisable5 = 0; }
+								switch (iEXEDisable5)
+								{
+									case 0: iEXEDisable5 = 1; break;
+									case 1:
+										iEXEDisable5 = 2;
+										iEXEDisable2 = 0; /*** Also necessary. ***/
+										break;
+									case 2: iEXEDisable5 = 0; break;
+								}
 								PlaySound ("wav/check_box.wav");
 							}
 							if (InArea (302, 218, 302 + 14, 218 + 14) == 1)
@@ -29493,6 +29587,41 @@ void EXE_F4 (void)
 								if (iEXEDisableS == 0)
 									{ iEXEDisableS = 1; } else { iEXEDisableS = 0; }
 								PlaySound ("wav/check_box.wav");
+							}
+						}
+
+						/*** Autorun. ***/
+						if (iEXEType == 1)
+						{
+							if (InArea (268, 303, 268 + 14, 303 + 14) == 1)
+							{ /*** No autorun. ***/
+								if (iEXEAutorun != 0)
+									{ iEXEAutorun = 0; PlaySound ("wav/check_box.wav"); }
+							}
+							if (InArea (253, 303, 253 + 14, 303 + 14) == 1)
+							{ /*** Left. ***/
+								if (iEXEAutorun != 1)
+									{ iEXEAutorun = 1; PlaySound ("wav/check_box.wav"); }
+							}
+							if (InArea (283, 303, 283 + 14, 303 + 14) == 1)
+							{ /*** Right. ***/
+								if (iEXEAutorun != 2)
+									{ iEXEAutorun = 2; PlaySound ("wav/check_box.wav"); }
+							}
+						}
+
+						/*** Quicker painful falls. ***/
+						if (iEXEType == 1)
+						{
+							if (InArea (261, 327, 261 + 14, 327 + 14) == 1)
+							{ /*** N ***/
+								if (iEXEQuicker != 0)
+									{ iEXEQuicker = 0; PlaySound ("wav/check_box.wav"); }
+							}
+							if (InArea (276, 327, 276 + 14, 327 + 14) == 1)
+							{ /*** Y ***/
+								if (iEXEQuicker != 1)
+									{ iEXEQuicker = 1; PlaySound ("wav/check_box.wav"); }
 							}
 						}
 					}
@@ -29589,9 +29718,12 @@ void ShowEXE_F4 (void)
 			ShowImageBasic (imgchkb, 232, 218, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 232, 218, "imgsrs", ascreen, iScale, 1);
 		}
-		if (iEXEDisable5 == 1)
+		if ((iEXEDisable5 == 1) || (iEXEDisable5 == 2))
 		{
-			ShowImageBasic (imgchkb, 267, 218, "imgchkb", ascreen, iScale, 1);
+			if (iEXEDisable5 == 1)
+				{ ShowImageBasic (imgchkb, 267, 218, "imgchkb", ascreen, iScale, 1); }
+			if (iEXEDisable5 == 2)
+				{ ShowImageBasic (imgchkg, 267, 218, "imgchkg", ascreen, iScale, 1); }
 			ShowImageBasic (imgsrs, 267, 218, "imgsrs", ascreen, iScale, 1);
 		}
 		if (iEXEDisable6 == 1)
@@ -29618,6 +29750,40 @@ void ShowEXE_F4 (void)
 		{
 			ShowImageBasic (imgchkb, 232, 258, "imgchkb", ascreen, iScale, 1);
 			ShowImageBasic (imgsrs, 232, 258, "imgsrs", ascreen, iScale, 1);
+		}
+	}
+
+	/*** Autorun. ***/
+	if (iEXEType == 1)
+	{
+		switch (iEXEAutorun)
+		{
+			case 0: /*** No autorun. ***/
+				ShowImageBasic (imgchkb, 268, 303, "imgchkb", ascreen, iScale, 1);
+				break;
+			case 1: /*** Left. ***/
+				ShowImageBasic (imgchkb, 253, 303, "imgchkb", ascreen, iScale, 1);
+				ShowImageBasic (imgsrs, 253, 303, "imgsrs", ascreen, iScale, 1);
+				break;
+			case 2: /*** Right. ***/
+				ShowImageBasic (imgchkb, 283, 303, "imgchkb", ascreen, iScale, 1);
+				ShowImageBasic (imgsrs, 283, 303, "imgsrs", ascreen, iScale, 1);
+				break;
+		}
+	}
+
+	/*** Quicker painful falls. ***/
+	if (iEXEType == 1)
+	{
+		switch (iEXEQuicker)
+		{
+			case 0: /*** N ***/
+				ShowImageBasic (imgchkb, 261, 327, "imgchkb", ascreen, iScale, 1);
+				break;
+			case 1: /*** Y ***/
+				ShowImageBasic (imgchkb, 276, 327, "imgchkb", ascreen, iScale, 1);
+				ShowImageBasic (imgsrs, 276, 327, "imgsrs", ascreen, iScale, 1);
+				break;
 		}
 	}
 
@@ -35228,6 +35394,11 @@ void UpdateStatusBar1_F4 (void)
 	if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
 	{
 		snprintf (sStatus, MAX_STATUS, "%s", URL_CUSPOP);
+	}
+	if (InArea (267, 218, 267 + 14, 218 + 14) == 1) /*** Disable 5? ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s",
+			"Use the green-colored cross to only allow sheathing.");
 	}
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F4(); }
 }

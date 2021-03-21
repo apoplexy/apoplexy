@@ -5,6 +5,11 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.14 (March 21, 2021) - Norbert de Jonge
+--------------------
++ PoP1 for DOS autorun and quicker painful falls (F4).
+* Another option for disabling arrow down, which leaves sheathing intact.
+
 v3.13 (February 1, 2021) - Norbert de Jonge
 --------------------
 + PoP1 for DOS gameplay keys can be disabled (F4).
