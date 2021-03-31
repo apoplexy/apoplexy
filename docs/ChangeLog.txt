@@ -5,6 +5,10 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.14.1 (March 31, 2021) - Norbert de Jonge
+--------------------
+* Better no-down-except-sheath.
+
 v3.14 (March 21, 2021) - Norbert de Jonge
 --------------------
 + PoP1 for DOS autorun and quicker painful falls (F4).

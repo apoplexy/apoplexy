@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.14 (March 2021)
+/* apoplexy v3.14.1 (March 2021)
  * Copyright (C) 2008-2021 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,10 +56,10 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.14 (March 2021)"
+#define EDITOR_VERSION "v3.14.1 (March 2021)"
 #define EDITOR_VERSION_MAJOR 3
 #define EDITOR_VERSION_MINOR 14
-#define EDITOR_VERSION_PATCH 0
+#define EDITOR_VERSION_PATCH 1
 #define COPYRIGHT "Copyright (C) 2021 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
@@ -26482,7 +26482,7 @@ void EXELoad_F4 (void)
 			(sData[2] == 0x00) && (sData[3] == 0x75) &&
 			(sData[4] == 0x07)) { /*** Disabled. ***/
 			iEXEDisable5 = 1;
-		} else if ((sData[0] == 0x4E) && (sData[1] == 0x59) &&
+		} else if ((sData[0] == 0x64) && (sData[1] == 0x43) &&
 			(sData[2] == 0x00) && (sData[3] == 0x74) &&
 			(sData[4] == 0x0C)) { /*** Disabled, but allow sheathing. ***/
 			iEXEDisable5 = 2;
@@ -27099,7 +27099,7 @@ void EXESave_F4 (void)
 				sBytes[0] = 0x8C; sBytes[1] = 0x28; sBytes[2] = 0x00;
 				sBytes[3] = 0x75; sBytes[4] = 0x07; break;
 			case 2: /*** Disabled, but allow sheathing. ***/
-				sBytes[0] = 0x4E; sBytes[1] = 0x59; sBytes[2] = 0x00;
+				sBytes[0] = 0x64; sBytes[1] = 0x43; sBytes[2] = 0x00;
 				sBytes[3] = 0x74; sBytes[4] = 0x0C; break;
 		}
 		LSeek (iFdEXE, arDisable5[iEXEType]);
