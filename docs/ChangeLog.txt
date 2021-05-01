@@ -5,6 +5,10 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.15 (May 1, 2021) - Norbert de Jonge
+--------------------
++ Added a basic built-in hex editor (F12).
+
 v3.14.1 (March 31, 2021) - Norbert de Jonge
 --------------------
 * Better no-down-except-sheath.

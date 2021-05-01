@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Makefile for apoplexy 3.14.1 by The apoplexy Team (see credits.txt)
+# Makefile for apoplexy 3.15 by The apoplexy Team (see credits.txt)
 #
 # cppcheck --language=c --std=c99 --verbose apoplexy.c
 # Also try the line below with clang instead of gcc.

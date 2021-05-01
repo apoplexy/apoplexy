@@ -40,6 +40,7 @@ F3*                                  [PoP1 for DOS] Second executable screen.
 F3*                                  [PoP1 for SNES] Go to the texts screen.
 F4*                                  [PoP1 for DOS] Third executable screen.
 F4*                                  [PoP1 for SNES] Modify automatic moves.
+F12                                  Go to the built-in hex editor.
 Ctrl+c                               Copy the room.
 Ctrl+v                               Paste the room.
 Ctrl+p                               [PoP1 for SNES] Print template data.

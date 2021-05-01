@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.14.1 (March 2021)
+/* apoplexy v3.15 (May 2021)
  * Copyright (C) 2008-2021 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,10 +56,10 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.14.1 (March 2021)"
+#define EDITOR_VERSION "v3.15 (May 2021)"
 #define EDITOR_VERSION_MAJOR 3
-#define EDITOR_VERSION_MINOR 14
-#define EDITOR_VERSION_PATCH 1
+#define EDITOR_VERSION_MINOR 15
+#define EDITOR_VERSION_PATCH 0
 #define COPYRIGHT "Copyright (C) 2021 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
@@ -92,6 +92,8 @@
 #define END_PRINCE 65535
 #define URL_CUSPOP "https://www.popot.org/other_useful_tools.php?tool=CusPop"
 #define URL_LATEST "https://www.apoplexy.org/latest_release.xml"
+#define MAX_TEXT_JUMP 20
+#define MAX_TEXT_FIND 44
 
 /*** Map window ***/
 #define MAP_BIG_AREA_W 1225
@@ -721,6 +723,17 @@ int iNrPlayers;
 int iKidHover;
 int arLiveX[8 + 2];
 int arLiveY[8 + 2];
+
+/*** hex editor ***/
+int iCloseHexEditorOn;
+int iHexOffset;
+int iHitOffset;
+int iHitNrChars;
+int iHexCursor;
+unsigned char sHexBytes[64 + 2];
+char arTextH[2 + 2][MAX_DATA + 2];
+char cHexInput;
+Uint32 saved;
 
 /*** exe ***/
 char sEXEType[MAX_EXETYPE + 2];
@@ -1919,6 +1932,8 @@ SDL_Texture *imgautomatic, *imgautomaticsel;
 SDL_Texture *imgautof[15 + 2], *imgautok[255 + 2], *imgautokunk;
 SDL_Texture *imgjump, *imgjumpdis16, *imgjumpdis25, *imgjumpdis28;
 SDL_Texture *imgjumpdis29, *imgseljump;
+SDL_Texture *imghexeditor, *imgshb, *imgshg, *imgshj, *imgshf;
+SDL_Texture *imgclosea[2 + 2];
 
 /*** the rooms ***/
 SDL_Texture *imgroom1, *imgroom2, *imgroom3, *imgroom4, *imgroom5, *imgroom6;
@@ -2002,7 +2017,7 @@ SDL_Texture *imggrid;
 SDL_Texture *imgmap, *imgmapgrid;
 SDL_Texture *imgmini1[31 + 2][255 + 2];
 SDL_Texture *imgminiguard, *imgminiprince, *imgminihover, *imgminirelated;
-SDL_Texture *imgclose[2 + 2];
+SDL_Texture *imgclosem[2 + 2];
 SDL_Texture *imgzoom1on_0, *imgzoom1on_1, *imgzoom1off;
 SDL_Texture *imgzoomfiton_0, *imgzoomfiton_1, *imgzoomfitoff;
 SDL_Texture *imgzoominon_0, *imgzoominon_1, *imgzoominoff;
@@ -2079,6 +2094,7 @@ int InArea (int iUpperLeftX, int iUpperLeftY,
 	int iLowerRightX, int iLowerRightY);
 int InAreaMap (int iUpperLeftX, int iUpperLeftY,
 	int iLowerRightX, int iLowerRightY);
+void PreventCPUEating (void);
 void InitScreenAction (char *sAction);
 void InitScreen (void);
 void EventDoor (int iX, int iY);
@@ -2279,6 +2295,7 @@ void UpdateStatusBar1_F3 (void);
 void UpdateStatusBar1_F4 (void);
 void UpdateStatusBar3 (void);
 void UpdateStatusBar3T (void);
+void UpdateStatusBar_F12 (void);
 int OnLevelBar (void);
 void AlwaysJumpThroughMirror (void);
 void StringToLower (char *sInput, char *sOutput);
@@ -2338,6 +2355,11 @@ int Kid (int iLocation, SDL_Renderer *screen);
 void ShowKid (SDL_Renderer *screen);
 void GetHorVer (int iLocation, int *iHor, int *iVer);
 int FixDir (int iDir);
+void RemoveSpaces (char *sString, int iToUpper);
+void HexEditorAction (char *sAction, int iFileSize, int iFdEXE);
+void HexEditor (char *sFileName);
+void ShowHexEditor (void);
+void HexEditorKey (char cAdd);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -2394,6 +2416,10 @@ int main (int argc, char *argv[])
 	iAutomaticSel = 1;
 	iJumpSel = 1;
 	iEventHover = 0;
+	iHexOffset = 0;
+	iHitOffset = 0;
+	iHitNrChars = 0;
+	iHexCursor = 0;
 
 	CheckSSE();
 	CheckLatest();
@@ -11258,6 +11284,17 @@ int InAreaMap (int iUpperLeftX, int iUpperLeftY,
 	}
 }
 /*****************************************************************************/
+void PreventCPUEating (void)
+/*****************************************************************************/
+{
+	gamespeed = REFRESH;
+	while ((SDL_GetTicks() - looptime) < gamespeed)
+	{
+		SDL_Delay (10);
+	}
+	looptime = SDL_GetTicks();
+}
+/*****************************************************************************/
 void InitScreenAction (char *sAction)
 /*****************************************************************************/
 {
@@ -12023,9 +12060,9 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 821; break;
-		case 2: iNrToPreLoad = 864; break;
-		case 3: iNrToPreLoad = 4851; break;
+		case 1: iNrToPreLoad = 828; break;
+		case 2: iNrToPreLoad = 871; break;
+		case 3: iNrToPreLoad = 4858; break;
 	}
 
 	/*** locations; dungeon ***/
@@ -13553,6 +13590,19 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "exe_tab.png", &imgexetab);
 		PreLoad (PNG_VARIOUS, "statusbar_sprite.png", &imgstatusbarsprite);
 	}
+	PreLoad (PNG_VARIOUS, "hexeditor.png", &imghexeditor);
+	PreLoad (PNG_VARIOUS, "sel_hex_black.png", &imgshb);
+	PreLoad (PNG_VARIOUS, "sel_hex_green.png", &imgshg);
+	PreLoad (PNG_VARIOUS, "sel_hex_jump.png", &imgshj);
+	PreLoad (PNG_VARIOUS, "sel_hex_find.png", &imgshf);
+	if (iController != 1)
+	{
+		PreLoad (PNG_BUTTONS, "Close.png", &imgclosea[1]);
+		PreLoad (PNG_BUTTONS, "sel_Close.png", &imgclosea[2]);
+	} else {
+		PreLoad (PNG_CONTROLLER, "Close.png", &imgclosea[1]);
+		PreLoad (PNG_CONTROLLER, "sel_Close.png", &imgclosea[2]);
+	}
 
 	/*** faded tiles ***/
 	switch (iEditPoP)
@@ -13751,14 +13801,14 @@ void InitScreen (void)
 			PreLoad (PNG_BUTTONS, "map_on_0.png", &imgmapon_0);
 			PreLoad (PNG_BUTTONS, "map_on_1.png", &imgmapon_1);
 			PreLoad (PNG_BUTTONS, "map_off.png", &imgmapoff);
-			PreLoadMap (PNG_BUTTONS, "Close.png", &imgclose[1]);
-			PreLoadMap (PNG_BUTTONS, "sel_Close.png", &imgclose[2]);
+			PreLoadMap (PNG_BUTTONS, "Close.png", &imgclosem[1]);
+			PreLoadMap (PNG_BUTTONS, "sel_Close.png", &imgclosem[2]);
 		} else {
 			PreLoad (PNG_CONTROLLER, "map_on_0.png", &imgmapon_0);
 			PreLoad (PNG_CONTROLLER, "map_on_1.png", &imgmapon_1);
 			PreLoad (PNG_CONTROLLER, "map_off.png", &imgmapoff);
-			PreLoadMap (PNG_CONTROLLER, "Close.png", &imgclose[1]);
-			PreLoadMap (PNG_CONTROLLER, "sel_Close.png", &imgclose[2]);
+			PreLoadMap (PNG_CONTROLLER, "Close.png", &imgclosem[1]);
+			PreLoadMap (PNG_CONTROLLER, "sel_Close.png", &imgclosem[2]);
 		}
 	} else {
 		PreLoad (PNG_VARIOUS, "grid_fragment.png", &imggrid);
@@ -14180,6 +14230,24 @@ void InitScreen (void)
 									}
 								}
 								if (iEditPoP == 3) { Automatic(); }
+							}
+							break;
+						case SDLK_F12:
+							if (iScreen == 1)
+							{
+								if ((strcmp (sEXEType, "missing") != 0) &&
+									(strcmp (sEXEType, "unknown") != 0))
+								{
+									if (iEditPoP != 2)
+									{
+										snprintf (sEXELoc, MAX_FILE, "%s", POP1_EXECUTABLE);
+									} else {
+										snprintf (sEXELoc, MAX_FILE, "%s", POP2_EXECUTABLE);
+									}
+									HexEditor (sEXELoc);
+								} else {
+									printf ("[ INFO ] Missing or unknown executable.\n");
+								}
 							}
 							break;
 						case SDLK_LEFTBRACKET:
@@ -15627,14 +15695,7 @@ void InitScreen (void)
 					break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 }
 /*****************************************************************************/
@@ -17487,14 +17548,7 @@ void InitPopUp (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	ShowScreen (iScreen, ascreen);
@@ -17658,14 +17712,7 @@ int InitPopUpYN (int iYNText)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	ShowScreen (iScreen, ascreen);
@@ -19738,14 +19785,7 @@ void ChangePos (int iLocation, SDL_Renderer *screen)
 				}
 				break;
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/ok_close.wav");
 }
@@ -20350,14 +20390,7 @@ int ChangePosCustom (int iLocation, SDL_Renderer *screen)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	if (iChanging == 1) { PlaySound ("wav/ok_close.wav"); }
 
@@ -21218,14 +21251,7 @@ void ChangeGuards (SDL_Renderer *screen)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/ok_close.wav");
 }
@@ -21619,14 +21645,7 @@ void ChangeMusic (SDL_Renderer *screen)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/ok_close.wav");
 }
@@ -21994,14 +22013,7 @@ int ChangeBackground (int iLocation, SDL_Renderer *screen)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	if (iChanging == 1) { PlaySound ("wav/ok_close.wav"); }
 
@@ -22246,14 +22258,7 @@ int PickTemplate (SDL_Renderer *screen)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	if (iChanging == 1) { PlaySound ("wav/ok_close.wav"); }
 
@@ -26132,14 +26137,7 @@ void Help (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	SDL_SetCursor (curArrow);
@@ -28072,14 +28070,7 @@ void EXE (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	SDL_SetCursor (curArrow);
@@ -28941,14 +28932,7 @@ void EXE_F3 (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	SDL_SetCursor (curArrow);
@@ -29641,14 +29625,7 @@ void EXE_F4 (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	SDL_SetCursor (curArrow);
@@ -30086,14 +30063,7 @@ void KidColors (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 }
@@ -31695,14 +31665,7 @@ void PoP1OrPoP2 (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 }
 /*****************************************************************************/
@@ -35560,6 +35523,26 @@ void UpdateStatusBar3T (void)
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowText(); }
 }
 /*****************************************************************************/
+void UpdateStatusBar_F12 (void)
+/*****************************************************************************/
+{
+	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+	/*** The 64 bytes block. ***/
+	if (InArea (153, 165, 153 + 385, 165 + 77) == 1)
+	{
+		if (iTextHover != 0)
+		{
+			snprintf (sStatus, MAX_STATUS, "%s", "First, select a byte.");
+		} else {
+			snprintf (sStatus, MAX_STATUS, "%s", "Type (00-FF) to modify.");
+		}
+	}
+	if (SDL_GetTicks() < saved + 2000)
+		{ snprintf (sStatus, MAX_STATUS, "%s", "Saved."); }
+	if (strcmp (sStatus, sStatusOld) != 0) { ShowHexEditor(); }
+}
+/*****************************************************************************/
 int OnLevelBar (void)
 /*****************************************************************************/
 {
@@ -36164,14 +36147,7 @@ int Native (int iLocation, SDL_Renderer *screen, int iViaCustom)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 
 	return (iChangingCustom);
@@ -36866,9 +36842,9 @@ void ShowMap (void)
 	/*** Close ***/
 	if (iDownAtMap == 1)
 	{ /*** down ***/
-		ShowImageBasic (imgclose[2], 1189, 809, "imgclose[2]", mscreen, 1, 1);
+		ShowImageBasic (imgclosem[2], 1189, 809, "imgclosem[2]", mscreen, 1, 1);
 	} else { /*** up ***/
-		ShowImageBasic (imgclose[1], 1189, 809, "imgclose[1]", mscreen, 1, 1);
+		ShowImageBasic (imgclosem[1], 1189, 809, "imgclosem[1]", mscreen, 1, 1);
 	}
 
 	/*** Zoom: in ***/
@@ -37654,14 +37630,7 @@ void Playtest (int iLevel)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	if (iPlaytest == 0) { PlaySound ("wav/popup_close.wav"); }
 	SDL_SetCursor (curArrow);
@@ -38036,14 +38005,7 @@ void Text (void)
 					break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	SDL_SetCursor (curArrow);
@@ -38583,14 +38545,7 @@ void Automatic (void)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	ShowScreen (iScreen, ascreen);
@@ -38982,14 +38937,7 @@ void JumpTo (int iType)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	PlaySound ("wav/popup_close.wav");
 	SDL_SetCursor (curArrow);
@@ -39761,14 +39709,7 @@ int Kid (int iLocation, SDL_Renderer *screen)
 					Quit(); break;
 			}
 		}
-
-		/*** prevent CPU eating ***/
-		gamespeed = REFRESH;
-		while ((SDL_GetTicks() - looptime) < gamespeed)
-		{
-			SDL_Delay (10);
-		}
-		looptime = SDL_GetTicks();
+		PreventCPUEating();
 	}
 	if (iChanging == 1) { PlaySound ("wav/ok_close.wav"); }
 
@@ -40059,5 +40000,719 @@ int FixDir (int iDir)
 	{
 		if (iDir == 0) { return (255); } else { return (0); }
 	} else { return (iDir); }
+}
+/*****************************************************************************/
+void RemoveSpaces (char *sString, int iToUpper)
+/*****************************************************************************/
+{
+	int iPos;
+
+	/*** Used for looping ***/
+	int iLoopChar;
+
+	iPos = 0;
+	for (iLoopChar = 0; iLoopChar < (int)strlen (sString); iLoopChar++)
+	{
+		if (sString[iLoopChar] != ' ')
+		{
+			if (iToUpper == 0)
+				{ sString[iPos] = sString[iLoopChar]; }
+					else { sString[iPos] = toupper (sString[iLoopChar]); }
+			iPos++;
+		}
+	}
+	sString[iPos] = '\0';
+}
+/*****************************************************************************/
+void HexEditorAction (char *sAction, int iFileSize, int iFdEXE)
+/*****************************************************************************/
+{
+	int iEOF;
+	int iHexOffsetCurrent;
+	int iCharsFound;
+	int iRead;
+	char sRead[1 + 2];
+	char sSearchH[MAX_TEXT + 2], sSearchD[MAX_TEXT + 2];
+	int iPos;
+	char sS[10 + 2];
+	int iS;
+	char sToWrite[MAX_TOWRITE + 2];
+
+	/*** Used for looping. ***/
+	int iLoopHex;
+	int iLoopByte;
+
+	if (strcmp (sAction, "jump") == 0)
+	{
+		if ((arTextH[1][0] == '0') &&
+			((arTextH[1][1] == 'x') || (arTextH[1][1] == 'X')))
+		{
+			iHexOffset = strtoul (arTextH[1], NULL, 16);
+		} else {
+			iHexOffset = atoi (arTextH[1]);
+		}
+		if (iHexOffset < 0)
+			{ iHexOffset = 0; }
+		if (iHexOffset > (iFileSize - 64))
+			{ iHexOffset = (iFileSize - 64); }
+		LSeek (iFdEXE, iHexOffset);
+		ReadFromFile (iFdEXE, "", 64, sHexBytes);
+		cHexInput = ' ';
+		/*** stop input ***/
+		iTextHover = 0;
+		SDL_StopTextInput();
+		SDL_SetCursor (curArrow);
+		/***/
+		iHexCursor = 0;
+		/***/
+		PlaySound ("wav/extras.wav");
+	}
+
+	if (strcmp (sAction, "up") == 0)
+	{
+		if (iTextHover == 0)
+		{
+			if (iHexCursor > 15)
+			{
+				iHexCursor-=16;
+			} else {
+				iHexOffset-=16;
+				if (iHexOffset < 0)
+					{ iHexOffset = 0; }
+				LSeek (iFdEXE, iHexOffset);
+				ReadFromFile (iFdEXE, "", 64, sHexBytes);
+			}
+			cHexInput = ' ';
+		}
+	}
+
+	if (strcmp (sAction, "down") == 0)
+	{
+		if (iTextHover == 0)
+		{
+			if (iHexCursor < 48)
+			{
+				iHexCursor+=16;
+			} else {
+				iHexOffset+=16;
+				if (iHexOffset > (iFileSize - 64))
+					{ iHexOffset = (iFileSize - 64); }
+				LSeek (iFdEXE, iHexOffset);
+				ReadFromFile (iFdEXE, "", 64, sHexBytes);
+			}
+			cHexInput = ' ';
+		}
+	}
+
+	if (strcmp (sAction, "next") == 0)
+	{
+		/*** sSearchH, sSearchD ***/
+		snprintf (sSearchH, MAX_TEXT, "%s", arTextH[2]);
+		RemoveSpaces (sSearchH, 0);
+		if (strlen (sSearchH) == 0) { return; }
+		iPos = 0;
+		for (iLoopHex = 0; iLoopHex < (int)strlen (sSearchH); iLoopHex+=2)
+		{
+			snprintf (sS, 10, "%c%c", sSearchH[iLoopHex], sSearchH[iLoopHex + 1]);
+			iS = (int)strtol (sS, NULL, 16);
+			sSearchD[iPos] = iS;
+			iPos++;
+		}
+		sSearchD[iPos] = '\0';
+
+		/*** iHexOffset ***/
+		iHexOffsetCurrent = iHexOffset;
+		/*** We may be AT a match, and we want the NEXT. ***/
+		iHexOffset = iHexOffset + iHexCursor + 1;
+		LSeek (iFdEXE, iHexOffset);
+		iEOF = 0;
+		iCharsFound = 0;
+		do {
+			iRead = read (iFdEXE, sRead, 1);
+			iHexOffset++;
+			switch (iRead)
+			{
+				case -1:
+					printf ("[FAILED] Could not read (3): %s!\n", strerror (errno));
+					exit (EXIT_ERROR);
+					break;
+				case 0: iEOF = 1; break;
+				default:
+					if (sSearchD[iCharsFound] == sRead[0])
+					{
+						iCharsFound++;
+					} else {
+						/*** Do not miss a hit that started INSIDE the FAILED hit. ***/
+						iHexOffset-=iCharsFound;
+						LSeek (iFdEXE, iHexOffset);
+						iCharsFound = 0;
+					}
+					break;
+			}
+		/* In C, 0 is the same as '\0'. One char in sSearchD may be 0. Therefore,
+		 * instead of "(int)strlen (sSearchD)", iPos is used.
+		 */
+		} while ((iEOF == 0) && (iCharsFound < iPos));
+		if (iEOF == 1)
+		{
+			iHexOffset = iHexOffsetCurrent;
+		} else {
+			iHexOffset-=iPos;
+			iHitOffset = iHexOffset;
+			iHitNrChars = iPos;
+			/***/
+			if (iHexOffset > (iFileSize - 64))
+				{ iHexOffset = (iFileSize - 64); }
+		}
+
+		LSeek (iFdEXE, iHexOffset);
+		ReadFromFile (iFdEXE, "", 64, sHexBytes);
+		cHexInput = ' ';
+		/*** stop input ***/
+		iTextHover = 0;
+		SDL_StopTextInput();
+		SDL_SetCursor (curArrow);
+		/***/
+		iHexCursor = 0;
+		/***/
+		PlaySound ("wav/extras.wav");
+	}
+
+	if (strcmp (sAction, "save") == 0)
+	{
+		cHexInput = ' ';
+		/***/
+		LSeek (iFdEXE, iHexOffset);
+		for (iLoopByte = 0; iLoopByte < 64; iLoopByte++)
+		{
+			snprintf (sToWrite, MAX_TOWRITE, "%c", sHexBytes[iLoopByte]);
+			write (iFdEXE, sToWrite, 1);
+		}
+		/***/
+		PlaySound ("wav/save.wav");
+		/***/
+		saved = SDL_GetTicks();
+	}
+}
+/*****************************************************************************/
+void HexEditor (char *sFileName)
+/*****************************************************************************/
+{
+	SDL_Event event;
+	int iHexEditor;
+	struct stat stStatus;
+	int iFileSize;
+	int iFdEXE;
+	char cAdd;
+	char sTempLine[MAX_DATA + 2];
+
+	/*** Used for looping. ***/
+	int iLoopX, iLoopY;
+
+	iHexEditor = 1;
+
+	stat (sFileName, &stStatus);
+	iFileSize = (int)stStatus.st_size;
+	/***/
+	iFdEXE = open (sFileName, O_RDWR|O_BINARY);
+	if (iFdEXE == -1)
+	{
+		printf ("[FAILED] Error opening %s: %s!\n", sFileName,
+			strerror (errno));
+		exit (EXIT_ERROR);
+	}
+	/***/
+	LSeek (iFdEXE, iHexOffset);
+	ReadFromFile (iFdEXE, "", 64, sHexBytes);
+	cHexInput = ' ';
+
+	iTextHover = 0;
+
+	PlaySound ("wav/popup.wav");
+	ShowHexEditor();
+	while (iHexEditor == 1)
+	{
+		if (iNoAnim == 0)
+		{
+			/*** We use the global REFRESH. No need for newticks/oldticks. ***/
+			iStatusBarFrame++;
+			if (iStatusBarFrame == 19) { iStatusBarFrame = 1; }
+			ShowHexEditor();
+		}
+
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_B:
+							iHexEditor = 0; break;
+					}
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							if (iTextHover == 0)
+							{
+								iHexEditor = 0;
+							} else {
+								/*** stop input ***/
+								iTextHover = 0;
+								SDL_StopTextInput();
+								SDL_SetCursor (curArrow);
+							}
+							break;
+						case SDLK_LEFT:
+							if (iTextHover == 0)
+							{
+								switch (iHexCursor)
+								{
+									case 0: case 16: case 32: case 48: break;
+									default: iHexCursor--; break;
+								}
+								cHexInput = ' ';
+							}
+							break;
+						case SDLK_RIGHT:
+							if (iTextHover == 0)
+							{
+								switch (iHexCursor)
+								{
+									case 15: case 31: case 47: case 63: break;
+									default: iHexCursor++; break;
+								}
+								cHexInput = ' ';
+							}
+							break;
+						case SDLK_UP:
+							HexEditorAction ("up", iFileSize, iFdEXE);
+							break;
+						case SDLK_DOWN:
+							HexEditorAction ("down", iFileSize, iFdEXE);
+							break;
+						case SDLK_HOME:
+							if (iTextHover == 0)
+							{
+								iHexOffset = 0;
+								LSeek (iFdEXE, iHexOffset);
+								ReadFromFile (iFdEXE, "", 64, sHexBytes);
+								iHexCursor = 0;
+								cHexInput = ' ';
+							}
+							break;
+						case SDLK_END:
+							if (iTextHover == 0)
+							{
+								iHexOffset = (iFileSize - 64);
+								LSeek (iFdEXE, iHexOffset);
+								ReadFromFile (iFdEXE, "", 64, sHexBytes);
+								iHexCursor = 63;
+								cHexInput = ' ';
+							}
+							break;
+						case SDLK_0: case SDLK_KP_0: HexEditorKey ('0'); break;
+						case SDLK_1: case SDLK_KP_1: HexEditorKey ('1'); break;
+						case SDLK_2: case SDLK_KP_2: HexEditorKey ('2'); break;
+						case SDLK_3: case SDLK_KP_3: HexEditorKey ('3'); break;
+						case SDLK_4: case SDLK_KP_4: HexEditorKey ('4'); break;
+						case SDLK_5: case SDLK_KP_5: HexEditorKey ('5'); break;
+						case SDLK_6: case SDLK_KP_6: HexEditorKey ('6'); break;
+						case SDLK_7: case SDLK_KP_7: HexEditorKey ('7'); break;
+						case SDLK_8: case SDLK_KP_8: HexEditorKey ('8'); break;
+						case SDLK_9: case SDLK_KP_9: HexEditorKey ('9'); break;
+						case SDLK_a: HexEditorKey ('a'); break;
+						case SDLK_b: HexEditorKey ('b'); break;
+						case SDLK_c:
+							if ((event.key.keysym.mod & KMOD_LCTRL) ||
+								(event.key.keysym.mod & KMOD_RCTRL))
+							{
+								iHexEditor = 0;
+							} else {
+								HexEditorKey ('c');
+							}
+							break;
+						case SDLK_d: HexEditorKey ('d'); break;
+						case SDLK_e: HexEditorKey ('e'); break;
+						case SDLK_f:
+							if ((event.key.keysym.mod & KMOD_LCTRL) ||
+								(event.key.keysym.mod & KMOD_RCTRL))
+							{
+								/*** start input ***/
+								iTextHover = 2; /*** Search hex: ***/
+								SDL_StartTextInput();
+							} else {
+								HexEditorKey ('f');
+							}
+							break;
+						case SDLK_j:
+							if ((event.key.keysym.mod & KMOD_LCTRL) ||
+								(event.key.keysym.mod & KMOD_RCTRL))
+							{
+								/*** start input ***/
+								iTextHover = 1; /*** Go to offset: ***/
+								SDL_StartTextInput();
+							}
+							break;
+						case SDLK_s:
+							if ((event.key.keysym.mod & KMOD_LCTRL) ||
+								(event.key.keysym.mod & KMOD_RCTRL))
+							{
+								HexEditorAction ("save", iFileSize, iFdEXE);
+							}
+							break;
+						case SDLK_BACKSPACE:
+							if ((iTextHover != 0) &&
+								(strlen (arTextH[iTextHover]) > 0))
+							{
+								arTextH[iTextHover][strlen (arTextH[iTextHover]) - 1] = '\0';
+								PlaySound ("wav/hum_adj.wav");
+							}
+							if ((iTextHover == 0) &&
+								(cHexInput != ' '))
+							{
+								cHexInput = ' ';
+							}
+							break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+							if (iTextHover == 1)
+							{
+								HexEditorAction ("jump", iFileSize, iFdEXE);
+							}
+							if (iTextHover == 2)
+							{
+								HexEditorAction ("next", iFileSize, iFdEXE);
+							}
+							break;
+						case SDLK_v:
+							if ((event.key.keysym.mod & KMOD_LCTRL) ||
+								(event.key.keysym.mod & KMOD_RCTRL))
+							{
+								if ((iTextHover == 1) && (strlen (arTextH[1]) < MAX_TEXT_JUMP))
+								{
+									snprintf (sTempLine, MAX_DATA, "%s", arTextH[1]);
+									snprintf (arTextH[1], MAX_TEXT_JUMP + 1,
+										"%s%s", sTempLine, SDL_GetClipboardText());
+								}
+								if ((iTextHover == 2) && (strlen (arTextH[2]) < MAX_TEXT_FIND))
+								{
+									snprintf (sTempLine, MAX_DATA, "%s", arTextH[2]);
+									snprintf (arTextH[2], MAX_TEXT_FIND + 1,
+										"%s%s", sTempLine, SDL_GetClipboardText());
+								}
+							}
+							break;
+						default: break;
+					}
+					ShowHexEditor();
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+
+					/*** Go to offset: & Search hex: ***/
+					if (((InArea (281, 267, 281 + 181, 267 + 18) == 1) &&
+						(iTextHover == 1)) ||
+						((InArea (281, 318, 281 + 375, 318 + 18) == 1) &&
+						(iTextHover == 2)))
+					{
+						SDL_SetCursor (curText);
+					} else {
+						SDL_SetCursor (curArrow);
+					}
+
+					UpdateStatusBar_F12();
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == 1)
+					{
+						if (InArea (590, 405, 674, 436) == 1) /*** Close ***/
+						{
+							if (iCloseHexEditorOn != 1) { iCloseHexEditorOn = 1; }
+							ShowHexEditor();
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iCloseHexEditorOn = 0;
+					if (event.button.button == 1) /*** left mouse button ***/
+					{
+						/*** The 64 bytes block. ***/
+						if (InArea (153, 165, 153 + 385, 165 + 77) == 1)
+						{
+							/*** stop input ***/
+							iTextHover = 0;
+							SDL_StopTextInput();
+							SDL_SetCursor (curArrow); /*** Already arrow. Consistency. ***/
+
+							/*** The individual rectangles. ***/
+							for (iLoopX = 1; iLoopX <= 16; iLoopX++)
+							{
+								for (iLoopY = 1; iLoopY <= 4; iLoopY++)
+								{
+									if (InArea (130 + (iLoopX * 24), 147 + (iLoopY * 19),
+										130 + (iLoopX * 24) + 23, 147 + (iLoopY * 19) + 18) == 1)
+									{
+										iHexCursor = ((iLoopY - 1) * 16) + (iLoopX - 1);
+										cHexInput = ' ';
+									}
+								}
+							}
+
+							UpdateStatusBar_F12();
+						}
+
+						/*** Go to offset: ***/
+						if (InArea (281, 267, 281 + 181, 267 + 18) == 1)
+						{
+							/*** start input ***/
+							iTextHover = 1;
+							SDL_StartTextInput();
+							SDL_SetCursor (curText);
+						}
+
+						/*** Search hex: ***/
+						if (InArea (281, 318, 281 + 375, 318 + 18) == 1)
+						{
+							/*** start input ***/
+							iTextHover = 2;
+							SDL_StartTextInput();
+							SDL_SetCursor (curText);
+						}
+
+						/*** Close ***/
+						if (InArea (590, 405, 674, 436) == 1)
+							{ iHexEditor = 0; }
+
+						/*** Jump ***/
+						if (InArea (474, 260, 474 + 63, 260 + 25) == 1)
+						{
+							HexEditorAction ("jump", iFileSize, iFdEXE);
+						}
+
+						/*** Find next ***/
+						if (InArea (491, 346, 491 + 99, 346 + 25) == 1)
+						{
+							HexEditorAction ("next", iFileSize, iFdEXE);
+						}
+
+						/*** Save ***/
+						if (InArea (594, 191, 594 + 61, 191 + 25) == 1)
+						{
+							HexEditorAction ("save", iFileSize, iFdEXE);
+						}
+					}
+					ShowHexEditor(); break;
+				case SDL_MOUSEWHEEL:
+					if (event.wheel.y > 0) /*** scroll wheel up ***/
+					{
+						/*** The 64 bytes block. ***/
+						if (InArea (153, 165, 153 + 385, 165 + 77) == 1)
+						{
+							if (iTextHover == 0)
+							{
+								HexEditorAction ("up", iFileSize, iFdEXE);
+							} else {
+								/*** stop input ***/
+								iTextHover = 0;
+								SDL_StopTextInput();
+								SDL_SetCursor (curArrow);
+							}
+						}
+					}
+					if (event.wheel.y < 0) /*** scroll wheel down ***/
+					{
+						/*** The 64 bytes block. ***/
+						if (InArea (153, 165, 153 + 385, 165 + 77) == 1)
+						{
+							if (iTextHover == 0)
+							{
+								HexEditorAction ("down", iFileSize, iFdEXE);
+							} else {
+								/*** stop input ***/
+								iTextHover = 0;
+								SDL_StopTextInput();
+								SDL_SetCursor (curArrow);
+							}
+						}
+					}
+					ShowHexEditor();
+					break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowHexEditor(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+				case SDL_TEXTINPUT:
+					if (((iTextHover == 1) && (strlen (arTextH[1]) < MAX_TEXT_JUMP)) ||
+						((iTextHover == 2) && (strlen (arTextH[2]) < MAX_TEXT_FIND)))
+					{
+						cAdd = event.text.text[0];
+						if (((cAdd >= 'a') && (cAdd <= 'f')) ||
+							((cAdd >= 'A') && (cAdd <= 'F')) ||
+							((cAdd >= '0') && (cAdd <= '9')) ||
+							(cAdd == ' ') || (cAdd == 'x'))
+						{
+							snprintf (sTempLine, MAX_DATA, "%s", arTextH[iTextHover]);
+							snprintf (arTextH[iTextHover], MAX_DATA,
+								"%s%c", sTempLine, cAdd);
+							PlaySound ("wav/hum_adj.wav");
+						}
+					}
+					ShowHexEditor();
+					break;
+			}
+		}
+		PreventCPUEating();
+		UpdateStatusBar_F12(); /*** For "Saved.", particularly its removal. ***/
+	}
+
+	close (iFdEXE);
+
+	PlaySound ("wav/popup_close.wav");
+	SDL_SetCursor (curArrow);
+	SDL_StopTextInput();
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void ShowHexEditor (void)
+/*****************************************************************************/
+{
+	int iByteX, iByteY;
+	char arText[1 + 2][MAX_TEXT + 2];
+
+	/*** Used for looping. ***/
+	int iLoopByte;
+
+	ShowImageBasic (imghexeditor, 0, 0, "imghexeditor", ascreen, iScale, 1);
+
+	/*** status bar ***/
+	if (strcmp (sStatus, "") != 0)
+	{
+		/*** bulb ***/
+		ShowImage (-9, (int[]){25, 0, 0, 0}, ascreen, 209, 0, 0, 20, 20);
+		/*** text ***/
+		DisplayTextLine (50, 415, sStatus, font2, color_bl, color_f4, 0);
+	}
+
+	/*** Close button. ***/
+	switch (iCloseHexEditorOn)
+	{
+		case 0: /*** Close up ***/
+			ShowImageBasic (imgclosea[1], 590, 405, "imgclosea[1]",
+				ascreen, iScale, 1); break;
+		case 1: /*** Close down ***/
+			ShowImageBasic (imgclosea[2], 590, 405, "imgclosea[2]",
+				ascreen, iScale, 1); break;
+	}
+
+	/*** type text ***/
+	snprintf (arText[0], MAX_TEXT, "Executable type is: %s (%i)",
+		sEXEType, iEXEType);
+	DisplayText (33, 32, FONT_SIZE_15, arText, 1, font1);
+
+	/*** Byte values. ***/
+	for (iLoopByte = 0; iLoopByte < 64; iLoopByte++)
+	{
+		iByteX = 158 + ((iLoopByte % 16) * 24);
+		iByteY = 168 + ((int)(iLoopByte / 16) * 19);
+		if ((iLoopByte == iHexCursor) && (cHexInput != ' '))
+		{
+			snprintf (arText[0], MAX_TEXT, "%c", cHexInput);
+		} else {
+			snprintf (arText[0], MAX_TEXT, "%02X", sHexBytes[iLoopByte]);
+		}
+		DisplayText (iByteX, iByteY, 14, arText, 1, font5);
+
+		/*** Found bytes (hit). ***/
+		if (iHitNrChars > 0)
+		{
+			if ((iHexOffset + iLoopByte >= iHitOffset) &&
+				(iHexOffset + iLoopByte <= (iHitOffset + iHitNrChars - 1)))
+			{
+				ShowImageBasic (imgshb, iByteX - 5, iByteY - 3, "imgshb",
+					ascreen, iScale, 1);
+			}
+		}
+
+		/*** Active byte. ***/
+		if ((iTextHover == 0) && (iLoopByte == iHexCursor))
+		{
+			ShowImageBasic (imgshg, iByteX - 5, iByteY - 3, "imgshg",
+				ascreen, iScale, 1);
+		}
+	}
+
+	/*** Offsets. ***/
+	snprintf (arText[0], MAX_TEXT, "0x%02X", iHexOffset);
+	DisplayText (64, 166, FONT_SIZE_15, arText, 1, font1);
+	snprintf (arText[0], MAX_TEXT, "0x%02X", iHexOffset + 16);
+	DisplayText (64, 185, FONT_SIZE_15, arText, 1, font1);
+	snprintf (arText[0], MAX_TEXT, "0x%02X", iHexOffset + 32);
+	DisplayText (64, 204, FONT_SIZE_15, arText, 1, font1);
+	snprintf (arText[0], MAX_TEXT, "0x%02X", iHexOffset + 48);
+	DisplayText (64, 223, FONT_SIZE_15, arText, 1, font1);
+
+	/*** Cursor offset. ***/
+	snprintf (arText[0], MAX_TEXT, "Cursor offset: 0x%02X (%i)",
+		iHexOffset + iHexCursor, iHexOffset + iHexCursor);
+	DisplayText (152, 134, FONT_SIZE_15, arText, 1, font1);
+
+	/*** Go to offset: ***/
+	if (iTextHover == 1)
+	{
+		ShowImageBasic (imgshj, 281, 267, "imgshj", ascreen, iScale, 1);
+	}
+	snprintf (arText[0], MAX_TEXT, "%s", arTextH[1]);
+	DisplayText (285, 269, 14, arText, 1, font5);
+
+	/*** Search hex: ***/
+	if (iTextHover == 2)
+	{
+		ShowImageBasic (imgshf, 281, 318, "imgshf", ascreen, iScale, 1);
+	}
+	snprintf (arText[0], MAX_TEXT, "%s", arTextH[2]);
+	DisplayText (285, 320, 14, arText, 1, font5);
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+void HexEditorKey (char cAdd)
+/*****************************************************************************/
+{
+	char sString[MAX_DATA + 2];
+	unsigned long luAdd;
+
+	if (iTextHover == 0)
+	{
+		if (cHexInput == ' ')
+		{
+			cHexInput = toupper (cAdd);
+		} else {
+			snprintf (sString, MAX_DATA, "%c%c", cHexInput, toupper (cAdd));
+			luAdd = strtoul (sString, NULL, 16);
+			sHexBytes[iHexCursor] = luAdd;
+			/***/
+			if (iHexCursor < 63) { iHexCursor++; }
+			cHexInput = ' ';
+		}
+		PlaySound ("wav/hum_adj.wav");
+	}
 }
 /*****************************************************************************/
