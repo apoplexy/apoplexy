@@ -58,7 +58,7 @@
 #define EDITOR_NAME "apoplexy"
 #define EDITOR_VERSION "v3.16 (November 2022)"
 #define EDITOR_VERSION_MAJOR 3
-#define EDITOR_VERSION_MINOR 15
+#define EDITOR_VERSION_MINOR 16
 #define EDITOR_VERSION_PATCH 0
 #define COPYRIGHT "Copyright (C) 2022 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.23, MININIM 0.10"
