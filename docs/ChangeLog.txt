@@ -5,6 +5,10 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.16 (November 16, 2022) - Norbert de Jonge
+--------------------
++ Updated SDLPoP support to v1.23, with teleports.
+
 v3.15 (May 1, 2021) - Norbert de Jonge
 --------------------
 + Added a basic built-in hex editor (F12).

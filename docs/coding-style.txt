@@ -1,4 +1,4 @@
-Do not worry too much about the coding style. Just write code. We can help you by reformatting it where necessary. Questions about our coding style may be emailed to info@apoplexy.org, or discussed at [ https://forum.princed.org/viewforum.php?f=112 ].
+Do not worry too much about the coding style. Just write code. We can help you by reformatting it where necessary. Questions about our coding style may be emailed to nlmdejonge@gmail.com, or discussed at [ https://forum.princed.org/viewforum.php?f=112 ].
 
 All contributions MUST be GPL3+ compatible. Contributions are GPL3+ licensed unless explicitly stated otherwise. If you contribute, you MUST add yourself to credits.txt; you may omit all but your name (N) and contributions (C).
 

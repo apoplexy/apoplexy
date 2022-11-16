@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.15 (May 2021)
- * Copyright (C) 2008-2021 The apoplexy Team (see credits.txt)
+/* apoplexy v3.16 (November 2022)
+ * Copyright (C) 2008-2022 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -56,12 +56,12 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.15 (May 2021)"
+#define EDITOR_VERSION "v3.16 (November 2022)"
 #define EDITOR_VERSION_MAJOR 3
 #define EDITOR_VERSION_MINOR 15
 #define EDITOR_VERSION_PATCH 0
-#define COPYRIGHT "Copyright (C) 2021 The apoplexy Team"
-#define COMPATIBLE_NATIVE "SDLPoP 1.21, MININIM 0.10"
+#define COPYRIGHT "Copyright (C) 2022 The apoplexy Team"
+#define COMPATIBLE_NATIVE "SDLPoP 1.23, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
 #define MAX_FILE 600
 #define MAX_ADJ 10
@@ -91,7 +91,7 @@
 #define END_SHADOW 65534
 #define END_PRINCE 65535
 #define URL_CUSPOP "https://www.popot.org/other_useful_tools.php?tool=CusPop"
-#define URL_LATEST "https://www.apoplexy.org/latest_release.xml"
+#define URL_LATEST "https://apoplexy.github.io/apoplexysite/latest_release.xml"
 #define MAX_TEXT_JUMP 20
 #define MAX_TEXT_FIND 44
 
@@ -680,8 +680,9 @@ char sStatus[MAX_STATUS + 2], sStatusOld[MAX_STATUS + 2];
 int iTooltip, iTooltipHeight;
 char sNativeFile[3 + 2][MAX_FILE + 2];
 int iNativeTab;
-int iNativeOldX, iNativeOldY;
+int iNativeOldTab, iNativeOldX, iNativeOldY;
 int iNativeColor;
+int iNativeMod;
 char cStore[3 + 2];
 unsigned int iActiveWindowID;
 int iMapOpen;
@@ -1532,6 +1533,10 @@ SDL_Texture *imgd20_12[2 + 2];
 SDL_Texture *imgp20_12[2 + 2];
 SDL_Texture *imgd20_14[2 + 2];
 SDL_Texture *imgp20_14[2 + 2];
+SDL_Texture *imgd23[2 + 2];
+SDL_Texture *imgp23[2 + 2];
+SDL_Texture *imgd24[2 + 2];
+SDL_Texture *imgp24[2 + 2];
 SDL_Texture *imgd30[2 + 2];
 SDL_Texture *imgp30[2 + 2];
 
@@ -2413,6 +2418,7 @@ int main (int argc, char *argv[])
 	iMapShowNumbers = 0;
 	iAutoUse = 0;
 	iNativeColor = 0x01;
+	iNativeMod = 1;
 	iAutomaticSel = 1;
 	iJumpSel = 1;
 	iEventHover = 0;
@@ -9428,6 +9434,15 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 				ShowPos (loc, dest, iLocation, imgd20_12, imgp20_12, "SDLPoP");
 			if ((iThing == 20) && (iModifier[0] == 14))
 				ShowPos (loc, dest, iLocation, imgd20_14, imgp20_14, "SDLPoP");
+			if ((iThing == 23) && (iModifier[0] != 0))
+			{
+				ShowPos (loc, dest, iLocation, imgd23, imgp23, "SDLPoP");
+				snprintf (sText, MAX_TEXT, "T:%i", iModifier[0]);
+				DisplayTextLine (dest.x + 7, dest.y + 145 - FONT_SIZE_11,
+					sText, font2, color_bl, color_wh, 0);
+			}
+			if ((iThing == 24) && (iModifier[0] == 0x01))
+				ShowPos (loc, dest, iLocation, imgd24, imgp24, "SDLPoP");
 			if (((iThing == 30) || (iThing == 62)) && ((iModifier[0] & 0x3F) != 0))
 			{
 				if (iNoAnim == 0)
@@ -10773,13 +10788,8 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 					snprintf (sText, MAX_TEXT, "LVL:%i", sGuardSkills[iCurRoom - 1]);
 					break;
 			}
-			message = TTF_RenderText_Shaded (font2, sText, color_bl, color_wh);
-			messaget = SDL_CreateTextureFromSurface (screen, message);
-			offset.x = iTemp + 7;
-			offset.y = iTemp2 + 145 - FONT_SIZE_11;
-			offset.w = message->w; offset.h = message->h;
-			CustomRenderCopy (messaget, "message", NULL, screen, &offset);
-			SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+			DisplayTextLine (iTemp + 7, iTemp2 + 145 - FONT_SIZE_11,
+				sText, font2, color_bl, color_wh, 0);
 			if (iSelected == iLocation)
 			{
 				/*** looking to the left ***/
@@ -10908,13 +10918,8 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			}
 			snprintf (sText, MAX_TEXT, "S:%i",
 				iStaticGuards_5_Skills[iCurRoom - 1][iModifier[1]]);
-			message = TTF_RenderText_Shaded (font2, sText, color_bl, color_wh);
-			messaget = SDL_CreateTextureFromSurface (screen, message);
-			offset.x = dest.x + 7;
-			offset.y = dest.y + iFromImageHeight - FONT_SIZE_11;
-			offset.w = message->w; offset.h = message->h;
-			CustomRenderCopy (messaget, "message", NULL, screen, &offset);
-			SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+			DisplayTextLine (dest.x + 7, dest.y + iFromImageHeight - FONT_SIZE_11,
+				sText, font2, color_bl, color_wh, 0);
 		}
 		if (iModifier[0] == 5) /*** PoP1 for SNES guard ***/
 		{
@@ -11086,13 +11091,8 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			}
 			snprintf (sText, MAX_TEXT, "S:%i",
 				sGuardSkills[iCurRoom - 1]);
-			message = TTF_RenderText_Shaded (font2, sText, color_bl, color_wh);
-			messaget = SDL_CreateTextureFromSurface (screen, message);
-			offset.x = dest.x + 7;
-			offset.y = dest.y + iFromImageHeight - FONT_SIZE_11;
-			offset.w = message->w; offset.h = message->h;
-			CustomRenderCopy (messaget, "message", NULL, screen, &offset);
-			SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+			DisplayTextLine (dest.x + 7, dest.y + iFromImageHeight - FONT_SIZE_11,
+				sText, font2, color_bl, color_wh, 0);
 		}
 	}
 
@@ -12060,7 +12060,7 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 828; break;
+		case 1: iNrToPreLoad = 836; break;
 		case 2: iNrToPreLoad = 871; break;
 		case 3: iNrToPreLoad = 4858; break;
 	}
@@ -12169,6 +12169,8 @@ void InitScreen (void)
 		PreLoadSet (PNG_DUNGEON, 'd', "20_6", imgd20_6);
 		PreLoadSet (PNG_DUNGEON, 'd', "20_12", imgd20_12);
 		PreLoadSet (PNG_DUNGEON, 'd', "20_14", imgd20_14);
+		PreLoadSet (PNG_DUNGEON, 'd', "23", imgd23);
+		PreLoadSet (PNG_DUNGEON, 'd', "24", imgd24);
 		PreLoadSet (PNG_DUNGEON, 'd', "30", imgd30);
 		PreLoad (PNG_DUNGEON, "d_19_sprite.png", &spriteflamed3);
 		PreLoad (PNG_DUNGEON, "d_30_sprite.png", &spriteflamed4);
@@ -12278,6 +12280,8 @@ void InitScreen (void)
 		PreLoadSet (PNG_PALACE, 'p', "20_6", imgp20_6);
 		PreLoadSet (PNG_PALACE, 'p', "20_12", imgp20_12);
 		PreLoadSet (PNG_PALACE, 'p', "20_14", imgp20_14);
+		PreLoadSet (PNG_PALACE, 'p', "23", imgp23);
+		PreLoadSet (PNG_PALACE, 'p', "24", imgp24);
 		PreLoadSet (PNG_PALACE, 'p', "30", imgp30);
 		PreLoad (PNG_PALACE, "p_19_sprite.png", &spriteflamep3);
 		PreLoad (PNG_PALACE, "p_30_sprite.png", &spriteflamep4);
@@ -16370,15 +16374,9 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 						if (iNrPlayers != 1)
 						{
 							snprintf (sText, MAX_TEXT, "P%i", iLoopPlayer);
-							message = TTF_RenderText_Shaded
-								(font2, sText, color_bl, color_wh);
-							messaget = SDL_CreateTextureFromSurface (screen, message);
 							GetHorVer (iLoc, &iHor, &iVer);
-							offset.x = iHor + 7;
-							offset.y = iVer + 145 - (FONT_SIZE_11 * iLoopPlayer);
-							offset.w = message->w; offset.h = message->h;
-							CustomRenderCopy (messaget, "message", NULL, screen, &offset);
-							SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+							DisplayTextLine (iHor + 7, iVer + 145 - (FONT_SIZE_11 *
+								iLoopPlayer), sText, font2, color_bl, color_wh, 0);
 						}
 					}
 				}
@@ -17013,13 +17011,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 
 	if (iLvlWarning == 0)
 	{
-		message = TTF_RenderText_Shaded (font1, sText, color_bl, color_wh);
-		messaget = SDL_CreateTextureFromSurface (screen, message);
-		offset.x = 31;
-		offset.y = 5;
-		offset.w = message->w; offset.h = message->h;
-		CustomRenderCopy (messaget, "message", NULL, screen, &offset);
-		SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+		DisplayTextLine (31, 5, sText, font1, color_bl, color_wh, 0);
 	}
 
 	if (iEditPoP == 1) { ShowMap(); }
@@ -17849,13 +17841,8 @@ void ShowPos (SDL_Rect loc, SDL_Rect dest, int iLocation,
 	if ((strcmp (sLbl, "") != 0) && (strcmp (sLbl, "SDLPoP") != 0) &&
 		(strcmp (sLbl, "MININIM") != 0) && (strcmp (sLbl, "both") != 0))
 	{
-		message = TTF_RenderText_Shaded (font2, sLbl, color_bl, color_wh);
-		messaget = SDL_CreateTextureFromSurface (ascreen, message);
-		offset.x = dest.x + 7;
-		offset.y = dest.y + 145 - FONT_SIZE_11;
-		offset.w = message->w; offset.h = message->h;
-		CustomRenderCopy (messaget, "message", NULL, ascreen, &offset);
-		SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+		DisplayTextLine (dest.x + 7, dest.y + 145 - FONT_SIZE_11,
+			sLbl, font2, color_bl, color_wh, 0);
 	}
 
 	if (iSelected == iLocation)
@@ -17897,13 +17884,8 @@ void ShowPosPoP2 (SDL_Rect loc, SDL_Rect dest, int iLocation,
 
 	if (strcmp (sLbl, "") != 0)
 	{
-		message = TTF_RenderText_Shaded (font2, sLbl, color_bl, color_wh);
-		messaget = SDL_CreateTextureFromSurface (ascreen, message);
-		offset.x = dest.x + 7;
-		offset.y = dest.y + 145 - FONT_SIZE_11;
-		offset.w = message->w; offset.h = message->h;
-		CustomRenderCopy (messaget, "message", NULL, ascreen, &offset);
-		SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+		DisplayTextLine (dest.x + 7, dest.y + 145 - FONT_SIZE_11,
+			sLbl, font2, color_bl, color_wh, 0);
 	}
 
 	if (iSelected == iLocation)
@@ -17924,13 +17906,8 @@ void ShowPosSNES (SDL_Rect loc, SDL_Rect dest, int iLocation,
 
 	if (strcmp (sLbl, "") != 0)
 	{
-		message = TTF_RenderText_Shaded (font2, sLbl, color_bl, color_wh);
-		messaget = SDL_CreateTextureFromSurface (ascreen, message);
-		offset.x = dest.x + 7;
-		offset.y = dest.y + 119 - FONT_SIZE_11;
-		offset.w = message->w; offset.h = message->h;
-		CustomRenderCopy (messaget, "message", NULL, ascreen, &offset);
-		SDL_DestroyTexture (messaget); SDL_FreeSurface (message);
+		DisplayTextLine (dest.x + 7, dest.y + 119 - FONT_SIZE_11,
+			sLbl, font2, color_bl, color_wh, 0);
 	}
 
 	if (iSelected == iLocation)
@@ -26083,7 +26060,7 @@ void Help (void)
 				case SDL_MOUSEMOTION:
 					iXPos = event.motion.x;
 					iYPos = event.motion.y;
-					if ((InArea (171, 38, 521, 61) == 1) ||
+					if ((InArea (66, 38, 66 + 560, 38 + 23) == 1) ||
 						(InArea (31, 108, 661, 131) == 1) ||
 						(InArea (45, 178, 647, 201) == 1) ||
 						(InArea (38, 248, 654, 271) == 1) ||
@@ -26110,8 +26087,8 @@ void Help (void)
 					{
 						if (InArea (590, 405, 674, 436) == 1)
 							{ iHelp = 0; }
-						if (InArea (171, 38, 521, 61) == 1)
-							{ OpenURL ("https://www.apoplexy.org/"); }
+						if (InArea (66, 38, 66 + 560, 38 + 23) == 1)
+							{ OpenURL ("https://apoplexy.github.io/apoplexysite/"); }
 						if (InArea (31, 108, 661, 131) == 1)
 							{ OpenURL ("https://forum.princed.org/viewforum.php?f=112"); }
 						if (InArea (45, 178, 647, 201) == 1)
@@ -35777,46 +35754,57 @@ void NativeOldTile (void)
 	int iTile, iMod1;
 
 	iIsCustom = 0;
-	iNativeOldX = -1; iNativeOldY = -1;
+	iNativeOldTab = -1; iNativeOldX = -1; iNativeOldY = -1;
 	iTile = iThingA[iCurRoom][iSelected - 1];
 	iMod1 = iModifierA[iCurRoom][iSelected - 1][1];
 
 	if ((iTile == 0) && (iMod1 == 4))
-		{ iNativeTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY1; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY1; }
 	if ((iTile == 0) && (iMod1 == 5))
-		{ iNativeTab = 1; iNativeOldX = TILESX4; iNativeOldY = TILESY1; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX4; iNativeOldY = TILESY1; }
 	if ((iTile == 0) && (iMod1 == 12))
-		{ iNativeTab = 1; iNativeOldX = TILESX1; iNativeOldY = TILESY1; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX1; iNativeOldY = TILESY1; }
 	if ((iTile == 0) && (iMod1 == 13))
-		{ iNativeTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY1; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY1; }
 	if ((iTile == 1) && (iMod1 == 5))
-		{ iNativeTab = 1; iNativeOldX = TILESX4; iNativeOldY = TILESY2; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX4; iNativeOldY = TILESY2; }
 	if ((iTile == 1) && (iMod1 == 6))
-		{ iNativeTab = 1; iNativeOldX = TILESX1; iNativeOldY = TILESY2; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX1; iNativeOldY = TILESY2; }
 	if ((iTile == 1) && (iMod1 == 13))
-		{ iNativeTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY2; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY2; }
 	if ((iTile == 1) && (iMod1 == 14))
-		{ iNativeTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY2; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY2; }
 	if ((iTile == 19) && (iMod1 != 0))
 	{
-		iNativeTab = 2; iNativeOldX = TILESX1; iNativeOldY = TILESY1;
+		iNativeOldTab = 2; iNativeOldX = TILESX1; iNativeOldY = TILESY1;
 		iNativeColor = (iMod1 & 0x3F);
 	}
 	if ((iTile == 20) && (iMod1 == 4))
-		{ iNativeTab = 1; iNativeOldX = TILESX4; iNativeOldY = TILESY3; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX4; iNativeOldY = TILESY3; }
 	if ((iTile == 20) && (iMod1 == 6))
-		{ iNativeTab = 1; iNativeOldX = TILESX1; iNativeOldY = TILESY3; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX1; iNativeOldY = TILESY3; }
 	if ((iTile == 20) && (iMod1 == 12))
-		{ iNativeTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY3; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY3; }
 	if ((iTile == 20) && (iMod1 == 14))
-		{ iNativeTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY3; }
+		{ iNativeOldTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY3; }
+	if ((iTile == 23) && (iMod1 != 0))
+	{
+		iNativeOldTab = 3; iNativeOldX = TILESX1; iNativeOldY = TILESY1;
+		iNativeMod = iMod1;
+	}
+	if ((iTile == 24) && (iMod1 == 1))
+	{
+		iNativeOldTab = 3; iNativeOldX = TILESX2; iNativeOldY = TILESY1;
+		/*** No need to set iNativeMod. ***/
+	}
 	if ((iTile == 30) && (iMod1 != 0))
 	{
-		iNativeTab = 2; iNativeOldX = TILESX2; iNativeOldY = TILESY1;
+		iNativeOldTab = 2; iNativeOldX = TILESX2; iNativeOldY = TILESY1;
 		iNativeColor = (iMod1 & 0x3F);
 	}
 
 	if ((iNativeOldX == -1) || (iNativeOldY == -1)) { iIsCustom = 1; }
+		else { iNativeTab = iNativeOldTab; }
 }
 /*****************************************************************************/
 int Native (int iLocation, SDL_Renderer *screen, int iViaCustom)
@@ -36087,6 +36075,30 @@ int Native (int iLocation, SDL_Renderer *screen, int iViaCustom)
 							}
 						}
 
+						/*** mod ***/
+						if (iNativeTab == 3)
+						{
+							iTemp = 0;
+							if (PlusMinus (&iNativeMod, 25, 281, 1, 255, -10, 0))
+								{ iTemp = 1; }
+							if (PlusMinus (&iNativeMod, 40, 281, 1, 255, -1, 0))
+								{ iTemp = 1; }
+							if (PlusMinus (&iNativeMod, 110, 281, 1, 255, +1, 0))
+								{ iTemp = 1; }
+							if (PlusMinus (&iNativeMod, 125, 281, 1, 255, +10, 0))
+								{ iTemp = 1; }
+							if (iTemp == 1)
+							{
+								if ((iThingA[iCurRoom][iSelected - 1] == 23) &&
+									(iModifierA[iCurRoom][iSelected - 1][1] != 0x00) &&
+									(iModifierA[iCurRoom][iSelected - 1][1] != iNativeMod))
+								{
+									iModifierA[iCurRoom][iSelected - 1][1] = iNativeMod;
+									iChanged++;
+								}
+							}
+						}
+
 						if (iUseTile == 1)
 						{
 							iUsed+=UseTileNative (iOnTileNative, iLocation, iCurRoom);
@@ -36173,10 +36185,16 @@ void ShowNative (SDL_Renderer *screen)
 	ShowImage (-3, (int[]){iMod, iNativeTab, 0, 0},
 		screen, 137, 0, 0, 648, 318);
 
-	/*** 6-bit color X ***/
-	if (iNativeTab == 2)
+	switch (iNativeTab)
 	{
-		ShowImage (-12, (int[]){12, 0, 0, 0}, screen, 220, 0, 0, 14, 14);
+		case 2:
+			/*** 6-bit color X ***/
+			ShowImage (-12, (int[]){12, 0, 0, 0}, screen, 220, 0, 0, 14, 14);
+			break;
+		case 3:
+			/*** mod ***/
+			CenterNumber (screen, iNativeMod, 53, 281, color_bl, color_wh, 0);
+			break;
 	}
 
 	/*** tabs ***/
@@ -36217,7 +36235,10 @@ void ShowNative (SDL_Renderer *screen)
 	}
 
 	/*** old tile ***/
-	ShowImage (-3, (int[]){9, 0, 0, 0}, screen, 217, 0, 0, 52, 66);
+	if (iNativeTab == iNativeOldTab)
+	{
+		ShowImage (-3, (int[]){9, 0, 0, 0}, screen, 217, 0, 0, 52, 66);
+	}
 
 	/*** bright magenta border ***/
 	if (iOnTileNative != 0)
@@ -36253,6 +36274,14 @@ void ShowNative (SDL_Renderer *screen)
 				/*** First row. ***/
 				case 1: iThing = 19; iMod1 = iNativeColor; break;
 				case 2: iThing = 30; iMod1 = iNativeColor; break;
+			}
+			break;
+		case 3:
+			switch (iOnTileNative)
+			{
+				/*** First row. ***/
+				case 1: iThing = 23; iMod1 = iNativeMod; break;
+				case 2: iThing = 24; iMod1 = 0x01; break;
 			}
 			break;
 	}
@@ -36336,6 +36365,18 @@ int UseTileNative (int iTile, int iLocation, int iRoom)
 					19, iNativeColor, -1, -1, -1); break;
 				case 2: SetLocation (iRoom, iLocation,
 					30, iNativeColor, -1, -1, -1); break;
+				/***/
+				default: iUsed = 0; break;
+			}
+			break;
+		case 3:
+			switch (iTile)
+			{
+				/*** First row. ***/
+				case 1: SetLocation (iRoom, iLocation,
+					23, iNativeMod, -1, -1, -1); break;
+				case 2: SetLocation (iRoom, iLocation,
+					24, 0x01, -1, -1, -1); break;
 				/***/
 				default: iUsed = 0; break;
 			}

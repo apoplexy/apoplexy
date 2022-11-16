@@ -10,12 +10,12 @@
 
 ===[1 - ABOUT]=================================================================
 
-apoplexy v3.15 (May 2021)
-Copyright (C) 2008-2021 The apoplexy Team (see credits.txt)
+apoplexy v3.16 (November 2022)
+Copyright (C) 2008-2022 The apoplexy Team (see credits.txt)
 
 A level editor of Prince of Persia 1 (for DOS and SNES) and 2 (for DOS).
 
-The apoplexy website can be found at [ https://www.apoplexy.org/ ].
+The apoplexy website can be found at [ https://apoplexy.github.io/apoplexysite/ ].
 Its GitHub repository at [ https://github.com/apoplexy/apoplexy ].
 
 ===[2 - LICENSE/DISCLAIMER]====================================================
@@ -54,7 +54,7 @@ https://www.popot.org/get_the_games/software/PoP2.zip (PoP2 for DOS)
 https://www.popot.org/get_the_games/software/PoP1.smc (PoP1 for SNES)
 
 Instructional videos are available at:
-https://www.apoplexy.org/t/
+https://www.youtube.com/channel/UCv14yL_YwUtSz85uUjgVDJw/search?query=apoplexy
 
 ===[4 - THANKS]================================================================
 
@@ -81,7 +81,7 @@ Thanks: David from the Princed Forum
 
 ===[5 - FEEDBACK]==============================================================
 
-If apoplexy crashes, gets compilation errors or crashes while building, send an e-mail to [ info@apoplexy.org ]. Make sure to describe exactly what actions triggered the bug and the precise symptoms of the bug. Also include: 'uname -a', 'gcc -v', 'sdl2-config --version', and 'apoplexy --version'.
+If apoplexy crashes, gets compilation errors or crashes while building, send an e-mail to [ nlmdejonge@gmail.com ]. Make sure to describe exactly what actions triggered the bug and the precise symptoms of the bug. Also include: 'uname -a', 'gcc -v', 'sdl2-config --version', and 'apoplexy --version'.
 
 Our forum board:
 https://forum.princed.org/viewforum.php?f=112

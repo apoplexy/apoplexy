@@ -8,7 +8,7 @@
 
 N: Norbert de Jonge
 G: EndeavourAccuracy
-E: mail@norbertdejonge.nl
-C: Original developer. Sole author of all versions u/i v3.15.
+E: nlmdejonge@gmail.com
+C: Original developer. Sole author of all versions u/i v3.16.
 C: Maintainer.
 A: The Netherlands
