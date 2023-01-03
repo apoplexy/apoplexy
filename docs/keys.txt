@@ -9,7 +9,7 @@ h                                    Flip the room horizontally.
 i                                    Toggle tile information.
 j                                    Jump to a room.
 l                                    Jump to a level.
-m                                    [PoP1 for DOS] Open the Map screen.
+m                                    [PoP1] Open the Map window.
 q (and Escape)                       Quit the application.
 r                                    Go to the room links screen.
 s                                    Save the level.
@@ -40,6 +40,7 @@ F3*                                  [PoP1 for DOS] Second executable screen.
 F3*                                  [PoP1 for SNES] Go to the texts screen.
 F4*                                  [PoP1 for DOS] Third executable screen.
 F4*                                  [PoP1 for SNES] Modify automatic moves.
+F5                                   [PoP1] Another executable screen.
 F12                                  Go to the built-in hex editor.
 Ctrl+c                               Copy the room.
 Ctrl+v                               Paste the room.
@@ -47,11 +48,20 @@ Ctrl+p                               [PoP1 for SNES] Print template data.
 Ctrl + left mouse button             [PoP1 for DOS] Go to the native tiles.
 
 ---------------------------------------------------------------------------
+MAP WINDOW (somewhat consistent with the main screen)
+---------------------------------------------------------------------------
+0, 1, + (and =), - (and _)           Zoom the map.
+c                                    Close the Map window.
+n                                    Toggle show room numbers.
+Arrows                               Reposition the map.
+Tab                                  Toggle edit panel.
+
+---------------------------------------------------------------------------
 ROOM LINKS SCREEN
 ---------------------------------------------------------------------------
 d                                    Playtest using DOSBox/ZSNES or native.
 e                                    Go to the events screen.
-m                                    [PoP1 for DOS] Open the Map screen.
+m                                    [PoP1] Open the Map window.
 q (and Escape)                       Go to the main screen.
 r                                    Modify broken room links.
 s                                    Save the level.
@@ -74,7 +84,7 @@ Arrow keys                           Select adjacent room.
 EVENTS SCREEN
 ---------------------------------------------------------------------------
 d                                    Playtest using DOSBox/ZSNES or native.
-m                                    [PoP1 for DOS] Open the Map screen.
+m                                    [PoP1] Open the Map window.
 n                                    [PoP1] Check the box under N.
 q (and Escape)                       Go to the main screen.
 r                                    Go to the room links screen.

@@ -10,8 +10,8 @@
 
 ===[1 - ABOUT]=================================================================
 
-apoplexy v3.16 (November 2022)
-Copyright (C) 2008-2022 The apoplexy Team (see credits.txt)
+apoplexy v3.17 (January 2023)
+Copyright (C) 2008-2023 The apoplexy Team (see credits.txt)
 
 A level editor of Prince of Persia 1 (for DOS and SNES) and 2 (for DOS).
 
@@ -76,7 +76,7 @@ Thanks: Seiichi Ikiuo, Katsunori Yoshimura, and others
 What: "Prince of Persia 2" (for DOS)
 Thanks: Jordan Mechner, Lance Groody, and others
 
-What: compiling apoplexy (1.0b-2.6b) under Windows; various suggestions
+What: compiling apoplexy (1.0b-2.6b) under Windows; many suggestions and tips
 Thanks: David from the Princed Forum
 
 ===[5 - FEEDBACK]==============================================================

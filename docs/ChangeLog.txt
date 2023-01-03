@@ -5,6 +5,17 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.17 (January 3, 2023) - Norbert de Jonge
+--------------------
++ PoP1 for SNES: added a Map window ("m").
++ PoP1 for SNES: more in-game texts can be modified (F3).
++ PoP1 for SNES: optional skeleton continue for all (F5).
++ PoP1 for DOS: a work-in-progress edit panel (Tab) on the Map window ("m").
++ PoP1 for DOS: guard and prince skills demo level settings (F4).
++ PoP1 for DOS: autodetection of the cheat code.
+* PoP1 for DOS: in-editor visual fix for the lattice top + tapestry combo.
+* Renamed some functions to improve code readability.
+
 v3.16 (November 16, 2022) - Norbert de Jonge
 --------------------
 + Updated SDLPoP support to v1.23, with teleports.

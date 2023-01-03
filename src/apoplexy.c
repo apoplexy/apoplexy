@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.16 (November 2022)
- * Copyright (C) 2008-2022 The apoplexy Team (see credits.txt)
+/* apoplexy v3.17 (January 2023)
+ * Copyright (C) 2008-2023 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -56,11 +56,11 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.16 (November 2022)"
+#define EDITOR_VERSION "v3.17 (January 2023)" /*** Modify? Also _MINOR! ***/
 #define EDITOR_VERSION_MAJOR 3
-#define EDITOR_VERSION_MINOR 16
+#define EDITOR_VERSION_MINOR 17
 #define EDITOR_VERSION_PATCH 0
-#define COPYRIGHT "Copyright (C) 2022 The apoplexy Team"
+#define COPYRIGHT "Copyright (C) 2023 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.23, MININIM 0.10"
 #define REFRESH 30 /*** That is 33 frames per second, 1000/30. ***/
 #define MAX_FILE 600
@@ -91,13 +91,14 @@
 #define END_SHADOW 65534
 #define END_PRINCE 65535
 #define URL_CUSPOP "https://www.popot.org/other_useful_tools.php?tool=CusPop"
+#define URL_THREAD "https://forum.princed.org/viewtopic.php?t=3099"
 #define URL_LATEST "https://apoplexy.github.io/apoplexysite/latest_release.xml"
 #define MAX_TEXT_JUMP 20
 #define MAX_TEXT_FIND 44
 
 /*** Map window ***/
 #define MAP_BIG_AREA_W 1225
-#define MAP_BIG_AREA_H 745
+#define MAP_BIG_AREA_H 745 /*** With the edit panel open, visible u/i 477. ***/
 #define MAX_ZOOM 7
 #define DEFAULT_ZOOM 4
 
@@ -263,6 +264,7 @@
 #define PNG_NATIVE "png\\native\\"
 #define PNG_PLAYTEST "png\\playtest\\"
 #define PNG_MINI1 "png\\mini_pop1\\"
+#define PNG_MINI3 "png\\mini_pop1snes\\"
 #define PNG_SIXBITRGB "png\\six_bit_rgb\\"
 #define PNG_AUTOMATIC "png\\automatic\\"
 #else
@@ -340,6 +342,7 @@
 #define PNG_NATIVE "png/native/"
 #define PNG_PLAYTEST "png/playtest/"
 #define PNG_MINI1 "png/mini_pop1/"
+#define PNG_MINI3 "png/mini_pop1snes/"
 #define PNG_SIXBITRGB "png/six_bit_rgb/"
 #define PNG_AUTOMATIC "png/automatic/"
 #endif
@@ -575,6 +578,7 @@ int iXPosMap, iYPosMap;
 int iXPosMapMoveStart, iYPosMapMoveStart;
 int iXPosMapMoveOffset, iYPosMapMoveOffset;
 int iMovingMap;
+int iDrawingOnMap;
 int iMapMoved;
 int iChanged;
 int iChangeEvent;
@@ -690,6 +694,8 @@ int iMapHoverYes;
 int iMapHoverRoom;
 int iMapHoverTile;
 int iMapShowNumbers;
+int iMapEditPanel;
+int iMapSelTile;
 int iFoundDOSBox, iOnDOSBox;
 int iFoundSDLPoP, iOnSDLPoP;
 int iFoundMININIM, iOnMININIM;
@@ -705,6 +711,8 @@ int iJumpTo;
 int iJumpSel;
 char sLatest[MAX_TEXT + 2];
 int iEventHover;
+int iUserCode;
+int iIgnoreTab;
 
 /*** controller ***/
 SDL_GameController *controller;
@@ -869,6 +877,12 @@ int iEXEDemoPrinceHP;
 static const unsigned long arDemoEndingRoom[6] =
 	{ 0XB40, 0X21F0, 0XC25, 0X1365, 0XBE9, 0X1D19 };
 int iEXEDemoEndingRoom;
+static const unsigned long arDemoPrinceSkill[6] =
+	{ 0x7C1C, 0x92CC, 0x80C0, 0x8800, 0x7B7C, 0x8CAC };
+int iEXEDemoPrinceSkill;
+static const unsigned long arDemoGuardSkill[6] =
+	{ 0x7C27, 0x92D7, 0x80CB, 0x880B, 0x7B87, 0x8CB7 };
+int iEXEDemoGuardSkill;
 /***/
 static const unsigned long arDisable2[6] =
 	{ 0X0, 0X2DD5, 0X0, 0X0, 0X0, 0X0 };
@@ -904,6 +918,10 @@ int iEXEAutorun;
 static const unsigned long arQuicker[6] =
 	{ 0X0, 0X7818, 0X0, 0X0, 0X0, 0X0 };
 int iEXEQuicker;
+
+/*** exe, F5 ***/
+static const unsigned long ulSkelCont = 0x85A9;
+int iEXESkelCont;
 
 /*** exe, PoP2 ***/
 static const int arDefaultEnvPoP2[29] =
@@ -1102,7 +1120,8 @@ static const char *arTextTab[][30] = {
 		" CANCEL  OK",
 		"", "", "", "", "", "", "", "",
 		"123456789BCDFGHJKLMNPQRSTVWXYZ+!----",
-		"", "", "", "", "", "", "", "", "", "", "", "", "", ""
+		"BTL3GY7Q9CVM4HZ8R+DWN5J12S!FXP6K",
+		"", "", "", "", "", "", "", "", "", "", "", "", ""
 	},
 	{
 		"     BEST TIME     ",
@@ -1153,7 +1172,16 @@ static const char *arTextTab[][30] = {
 		" LEVEL ",
 		"",
 		" SOUND ",
-		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""
+		"", "", "", "", "", "",
+		"BRNGBB9",
+		"",
+		"A",
+		"B",
+		"X",
+		"Y",
+		"L",
+		"R  345678901234  789012",
+		"", "", "", "", "", "", ""
 	},
 	{
 		"LEVEL ",
@@ -1175,7 +1203,11 @@ static const char *arTextTab[][30] = {
 		"PASSWORD  ",
 		"",
 		"PRINCE OF PERSIA      ",
-		"", "", "", "", "", "", "", "", "", "", ""
+		"",
+		"\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8A\x00", /*** MINUTES LEFT ***/
+		"\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9A\x9B\x00", /*** SEC. LEFT ***/
+		"\x84\x20\x1E\x1F", /*** THE END ***/
+		"", "", "", "", "", "", ""
 	}
 };
 
@@ -1185,11 +1217,11 @@ static const int arTextOffsets[][30] = {
 	{ 0x1B863, 0x1B87A, 0x00, 0x1B896, 0x1B8AD, 0x00, 0x1B8CA, 0x1B8E3, 0x1B8F9, 0x1B914, 0x1B92E, 0x00, 0x00, 0x00, 0x00, 0x1B94D, 0x1B969, 0x1B980, 0x1B99B, 0x1B9B3, 0x00, 0x1B9D2, 0x1B9E8, 0x1BA01, 0x1BA1C, 0x1BA33, 0x00, 0x00, 0x00, 0x00 },
 	{ 0x1BA52, 0x1BA6D, 0x1BA87, 0x1BA9E, 0x00, 0x00, 0x1BAC7, 0x00, 0x1BAEA, 0x1BB03, 0x1BB1C, 0x1BB37, 0x1BB4F, 0x00, 0x00, 0x1BB6C, 0x1BB88, 0x00, 0x1BBA6, 0x1BBC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	{ 0x125F, 0x1269, 0x1277, 0x1283, 0x128F, 0x129C, 0x00, 0x1109, 0x1116, 0x1123, 0x1130, 0x113D, 0x00, 0x00, 0x00, 0x10A5, 0x10B1, 0x10BD, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-	{ 0x154DA, 0x154EE, 0x1551A, 0x15530, 0x15546, 0x1555C, 0x15577, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x15583, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0x154DA, 0x154EE, 0x1551A, 0x15530, 0x15546, 0x1555C, 0x15577, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x15583, 0x15C38, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	{ 0x156DF, 0x156F5, 0x1570B, 0x15721, 0x15737, 0x1574D, 0x15763, 0x15779, 0x1578F, 0x157A5, 0x157BB, 0x157D1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	{ 0x161E0, 0x1621F, 0x1622E, 0x1623D, 0x00, 0x16255, 0x16262, 0x1626F, 0x1627C, 0x16289, 0x16296, 0x162A3, 0x00, 0x00, 0x00, 0x162B0, 0x162B7, 0x162BE, 0x162C8, 0x162D2, 0x00, 0x162DC, 0x162E3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-	{ 0x15497, 0x00, 0x16615, 0x16625, 0x16635, 0x00, 0x16768, 0x00, 0x16966, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-	{ 0xCAE8, 0xCAEF, 0x00, 0xCA2F, 0x00, 0x10F5, 0x00, 0xCB1D, 0x00, 0xCA27, 0x00, 0x14B9A, 0x00, 0x15D0E, 0x15D23, 0x00, 0x15D7F, 0x00, 0x7FC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+	{ 0x15497, 0x00, 0x16615, 0x16625, 0x16635, 0x00, 0x16768, 0x00, 0x16966, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x15DF2, 0x00, 0x161F1, 0x161F5, 0x161F9, 0x161FD, 0x16201, 0x16205, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	{ 0xCAE8, 0xCAEF, 0x00, 0xCA2F, 0x00, 0x10F5, 0x00, 0xCB1D, 0x00, 0xCA27, 0x00, 0x14B9A, 0x00, 0x15D0E, 0x15D23, 0x00, 0x15D7F, 0x00, 0x7FC0, 0x00, 0xCA0E, 0xCA1A, 0x1BC01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
 
 /*** automatic ***/
@@ -1489,6 +1521,7 @@ SDL_Texture *spriteswordd;
 SDL_Texture *spritesworddsel;
 SDL_Texture *spriteswordp;
 SDL_Texture *spriteswordpsel;
+SDL_Texture *imgp26_0_wl[2 + 2];
 
 /*** locations; native ***/
 SDL_Texture *imgd0_4[2 + 2];
@@ -1897,7 +1930,7 @@ SDL_Texture *imgpopup_yn, *imgyes[2 + 2], *imgno[2 + 2], *imghelp, *imgexe;
 SDL_Texture *imgexepacked, *imgexemusicyes, *imgexemusicno;
 SDL_Texture *imgexehazeyes, *imgexehazeno, *imgexeskeldis, *imgexetab;
 SDL_Texture *imgexedetails, *imgexepacked2, *imgexef3, *imgexepacked3;
-SDL_Texture *imgexef4;
+SDL_Texture *imgexef4, *imgexef5;
 SDL_Texture *imgexeactionr, *imgexeactionf, *imgexeactionb;
 SDL_Texture *imgexeactionu, *imgexeactiond, *imgexeactionj;
 SDL_Texture *imgexeactions, *imgexeactionh, *imgexeactione;
@@ -2019,8 +2052,9 @@ SDL_Texture *imgptdosboxkey, *imgptsdlpopkey, *imgptmininimkey;
 /*** Map window ***/
 SDL_Texture *imgmapon_0, *imgmapon_1, *imgmapoff;
 SDL_Texture *imggrid;
-SDL_Texture *imgmap, *imgmapgrid;
-SDL_Texture *imgmini1[31 + 2][255 + 2];
+SDL_Texture *imgmap, *imgmapgrid, *imgmapseltile, *imgmappanel;
+SDL_Texture *imgmini1[31 + 2][255 + 2]; /*** PoP1 for DOS ***/
+SDL_Texture *imgmini3[48 + 2][255 + 2]; /*** PoP1 for SNES ***/
 SDL_Texture *imgminiguard, *imgminiprince, *imgminihover, *imgminirelated;
 SDL_Texture *imgclosem[2 + 2];
 SDL_Texture *imgzoom1on_0, *imgzoom1on_1, *imgzoom1off;
@@ -2195,22 +2229,28 @@ void Help (void);
 void ShowHelp (void);
 unsigned long BytesAsLU (unsigned char *sData, int iBytes);
 void EXECheckbox (int iX, int iY17, int *iChange, int iTo);
-void EXELoad (void);
-void EXELoad_F3 (void);
-void EXELoad_F4 (void);
-void EXELoadPoP2 (void);
-void EXELoadSNES (void);
-void EXESave (void);
-void EXESave_F3 (void);
-void EXESave_F4 (void);
-void EXESavePoP2 (void);
-void EXESaveSNES (void);
+void EXELoad_F2_1 (void);
+void EXELoad_F3_1 (void);
+void EXELoad_F4_1 (void);
+void EXELoad_F5_1 (void);
+void EXELoad_F2_2 (void);
+void EXELoad_F2_3 (void);
+void EXELoad_F5_3 (void);
+void EXESave_F2_1 (void);
+void EXESave_F3_1 (void);
+void EXESave_F4_1 (void);
+void EXESave_F5_1 (void);
+void EXESave_F2_2 (void);
+void EXESave_F2_3 (void);
+void EXESave_F5_3 (void);
 void EXE (void);
 void ShowEXE (void);
-void EXE_F3 (void);
+void EXE_F3 (void); /*** SNES: See Text(). ***/
 void ShowEXE_F3 (void);
-void EXE_F4 (void);
+void EXE_F4 (void); /*** SNES: See Automatic(). ***/
 void ShowEXE_F4 (void);
+void EXE_F5 (void);
+void ShowEXE_F5 (void);
 void KidColorsLoad (void);
 void KidColorsSave (void);
 void KidColors (void);
@@ -2288,19 +2328,23 @@ void ShowArrow (char *sWhat, char cDir);
 void PreLoadTilesSNES (char cType);
 void GetCurDir (char cType, char *sCurDir);
 void UpdateTileAboveMe (int iRoom, int iLocation);
+int GetTileNr (int iTileC, int iMod1);
 int GetTileNrSNES (int iB1, int iB2, int iB3, int iB4, int iMod1);
+int GetTileNrSNESApprox (int iB3, int iB4, int iMod1);
 int CompressedLevelSize (int iFd, int iLevel);
 void LSeek (int iFd, int iOffset);
 void EnvNrAsName (int iEnvNr, char *sLevelName);
 void ForceSpecialsToMatchEnv (void);
 int OnKid (int iKOld);
 void GiveAnimationGroups (void);
-void UpdateStatusBar1 (void);
-void UpdateStatusBar1_F3 (void);
-void UpdateStatusBar1_F4 (void);
-void UpdateStatusBar3 (void);
-void UpdateStatusBar3T (void);
-void UpdateStatusBar_F12 (void);
+void UpdateStatusBar_F2_1 (void);
+void UpdateStatusBar_F3_1 (void);
+void UpdateStatusBar_F4_1 (void);
+void UpdateStatusBar_F5_1 (void);
+void UpdateStatusBar_F2_3 (void);
+void UpdateStatusBar_F3_3 (void);
+void UpdateStatusBar_F5_3 (void);
+void UpdateStatusBar_F12_All (void);
 int OnLevelBar (void);
 void AlwaysJumpThroughMirror (void);
 void StringToLower (char *sInput, char *sOutput);
@@ -2319,6 +2363,7 @@ void MapControllerMotion (SDL_Event event);
 void MapButtonDown (SDL_Event event);
 void MapButtonUp (SDL_Event event);
 void MapKeyDown (SDL_Event event);
+void MapKeyUp (SDL_Event event);
 void MapMouseMotion (SDL_Event event);
 void MapMouseWheel (SDL_Event event);
 void MapShow (void);
@@ -2329,7 +2374,8 @@ int MapGridStartY (void);
 float ZoomGet (void);
 void ZoomIncrease (void);
 void ZoomDecrease (void);
-int RelatedToHover (int iRoom, int iTile);
+int RelatedToHover1 (int iRoom, int iTile);
+int RelatedToHover3 (int iRoom, int iTile);
 size_t WriteData (void *ptr, size_t size, size_t nmemb, FILE *stream);
 int DownloadAndUnzipTo (char *sURLBase, char *sURLFile, char *sDir);
 void CreateDir (char *sDir);
@@ -2338,15 +2384,18 @@ void Playtest (int iLevel);
 void ShowPlaytest (void);
 void CheckPlaytestFiles (void);
 void AutoUse (int iLevel);
+/***/
 void Text (void);
 void TextLoadSNES (void);
 void TextSaveSNES (void);
 void ShowText (void);
+/***/
 void AutomaticLoadSNES (void);
 void AutomaticSaveSNES (void);
 void AutomaticAction (char *sAction);
 void Automatic (void);
 void ShowAutomatic (void);
+/***/
 void JumpToAction (int iType, char *sAction);
 void JumpTo (int iType);
 void ShowJumpTo (int iType);
@@ -2365,6 +2414,8 @@ void HexEditorAction (char *sAction, int iFileSize, int iFdEXE);
 void HexEditor (char *sFileName);
 void ShowHexEditor (void);
 void HexEditorKey (char cAdd);
+int GetMapSelTileXY (int iAxis);
+void SetMapSelTile (void);
 
 /*****************************************************************************/
 int main (int argc, char *argv[])
@@ -2416,6 +2467,8 @@ int main (int argc, char *argv[])
 	iMapOpen = 0;
 	iMapHoverRoom = 0;
 	iMapShowNumbers = 0;
+	iMapEditPanel = 0;
+	iMapSelTile = 1;
 	iAutoUse = 0;
 	iNativeColor = 0x01;
 	iNativeMod = 1;
@@ -2426,6 +2479,8 @@ int main (int argc, char *argv[])
 	iHitOffset = 0;
 	iHitNrChars = 0;
 	iHexCursor = 0;
+	iUserCode = 0;
+	iIgnoreTab = 0;
 
 	CheckSSE();
 	CheckLatest();
@@ -2481,6 +2536,7 @@ int main (int argc, char *argv[])
 				(strcmp (argv[iTemp], "--improved") == 0))
 			{
 				snprintf (sCheat1, MAX_OPTION, "%s", "improved");
+				iUserCode = 1;
 			}
 			else if ((strcmp (argv[iTemp], "-m") == 0) ||
 				(strcmp (argv[iTemp], "--makinit") == 0))
@@ -2515,6 +2571,7 @@ int main (int argc, char *argv[])
 			{
 				GetOptionValue (argv[iTemp], sCheat1);
 				GetOptionValue (argv[iTemp], sCheat2);
+				iUserCode = 1;
 				if (iDebug == 1)
 					printf ("[ INFO ] Using cheat code: %s\n", sCheat1);
 			}
@@ -2721,8 +2778,15 @@ void CheckRequiredFiles (void)
 	/*** PoP1 ***/
 	if (access (LEVELS_DAT, R_OK|W_OK) == -1)
 	{
-		printf ("[ WARN ] %s: %s!\n", LEVELS_DAT, strerror (errno));
-		iPoP1 = 0;
+		if (iEditPoP != 1)
+		{
+			printf ("[ WARN ] %s: %s!\n", LEVELS_DAT, strerror (errno));
+			iPoP1 = 0;
+		} else {
+			/*** Started with "-1". ***/
+			printf ("[FAILED] %s: %s!\n", LEVELS_DAT, strerror (errno));
+			exit (EXIT_ERROR);
+		}
 	} else {
 		iPoP1 = 1;
 		CheckPlaytestFiles();
@@ -5659,168 +5723,111 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 			if (iEditPoP == 2)
 			{
 				iMod2 = iModifierA[iCurRoom][iSelected - 1][2];
-			}
+			} else { iMod2 = 0; } /*** To prevent an "uninitialized" warning. ***/
 
 			if (iEditPoP == 1)
 			{
-				/*** first row ***/
-				if (((iTile == 0) || (iTile == 32)) && (iMod1 == 0))
-					{ dest.x = TILESX1; dest.y = TILESY1; }
-				else if (((iTile == 0) || (iTile == 32)) && (iMod1 == 1))
-					{ dest.x = TILESX2; dest.y = TILESY1; }
-				else if (((iTile == 0) || (iTile == 32)) && (iMod1 == 2))
-					{ dest.x = TILESX3; dest.y = TILESY1; }
-				else if (((iTile == 0) || (iTile == 32)) && (iMod1 == 3))
-					{ dest.x = TILESX4; dest.y = TILESY1; }
-				else if (((iTile == 0) || (iTile == 32)) && (iMod1 == 255))
-					{ dest.x = TILESX5; dest.y = TILESY1; }
-				else if (((iTile == 1) || (iTile == 33)) && (iMod1 == 0))
-					{ dest.x = TILESX6; dest.y = TILESY1; }
-				else if (((iTile == 1) || (iTile == 33)) && (iMod1 == 1))
-					{ dest.x = TILESX7; dest.y = TILESY1; }
-				else if (((iTile == 1) || (iTile == 33)) && (iMod1 == 2))
-					{ dest.x = TILESX8; dest.y = TILESY1; }
-				else if (((iTile == 1) || (iTile == 33)) && (iMod1 == 3))
-					{ dest.x = TILESX9; dest.y = TILESY1; }
-				else if (((iTile == 1) || (iTile == 33)) && (iMod1 == 255))
-					{ dest.x = TILESX10; dest.y = TILESY1; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 0))
-					{ dest.x = TILESX11; dest.y = TILESY1; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 1))
-					{ dest.x = TILESX12; dest.y = TILESY1; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 2))
-					{ dest.x = TILESX13; dest.y = TILESY1; }
+				iTileNr = GetTileNr (iTile, iMod1);
+				switch (iTileNr)
+				{
+					case 0: iIsCustom = 1; break;
 
-				/*** second row ***/
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 3))
-					{ dest.x = TILESX1; dest.y = TILESY2; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 4))
-					{ dest.x = TILESX2; dest.y = TILESY2; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 5))
-					{ dest.x = TILESX3; dest.y = TILESY2; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 6))
-					{ dest.x = TILESX4; dest.y = TILESY2; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 7))
-					{ dest.x = TILESX5; dest.y = TILESY2; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 8))
-					{ dest.x = TILESX6; dest.y = TILESY2; }
-				else if (((iTile == 2) || (iTile == 34)) && (iMod1 == 9))
-					{ dest.x = TILESX7; dest.y = TILESY2; }
-				else if (((iTile == 3) || (iTile == 35)) && (iMod1 == 0))
-					{ dest.x = TILESX8; dest.y = TILESY2; }
-				else if (((iTile == 4) || (iTile == 36)) &&
-					((iMod1 == 0) || (iMod1 == 2)))
-					{ dest.x = TILESX9; dest.y = TILESY2; }
-				else if (((iTile == 4) || (iTile == 36)) && (iMod1 == 1))
-					{ dest.x = TILESX10; dest.y = TILESY2; }
-				else if (((iTile == 5) || (iTile == 37)) && (iMod1 == 0))
-					{ dest.x = TILESX11; dest.y = TILESY2; }
-				else if ((iTile == 6) || (iTile == 38))
-					{ dest.x = TILESX12; dest.y = TILESY2; iChangeEvent = iMod1; }
-				else if (((iTile == 7) || (iTile == 39)) && (iMod1 == 0))
-					{ dest.x = TILESX13; dest.y = TILESY2; }
+					/*** first row ***/
+					case 1: dest.x = TILESX1; dest.y = TILESY1; break;
+					case 2: dest.x = TILESX2; dest.y = TILESY1; break;
+					case 3: dest.x = TILESX3; dest.y = TILESY1; break;
+					case 4: dest.x = TILESX4; dest.y = TILESY1; break;
+					case 5: dest.x = TILESX5; dest.y = TILESY1; break;
+					case 6: dest.x = TILESX6; dest.y = TILESY1; break;
+					case 7: dest.x = TILESX7; dest.y = TILESY1; break;
+					case 8: dest.x = TILESX8; dest.y = TILESY1; break;
+					case 9: dest.x = TILESX9; dest.y = TILESY1; break;
+					case 10: dest.x = TILESX10; dest.y = TILESY1; break;
+					case 11: dest.x = TILESX11; dest.y = TILESY1; break;
+					case 12: dest.x = TILESX12; dest.y = TILESY1; break;
+					case 13: dest.x = TILESX13; dest.y = TILESY1; break;
 
-				/*** third row ***/
-				else if (((iTile == 7) || (iTile == 39)) && (iMod1 == 1))
-					{ dest.x = TILESX1; dest.y = TILESY3; }
-				else if (((iTile == 7) || (iTile == 39)) && (iMod1 == 2))
-					{ dest.x = TILESX2; dest.y = TILESY3; }
-				else if (((iTile == 7) || (iTile == 39)) && (iMod1 == 3))
-					{ dest.x = TILESX3; dest.y = TILESY3; }
-				else if (((iTile == 8) || (iTile == 40)) && (iMod1 == 0))
-					{ dest.x = TILESX4; dest.y = TILESY3; }
-				else if (((iTile == 9) || (iTile == 41)) && (iMod1 == 0))
-					{ dest.x = TILESX5; dest.y = TILESY3; }
-				else if (((iTile == 10) || (iTile == 42)) && (iMod1 == 0))
-					{ dest.x = TILESX6; dest.y = TILESY3; }
-				else if (((iTile == 10) || (iTile == 42)) && (iMod1 == 1))
-					{ dest.x = TILESX7; dest.y = TILESY3; }
-				else if (((iTile == 10) || (iTile == 42)) && (iMod1 == 2))
-					{ dest.x = TILESX8; dest.y = TILESY3; }
-				else if (((iTile == 10) || (iTile == 42)) && (iMod1 == 3))
-					{ dest.x = TILESX9; dest.y = TILESY3; }
-				else if (((iTile == 10) || (iTile == 42)) && (iMod1 == 4))
-					{ dest.x = TILESX10; dest.y = TILESY3; }
-				else if (((iTile == 10) || (iTile == 42)) && (iMod1 == 5))
-					{ dest.x = TILESX11; dest.y = TILESY3; }
-				else if (((iTile == 10) || (iTile == 42)) && (iMod1 == 6))
-					{ dest.x = TILESX12; dest.y = TILESY3; }
-				else if ((iTile == 11) && (iMod1 == 0))
-					{ dest.x = TILESX13; dest.y = TILESY3; }
+					/*** second row ***/
+					case 14: dest.x = TILESX1; dest.y = TILESY2; break;
+					case 15: dest.x = TILESX2; dest.y = TILESY2; break;
+					case 16: dest.x = TILESX3; dest.y = TILESY2; break;
+					case 17: dest.x = TILESX4; dest.y = TILESY2; break;
+					case 18: dest.x = TILESX5; dest.y = TILESY2; break;
+					case 19: dest.x = TILESX6; dest.y = TILESY2; break;
+					case 20: dest.x = TILESX7; dest.y = TILESY2; break;
+					case 21: dest.x = TILESX8; dest.y = TILESY2; break;
+					case 22: dest.x = TILESX9; dest.y = TILESY2; break;
+					case 23: dest.x = TILESX10; dest.y = TILESY2; break;
+					case 24: dest.x = TILESX11; dest.y = TILESY2; break;
+					case 25: dest.x = TILESX12; dest.y = TILESY2; /*** Drop button. ***/
+						iChangeEvent = iMod1; break;
+					case 26: dest.x = TILESX13; dest.y = TILESY2; break;
 
-				/*** fourth row ***/
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 0))
-					{ dest.x = TILESX1; dest.y = TILESY4; }
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 1))
-					{ dest.x = TILESX2; dest.y = TILESY4; }
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 2))
-					{ dest.x = TILESX3; dest.y = TILESY4; }
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 3))
-					{ dest.x = TILESX4; dest.y = TILESY4; }
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 4))
-					{ dest.x = TILESX5; dest.y = TILESY4; }
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 5))
-					{ dest.x = TILESX6; dest.y = TILESY4; }
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 6))
-					{ dest.x = TILESX7; dest.y = TILESY4; }
-				else if (((iTile == 12) || (iTile == 44)) && (iMod1 == 7))
-					{ dest.x = TILESX8; dest.y = TILESY4; }
-				else if (((iTile == 13) || (iTile == 45)) && (iMod1 == 0))
-					{ dest.x = TILESX9; dest.y = TILESY4; }
-				else if (((iTile == 14) || (iTile == 46)) && (iMod1 == 0))
-					{ dest.x = TILESX10; dest.y = TILESY4; }
-				else if ((iTile == 15) || (iTile == 47))
-					{ dest.x = TILESX11; dest.y = TILESY4; iChangeEvent = iMod1; }
-				else if (((iTile == 16) || (iTile == 48)) && (iMod1 == 0))
-					{ dest.x = TILESX12; dest.y = TILESY4; }
-				else if (((iTile == 17) || (iTile == 49)) && (iMod1 == 0))
-					{ dest.x = TILESX13; dest.y = TILESY4; }
+					/*** third row ***/
+					case 27: dest.x = TILESX1; dest.y = TILESY3; break;
+					case 28: dest.x = TILESX2; dest.y = TILESY3; break;
+					case 29: dest.x = TILESX3; dest.y = TILESY3; break;
+					case 30: dest.x = TILESX4; dest.y = TILESY3; break;
+					case 31: dest.x = TILESX5; dest.y = TILESY3; break;
+					case 32: dest.x = TILESX6; dest.y = TILESY3; break;
+					case 33: dest.x = TILESX7; dest.y = TILESY3; break;
+					case 34: dest.x = TILESX8; dest.y = TILESY3; break;
+					case 35: dest.x = TILESX9; dest.y = TILESY3; break;
+					case 36: dest.x = TILESX10; dest.y = TILESY3; break;
+					case 37: dest.x = TILESX11; dest.y = TILESY3; break;
+					case 38: dest.x = TILESX12; dest.y = TILESY3; break;
+					case 39: dest.x = TILESX13; dest.y = TILESY3; break;
 
-				/*** fifth row ***/
-				else if (((iTile == 18) || (iTile == 50)) && (iMod1 == 0))
-					{ dest.x = TILESX1; dest.y = TILESY5; }
-				else if (((iTile == 18) || (iTile == 50)) && (iMod1 == 1))
-					{ dest.x = TILESX2; dest.y = TILESY5; }
-				else if (((iTile == 18) || (iTile == 50)) && (iMod1 == 2))
-					{ dest.x = TILESX3; dest.y = TILESY5; }
-				else if (((iTile == 18) || (iTile == 50)) && (iMod1 == 3))
-					{ dest.x = TILESX4; dest.y = TILESY5; }
-				else if (((iTile == 18) || (iTile == 50)) && (iMod1 == 4))
-					{ dest.x = TILESX5; dest.y = TILESY5; }
-				else if (((iTile == 18) || (iTile == 50)) && (iMod1 == 5))
-					{ dest.x = TILESX6; dest.y = TILESY5; }
-				else if (((iTile == 19) || (iTile == 51)) && (iMod1 == 0))
-					{ dest.x = TILESX7; dest.y = TILESY5; }
-				else if (((iTile == 20) || (iTile == 52)) && (iMod1 == 0))
-					{ dest.x = TILESX8; dest.y = TILESY5; }
-				else if (((iTile == 20) || (iTile == 52)) && (iMod1 == 1))
-					{ dest.x = TILESX9; dest.y = TILESY5; }
-				else if (((iTile == 21) || (iTile == 53)) && (iMod1 == 0))
-					{ dest.x = TILESX10; dest.y = TILESY5; }
-				else if (((iTile == 22) || (iTile == 54)) && (iMod1 == 0))
-					{ dest.x = TILESX11; dest.y = TILESY5; }
-				else if (((iTile == 23) || (iTile == 55)) && (iMod1 == 0))
-					{ dest.x = TILESX12; dest.y = TILESY5; }
-				else if (((iTile == 24) || (iTile == 56)) && (iMod1 == 0))
-					{ dest.x = TILESX13; dest.y = TILESY5; }
+					/*** fourth row ***/
+					case 40: dest.x = TILESX1; dest.y = TILESY4; break;
+					case 41: dest.x = TILESX2; dest.y = TILESY4; break;
+					case 42: dest.x = TILESX3; dest.y = TILESY4; break;
+					case 43: dest.x = TILESX4; dest.y = TILESY4; break;
+					case 44: dest.x = TILESX5; dest.y = TILESY4; break;
+					case 45: dest.x = TILESX6; dest.y = TILESY4; break;
+					case 46: dest.x = TILESX7; dest.y = TILESY4; break;
+					case 47: dest.x = TILESX8; dest.y = TILESY4; break;
+					case 48: dest.x = TILESX9; dest.y = TILESY4; break;
+					case 49: dest.x = TILESX10; dest.y = TILESY4; break;
+					case 50: dest.x = TILESX11; dest.y = TILESY4; /*** Raise button. ***/
+						iChangeEvent = iMod1; break;
+					case 51: dest.x = TILESX12; dest.y = TILESY4; break;
+					case 52: dest.x = TILESX13; dest.y = TILESY4; break;
 
-				/*** sixth row ***/
-				else if (((iTile == 25) || (iTile == 57)) && (iMod1 == 0))
-					{ dest.x = TILESX1; dest.y = TILESY6; }
-				else if (((iTile == 26) || (iTile == 58)) && (iMod1 == 0))
-					{ dest.x = TILESX2; dest.y = TILESY6; }
-				else if (((iTile == 27) || (iTile == 59)) && (iMod1 == 0))
-					{ dest.x = TILESX3; dest.y = TILESY6; }
-				else if (((iTile == 28) || (iTile == 60)) && (iMod1 == 0))
-					{ dest.x = TILESX4; dest.y = TILESY6; }
-				else if (((iTile == 29) || (iTile == 61)) && (iMod1 == 0))
-					{ dest.x = TILESX5; dest.y = TILESY6; }
-				else if (((iTile == 30) || (iTile == 62)) && (iMod1 == 0))
-					{ dest.x = TILESX6; dest.y = TILESY6; }
-				else if ((iTile == 43) && (iMod1 == 0))
-					{ dest.x = TILESX7; dest.y = TILESY6; }
+					/*** fifth row ***/
+					case 53: dest.x = TILESX1; dest.y = TILESY5; break;
+					case 54: dest.x = TILESX2; dest.y = TILESY5; break;
+					case 55: dest.x = TILESX3; dest.y = TILESY5; break;
+					case 56: dest.x = TILESX4; dest.y = TILESY5; break;
+					case 57: dest.x = TILESX5; dest.y = TILESY5; break;
+					case 58: dest.x = TILESX6; dest.y = TILESY5; break;
+					case 59: dest.x = TILESX7; dest.y = TILESY5; break;
+					case 60: dest.x = TILESX8; dest.y = TILESY5; break;
+					case 61: dest.x = TILESX9; dest.y = TILESY5; break;
+					case 62: dest.x = TILESX10; dest.y = TILESY5; break;
+					case 63: dest.x = TILESX11; dest.y = TILESY5; break;
+					case 64: dest.x = TILESX12; dest.y = TILESY5; break;
+					case 65: dest.x = TILESX13; dest.y = TILESY5; break;
 
-				else { iIsCustom = 1; }
+					/*** sixth row ***/
+					case 66: dest.x = TILESX1; dest.y = TILESY6; break;
+					case 67: dest.x = TILESX2; dest.y = TILESY6; break;
+					case 68: dest.x = TILESX3; dest.y = TILESY6; break;
+					case 69: dest.x = TILESX4; dest.y = TILESY6; break;
+					case 70: dest.x = TILESX5; dest.y = TILESY6; break;
+					case 71: dest.x = TILESX6; dest.y = TILESY6; break;
+					case 72: dest.x = TILESX7; dest.y = TILESY6; break;
+
+					default:
+						if (iTileNr >= 10000) /*** native ***/
+						{
+							iIsCustom = 1;
+						} else {
+							printf ("[ WARN ] Unknown tile: %i!\n", iTileNr);
+							iIsCustom = 1; /*** Fallback. ***/
+						}
+						break;
+				}
 			}
 
 			if (iEditPoP == 2)
@@ -9071,413 +9078,436 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 
 		if (iEditPoP == 1)
 		{
-			if (((iThing == 0) || (iThing == 32)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd0_0, imgp0_0, "");
-			if (((iThing == 0) || (iThing == 32)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd0_1, imgp0_1, "");
-			if (((iThing == 0) || (iThing == 32)) && (iModifier[0] == 2))
-				ShowPos (loc, dest, iLocation, imgd0_2, imgp0_2, "");
-			if (((iThing == 0) || (iThing == 32)) && (iModifier[0] == 3))
-				ShowPos (loc, dest, iLocation, imgd0_3, imgp0_3, "");
-			if (((iThing == 0) || (iThing == 32)) && (iModifier[0] == 255))
-				ShowPos (loc, dest, iLocation, imgd0_255, imgp0_255, "");
-			if (((iThing == 1) || (iThing == 33)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd1_0, imgp1_0, "");
-			if (((iThing == 1) || (iThing == 33)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd1_1, imgp1_1, "");
-			if (((iThing == 1) || (iThing == 33)) && (iModifier[0] == 2))
-				ShowPos (loc, dest, iLocation, imgd1_2, imgp1_2, "");
-			if (((iThing == 1) || (iThing == 33)) && (iModifier[0] == 3))
-				ShowPos (loc, dest, iLocation, imgd1_3, imgp1_3, "");
-			if (((iThing == 1) || (iThing == 33)) && (iModifier[0] == 255))
-				ShowPos (loc, dest, iLocation, imgd1_255, imgp1_255, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd2_0, imgp2_0, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd2_1, imgp2_1, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 2))
-				ShowPos (loc, dest, iLocation, imgd2_2, imgp2_2, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 3))
-				ShowPos (loc, dest, iLocation, imgd2_3, imgp2_3, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd2_4, imgp2_4, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd2_5, imgp2_5, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 6))
-				ShowPos (loc, dest, iLocation, imgd2_6, imgp2_6, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 7))
-				ShowPos (loc, dest, iLocation, imgd2_7, imgp2_7, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 8))
-				ShowPos (loc, dest, iLocation, imgd2_8, imgp2_8, "");
-			if (((iThing == 2) || (iThing == 34)) && (iModifier[0] == 9))
-				ShowPos (loc, dest, iLocation, imgd2_9, imgp2_9, "");
-			if (((iThing == 3) || (iThing == 35)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd3_0, imgp3_0, "");
-			if (((iThing == 4) || (iThing == 36)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd4_1, imgp4_1, "");
-			/*** 0 = default for level editors, 2 = default of the game ***/
-			if (((iThing == 4) || (iThing == 36)) &&
-				((iModifier[0] == 2) || (iModifier[0] == 0)))
-				ShowPos (loc, dest, iLocation, imgd4_0, imgp4_0, "");
-			if (((iThing == 5) || (iThing == 37)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd5_0, imgp5_0, "");
-			if ((iThing == 6) || (iThing == 38)) /*** drop button ***/
+			iTileNr = GetTileNr (iThing, iModifier[0]);
+			switch (iTileNr)
 			{
-				snprintf (sText, MAX_TEXT, "E:%i", iModifier[0] + 1);
-				ShowPos (loc, dest, iLocation, imgd6, imgp6, sText);
-			}
-			if (((iThing == 7) || (iThing == 39)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd7_0, imgp7_0, "");
-			if (((iThing == 7) || (iThing == 39)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd7_1, imgp7_1, "");
-			if (((iThing == 7) || (iThing == 39)) && (iModifier[0] == 2))
-				ShowPos (loc, dest, iLocation, imgd7_2, imgp7_2, "");
-			if (((iThing == 7) || (iThing == 39)) && (iModifier[0] == 3))
-				ShowPos (loc, dest, iLocation, imgd7_3, imgp7_3, "");
-			if (((iThing == 8) || (iThing == 40)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd8_0, imgp8_0, "");
-			if (((iThing == 9) || (iThing == 41)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd9_0, imgp9_0, "");
-			if (((iThing == 10) || (iThing == 42)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd10_0, imgp10_0, "");
-			if (((iThing == 10) || (iThing == 42)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd10_1, imgp10_1, "");
-			if (((iThing == 10) || (iThing == 42)) && (iModifier[0] == 2))
-				ShowPos (loc, dest, iLocation, imgd10_2, imgp10_2, "");
-			if (((iThing == 10) || (iThing == 42)) && (iModifier[0] == 3))
-				ShowPos (loc, dest, iLocation, imgd10_3, imgp10_3, "");
-			if (((iThing == 10) || (iThing == 42)) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd10_4, imgp10_4, "");
-			if (((iThing == 10) || (iThing == 42)) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd10_5, imgp10_5, "");
-			if (((iThing == 10) || (iThing == 42)) && (iModifier[0] == 6))
-				ShowPos (loc, dest, iLocation, imgd10_6, imgp10_6, "");
-			if ((iThing == 11) && (iModifier[0] == 0)) /*** loose floor ***/
-				ShowPos (loc, dest, iLocation, imgd11_0, imgp11_0, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd12_0, imgp12_0, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd12_1, imgp12_1, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 2))
-				ShowPos (loc, dest, iLocation, imgd12_2, imgp12_2, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 3))
-				ShowPos (loc, dest, iLocation, imgd12_3, imgp12_3, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd12_4, imgp12_4, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd12_5, imgp12_5, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 6))
-				ShowPos (loc, dest, iLocation, imgd12_6, imgp12_6, "");
-			if (((iThing == 12) || (iThing == 44)) && (iModifier[0] == 7))
-				ShowPos (loc, dest, iLocation, imgd12_3, imgp12_7, "");
-			if (((iThing == 13) || (iThing == 45)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd13_0, imgp13_0, "");
-			if (((iThing == 14) || (iThing == 46)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd14_0, imgp14_0, "");
-			if ((iThing == 15) || (iThing == 47)) /*** raise button ***/
-			{
-				snprintf (sText, MAX_TEXT, "E:%i", iModifier[0] + 1);
-				ShowPos (loc, dest, iLocation, imgd15, imgp15, sText);
-			}
-			if (((iThing == 16) || (iThing == 48)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd16_0, imgp16_0, "");
-			if (((iThing == 17) || (iThing == 49)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd17_0, imgp17_0, "");
-			if (((iThing == 18) || (iThing == 50)) && (iModifier[0] == 0))
-			{
-				if (iNoAnim == 0)
-				{
-					switch (iChomperFrameDP)
-					{
-						case 10: iUseSprite = 1; break;
-						case 11:
-							iUseSprite = 2;
-							if (iChomped == 0)
-							{
-								if ((iNoChomp != 1) && (iLocation >= 1))
-								{
-									PlaySound ("wav/chomper.wav");
-									iChomped = 1;
-								}
-							}
-							break;
-						case 12: iUseSprite = 3; iChomped = 0; break;
-						case 13: iUseSprite = 4; break;
-						default: iUseSprite = 0; break; /*** 1-9 ***/
-					}
-					loc.x = iUseSprite * 120;
-					if (cCurType == 'd')
-					{
-						CustomRenderCopy (spritechomperd, "spritechomperd", &loc,
-							screen, &dest);
-					} else {
-						CustomRenderCopy (spritechomperp, "spritechomperp", &loc,
-							screen, &dest);
-					}
-					if (iSelected == iLocation)
-					{
-						if (cCurType == 'd')
-						{
-							CustomRenderCopy (spritechomperdsel, "spritechomperdsel", &loc,
-								screen, &dest);
-						} else {
-							CustomRenderCopy (spritechomperpsel, "spritechomperpsel", &loc,
-								screen, &dest);
-						}
-					}
-					iPosShown = 1;
-				} else {
-					ShowPos (loc, dest, iLocation, imgd18_0, imgp18_0, "");
-				}
-			}
-			if (((iThing == 18) || (iThing == 50)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd18_1, imgp18_1, "");
-			if (((iThing == 18) || (iThing == 50)) && (iModifier[0] == 2))
-				ShowPos (loc, dest, iLocation, imgd18_2, imgp18_2, "");
-			if (((iThing == 18) || (iThing == 50)) && (iModifier[0] == 3))
-				ShowPos (loc, dest, iLocation, imgd18_3, imgp18_3, "");
-			if (((iThing == 18) || (iThing == 50)) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd18_4, imgp18_4, "");
-			if (((iThing == 18) || (iThing == 50)) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd18_5, imgp18_5, "");
-			if (((iThing == 19) || (iThing == 51)) && (iModifier[0] == 0))
-			{
-				if (iNoAnim == 0)
-				{
-					loc.x = (iFlameFrameDP - 1) * 120;
-					if (cCurType == 'd')
-					{
-						CustomRenderCopy (spriteflamed1, "spriteflamed1", &loc,
-							screen, &dest);
-					} else {
-						CustomRenderCopy (spriteflamep1, "spriteflamep1", &loc,
-							screen, &dest);
-					}
-					if (iSelected == iLocation)
-					{
-						loc.x = iFromImageX * iScale;
-						if (cCurType == 'd')
-						{
-							CustomRenderCopy (imgd19_0[2], "imgd19_0[2]", &loc,
-								screen, &dest);
-						} else {
-							CustomRenderCopy (imgp19_0[2], "imgp19_0[2]", &loc,
-								screen, &dest);
-						}
-					}
-					iPosShown = 1;
-				} else {
-					ShowPos (loc, dest, iLocation, imgd19_0, imgp19_0, "");
-				}
-			}
-			if (((iThing == 20) || (iThing == 52)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd20_0, imgp20_0, "");
-			if (((iThing == 20) || (iThing == 52)) && (iModifier[0] == 1))
-				ShowPos (loc, dest, iLocation, imgd20_1, imgp20_1, "");
-			if (((iThing == 21) || (iThing == 53)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd21_0, imgp21_0, "");
-			if (((iThing == 22) || (iThing == 54)) && (iModifier[0] == 0))
-			{
-				if (iNoAnim == 0)
-				{
-					switch (iSwordFrameDP)
-					{
-						case 48: iUseSprite = 1; break;
-						default: iUseSprite = 0; break; /*** 1-47 ***/
-					}
-					loc.x = iUseSprite * 120;
-					if (cCurType == 'd')
-					{
-						CustomRenderCopy (spriteswordd, "spriteswordd", &loc,
-							screen, &dest);
-					} else {
-						CustomRenderCopy (spriteswordp, "spriteswordp", &loc,
-							screen, &dest);
-					}
-					if (iSelected == iLocation)
-					{
-						if (cCurType == 'd')
-						{
-							CustomRenderCopy (spritesworddsel, "spritesworddsel", &loc,
-								screen, &dest);
-						} else {
-							CustomRenderCopy (spriteswordpsel, "spriteswordpsel", &loc,
-								screen, &dest);
-						}
-					}
-					iPosShown = 1;
-				} else {
-					ShowPos (loc, dest, iLocation, imgd22_0, imgp22_0, "");
-				}
-			}
-			if (((iThing == 23) || (iThing == 55)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd23_0, imgp23_0, "");
-			if (((iThing == 24) || (iThing == 56)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd24_0, imgp24_0, "");
-			if (((iThing == 25) || (iThing == 57)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd25_0, imgp25_0, "");
-			if (((iThing == 26) || (iThing == 58)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd26_0, imgp26_0, "");
-			if (((iThing == 27) || (iThing == 59)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd27_0, imgp27_0, "");
-			if (((iThing == 28) || (iThing == 60)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd28_0, imgp28_0, "");
-			if (((iThing == 29) || (iThing == 61)) && (iModifier[0] == 0))
-				ShowPos (loc, dest, iLocation, imgd29_0, imgp29_0, "");
-			if (((iThing == 30) || (iThing == 62)) && (iModifier[0] == 0))
-			{
-				if (iNoAnim == 0)
-				{
-					loc.x = (iFlameFrameDP - 1) * 120;
-					if (cCurType == 'd')
-					{
-						CustomRenderCopy (spriteflamed2, "spriteflamed2", &loc,
-							screen, &dest);
-					} else {
-						CustomRenderCopy (spriteflamep2, "spriteflamep2", &loc,
-							screen, &dest);
-					}
-					if (iSelected == iLocation)
-					{
-						loc.x = iFromImageX * iScale;
-						if (cCurType == 'd')
-						{
-							CustomRenderCopy (imgd30_0[2], "imgd30_0[2]", &loc,
-								screen, &dest);
-						} else {
-							CustomRenderCopy (imgp30_0[2], "imgp30_0[2]", &loc,
-								screen, &dest);
-						}
-					}
-					iPosShown = 1;
-				} else {
-					ShowPos (loc, dest, iLocation, imgd30_0, imgp30_0, "");
-				}
-			}
-			if ((iThing == 43) && (iModifier[0] == 0)) /*** loose floor, stuck ***/
-				ShowPos (loc, dest, iLocation, imgd43_0, imgp43_0, "");
+				/*** first row ***/
+				case 1:
+					ShowPos (loc, dest, iLocation, imgd0_0, imgp0_0, ""); break;
+				case 2:
+					ShowPos (loc, dest, iLocation, imgd0_1, imgp0_1, ""); break;
+				case 3:
+					ShowPos (loc, dest, iLocation, imgd0_2, imgp0_2, ""); break;
+				case 4:
+					ShowPos (loc, dest, iLocation, imgd0_3, imgp0_3, ""); break;
+				case 5:
+					ShowPos (loc, dest, iLocation, imgd0_255, imgp0_255, ""); break;
+				case 6:
+					ShowPos (loc, dest, iLocation, imgd1_0, imgp1_0, ""); break;
+				case 7:
+					ShowPos (loc, dest, iLocation, imgd1_1, imgp1_1, ""); break;
+				case 8:
+					ShowPos (loc, dest, iLocation, imgd1_2, imgp1_2, ""); break;
+				case 9:
+					ShowPos (loc, dest, iLocation, imgd1_3, imgp1_3, ""); break;
+				case 10:
+					ShowPos (loc, dest, iLocation, imgd1_255, imgp1_255, ""); break;
+				case 11:
+					ShowPos (loc, dest, iLocation, imgd2_0, imgp2_0, ""); break;
+				case 12:
+					ShowPos (loc, dest, iLocation, imgd2_1, imgp2_1, ""); break;
+				case 13:
+					ShowPos (loc, dest, iLocation, imgd2_2, imgp2_2, ""); break;
 
-			/*** native ***/
-			if ((iThing == 0) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd0_4, imgp0_4, "SDLPoP");
-			if ((iThing == 0) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd0_5, imgp0_5, "SDLPoP");
-			if ((iThing == 0) && (iModifier[0] == 12))
-				ShowPos (loc, dest, iLocation, imgd0_12, imgp0_12, "SDLPoP");
-			if ((iThing == 0) && (iModifier[0] == 13))
-				ShowPos (loc, dest, iLocation, imgd0_13, imgp0_13, "SDLPoP");
-			if ((iThing == 0) && (iModifier[0] == 50))
-				ShowPos (loc, dest, iLocation, imgd0_50, imgp0_50, "SDLPoP");
-			if ((iThing == 0) && (iModifier[0] == 51))
-				ShowPos (loc, dest, iLocation, imgd0_51, imgp0_51, "SDLPoP");
-			if ((iThing == 0) && (iModifier[0] == 52))
-				ShowPos (loc, dest, iLocation, imgd0_52, imgp0_52, "SDLPoP");
-			if ((iThing == 0) && (iModifier[0] == 53))
-				ShowPos (loc, dest, iLocation, imgd0_53, imgp0_53, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 5))
-				ShowPos (loc, dest, iLocation, imgd1_5, imgp1_5, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 6))
-				ShowPos (loc, dest, iLocation, imgd1_6, imgp1_6, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 13))
-				ShowPos (loc, dest, iLocation, imgd1_13, imgp1_13, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 14))
-				ShowPos (loc, dest, iLocation, imgd1_14, imgp1_14, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 50))
-				ShowPos (loc, dest, iLocation, imgd1_50, imgp1_50, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 51))
-				ShowPos (loc, dest, iLocation, imgd1_51, imgp1_51, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 52))
-				ShowPos (loc, dest, iLocation, imgd1_52, imgp1_52, "SDLPoP");
-			if ((iThing == 1) && (iModifier[0] == 53))
-				ShowPos (loc, dest, iLocation, imgd1_53, imgp1_53, "SDLPoP");
-			if (((iThing == 19) || (iThing == 51)) && ((iModifier[0] & 0x3F) != 0))
-			{
-				if (iNoAnim == 0)
-				{
-					loc.x = (iFlameFrameDP - 1) * 120;
-					if (cCurType == 'd')
+				/*** second row ***/
+				case 14:
+					ShowPos (loc, dest, iLocation, imgd2_3, imgp2_3, ""); break;
+				case 15:
+					ShowPos (loc, dest, iLocation, imgd2_4, imgp2_4, ""); break;
+				case 16:
+					ShowPos (loc, dest, iLocation, imgd2_5, imgp2_5, ""); break;
+				case 17:
+					ShowPos (loc, dest, iLocation, imgd2_6, imgp2_6, ""); break;
+				case 18:
+					ShowPos (loc, dest, iLocation, imgd2_7, imgp2_7, ""); break;
+				case 19:
+					ShowPos (loc, dest, iLocation, imgd2_8, imgp2_8, ""); break;
+				case 20:
+					ShowPos (loc, dest, iLocation, imgd2_9, imgp2_9, ""); break;
+				case 21:
+					ShowPos (loc, dest, iLocation, imgd3_0, imgp3_0, ""); break;
+				case 22:
+					ShowPos (loc, dest, iLocation, imgd4_0, imgp4_0, ""); break;
+				case 23:
+					ShowPos (loc, dest, iLocation, imgd4_1, imgp4_1, ""); break;
+				case 24:
+					ShowPos (loc, dest, iLocation, imgd5_0, imgp5_0, ""); break;
+				case 25: /*** drop button ***/
+					snprintf (sText, MAX_TEXT, "E:%i", iModifier[0] + 1);
+					ShowPos (loc, dest, iLocation, imgd6, imgp6, sText);
+					break;
+				case 26:
+					ShowPos (loc, dest, iLocation, imgd7_0, imgp7_0, ""); break;
+
+				/*** third row ***/
+				case 27:
+					ShowPos (loc, dest, iLocation, imgd7_1, imgp7_1, ""); break;
+				case 28:
+					ShowPos (loc, dest, iLocation, imgd7_2, imgp7_2, ""); break;
+				case 29:
+					ShowPos (loc, dest, iLocation, imgd7_3, imgp7_3, ""); break;
+				case 30:
+					ShowPos (loc, dest, iLocation, imgd8_0, imgp8_0, ""); break;
+				case 31:
+					ShowPos (loc, dest, iLocation, imgd9_0, imgp9_0, ""); break;
+				case 32:
+					ShowPos (loc, dest, iLocation, imgd10_0, imgp10_0, ""); break;
+				case 33:
+					ShowPos (loc, dest, iLocation, imgd10_1, imgp10_1, ""); break;
+				case 34:
+					ShowPos (loc, dest, iLocation, imgd10_2, imgp10_2, ""); break;
+				case 35:
+					ShowPos (loc, dest, iLocation, imgd10_3, imgp10_3, ""); break;
+				case 36:
+					ShowPos (loc, dest, iLocation, imgd10_4, imgp10_4, ""); break;
+				case 37:
+					ShowPos (loc, dest, iLocation, imgd10_5, imgp10_5, ""); break;
+				case 38:
+					ShowPos (loc, dest, iLocation, imgd10_6, imgp10_6, ""); break;
+				case 39:
+					ShowPos (loc, dest, iLocation, imgd11_0, imgp11_0, ""); break;
+
+				/*** fourth row ***/
+				case 40:
+					ShowPos (loc, dest, iLocation, imgd12_0, imgp12_0, ""); break;
+				case 41:
+					ShowPos (loc, dest, iLocation, imgd12_1, imgp12_1, ""); break;
+				case 42:
+					ShowPos (loc, dest, iLocation, imgd12_2, imgp12_2, ""); break;
+				case 43:
+					ShowPos (loc, dest, iLocation, imgd12_3, imgp12_3, ""); break;
+				case 44:
+					ShowPos (loc, dest, iLocation, imgd12_4, imgp12_4, ""); break;
+				case 45:
+					ShowPos (loc, dest, iLocation, imgd12_5, imgp12_5, ""); break;
+				case 46:
+					ShowPos (loc, dest, iLocation, imgd12_6, imgp12_6, ""); break;
+				case 47:
+					ShowPos (loc, dest, iLocation, imgd12_3, imgp12_7, ""); break;
+				case 48:
+					ShowPos (loc, dest, iLocation, imgd13_0, imgp13_0, ""); break;
+				case 49:
+					ShowPos (loc, dest, iLocation, imgd14_0, imgp14_0, ""); break;
+				case 50: /*** raise button ***/
+					snprintf (sText, MAX_TEXT, "E:%i", iModifier[0] + 1);
+					ShowPos (loc, dest, iLocation, imgd15, imgp15, sText);
+					break;
+				case 51:
+					ShowPos (loc, dest, iLocation, imgd16_0, imgp16_0, ""); break;
+				case 52:
+					ShowPos (loc, dest, iLocation, imgd17_0, imgp17_0, ""); break;
+
+				/*** fifth row ***/
+				case 53: /*** chomper ***/
+					if (iNoAnim == 0)
 					{
-						CustomRenderCopy (spriteflamed3, "spriteflamed3", &loc,
-							screen, &dest);
-					} else {
-						CustomRenderCopy (spriteflamep3, "spriteflamep3", &loc,
-							screen, &dest);
-					}
-					ShowImageBasic (imgnative_s, dest.x + 22, dest.y + 32, "imgnative_s",
-						ascreen, iScale, 1);
-					ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
-						dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
-					if (iSelected == iLocation)
-					{
-						loc.x = iFromImageX * iScale;
+						switch (iChomperFrameDP)
+						{
+							case 10: iUseSprite = 1; break;
+							case 11:
+								iUseSprite = 2;
+								if (iChomped == 0)
+								{
+									if ((iNoChomp != 1) && (iLocation >= 1))
+									{
+										PlaySound ("wav/chomper.wav");
+										iChomped = 1;
+									}
+								}
+								break;
+							case 12: iUseSprite = 3; iChomped = 0; break;
+							case 13: iUseSprite = 4; break;
+							default: iUseSprite = 0; break; /*** 1-9 ***/
+						}
+						loc.x = iUseSprite * 120;
 						if (cCurType == 'd')
 						{
-							CustomRenderCopy (imgd19[2], "imgd19[2]", &loc,
+							CustomRenderCopy (spritechomperd, "spritechomperd", &loc,
 								screen, &dest);
 						} else {
-							CustomRenderCopy (imgp19[2], "imgp19[2]", &loc,
+							CustomRenderCopy (spritechomperp, "spritechomperp", &loc,
 								screen, &dest);
 						}
-					}
-					iPosShown = 1;
-				} else {
-					ShowPos (loc, dest, iLocation, imgd19, imgp19, "SDLPoP");
-					ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
-						dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
-				}
-			}
-			if ((iThing == 20) && (iModifier[0] == 4))
-				ShowPos (loc, dest, iLocation, imgd20_4, imgp20_4, "SDLPoP");
-			if ((iThing == 20) && (iModifier[0] == 6))
-				ShowPos (loc, dest, iLocation, imgd20_6, imgp20_6, "SDLPoP");
-			if ((iThing == 20) && (iModifier[0] == 12))
-				ShowPos (loc, dest, iLocation, imgd20_12, imgp20_12, "SDLPoP");
-			if ((iThing == 20) && (iModifier[0] == 14))
-				ShowPos (loc, dest, iLocation, imgd20_14, imgp20_14, "SDLPoP");
-			if ((iThing == 23) && (iModifier[0] != 0))
-			{
-				ShowPos (loc, dest, iLocation, imgd23, imgp23, "SDLPoP");
-				snprintf (sText, MAX_TEXT, "T:%i", iModifier[0]);
-				DisplayTextLine (dest.x + 7, dest.y + 145 - FONT_SIZE_11,
-					sText, font2, color_bl, color_wh, 0);
-			}
-			if ((iThing == 24) && (iModifier[0] == 0x01))
-				ShowPos (loc, dest, iLocation, imgd24, imgp24, "SDLPoP");
-			if (((iThing == 30) || (iThing == 62)) && ((iModifier[0] & 0x3F) != 0))
-			{
-				if (iNoAnim == 0)
-				{
-					loc.x = (iFlameFrameDP - 1) * 120;
-					if (cCurType == 'd')
-					{
-						CustomRenderCopy (spriteflamed4, "spriteflamed4", &loc,
-							screen, &dest);
+						if (iSelected == iLocation)
+						{
+							if (cCurType == 'd')
+							{
+								CustomRenderCopy (spritechomperdsel, "spritechomperdsel", &loc,
+									screen, &dest);
+							} else {
+								CustomRenderCopy (spritechomperpsel, "spritechomperpsel", &loc,
+									screen, &dest);
+							}
+						}
+						iPosShown = 1;
 					} else {
-						CustomRenderCopy (spriteflamep4, "spriteflamep4", &loc,
-							screen, &dest);
+						ShowPos (loc, dest, iLocation, imgd18_0, imgp18_0, "");
 					}
-					ShowImageBasic (imgnative_s, dest.x + 22, dest.y + 32, "imgnative_s",
-						ascreen, iScale, 1);
-					ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
-						dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
-					if (iSelected == iLocation)
+					break;
+				case 54:
+					ShowPos (loc, dest, iLocation, imgd18_1, imgp18_1, ""); break;
+				case 55:
+					ShowPos (loc, dest, iLocation, imgd18_2, imgp18_2, ""); break;
+				case 56:
+					ShowPos (loc, dest, iLocation, imgd18_3, imgp18_3, ""); break;
+				case 57:
+					ShowPos (loc, dest, iLocation, imgd18_4, imgp18_4, ""); break;
+				case 58:
+					ShowPos (loc, dest, iLocation, imgd18_5, imgp18_5, ""); break;
+				case 59:
+					if (iNoAnim == 0)
 					{
-						loc.x = iFromImageX * iScale;
+						loc.x = (iFlameFrameDP - 1) * 120;
 						if (cCurType == 'd')
 						{
-							CustomRenderCopy (imgd30[2], "imgd30[2]", &loc,
+							CustomRenderCopy (spriteflamed1, "spriteflamed1", &loc,
 								screen, &dest);
 						} else {
-							CustomRenderCopy (imgp30[2], "imgp30[2]", &loc,
+							CustomRenderCopy (spriteflamep1, "spriteflamep1", &loc,
 								screen, &dest);
 						}
+						if (iSelected == iLocation)
+						{
+							loc.x = iFromImageX * iScale;
+							if (cCurType == 'd')
+							{
+								CustomRenderCopy (imgd19_0[2], "imgd19_0[2]", &loc,
+									screen, &dest);
+							} else {
+								CustomRenderCopy (imgp19_0[2], "imgp19_0[2]", &loc,
+									screen, &dest);
+							}
+						}
+						iPosShown = 1;
+					} else {
+						ShowPos (loc, dest, iLocation, imgd19_0, imgp19_0, "");
 					}
-					iPosShown = 1;
-				} else {
-					ShowPos (loc, dest, iLocation, imgd30, imgp30, "SDLPoP");
-					ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
-						dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
-				}
+					break;
+				case 60:
+					ShowPos (loc, dest, iLocation, imgd20_0, imgp20_0, ""); break;
+				case 61:
+					ShowPos (loc, dest, iLocation, imgd20_1, imgp20_1, ""); break;
+				case 62:
+					ShowPos (loc, dest, iLocation, imgd21_0, imgp21_0, ""); break;
+				case 63:
+					if (iNoAnim == 0)
+					{
+						switch (iSwordFrameDP)
+						{
+							case 48: iUseSprite = 1; break;
+							default: iUseSprite = 0; break; /*** 1-47 ***/
+						}
+						loc.x = iUseSprite * 120;
+						if (cCurType == 'd')
+						{
+							CustomRenderCopy (spriteswordd, "spriteswordd", &loc,
+								screen, &dest);
+						} else {
+							CustomRenderCopy (spriteswordp, "spriteswordp", &loc,
+								screen, &dest);
+						}
+						if (iSelected == iLocation)
+						{
+							if (cCurType == 'd')
+							{
+								CustomRenderCopy (spritesworddsel, "spritesworddsel", &loc,
+									screen, &dest);
+							} else {
+								CustomRenderCopy (spriteswordpsel, "spriteswordpsel", &loc,
+									screen, &dest);
+							}
+						}
+						iPosShown = 1;
+					} else {
+						ShowPos (loc, dest, iLocation, imgd22_0, imgp22_0, "");
+					}
+					break;
+				case 64:
+					ShowPos (loc, dest, iLocation, imgd23_0, imgp23_0, ""); break;
+				case 65:
+					ShowPos (loc, dest, iLocation, imgd24_0, imgp24_0, ""); break;
+
+				/*** sixth row ***/
+				case 66:
+					ShowPos (loc, dest, iLocation, imgd25_0, imgp25_0, ""); break;
+				case 67:
+					/* The game changes tapestries when the lattice top is to the left
+					 * of them (to SDLPoP's res206.png). This editor, instead, visually
+					 * modifies the lattice top. This is easier (multiple tapestry
+					 * tiles vs. single lattice top tile).
+					 */
+					if ((iThingA[iCurRoom][iLocation] == 12) && /*** NOT iLoc. + 1 ***/
+						(((iLocation >= 1) && (iLocation <= 9)) ||
+						((iLocation >= 11) && (iLocation <= 19)) ||
+						((iLocation >= 21) && (iLocation <= 29))))
+					{
+						ShowPos (loc, dest, iLocation, imgd26_0, imgp26_0_wl, "");
+					} else {
+						ShowPos (loc, dest, iLocation, imgd26_0, imgp26_0, "");
+					}
+					break;
+				case 68:
+					ShowPos (loc, dest, iLocation, imgd27_0, imgp27_0, ""); break;
+				case 69:
+					ShowPos (loc, dest, iLocation, imgd28_0, imgp28_0, ""); break;
+				case 70:
+					ShowPos (loc, dest, iLocation, imgd29_0, imgp29_0, ""); break;
+				case 71:
+					if (iNoAnim == 0)
+					{
+						loc.x = (iFlameFrameDP - 1) * 120;
+						if (cCurType == 'd')
+						{
+							CustomRenderCopy (spriteflamed2, "spriteflamed2", &loc,
+								screen, &dest);
+						} else {
+							CustomRenderCopy (spriteflamep2, "spriteflamep2", &loc,
+								screen, &dest);
+						}
+						if (iSelected == iLocation)
+						{
+							loc.x = iFromImageX * iScale;
+							if (cCurType == 'd')
+							{
+								CustomRenderCopy (imgd30_0[2], "imgd30_0[2]", &loc,
+									screen, &dest);
+							} else {
+								CustomRenderCopy (imgp30_0[2], "imgp30_0[2]", &loc,
+									screen, &dest);
+							}
+						}
+						iPosShown = 1;
+					} else {
+						ShowPos (loc, dest, iLocation, imgd30_0, imgp30_0, "");
+					}
+					break;
+				case 72:
+					ShowPos (loc, dest, iLocation, imgd43_0, imgp43_0, ""); break;
+
+				/*** native, tab 01/12 ***/
+				case 10101:
+					ShowPos (loc, dest, iLocation, imgd0_12, imgp0_12, "SDLPoP"); break;
+				case 10102:
+					ShowPos (loc, dest, iLocation, imgd0_4, imgp0_4, "SDLPoP"); break;
+				case 10103:
+					ShowPos (loc, dest, iLocation, imgd0_13, imgp0_13, "SDLPoP"); break;
+				case 10104:
+					ShowPos (loc, dest, iLocation, imgd0_5, imgp0_5, "SDLPoP"); break;
+				case 10105:
+					ShowPos (loc, dest, iLocation, imgd1_6, imgp1_6, "SDLPoP"); break;
+				case 10106:
+					ShowPos (loc, dest, iLocation, imgd1_14, imgp1_14, "SDLPoP"); break;
+				case 10107:
+					ShowPos (loc, dest, iLocation, imgd1_13, imgp1_13, "SDLPoP"); break;
+				case 10108:
+					ShowPos (loc, dest, iLocation, imgd1_5, imgp1_5, "SDLPoP"); break;
+				case 10109:
+					ShowPos (loc, dest, iLocation, imgd20_6, imgp20_6, "SDLPoP"); break;
+				case 10110:
+					ShowPos (loc, dest, iLocation, imgd20_14, imgp20_14, "SDLPoP"); break;
+				case 10111:
+					ShowPos (loc, dest, iLocation, imgd20_12, imgp20_12, "SDLPoP"); break;
+				case 10112:
+					ShowPos (loc, dest, iLocation, imgd20_4, imgp20_4, "SDLPoP"); break;
+				/***/
+				case 10141:
+					ShowPos (loc, dest, iLocation, imgd0_50, imgp0_50, "SDLPoP"); break;
+				case 10142:
+					ShowPos (loc, dest, iLocation, imgd0_51, imgp0_51, "SDLPoP"); break;
+				case 10143:
+					ShowPos (loc, dest, iLocation, imgd0_52, imgp0_52, "SDLPoP"); break;
+				case 10144:
+					ShowPos (loc, dest, iLocation, imgd0_53, imgp0_53, "SDLPoP"); break;
+				case 10145:
+					ShowPos (loc, dest, iLocation, imgd1_50, imgp1_50, "SDLPoP"); break;
+				case 10146:
+					ShowPos (loc, dest, iLocation, imgd1_51, imgp1_51, "SDLPoP"); break;
+				case 10147:
+					ShowPos (loc, dest, iLocation, imgd1_52, imgp1_52, "SDLPoP"); break;
+				case 10148:
+					ShowPos (loc, dest, iLocation, imgd1_53, imgp1_53, "SDLPoP"); break;
+
+				/*** native, tab 02/12 ***/
+				case 10201:
+					if (iNoAnim == 0)
+					{
+						loc.x = (iFlameFrameDP - 1) * 120;
+						if (cCurType == 'd')
+						{
+							CustomRenderCopy (spriteflamed3, "spriteflamed3", &loc,
+								screen, &dest);
+						} else {
+							CustomRenderCopy (spriteflamep3, "spriteflamep3", &loc,
+								screen, &dest);
+						}
+						ShowImageBasic (imgnative_s, dest.x + 22, dest.y + 32,
+							"imgnative_s", ascreen, iScale, 1);
+						ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
+							dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
+						if (iSelected == iLocation)
+						{
+							loc.x = iFromImageX * iScale;
+							if (cCurType == 'd')
+							{
+								CustomRenderCopy (imgd19[2], "imgd19[2]", &loc,
+									screen, &dest);
+							} else {
+								CustomRenderCopy (imgp19[2], "imgp19[2]", &loc,
+									screen, &dest);
+							}
+						}
+						iPosShown = 1;
+					} else {
+						ShowPos (loc, dest, iLocation, imgd19, imgp19, "SDLPoP");
+						ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
+							dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
+					}
+					break;
+				case 10202:
+					if (iNoAnim == 0)
+					{
+						loc.x = (iFlameFrameDP - 1) * 120;
+						if (cCurType == 'd')
+						{
+							CustomRenderCopy (spriteflamed4, "spriteflamed4", &loc,
+								screen, &dest);
+						} else {
+							CustomRenderCopy (spriteflamep4, "spriteflamep4", &loc,
+								screen, &dest);
+						}
+						ShowImageBasic (imgnative_s, dest.x + 22, dest.y + 32,
+							"imgnative_s", ascreen, iScale, 1);
+						ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
+							dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
+						if (iSelected == iLocation)
+						{
+							loc.x = iFromImageX * iScale;
+							if (cCurType == 'd')
+							{
+								CustomRenderCopy (imgd30[2], "imgd30[2]", &loc,
+									screen, &dest);
+							} else {
+								CustomRenderCopy (imgp30[2], "imgp30[2]", &loc,
+									screen, &dest);
+							}
+						}
+						iPosShown = 1;
+					} else {
+						ShowPos (loc, dest, iLocation, imgd30, imgp30, "SDLPoP");
+						ShowImageBasic (six_bit_rgb[(iModifier[0] & 0x3F)], dest.x + 90,
+							dest.y + 48, "six_bit_rgb[...]", ascreen, iScale, 1);
+					}
+					break;
+
+				/*** native, tab 03/12 ***/
+				case 10301:
+					ShowPos (loc, dest, iLocation, imgd23, imgp23, "SDLPoP");
+					snprintf (sText, MAX_TEXT, "T:%i", iModifier[0]);
+					DisplayTextLine (dest.x + 7, dest.y + 145 - FONT_SIZE_11,
+						sText, font2, color_bl, color_wh, 0);
+					break;
+				case 10302:
+					ShowPos (loc, dest, iLocation, imgd24, imgp24, "SDLPoP"); break;
 			}
 		}
 
@@ -11711,7 +11741,7 @@ void InitScreenAction (char *sAction)
 				if ((strcmp (sEXEType, "missing") != 0) &&
 					(strcmp (sEXEType, "unknown") != 0))
 				{
-					EXELoad();
+					EXELoad_F2_1();
 					switch (cCurType)
 					{
 						case 'd':
@@ -11719,7 +11749,7 @@ void InitScreenAction (char *sAction)
 						case 'p':
 							cCurType = 'd'; iEXEEnv[(int)luLevelNr] = 0; break;
 					}
-					EXESave();
+					EXESave_F2_1();
 					PlaySound ("wav/extras.wav");
 				} else {
 					printf ("[ INFO ] %s does not exist or has an unknown"
@@ -11740,7 +11770,7 @@ void InitScreenAction (char *sAction)
 				PlaySound ("wav/extras.wav");
 				break;
 			case 3:
-				EXELoadSNES();
+				EXELoad_F2_3();
 				switch (cCurType)
 				{
 					case 'b':
@@ -11804,7 +11834,7 @@ void InitScreenAction (char *sAction)
 						iEXEEnvF[luLevelNr] = 50564;
 						break;
 				}
-				EXESaveSNES();
+				EXESave_F2_3();
 				ForceSpecialsToMatchEnv();
 				GiveAnimationGroups();
 				PlaySound ("wav/extras.wav");
@@ -12060,9 +12090,9 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 836; break;
+		case 1: iNrToPreLoad = 841; break;
 		case 2: iNrToPreLoad = 871; break;
-		case 3: iNrToPreLoad = 4858; break;
+		case 3: iNrToPreLoad = 4960; break;
 	}
 
 	/*** locations; dungeon ***/
@@ -12257,6 +12287,8 @@ void InitScreen (void)
 		PreLoad (PNG_PALACE, "p_sel_18_0_sprite.png", &spritechomperpsel);
 		PreLoad (PNG_PALACE, "p_22_0_sprite.png", &spriteswordp);
 		PreLoad (PNG_PALACE, "p_sel_22_0_sprite.png", &spriteswordpsel);
+		PreLoad (PNG_PALACE, "p_26_0_with_lattice.png", &imgp26_0_wl[1]);
+		PreLoad (PNG_PALACE, "p_sel_26_0.png", &imgp26_0_wl[2]);
 
 		/*** native ***/
 		PreLoadSet (PNG_PALACE, 'p', "0_4", imgp0_4);
@@ -13524,6 +13556,7 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "exe.png", &imgexe);
 		PreLoad (PNG_VARIOUS, "exe_F3.png", &imgexef3);
 		PreLoad (PNG_VARIOUS, "exe_F4.png", &imgexef4);
+		PreLoad (PNG_VARIOUS, "exe_F5.png", &imgexef5);
 		PreLoad (PNG_VARIOUS, "exe_packed.png", &imgexepacked);
 		PreLoad (PNG_VARIOUS, "exe_guard_details.png", &imgexedetails);
 		PreLoad (PNG_VARIOUS, "exe_packed2.png", &imgexepacked2);
@@ -13550,6 +13583,7 @@ void InitScreen (void)
 		PreLoad (PNG_VARIOUS, "exe_snes_haze_yes.png", &imgexehazeyes);
 		PreLoad (PNG_VARIOUS, "exe_snes_haze_no.png", &imgexehazeno);
 		PreLoad (PNG_VARIOUS, "exe_skel_dis.png", &imgexeskeldis);
+		PreLoad (PNG_VARIOUS, "exe_F5_snes.png", &imgexef5);
 		PreLoad (PNG_VARIOUS, "no_marker.png", &imgnomarker);
 		PreLoad (PNG_VARIOUS, "red_prince.png", &imgredp);
 		PreLoad (PNG_VARIOUS, "kid_colors.png", &imgkcolors);
@@ -13725,54 +13759,134 @@ void InitScreen (void)
 	}
 
 	/*** Map window ***/
-	if (iEditPoP == 1)
+	if ((iEditPoP == 1) || (iEditPoP == 3))
 	{
 		PreLoadMap (PNG_VARIOUS, "map.png", &imgmap);
 		PreLoadMap (PNG_VARIOUS, "map_grid.png", &imgmapgrid);
-		PreLoadMap (PNG_MINI1, "0.png", &imgmini1[0][0]);
-		PreLoadMap (PNG_MINI1, "0_3.png", &imgmini1[0][3]);
-		PreLoadMap (PNG_MINI1, "1.png", &imgmini1[1][0]);
-		PreLoadMap (PNG_MINI1, "2.png", &imgmini1[2][0]);
-		PreLoadMap (PNG_MINI1, "3.png", &imgmini1[3][0]);
-		PreLoadMap (PNG_MINI1, "4_0.png", &imgmini1[4][0]);
-		PreLoadMap (PNG_MINI1, "4_1.png", &imgmini1[4][1]);
-		PreLoadMap (PNG_MINI1, "5.png", &imgmini1[5][0]);
-		PreLoadMap (PNG_MINI1, "6.png", &imgmini1[6][0]);
-		PreLoadMap (PNG_MINI1, "7.png", &imgmini1[7][0]);
-		PreLoadMap (PNG_MINI1, "8.png", &imgmini1[8][0]);
-		PreLoadMap (PNG_MINI1, "9.png", &imgmini1[9][0]);
-		PreLoadMap (PNG_MINI1, "10_0.png", &imgmini1[10][0]);
-		PreLoadMap (PNG_MINI1, "10_1.png", &imgmini1[10][1]);
-		PreLoadMap (PNG_MINI1, "10_2.png", &imgmini1[10][2]);
-		PreLoadMap (PNG_MINI1, "10_3.png", &imgmini1[10][3]);
-		PreLoadMap (PNG_MINI1, "10_4.png", &imgmini1[10][4]);
-		PreLoadMap (PNG_MINI1, "10_5.png", &imgmini1[10][5]);
-		PreLoadMap (PNG_MINI1, "10_6.png", &imgmini1[10][6]);
-		PreLoadMap (PNG_MINI1, "11.png", &imgmini1[11][0]);
-		PreLoadMap (PNG_MINI1, "12.png", &imgmini1[12][0]);
-		PreLoadMap (PNG_MINI1, "13.png", &imgmini1[13][0]);
-		PreLoadMap (PNG_MINI1, "14.png", &imgmini1[14][0]);
-		PreLoadMap (PNG_MINI1, "15.png", &imgmini1[15][0]);
-		PreLoadMap (PNG_MINI1, "16.png", &imgmini1[16][0]);
-		PreLoadMap (PNG_MINI1, "17.png", &imgmini1[17][0]);
-		PreLoadMap (PNG_MINI1, "18.png", &imgmini1[18][0]);
-		PreLoadMap (PNG_MINI1, "18_2.png", &imgmini1[18][2]);
-		PreLoadMap (PNG_MINI1, "19.png", &imgmini1[19][0]);
-		PreLoadMap (PNG_MINI1, "20.png", &imgmini1[20][0]);
-		PreLoadMap (PNG_MINI1, "21.png", &imgmini1[21][0]);
-		PreLoadMap (PNG_MINI1, "22.png", &imgmini1[22][0]);
-		PreLoadMap (PNG_MINI1, "23.png", &imgmini1[23][0]);
-		PreLoadMap (PNG_MINI1, "24.png", &imgmini1[24][0]);
-		PreLoadMap (PNG_MINI1, "25.png", &imgmini1[25][0]);
-		PreLoadMap (PNG_MINI1, "26.png", &imgmini1[26][0]);
-		PreLoadMap (PNG_MINI1, "27.png", &imgmini1[27][0]);
-		PreLoadMap (PNG_MINI1, "28.png", &imgmini1[28][0]);
-		PreLoadMap (PNG_MINI1, "29.png", &imgmini1[29][0]);
-		PreLoadMap (PNG_MINI1, "30.png", &imgmini1[30][0]);
-		PreLoadMap (PNG_MINI1, "guard.png", &imgminiguard);
-		PreLoadMap (PNG_MINI1, "prince.png", &imgminiprince);
-		PreLoadMap (PNG_MINI1, "hover.png", &imgminihover);
-		PreLoadMap (PNG_MINI1, "related.png", &imgminirelated);
+		PreLoadMap (PNG_VARIOUS, "map_sel_tile.png", &imgmapseltile);
+		if (iEditPoP == 1)
+		{
+			PreLoadMap (PNG_VARIOUS, "map_panel_1.png", &imgmappanel);
+			/***/
+			PreLoadMap (PNG_MINI1, "0.png", &imgmini1[0][0]);
+			PreLoadMap (PNG_MINI1, "0_3.png", &imgmini1[0][3]);
+			PreLoadMap (PNG_MINI1, "1.png", &imgmini1[1][0]);
+			PreLoadMap (PNG_MINI1, "2.png", &imgmini1[2][0]);
+			PreLoadMap (PNG_MINI1, "3.png", &imgmini1[3][0]);
+			PreLoadMap (PNG_MINI1, "4_0.png", &imgmini1[4][0]);
+			PreLoadMap (PNG_MINI1, "4_1.png", &imgmini1[4][1]);
+			PreLoadMap (PNG_MINI1, "5.png", &imgmini1[5][0]);
+			PreLoadMap (PNG_MINI1, "6.png", &imgmini1[6][0]);
+			PreLoadMap (PNG_MINI1, "7.png", &imgmini1[7][0]);
+			PreLoadMap (PNG_MINI1, "8.png", &imgmini1[8][0]);
+			PreLoadMap (PNG_MINI1, "9.png", &imgmini1[9][0]);
+			PreLoadMap (PNG_MINI1, "10_0.png", &imgmini1[10][0]);
+			PreLoadMap (PNG_MINI1, "10_1.png", &imgmini1[10][1]);
+			PreLoadMap (PNG_MINI1, "10_2.png", &imgmini1[10][2]);
+			PreLoadMap (PNG_MINI1, "10_3.png", &imgmini1[10][3]);
+			PreLoadMap (PNG_MINI1, "10_4.png", &imgmini1[10][4]);
+			PreLoadMap (PNG_MINI1, "10_5.png", &imgmini1[10][5]);
+			PreLoadMap (PNG_MINI1, "10_6.png", &imgmini1[10][6]);
+			PreLoadMap (PNG_MINI1, "11.png", &imgmini1[11][0]);
+			PreLoadMap (PNG_MINI1, "12.png", &imgmini1[12][0]);
+			PreLoadMap (PNG_MINI1, "13.png", &imgmini1[13][0]);
+			PreLoadMap (PNG_MINI1, "14.png", &imgmini1[14][0]);
+			PreLoadMap (PNG_MINI1, "15.png", &imgmini1[15][0]);
+			PreLoadMap (PNG_MINI1, "16.png", &imgmini1[16][0]);
+			PreLoadMap (PNG_MINI1, "17.png", &imgmini1[17][0]);
+			PreLoadMap (PNG_MINI1, "18.png", &imgmini1[18][0]);
+			PreLoadMap (PNG_MINI1, "18_2.png", &imgmini1[18][2]);
+			PreLoadMap (PNG_MINI1, "19.png", &imgmini1[19][0]);
+			PreLoadMap (PNG_MINI1, "20.png", &imgmini1[20][0]);
+			PreLoadMap (PNG_MINI1, "21.png", &imgmini1[21][0]);
+			PreLoadMap (PNG_MINI1, "22.png", &imgmini1[22][0]);
+			PreLoadMap (PNG_MINI1, "23.png", &imgmini1[23][0]);
+			PreLoadMap (PNG_MINI1, "24.png", &imgmini1[24][0]);
+			PreLoadMap (PNG_MINI1, "25.png", &imgmini1[25][0]);
+			PreLoadMap (PNG_MINI1, "26.png", &imgmini1[26][0]);
+			PreLoadMap (PNG_MINI1, "27.png", &imgmini1[27][0]);
+			PreLoadMap (PNG_MINI1, "28.png", &imgmini1[28][0]);
+			PreLoadMap (PNG_MINI1, "29.png", &imgmini1[29][0]);
+			PreLoadMap (PNG_MINI1, "30.png", &imgmini1[30][0]);
+			PreLoadMap (PNG_MINI1, "guard.png", &imgminiguard);
+			PreLoadMap (PNG_MINI1, "prince.png", &imgminiprince);
+			PreLoadMap (PNG_MINI1, "hover.png", &imgminihover);
+			PreLoadMap (PNG_MINI1, "related.png", &imgminirelated);
+		}
+		if (iEditPoP == 3)
+		{
+			PreLoadMap (PNG_VARIOUS, "map_panel_3.png", &imgmappanel);
+			/***/
+			PreLoadMap (PNG_MINI3, "0.png", &imgmini3[0][0]); /*** custom ***/
+			PreLoadMap (PNG_MINI3, "1.png", &imgmini3[1][0]); /*** space ***/
+			PreLoadMap (PNG_MINI3, "2.png", &imgmini3[2][0]); /*** floor ***/
+			PreLoadMap (PNG_MINI3, "2_3.png", &imgmini3[2][3]); /*** floor ? ***/
+			PreLoadMap (PNG_MINI3, "2_4.png", &imgmini3[2][4]); /*** floor ? ***/
+			PreLoadMap (PNG_MINI3, "2_7.png", &imgmini3[2][7]); /*** floor ? ***/
+			PreLoadMap (PNG_MINI3, "2_255.png", &imgmini3[2][255]); /*** floor ? ***/
+			PreLoadMap (PNG_MINI3, "3.png", &imgmini3[3][0]); /*** wall ***/
+			PreLoadMap (PNG_MINI3, "3_255.png", &imgmini3[3][255]); /*** wall ? ***/
+			PreLoadMap (PNG_MINI3, "4.png", &imgmini3[4][0]); /*** pillar ***/
+			PreLoadMap (PNG_MINI3, "5.png", &imgmini3[5][0]); /*** loose ***/
+			PreLoadMap (PNG_MINI3, "5_1.png", &imgmini3[5][1]); /*** loose hl ***/
+			PreLoadMap (PNG_MINI3, "6.png", &imgmini3[6][0]); /*** debris ***/
+			PreLoadMap (PNG_MINI3, "7.png", &imgmini3[7][0]); /*** fake fl; s ***/
+			PreLoadMap (PNG_MINI3, "8.png", &imgmini3[8][0]); /*** fake fl; sdo ***/
+			PreLoadMap (PNG_MINI3, "9.png", &imgmini3[9][0]); /*** fake wl; s ***/
+			PreLoadMap (PNG_MINI3, "10.png", &imgmini3[10][0]); /*** fake s; fl ***/
+			PreLoadMap (PNG_MINI3, "11.png", &imgmini3[11][0]); /*** fake wl; fl ***/
+			PreLoadMap (PNG_MINI3, "12.png", &imgmini3[12][0]); /*** fake s; wl ***/
+			PreLoadMap (PNG_MINI3, "13.png", &imgmini3[13][0]); /*** fake fl; wl ***/
+			PreLoadMap (PNG_MINI3, "14.png", &imgmini3[14][0]); /*** raise ***/
+			PreLoadMap (PNG_MINI3, "15.png", &imgmini3[15][0]); /*** drop ***/
+			PreLoadMap (PNG_MINI3, "16.png", &imgmini3[16][0]); /*** gate; cl. ***/
+			PreLoadMap (PNG_MINI3, "17.png", &imgmini3[17][0]); /*** gate; % ***/
+			PreLoadMap (PNG_MINI3, "18.png", &imgmini3[18][0]); /*** gate; open ***/
+			PreLoadMap (PNG_MINI3, "19.png", &imgmini3[19][0]); /*** gate top ***/
+			PreLoadMap (PNG_MINI3, "20.png", &imgmini3[20][0]); /*** lv dr b (1) ***/
+			/*** NO 21.png ***/
+			PreLoadMap (PNG_MINI3, "22.png", &imgmini3[22][0]); /*** lv dr e (1) ***/
+			/*** NO 23.png ***/
+			PreLoadMap (PNG_MINI3, "24.png", &imgmini3[24][0]); /*** tele (1) ***/
+			/*** NO 25.png ***/
+			PreLoadMap (PNG_MINI3, "26.png", &imgmini3[26][0]); /*** sword ***/
+			PreLoadMap (PNG_MINI3, "27.png", &imgmini3[27][0]); /*** chomper ***/
+			PreLoadMap (PNG_MINI3, "27_2.png", &imgmini3[27][2]); /*** chomp hf ***/
+			PreLoadMap (PNG_MINI3, "27_5.png", &imgmini3[27][5]); /*** chomp hl ***/
+			PreLoadMap (PNG_MINI3, "28.png", &imgmini3[28][0]); /*** spike ***/
+			PreLoadMap (PNG_MINI3, "28_4.png", &imgmini3[28][4]); /*** spike hf ***/
+			PreLoadMap (PNG_MINI3, "28_9.png", &imgmini3[28][9]); /*** spike hl ***/
+			PreLoadMap (PNG_MINI3, "29.png", &imgmini3[29][0]); /*** guillotine ***/
+			PreLoadMap (PNG_MINI3, "29_1.png", &imgmini3[29][1]); /*** guil hl ***/
+			PreLoadMap (PNG_MINI3, "29_2.png", &imgmini3[29][2]); /*** guil hf ***/
+			PreLoadMap (PNG_MINI3, "30.png", &imgmini3[30][0]); /*** crusher ***/
+			PreLoadMap (PNG_MINI3, "30_1.png", &imgmini3[30][1]); /*** crush hl ***/
+			PreLoadMap (PNG_MINI3, "30_3.png", &imgmini3[30][3]); /*** crush hf ***/
+			PreLoadMap (PNG_MINI3, "31.png", &imgmini3[31][0]); /*** lava ***/
+			PreLoadMap (PNG_MINI3, "32.png", &imgmini3[32][0]); /*** fire ***/
+			PreLoadMap (PNG_MINI3, "33.png", &imgmini3[33][0]); /*** spin. log ***/
+			PreLoadMap (PNG_MINI3, "33_1.png", &imgmini3[33][1]); /*** spin hl ***/
+			PreLoadMap (PNG_MINI3, "33_3.png", &imgmini3[33][3]); /*** spin hf ***/
+			PreLoadMap (PNG_MINI3, "34.png", &imgmini3[34][0]); /*** stars ***/
+			PreLoadMap (PNG_MINI3, "35.png", &imgmini3[35][0]); /*** mirror ***/
+			PreLoadMap (PNG_MINI3, "36.png", &imgmini3[36][0]); /*** <<< ***/
+			PreLoadMap (PNG_MINI3, "37.png", &imgmini3[37][0]); /*** >>> ***/
+			PreLoadMap (PNG_MINI3, "38.png", &imgmini3[38][0]); /*** skeleton ***/
+			PreLoadMap (PNG_MINI3, "39.png", &imgmini3[39][0]); /*** skeleton c ***/
+			PreLoadMap (PNG_MINI3, "40.png", &imgmini3[40][0]); /*** heal potion ***/
+			PreLoadMap (PNG_MINI3, "41.png", &imgmini3[41][0]); /*** life potion ***/
+			PreLoadMap (PNG_MINI3, "42.png", &imgmini3[42][0]); /*** hurt potion ***/
+			PreLoadMap (PNG_MINI3, "43.png", &imgmini3[43][0]); /*** flip potion ***/
+			PreLoadMap (PNG_MINI3, "44.png", &imgmini3[44][0]); /*** flt potion ***/
+			PreLoadMap (PNG_MINI3, "45.png", &imgmini3[45][0]); /*** warp potion ***/
+			PreLoadMap (PNG_MINI3, "46.png", &imgmini3[46][0]); /*** kill potion ***/
+			PreLoadMap (PNG_MINI3, "47.png", &imgmini3[47][0]); /*** torch (fl) ***/
+			PreLoadMap (PNG_MINI3, "48.png", &imgmini3[48][0]); /*** torch (s) ***/
+			PreLoadMap (PNG_MINI3, "guard.png", &imgminiguard);
+			PreLoadMap (PNG_MINI3, "prince.png", &imgminiprince);
+			PreLoadMap (PNG_MINI3, "hover.png", &imgminihover);
+			PreLoadMap (PNG_MINI3, "related.png", &imgminirelated);
+		}
 		PreLoadMap (PNG_BUTTONS, "zoom-1_on_0.png", &imgzoom1on_0);
 		PreLoadMap (PNG_BUTTONS, "zoom-1_on_1.png", &imgzoom1on_1);
 		PreLoadMap (PNG_BUTTONS, "zoom-1_off.png", &imgzoom1off);
@@ -13867,6 +13981,7 @@ void InitScreen (void)
 	iXPosMapMoveOffset = 0;
 	iYPosMapMoveOffset = 0;
 	iMovingMap = 0;
+	iDrawingOnMap = 0;
 
 	iSelected = 1; /*** Start with the upper left selected. ***/
 	iScreen = 1;
@@ -13994,7 +14109,7 @@ void InitScreen (void)
 								{
 									LinkMinus();
 								} else {
-									if (iEditPoP == 1) { MapShow(); }
+									if ((iEditPoP == 1) || (iEditPoP == 3)) { MapShow(); }
 								}
 							}
 							if ((iScreen == 3) && (iEditPoP != 2))
@@ -14234,6 +14349,21 @@ void InitScreen (void)
 									}
 								}
 								if (iEditPoP == 3) { Automatic(); }
+							}
+							break;
+						case SDLK_F5:
+							if (iScreen == 1)
+							{
+								if (iEditPoP != 2)
+								{
+									if ((strcmp (sEXEType, "missing") != 0) &&
+										(strcmp (sEXEType, "unknown") != 0))
+									{
+										EXE_F5();
+									} else {
+										printf ("[ INFO ] Missing or unknown executable.\n");
+									}
+								}
 							}
 							break;
 						case SDLK_F12:
@@ -14767,7 +14897,8 @@ void InitScreen (void)
 							}
 							break;
 						case SDLK_m:
-							if (iEditPoP == 1) /*** && (iScreen == 2) ***/
+							/*** && (iScreen == 2) ***/
+							if ((iEditPoP == 1) || (iEditPoP == 3))
 							{
 								if (iBrokenRoomLinks == 0)
 								{
@@ -15414,7 +15545,7 @@ void InitScreen (void)
 								}
 
 								/*** Map window ***/
-								if ((iEditPoP == 1) && (iMapOpen == 0))
+								if (((iEditPoP == 1) || (iEditPoP == 3)) && (iMapOpen == 0))
 								{
 									if (InArea (599, 63, 599 + 25, 63 + 25) == 1)
 									{
@@ -16539,7 +16670,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 				ShowImage (-6, (int[]){35, 0, 0, 0}, screen, 128, 0, 0, 112, 131);
 			}
 			/*** Map window ***/
-			if (iEditPoP == 1)
+			if ((iEditPoP == 1) || (iEditPoP == 3))
 			{
 				if (iMapOpen == 0)
 				{
@@ -17014,7 +17145,7 @@ void ShowScreen (int iScreenS, SDL_Renderer *screen)
 		DisplayTextLine (31, 5, sText, font1, color_bl, color_wh, 0);
 	}
 
-	if (iEditPoP == 1) { ShowMap(); }
+	if (iEditPoP != 2) { ShowMap(); }
 
 	/*** refresh screen ***/
 	if ((iPlaytest != 1) && (iJumpTo != 1))
@@ -17274,26 +17405,26 @@ void SetMapHover (int iRoom, int iX, int iY)
 	iDone[iRoom] = 1;
 
 	if ((iRoomConnections[iRoom][1] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][1] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][1] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][1] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][1] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][1]] != 1))
 		{ SetMapHover (iRoomConnections[iRoom][1], iX - 1, iY); }
 
 	if ((iRoomConnections[iRoom][2] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][2] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][2] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][2] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][2] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][2]] != 1))
 		{ SetMapHover (iRoomConnections[iRoom][2], iX + 1, iY); }
 
 	if ((iRoomConnections[iRoom][3] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][3] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][3] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][3] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][3] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][3]] != 1))
 		{ SetMapHover (iRoomConnections[iRoom][3], iX, iY - 1); }
 
 	if ((iRoomConnections[iRoom][4] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][4] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][4] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][4] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][4] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][4]] != 1))
 		{ SetMapHover (iRoomConnections[iRoom][4], iX, iY + 1); }
 }
@@ -17306,6 +17437,7 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 	float fOffsetX, fOffsetY;
 	float fRoomStartX, fRoomStartY;
 	char sText[MAX_TEXT + 2];
+	int iB1, iB2, iB3, iB4;
 
 	/*** Used for looping. ***/
 	int iTileLoop;
@@ -17333,48 +17465,85 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 		fOffsetX = fOffsetX * ZoomGet();
 		fOffsetY = fOffsetY * ZoomGet();
 
-		iThing = iThingA[iRoom][iTileLoop - 1];
-		if (iThing > 31) { iThing = iThing % 32; }
-		iMod = iModifierA[iRoom][iTileLoop - 1][1];
-		switch (iThing)
+		if (iEditPoP == 1)
 		{
-			case 0: if (iMod != 3) { iMod = 0; } break;
-			case 1: iMod = 0; break;
-			case 2: iMod = 0; break;
-			case 3: iMod = 0; break;
-			case 4: if ((iMod != 0) && (iMod != 1)) { iMod = 0; } break;
-			case 5: iMod = 0; break;
-			case 6: iMod = 0; break;
-			case 7: iMod = 0; break;
-			case 8: iMod = 0; break;
-			case 9: iMod = 0; break;
-			case 10: if (iMod > 6) { iMod = 0; } break;
-			case 11: iMod = 0; break;
-			case 12: iMod = 0; break;
-			case 13: iMod = 0; break;
-			case 14: iMod = 0; break;
-			case 15: iMod = 0; break;
-			case 16: iMod = 0; break;
-			case 17: iMod = 0; break;
-			case 18: if (iMod != 2) { iMod = 0; } break; /*** chomper ***/
-			case 19: iMod = 0; break;
-			case 20: iMod = 0; break;
-			case 21: iMod = 0; break;
-			case 22: iMod = 0; break;
-			case 23: iMod = 0; break;
-			case 24: iMod = 0; break;
-			case 25: iMod = 0; break;
-			case 26: iMod = 0; break;
-			case 27: iMod = 0; break;
-			case 28: iMod = 0; break;
-			case 29: iMod = 0; break;
-			case 30: iMod = 0; break;
+			iThing = iThingA[iRoom][iTileLoop - 1];
+			if (iThing > 31) { iThing = iThing % 32; }
+			iMod = iModifierA[iRoom][iTileLoop - 1][1];
+			switch (iThing)
+			{
+				case 0: if (iMod != 3) { iMod = 0; } break;
+				case 1: iMod = 0; break;
+				case 2: iMod = 0; break;
+				case 3: iMod = 0; break;
+				case 4: if ((iMod != 0) && (iMod != 1)) { iMod = 0; } break;
+				case 5: iMod = 0; break;
+				case 6: iMod = 0; break;
+				case 7: iMod = 0; break;
+				case 8: iMod = 0; break;
+				case 9: iMod = 0; break;
+				case 10: if (iMod > 6) { iMod = 0; } break;
+				case 11: iMod = 0; break;
+				case 12: iMod = 0; break;
+				case 13: iMod = 0; break;
+				case 14: iMod = 0; break;
+				case 15: iMod = 0; break;
+				case 16: iMod = 0; break;
+				case 17: iMod = 0; break;
+				case 18: if (iMod != 2) { iMod = 0; } break; /*** chomper ***/
+				case 19: iMod = 0; break;
+				case 20: iMod = 0; break;
+				case 21: iMod = 0; break;
+				case 22: iMod = 0; break;
+				case 23: iMod = 0; break;
+				case 24: iMod = 0; break;
+				case 25: iMod = 0; break;
+				case 26: iMod = 0; break;
+				case 27: iMod = 0; break;
+				case 28: iMod = 0; break;
+				case 29: iMod = 0; break;
+				case 30: iMod = 0; break;
+			}
+			snprintf (sInfo, MAX_INFO, "imgmini1[%i][%i]", iThing, iMod);
+			ShowImageBasic (imgmini1[iThing][iMod],
+				fRoomStartX + fOffsetX,
+				fRoomStartY + fOffsetY,
+				sInfo, mscreen, ZoomGet(), 0);
 		}
-		snprintf (sInfo, MAX_INFO, "imgmini1[%i][%i]", iThing, iMod);
-		ShowImageBasic (imgmini1[iThing][iMod],
-			fRoomStartX + fOffsetX,
-			fRoomStartY + fOffsetY,
-			sInfo, mscreen, ZoomGet(), 0);
+		if (iEditPoP == 3)
+		{
+			iB1 = iBlock1A[iRoom][iTileLoop - 1];
+			iB2 = iBlock2A[iRoom][iTileLoop - 1];
+			iB3 = iBlock3A[iRoom][iTileLoop - 1];
+			iB4 = iBlock4A[iRoom][iTileLoop - 1];
+			iMod = iModifierA[iRoom][iTileLoop - 1][1];
+			CurTypeBlocks(); /*** Maybe not necessary. ***/
+			iThing = GetTileNrSNES (iB1, iB2, iB3, iB4, iMod);
+			if (iThing == 0)
+				{ iThing = GetTileNrSNESApprox (iB3, iB4, iMod); }
+			switch (iThing)
+			{
+				case 14: iMod = 0; break; /*** raise ***/
+				case 15: iMod = 0; break; /*** drop ***/
+				case 18: iMod = 0; break; /*** gate (open) ***/
+				case 24: iMod = 0; break; /*** teleport ***/
+			}
+			if (imgmini3[iThing][iMod] == NULL)
+			{
+				if (iDebug == 1)
+				{
+					printf ("[ WARN ] Strange tile (level %i, room %i,"
+						" tile %i): %i %i!\n",
+						(int)luLevelNr, iRoom, iTileLoop, iThing, iMod);
+				}
+				iThing = 0; iMod = 0; /*** Fallback. ***/
+			}
+			snprintf (sInfo, MAX_INFO, "imgmini3[%i][%i]", iThing, iMod);
+			ShowImageBasic (imgmini3[iThing][iMod],
+				fRoomStartX + fOffsetX,
+				fRoomStartY + fOffsetY,
+				sInfo, mscreen, ZoomGet(), 0);
+		}
 
 		/*** guard ***/
 		if (sGuardLocations[iRoom - 1] == iTileLoop - 1)
@@ -17401,7 +17570,8 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 		}
 
 		/*** related tile (yellow) ***/
-		if (RelatedToHover (iRoom, iTileLoop) == 1)
+		if (((iEditPoP == 1) && (RelatedToHover1 (iRoom, iTileLoop) == 1)) ||
+			((iEditPoP == 3) && (RelatedToHover3 (iRoom, iTileLoop) == 1)))
 		{
 			ShowImageBasic (imgminirelated, fRoomStartX + fOffsetX,
 				fRoomStartY + fOffsetY, "imgminirelated", mscreen, ZoomGet(), 0);
@@ -17436,26 +17606,26 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 	iDone[iRoom] = 1;
 
 	if ((iRoomConnections[iRoom][1] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][1] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][1] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][1] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][1] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][1]] != 1))
 		{ ShowRoomsMap (iRoomConnections[iRoom][1], iX - 1, iY); }
 
 	if ((iRoomConnections[iRoom][2] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][2] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][2] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][2] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][2] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][2]] != 1))
 		{ ShowRoomsMap (iRoomConnections[iRoom][2], iX + 1, iY); }
 
 	if ((iRoomConnections[iRoom][3] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][3] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][3] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][3] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][3] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][3]] != 1))
 		{ ShowRoomsMap (iRoomConnections[iRoom][3], iX, iY - 1); }
 
 	if ((iRoomConnections[iRoom][4] != 0) && /*** DOS ***/
-		(iRoomConnections[iRoom][4] != 254) && /*** SNES; not in use ***/
-		(iRoomConnections[iRoom][4] != 255) && /*** SNES; not in use ***/
+		(iRoomConnections[iRoom][4] != 254) && /*** SNES ***/
+		(iRoomConnections[iRoom][4] != 255) && /*** SNES ***/
 		(iDone[iRoomConnections[iRoom][4]] != 1))
 		{ ShowRoomsMap (iRoomConnections[iRoom][4], iX, iY + 1); }
 }
@@ -25495,8 +25665,9 @@ void ShowUsage (void)
 	printf ("  -d,        --debug          also show levels on the console\n");
 	printf ("  -n,        --noaudio        mute editor and game audio\n");
 	printf ("  -q,        --quiteloud      chompers in-editor make noise\n");
-	printf ("  -i,        --improved       \"improved\" instead of"
-		" \"megahit\"\n");
+	printf ("  -i,        --improved       use \"improved\" as the cheat"
+		" code\n");
+	printf ("                              (default: \"megahit\"/autodetect)\n");
 	printf ("  -m,        --makinit        \"makinit\" instead of"
 		" \"yippeeyahoo\"\n");
 	printf ("  -c='CODE', --cheat='CODE'   use CODE as the cheat code\n");
@@ -25510,8 +25681,8 @@ void ShowUsage (void)
 	printf ("  -3,        --snes1          edit PoP1 for SNES levels\n");
 	printf ("  -s,        --static         do not display animations\n");
 	printf ("  -k,        --keyboard       do not use a game controller\n");
-	printf ("  -e=TYPE    --exe=TYPE       specify executable type (default:"
-		" autodetect)\n");
+	printf ("  -e=TYPE    --exe=TYPE       specify executable type\n");
+	printf ("                              (default: autodetect)\n");
 	printf ("  -t=ENV     --test=ENV       test PoP1 for SNES tile images"
 		" availability\n\n");
 	printf ("Types:\n");
@@ -26159,7 +26330,7 @@ unsigned long BytesAsLU (unsigned char *sData, int iBytes)
 	return (luReturn);
 }
 /*****************************************************************************/
-void EXELoad (void)
+void EXELoad_F2_1 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -26283,7 +26454,7 @@ void EXELoad (void)
 	close (iFdEXE);
 }
 /*****************************************************************************/
-void EXELoad_F3 (void)
+void EXELoad_F3_1 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -26375,7 +26546,7 @@ void EXELoad_F3 (void)
 	close (iFdEXE);
 }
 /*****************************************************************************/
-void EXELoad_F4 (void)
+void EXELoad_F4_1 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -26426,6 +26597,16 @@ void EXELoad_F4 (void)
 	LSeek (iFdEXE, arDemoEndingRoom[iEXEType]);
 	ReadFromFile (iFdEXE, "", 1, sData);
 	iEXEDemoEndingRoom = BytesAsLU (sData, 1);
+
+	/*** (Demo level) Prince skill. ***/
+	LSeek (iFdEXE, arDemoPrinceSkill[iEXEType]);
+	ReadFromFile (iFdEXE, "", 1, sData);
+	iEXEDemoPrinceSkill = BytesAsLU (sData, 1);
+
+	/*** (Demo level) Guard skill. ***/
+	LSeek (iFdEXE, arDemoGuardSkill[iEXEType]);
+	ReadFromFile (iFdEXE, "", 1, sData);
+	iEXEDemoGuardSkill = BytesAsLU (sData, 1);
 
 	/*** Disable. ***/
 	if (iEXEType == 1)
@@ -26548,13 +26729,19 @@ void EXELoad_F4 (void)
 	close (iFdEXE);
 }
 /*****************************************************************************/
-void EXELoadPoP2 (void)
+void EXELoad_F5_1 (void)
 /*****************************************************************************/
 {
 	/*** Nothing for now. ***/
 }
 /*****************************************************************************/
-void EXELoadSNES (void)
+void EXELoad_F2_2 (void)
+/*****************************************************************************/
+{
+	/*** Nothing for now. ***/
+}
+/*****************************************************************************/
+void EXELoad_F2_3 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -26727,7 +26914,31 @@ void EXELoadSNES (void)
 	close (iFdEXE);
 }
 /*****************************************************************************/
-void EXESave (void)
+void EXELoad_F5_3 (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	unsigned char sData[MAX_DATA + 2];
+
+	iFdEXE = open (sSNESFile, O_RDONLY|O_BINARY);
+
+	/*** Skeleton continue for all. ***/
+	LSeek (iFdEXE, ulSkelCont);
+	ReadFromFile (iFdEXE, "", 11, sData);
+	if ((sData[0] == 0xAD) && (sData[1] == 0x84) && (sData[2] == 0x04) &&
+		(sData[3] == 0xC9) && (sData[4] == 0x01) && (sData[5] == 0xF0) &&
+		(sData[6] == 0x20) && (sData[7] == 0xC9) && (sData[8] == 0x04) &&
+		(sData[9] == 0x80) && (sData[10] == 0x2C))
+	{
+		iEXESkelCont = 1;
+	} else {
+		iEXESkelCont = 0;
+	}
+
+	close (iFdEXE);
+}
+/*****************************************************************************/
+void EXESave_F2_1 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -26906,7 +27117,7 @@ void EXESave (void)
 	PlaySound ("wav/save.wav");
 }
 /*****************************************************************************/
-void EXESave_F3 (void)
+void EXESave_F3_1 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -26992,7 +27203,7 @@ void EXESave_F3 (void)
 	PlaySound ("wav/save.wav");
 }
 /*****************************************************************************/
-void EXESave_F4 (void)
+void EXESave_F4_1 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -27044,6 +27255,16 @@ void EXESave_F4 (void)
 	/*** (Demo level) Ending room. ***/
 	LSeek (iFdEXE, arDemoEndingRoom[iEXEType]);
 	sBytes[0] = iEXEDemoEndingRoom;
+	WriteCharByChar (iFdEXE, sBytes, 1);
+
+	/*** (Demo level) Prince skill. ***/
+	LSeek (iFdEXE, arDemoPrinceSkill[iEXEType]);
+	sBytes[0] = iEXEDemoPrinceSkill;
+	WriteCharByChar (iFdEXE, sBytes, 1);
+
+	/*** (Demo level) Guard skill. ***/
+	LSeek (iFdEXE, arDemoGuardSkill[iEXEType]);
+	sBytes[0] = iEXEDemoGuardSkill;
 	WriteCharByChar (iFdEXE, sBytes, 1);
 
 	/*** Disable. ***/
@@ -27158,7 +27379,7 @@ void EXESave_F4 (void)
 	PlaySound ("wav/save.wav");
 }
 /*****************************************************************************/
-void EXESavePoP2 (void)
+void EXESave_F5_1 (void)
 /*****************************************************************************/
 {
 	/*** Nothing for now. ***/
@@ -27166,7 +27387,15 @@ void EXESavePoP2 (void)
 	PlaySound ("wav/save.wav");
 }
 /*****************************************************************************/
-void EXESaveSNES (void)
+void EXESave_F2_2 (void)
+/*****************************************************************************/
+{
+	/*** Nothing for now. ***/
+
+	PlaySound ("wav/save.wav");
+}
+/*****************************************************************************/
+void EXESave_F2_3 (void)
 /*****************************************************************************/
 {
 	int iFdEXE;
@@ -27219,6 +27448,9 @@ void EXESaveSNES (void)
 	{
 		case 1: sBytes[0] = iEXEMusicSNESValue; break;
 		case 0: sBytes[0] = 255; break;
+		default:
+			printf ("[ WARN ] Invalid iEXEMusicSNESOnOff value: %i!\n",
+				iEXEMusicSNESOnOff); sBytes[0] = 1; break; /*** Fallback. ***/
 	}
 	WriteCharByChar (iFdEXE, sBytes, 1);
 
@@ -27316,6 +27548,33 @@ void EXESaveSNES (void)
 	PlaySound ("wav/save.wav");
 }
 /*****************************************************************************/
+void EXESave_F5_3 (void)
+/*****************************************************************************/
+{
+	int iFdEXE;
+	char sToWrite[MAX_TOWRITE + 2];
+
+	iFdEXE = open (sSNESFile, O_RDWR|O_BINARY);
+
+	/*** Skeleton continue for all. ***/
+	LSeek (iFdEXE, ulSkelCont);
+	switch (iEXESkelCont)
+	{
+		case 0:
+			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c",
+				0xAD, 0x84, 0x04, 0xC9, 0x04, 0xF0, 0x30, 0xC9, 0x01, 0xF0, 0x1C);
+			WriteCharByChar (iFdEXE, (unsigned char *)sToWrite, 11); break;
+		case 1:
+			snprintf (sToWrite, MAX_TOWRITE, "%c%c%c%c%c%c%c%c%c%c%c",
+				0xAD, 0x84, 0x04, 0xC9, 0x01, 0xF0, 0x20, 0xC9, 0x04, 0x80, 0x2C);
+			WriteCharByChar (iFdEXE, (unsigned char *)sToWrite, 11); break;
+	}
+
+	close (iFdEXE);
+
+	PlaySound ("wav/save.wav");
+}
+/*****************************************************************************/
 void EXECheckbox (int iX, int iY17, int *iChange, int iTo)
 /*****************************************************************************/
 {
@@ -27343,9 +27602,9 @@ void EXE (void)
 
 	switch (iEditPoP)
 	{
-		case 1: EXELoad(); break;
-		case 2: EXELoadPoP2(); break;
-		case 3: EXELoadSNES(); break;
+		case 1: EXELoad_F2_1(); break;
+		case 2: EXELoad_F2_2(); break;
+		case 3: EXELoad_F2_3(); break;
 	}
 
 	PlaySound ("wav/popup.wav");
@@ -27374,9 +27633,9 @@ void EXE (void)
 						case SDL_CONTROLLER_BUTTON_A:
 							switch (iEditPoP)
 							{
-								case 1: EXESave(); break;
-								case 2: EXESavePoP2(); break;
-								case 3: EXESaveSNES(); break;
+								case 1: EXESave_F2_1(); break;
+								case 2: EXESave_F2_2(); break;
+								case 3: EXESave_F2_3(); break;
 							}
 							iEXE = 0; break;
 					}
@@ -27392,9 +27651,9 @@ void EXE (void)
 						case SDLK_s:
 							switch (iEditPoP)
 							{
-								case 1: EXESave(); break;
-								case 2: EXESavePoP2(); break;
-								case 3: EXESaveSNES(); break;
+								case 1: EXESave_F2_1(); break;
+								case 2: EXESave_F2_2(); break;
+								case 3: EXESave_F2_3(); break;
 							}
 							iEXE = 0; break;
 						default: break;
@@ -27416,18 +27675,18 @@ void EXE (void)
 							SDL_SetCursor (curArrow);
 						}
 
-						UpdateStatusBar1();
+						UpdateStatusBar_F2_1();
 					}
 					if (iEditPoP == 3)
 					{
-						if (InArea (614, 35, 655, 51) == 1)
+						if (InArea (614, 35, 655, 51) == 1) /*** thread ***/
 						{
 							SDL_SetCursor (curHand);
 						} else {
 							SDL_SetCursor (curArrow);
 						}
 
-						UpdateStatusBar3();
+						UpdateStatusBar_F2_3();
 					}
 					break;
 				case SDL_MOUSEBUTTONDOWN:
@@ -27449,9 +27708,9 @@ void EXE (void)
 						{
 							switch (iEditPoP)
 							{
-								case 1: EXESave(); break;
-								case 2: EXESavePoP2(); break;
-								case 3: EXESaveSNES(); break;
+								case 1: EXESave_F2_1(); break;
+								case 2: EXESave_F2_2(); break;
+								case 3: EXESave_F2_3(); break;
 							}
 							iEXE = 0;
 						}
@@ -27867,7 +28126,7 @@ void EXE (void)
 							/*** thread ***/
 							if (InArea (614, 35, 655, 51) == 1)
 							{
-								OpenURL ("https://forum.princed.org/viewtopic.php?t=3099");
+								OpenURL (URL_THREAD);
 							}
 
 							/*** strike prob. ***/
@@ -27939,14 +28198,14 @@ void EXE (void)
 								PlusMinus (&iEXEMusicSNESValue, 304, 76, 0, 255, +1, 0);
 								PlusMinus (&iEXEMusicSNESValue, 319, 76, 0, 255, +10, 0);
 								if (iEXEMusicSNESValue != iEXEMusicSNESValueOld)
-									{ UpdateStatusBar3(); }
+									{ UpdateStatusBar_F2_3(); }
 							}
 							if (InArea (196, 79, 210, 93) == 1) /*** on ***/
 							{
 								if (iEXEMusicSNESOnOff != 1)
 								{
 									iEXEMusicSNESOnOff = 1;
-									UpdateStatusBar3();
+									UpdateStatusBar_F2_3();
 									PlaySound ("wav/check_box.wav");
 								}
 							}
@@ -27955,7 +28214,7 @@ void EXE (void)
 								if (iEXEMusicSNESOnOff != 0)
 								{
 									iEXEMusicSNESOnOff = 0;
-									UpdateStatusBar3();
+									UpdateStatusBar_F2_3();
 									PlaySound ("wav/check_box.wav");
 								}
 							}
@@ -28547,7 +28806,7 @@ void EXE_F3 (void)
 	iStatusBarFrame = 1;
 	snprintf (sStatus, MAX_STATUS, "%s", "");
 
-	EXELoad_F3();
+	EXELoad_F3_1();
 
 	PlaySound ("wav/popup.wav");
 	ShowEXE_F3();
@@ -28573,7 +28832,7 @@ void EXE_F3 (void)
 					switch (event.cbutton.button)
 					{
 						case SDL_CONTROLLER_BUTTON_A:
-							EXESave_F3();
+							EXESave_F3_1();
 							iEXE = 0; break;
 					}
 					break;
@@ -28586,7 +28845,7 @@ void EXE_F3 (void)
 						case SDLK_RETURN:
 						case SDLK_SPACE:
 						case SDLK_s:
-							EXESave_F3();
+							EXESave_F3_1();
 							iEXE = 0; break;
 						default: break;
 					}
@@ -28600,7 +28859,7 @@ void EXE_F3 (void)
 					} else {
 						SDL_SetCursor (curArrow);
 					}
-					UpdateStatusBar1_F3();
+					UpdateStatusBar_F3_1();
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == 1)
@@ -28619,7 +28878,7 @@ void EXE_F3 (void)
 						/*** Save ***/
 						if (InArea (590, 405, 674, 436) == 1)
 						{
-							EXESave_F3(); iEXE = 0;
+							EXESave_F3_1(); iEXE = 0;
 						}
 
 						/*** CusPop ***/
@@ -29385,7 +29644,7 @@ void EXE_F4 (void)
 	iStatusBarFrame = 1;
 	snprintf (sStatus, MAX_STATUS, "%s", "");
 
-	EXELoad_F4();
+	EXELoad_F4_1();
 
 	PlaySound ("wav/popup.wav");
 	ShowEXE_F4();
@@ -29411,7 +29670,7 @@ void EXE_F4 (void)
 					switch (event.cbutton.button)
 					{
 						case SDL_CONTROLLER_BUTTON_A:
-							EXESave_F4();
+							EXESave_F4_1();
 							iEXE = 0; break;
 					}
 					break;
@@ -29424,7 +29683,7 @@ void EXE_F4 (void)
 						case SDLK_RETURN:
 						case SDLK_SPACE:
 						case SDLK_s:
-							EXESave_F4();
+							EXESave_F4_1();
 							iEXE = 0; break;
 						default: break;
 					}
@@ -29438,7 +29697,7 @@ void EXE_F4 (void)
 					} else {
 						SDL_SetCursor (curArrow);
 					}
-					UpdateStatusBar1_F4();
+					UpdateStatusBar_F4_1();
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == 1)
@@ -29457,7 +29716,7 @@ void EXE_F4 (void)
 						/*** Save ***/
 						if (InArea (590, 405, 674, 436) == 1)
 						{
-							EXESave_F4(); iEXE = 0;
+							EXESave_F4_1(); iEXE = 0;
 						}
 
 						/*** CusPop ***/
@@ -29485,6 +29744,18 @@ void EXE_F4 (void)
 						PlusMinus (&iEXEDemoEndingRoom, 234, 148, 1, 24, -1, 0);
 						PlusMinus (&iEXEDemoEndingRoom, 304, 148, 1, 24, +1, 0);
 						PlusMinus (&iEXEDemoEndingRoom, 319, 148, 1, 24, +10, 0);
+
+						/*** (Demo level) Prince skill. ***/
+						PlusMinus (&iEXEDemoPrinceSkill, 546, 124, 0, 11, -10, 0);
+						PlusMinus (&iEXEDemoPrinceSkill, 561, 124, 0, 11, -1, 0);
+						PlusMinus (&iEXEDemoPrinceSkill, 631, 124, 0, 11, +1, 0);
+						PlusMinus (&iEXEDemoPrinceSkill, 646, 124, 0, 11, +10, 0);
+
+						/*** (Demo level) Guard skill. ***/
+						PlusMinus (&iEXEDemoGuardSkill, 546, 148, 0, 11, -10, 0);
+						PlusMinus (&iEXEDemoGuardSkill, 561, 148, 0, 11, -1, 0);
+						PlusMinus (&iEXEDemoGuardSkill, 631, 148, 0, 11, +1, 0);
+						PlusMinus (&iEXEDemoGuardSkill, 646, 148, 0, 11, +10, 0);
 
 						/*** Disable. ***/
 						if (iEXEType == 1)
@@ -29659,6 +29930,14 @@ void ShowEXE_F4 (void)
 	if (iEXEDemoEndingRoom == 24) { clr = color_bl; } else { clr = color_blue; }
 	CenterNumber (ascreen, iEXEDemoEndingRoom, 247, 148, clr, color_wh, 0);
 
+	/*** (Demo level) Prince skill. ***/
+	if (iEXEDemoPrinceSkill == 10) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEDemoPrinceSkill, 574, 124, clr, color_wh, 0);
+
+	/*** (Demo level) Guard skill. ***/
+	if (iEXEDemoGuardSkill == 11) { clr = color_bl; } else { clr = color_blue; }
+	CenterNumber (ascreen, iEXEDemoGuardSkill, 574, 148, clr, color_wh, 0);
+
 	/*** Disable. ***/
 	if (iEXEType == 1)
 	{
@@ -29737,6 +30016,223 @@ void ShowEXE_F4 (void)
 			case 1: /*** Y ***/
 				ShowImageBasic (imgchkb, 276, 327, "imgchkb", ascreen, iScale, 1);
 				ShowImageBasic (imgsrs, 276, 327, "imgsrs", ascreen, iScale, 1);
+				break;
+		}
+	}
+
+	/*** refresh screen ***/
+	SDL_RenderPresent (ascreen);
+}
+/*****************************************************************************/
+void EXE_F5 (void)
+/*****************************************************************************/
+{
+	int iEXE;
+	SDL_Event event;
+
+	iEXE = 1;
+	iStatusBarFrame = 1;
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+
+	switch (iEditPoP)
+	{
+		case 1: EXELoad_F5_1(); break;
+		case 3: EXELoad_F5_3(); break;
+	}
+
+	PlaySound ("wav/popup.wav");
+	ShowEXE_F5();
+	while (iEXE == 1)
+	{
+		if (iNoAnim == 0)
+		{
+			/*** We use the global REFRESH. No need for newticks/oldticks. ***/
+			iStatusBarFrame++;
+			if (iStatusBarFrame == 19) { iStatusBarFrame = 1; }
+			ShowEXE_F5();
+		}
+
+		while (SDL_PollEvent (&event))
+		{
+			if (MapEvents (event) == 0)
+			switch (event.type)
+			{
+				case SDL_CONTROLLERBUTTONDOWN:
+					/*** Nothing for now. ***/
+					break;
+				case SDL_CONTROLLERBUTTONUP:
+					switch (event.cbutton.button)
+					{
+						case SDL_CONTROLLER_BUTTON_A:
+							switch (iEditPoP)
+							{
+								case 1: EXESave_F5_1(); break;
+								case 3: EXESave_F5_3(); break;
+							}
+							iEXE = 0; break;
+					}
+					break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							iEXE = 0; break;
+						case SDLK_KP_ENTER:
+						case SDLK_RETURN:
+						case SDLK_SPACE:
+						case SDLK_s:
+							switch (iEditPoP)
+							{
+								case 1: EXESave_F5_1(); break;
+								case 3: EXESave_F5_3(); break;
+							}
+							iEXE = 0; break;
+						default: break;
+					}
+					break;
+				case SDL_MOUSEMOTION:
+					iXPos = event.motion.x;
+					iYPos = event.motion.y;
+					if (iEditPoP == 1)
+					{
+						if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
+						{
+							SDL_SetCursor (curHand);
+						} else {
+							SDL_SetCursor (curArrow);
+						}
+
+						UpdateStatusBar_F5_1();
+					}
+					if (iEditPoP == 3)
+					{
+						if (InArea (614, 35, 655, 51) == 1) /*** thread ***/
+						{
+							SDL_SetCursor (curHand);
+						} else {
+							SDL_SetCursor (curArrow);
+						}
+
+						UpdateStatusBar_F5_3();
+					}
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == 1)
+					{
+						if (InArea (590, 405, 674, 436) == 1) /*** Save ***/
+						{
+							if (iEXESave != 1) { iEXESave = 1; }
+							ShowEXE_F5();
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					iEXESave = 0;
+					if (event.button.button == 1) /*** left mouse button ***/
+					{
+						/*** Save ***/
+						if (InArea (590, 405, 674, 436) == 1)
+						{
+							switch (iEditPoP)
+							{
+								case 1: EXESave_F5_1(); break;
+								case 3: EXESave_F5_3(); break;
+							}
+							iEXE = 0;
+						}
+
+						if (iEditPoP == 1)
+						{
+							/*** CusPop ***/
+							if (InArea (608, 35, 656, 51) == 1)
+							{
+								OpenURL (URL_CUSPOP);
+							}
+						}
+
+						if (iEditPoP == 3)
+						{
+							/*** thread ***/
+							if (InArea (614, 35, 655, 51) == 1)
+							{
+								OpenURL (URL_THREAD);
+							}
+
+							/*** Skeleton continue for all. ***/
+							if ((InArea (261, 77, 261 + 14, 77 + 14) == 1) && /*** N ***/
+								(iEXESkelCont != 0))
+								{ iEXESkelCont = 0; PlaySound ("wav/check_box.wav"); }
+							if ((InArea (276, 77, 276 + 14, 77 + 14) == 1) && /*** Y ***/
+								(iEXESkelCont != 1))
+								{ iEXESkelCont = 1; PlaySound ("wav/check_box.wav"); }
+						}
+					}
+					ShowEXE_F5(); break;
+				case SDL_WINDOWEVENT:
+					switch (event.window.event)
+					{
+						case SDL_WINDOWEVENT_EXPOSED:
+							ShowEXE_F5(); break;
+						case SDL_WINDOWEVENT_CLOSE:
+							Quit(); break;
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+							iActiveWindowID = iWindowID; break;
+					}
+					break;
+				case SDL_QUIT:
+					Quit(); break;
+			}
+		}
+		PreventCPUEating();
+	}
+	PlaySound ("wav/popup_close.wav");
+	SDL_SetCursor (curArrow);
+	ShowScreen (iScreen, ascreen);
+}
+/*****************************************************************************/
+void ShowEXE_F5 (void)
+/*****************************************************************************/
+{
+	char arText[9 + 2][MAX_TEXT + 2];
+
+	/*** exe ***/
+	ShowImageBasic (imgexef5, 0, 0, "imgexef5", ascreen, iScale, 1);
+
+	/*** status bar ***/
+	if (strcmp (sStatus, "") != 0)
+	{
+		/*** bulb ***/
+		ShowImage (-9, (int[]){25, 0, 0, 0}, ascreen, 209, 0, 0, 20, 20);
+		/*** text ***/
+		DisplayTextLine (50, 415, sStatus, font2, color_bl, color_f4, 0);
+	}
+
+	/*** save ***/
+	switch (iEXESave)
+	{
+		case 0:
+			/*** Save off ***/
+			ShowImage (-9, (int[]){12, 0, 0, 0}, ascreen, 43, 0, 0, 85, 32); break;
+		case 1:
+			/*** Save on ***/
+			ShowImage (-9, (int[]){13, 0, 0, 0}, ascreen, 43, 0, 0, 85, 32); break;
+	}
+
+	/*** type text ***/
+	snprintf (arText[0], MAX_TEXT, "Executable type is: %s (%i)",
+		sEXEType, iEXEType);
+	DisplayText (33, 32, FONT_SIZE_15, arText, 1, font1);
+
+	if (iEditPoP == 3)
+	{
+		switch (iEXESkelCont)
+		{
+			case 0: /*** N ***/
+				ShowImageBasic (imgchkb, 261, 77, "imgchkb", ascreen, iScale, 1);
+				break;
+			case 1: /*** Y ***/
+				ShowImageBasic (imgchkb, 276, 77, "imgchkb", ascreen, iScale, 1);
+				ShowImageBasic (imgsrs, 276, 77, "imgsrs", ascreen, iScale, 1);
 				break;
 		}
 	}
@@ -30496,7 +30992,7 @@ void LoadLevel (int iLevel)
 		if ((strcmp (sEXEType, "missing") != 0) &&
 			(strcmp (sEXEType, "unknown") != 0))
 		{
-			EXELoad();
+			EXELoad_F2_1();
 			switch (iEXEEnv[iLevel])
 			{
 				case 0: cCurType = 'd'; break;
@@ -30608,7 +31104,7 @@ void LoadLevel (int iLevel)
 		}
 	} else {
 		/*** Set cCurType. ***/
-		EXELoadSNES();
+		EXELoad_F2_3();
 		EnvNrAsName (iEXEEnvL[iLevel], sLevelName);
 		cCurType = sLevelName[0];
 
@@ -31649,7 +32145,7 @@ void PoP1OrPoP2 (void)
 void ShowPoP1OrPoP2 (SDL_Renderer *screen)
 /*****************************************************************************/
 {
-	char arText[2 + 2][MAX_TEXT + 2];
+	char arText[9 + 2][MAX_TEXT + 2];
 
 	/*** background ***/
 	ShowImage (-13, (int[]){1, 0, 0, 0}, screen, 31, 0, 0, 692, 455);
@@ -31726,7 +32222,7 @@ void ShowPoP1OrPoP2 (SDL_Renderer *screen)
 			ShowImageBasic (imgupgrade, 188, 394, "imgupgrade", screen, iScale, 1);
 			snprintf (arText[0], MAX_TEXT, "Version %s of %s is",
 				sLatest, EDITOR_NAME);
-			snprintf (arText[1], MAX_TEXT, "%s", "now available at Apoplexy.org.");
+			snprintf (arText[1], MAX_TEXT, "%s", "now available at GitHub.");
 			DisplayText (296, 405, FONT_SIZE_11, arText, 2, font2);
 		} else {
 			/*** controller ***/
@@ -32561,9 +33057,10 @@ void PoP1Basics (void)
 			stat (POP1_EXECUTABLE, &stStatus);
 			switch ((int)stStatus.st_size)
 			{
-				case 123335:
-				case 125115:
-				case 110855:
+				case 123335: /*** p0 ***/
+				case 122135: /*** p1 ***/
+				case 125115: /*** p3 ***/
+				case 110855: /*** p4 ***/
 					iFd = open ("upack.bat", O_WRONLY|O_TRUNC|O_CREAT|O_BINARY, 0600);
 					snprintf (sToWrite, MAX_TOWRITE,
 						"copy upack\\UPACKEXE.* prince\\\n");
@@ -32597,6 +33094,10 @@ void PoP1Basics (void)
 				case 129504:
 					snprintf (sEXEType, MAX_EXETYPE, "%s", "u0");
 					iEXEType = 1; iEXEPacked = 0; break;
+				case 122135: /*** p1 ***/
+				case 126304: /*** u1 ***/
+					printf ("[ WARN ] This editor does not support PRINCE.EXE 1.1.\n");
+					snprintf (sEXEType, MAX_EXETYPE, "%s", "unknown"); break;
 				case 125115:
 					snprintf (sEXEType, MAX_EXETYPE, "%s", "p3");
 					iEXEType = 2; iEXEPacked = 1; break;
@@ -32644,6 +33145,29 @@ void PoP1Basics (void)
 			}
 		} else {
 			printf ("[ WARN ] Packed executable. Some resources may be disabled!\n");
+		}
+	}
+
+	/*** Custom cheat code? ***/
+	if (iUserCode == 0)
+	{
+		if ((strcmp (sEXEType, "missing") != 0) &&
+			(strcmp (sEXEType, "unknown") != 0))
+		{
+			int iCheatCode;
+			static const unsigned long arCheatCode[6] =
+				{ 0X1AACA, 0X1C60D, 0X1B85F, 0X1C462, 0X17C05, 0X18DE0 };
+			if ((iEXEType == 0) || (iEXEType == 1))
+				{ iCheatCode = 7; } else { iCheatCode = 8; }
+			iFdEXE = open (POP1_EXECUTABLE, O_RDONLY|O_BINARY);
+			LSeek (iFdEXE, arCheatCode[iEXEType]);
+			ReadFromFile (iFdEXE, "", iCheatCode, sData);
+			if (strcmp ((char *)sData, sCheat1) != 0)
+			{
+				printf ("[ INFO ] Using custom cheat code: %s\n", sData);
+				snprintf (sCheat1, MAX_OPTION, "%s", sData);
+			}
+			close (iFdEXE);
 		}
 	}
 
@@ -34556,6 +35080,143 @@ void UpdateTileAboveMe (int iRoom, int iLocation)
 	}
 }
 /*****************************************************************************/
+int GetTileNr (int iTileC, int iMod1)
+/*****************************************************************************/
+{
+	/* For native tiles, this function returns 10000+.
+	 * If this function returns 25 or 50, you may want to set iChangeEvent
+	 * to iMod1.
+	 */
+
+	int iTile;
+
+	iTile = iTileC;
+	if (iTile >= 32) { iTile-=32; }
+
+	/*** first row ***/
+	if ((iTile == 0) && (iMod1 == 0)) { return (1); }
+	if ((iTile == 0) && (iMod1 == 1)) { return (2); }
+	if ((iTile == 0) && (iMod1 == 2)) { return (3); }
+	if ((iTile == 0) && (iMod1 == 3)) { return (4); }
+	if ((iTile == 0) && (iMod1 == 255)) { return (5); }
+	if ((iTile == 1) && (iMod1 == 0)) { return (6); }
+	if ((iTile == 1) && (iMod1 == 1)) { return (7); }
+	if ((iTile == 1) && (iMod1 == 2)) { return (8); }
+	if ((iTile == 1) && (iMod1 == 3)) { return (9); }
+	if ((iTile == 1) && (iMod1 == 255)) { return (10); }
+	if ((iTile == 2) && (iMod1 == 0)) { return (11); }
+	if ((iTile == 2) && (iMod1 == 1)) { return (12); }
+	if ((iTile == 2) && (iMod1 == 2)) { return (13); }
+
+	/*** second row ***/
+	if ((iTile == 2) && (iMod1 == 3)) { return (14); }
+	if ((iTile == 2) && (iMod1 == 4)) { return (15); }
+	if ((iTile == 2) && (iMod1 == 5)) { return (16); }
+	if ((iTile == 2) && (iMod1 == 6)) { return (17); }
+	if ((iTile == 2) && (iMod1 == 7)) { return (18); }
+	if ((iTile == 2) && (iMod1 == 8)) { return (19); }
+	if ((iTile == 2) && (iMod1 == 9)) { return (20); }
+	if ((iTile == 3) && (iMod1 == 0)) { return (21); }
+	/*** Closed gate per the docs (mod 0) and game (mod 2). ***/
+	if ((iTile == 4) && ((iMod1 == 0) || (iMod1 == 2))) { return (22); }
+	if ((iTile == 4) && (iMod1 == 1)) { return (23); }
+	if ((iTile == 5) && (iMod1 == 0)) { return (24); }
+	if (iTile == 6) { return (25); } /*** Drop button. ***/
+	if ((iTile == 7) && (iMod1 == 0)) { return (26); }
+
+	/*** third row ***/
+	if ((iTile == 7) && (iMod1 == 1)) { return (27); }
+	if ((iTile == 7) && (iMod1 == 2)) { return (28); }
+	if ((iTile == 7) && (iMod1 == 3)) { return (29); }
+	if ((iTile == 8) && (iMod1 == 0)) { return (30); }
+	if ((iTile == 9) && (iMod1 == 0)) { return (31); }
+	if ((iTile == 10) && (iMod1 == 0)) { return (32); }
+	if ((iTile == 10) && (iMod1 == 1)) { return (33); }
+	if ((iTile == 10) && (iMod1 == 2)) { return (34); }
+	if ((iTile == 10) && (iMod1 == 3)) { return (35); }
+	if ((iTile == 10) && (iMod1 == 4)) { return (36); }
+	if ((iTile == 10) && (iMod1 == 5)) { return (37); }
+	if ((iTile == 10) && (iMod1 == 6)) { return (38); }
+	/*** Check against iTileC for the loose floor. ***/
+	if ((iTileC == 11) && (iMod1 == 0)) { return (39); }
+
+	/*** fourth row ***/
+	if ((iTile == 12) && (iMod1 == 0)) { return (40); }
+	if ((iTile == 12) && (iMod1 == 1)) { return (41); }
+	if ((iTile == 12) && (iMod1 == 2)) { return (42); }
+	if ((iTile == 12) && (iMod1 == 3)) { return (43); }
+	if ((iTile == 12) && (iMod1 == 4)) { return (44); }
+	if ((iTile == 12) && (iMod1 == 5)) { return (45); }
+	if ((iTile == 12) && (iMod1 == 6)) { return (46); }
+	if ((iTile == 12) && (iMod1 == 7)) { return (47); }
+	if ((iTile == 13) && (iMod1 == 0)) { return (48); }
+	if ((iTile == 14) && (iMod1 == 0)) { return (49); }
+	if (iTile == 15) { return (50); } /*** Raise button. ***/
+	if ((iTile == 16) && (iMod1 == 0)) { return (51); }
+	if ((iTile == 17) && (iMod1 == 0)) { return (52); }
+
+	/*** fifth row ***/
+	if ((iTile == 18) && (iMod1 == 0)) { return (53); }
+	if ((iTile == 18) && (iMod1 == 1)) { return (54); }
+	if ((iTile == 18) && (iMod1 == 2)) { return (55); }
+	if ((iTile == 18) && (iMod1 == 3)) { return (56); }
+	if ((iTile == 18) && (iMod1 == 4)) { return (57); }
+	if ((iTile == 18) && (iMod1 == 5)) { return (58); }
+	if ((iTile == 19) && (iMod1 == 0)) { return (59); }
+	if ((iTile == 20) && (iMod1 == 0)) { return (60); }
+	if ((iTile == 20) && (iMod1 == 1)) { return (61); }
+	if ((iTile == 21) && (iMod1 == 0)) { return (62); }
+	if ((iTile == 22) && (iMod1 == 0)) { return (63); }
+	if ((iTile == 23) && (iMod1 == 0)) { return (64); }
+	if ((iTile == 24) && (iMod1 == 0)) { return (65); }
+
+	/*** sixth row ***/
+	if ((iTile == 25) && (iMod1 == 0)) { return (66); }
+	if ((iTile == 26) && (iMod1 == 0)) { return (67); }
+	if ((iTile == 27) && (iMod1 == 0)) { return (68); }
+	if ((iTile == 28) && (iMod1 == 0)) { return (69); }
+	if ((iTile == 29) && (iMod1 == 0)) { return (70); }
+	if ((iTile == 30) && (iMod1 == 0)) { return (71); }
+	/*** Check against iTileC for the stuck loose floor. ***/
+	if ((iTileC == 43) && (iMod1 == 0)) { return (72); }
+
+	/*** native, tab 01/12 ***/
+	if ((iTile == 0) && (iMod1 == 12)) { return (10101); }
+	if ((iTile == 0) && (iMod1 == 4)) { return (10102); }
+	if ((iTile == 0) && (iMod1 == 13)) { return (10103); }
+	if ((iTile == 0) && (iMod1 == 5)) { return (10104); }
+	if ((iTile == 1) && (iMod1 == 6)) { return (10105); }
+	if ((iTile == 1) && (iMod1 == 14)) { return (10106); }
+	if ((iTile == 1) && (iMod1 == 13)) { return (10107); }
+	if ((iTile == 1) && (iMod1 == 5)) { return (10108); }
+	if ((iTile == 20) && (iMod1 == 6)) { return (10109); }
+	if ((iTile == 20) && (iMod1 == 14)) { return (10110); }
+	if ((iTile == 20) && (iMod1 == 12)) { return (10111); }
+	if ((iTile == 20) && (iMod1 == 4)) { return (10112); }
+	/***/
+	/* The following tiles aren't actually shown on the tab.
+	 * But they do exist, e.g. could have been added manually as custom tiles.
+	 */
+	if ((iTile == 0) && (iMod1 == 50)) { return (10141); }
+	if ((iTile == 0) && (iMod1 == 51)) { return (10142); }
+	if ((iTile == 0) && (iMod1 == 52)) { return (10143); }
+	if ((iTile == 0) && (iMod1 == 53)) { return (10144); }
+	if ((iTile == 1) && (iMod1 == 50)) { return (10145); }
+	if ((iTile == 1) && (iMod1 == 51)) { return (10146); }
+	if ((iTile == 1) && (iMod1 == 52)) { return (10147); }
+	if ((iTile == 1) && (iMod1 == 53)) { return (10148); }
+
+	/*** native, tab 02/12 ***/
+	if ((iTile == 19) && ((iMod1 >= 1) && (iMod1 <= 63))) { return (10201); }
+	if ((iTile == 30) && ((iMod1 >= 1) && (iMod1 <= 63))) { return (10202); }
+
+	/*** native, tab 03/12 ***/
+	if ((iTile == 23) && (iMod1 != 0)) { return (10301); }
+	if ((iTile == 24) && (iMod1 == 1)) { return (10302); }
+
+	return (0);
+}
+/*****************************************************************************/
 int GetTileNrSNES (int iB1, int iB2, int iB3, int iB4, int iMod1)
 /*****************************************************************************/
 {
@@ -34678,6 +35339,88 @@ int GetTileNrSNES (int iB1, int iB2, int iB3, int iB4, int iMod1)
 	}
 
 	return (iRet);
+}
+/*****************************************************************************/
+int GetTileNrSNESApprox (int iB3, int iB4, int iMod1)
+/*****************************************************************************/
+{
+	int iThing;
+
+	switch (iB3)
+	{
+		case 0x00: /*** no object ***/
+			switch (iB4)
+			{
+				case 0x00: iThing = 1; break; /*** space ***/
+				case 0x01: iThing = 2; break; /*** floor ***/
+				case 0x02: iThing = 3; break; /*** wall ***/
+			}
+			break;
+		/*** 0x01 = unused ***/
+		case 0x02: iThing = 5; break; /*** loose (mod 1=hl) ***/
+		/*** 0x03 = unused ***/
+		case 0x04: iThing = 14; break; /*** raise ***/
+		case 0x05: iThing = 15; break; /*** drop ***/
+		case 0x06: /*** gate ***/
+			switch (iMod1)
+			{
+				case 0x00: iThing = 16; break; /*** closed ***/
+				case 0xff: iThing = 18; break; /*** open ***/
+				default: iThing = 17; break; /*** % ***/
+			}
+			break;
+		case 0x07: iThing = 22; break; /*** level door end (single) ***/
+		case 0x08: iThing = 35; break; /*** mirror ***/
+		case 0x09: iThing = 38; break; /*** skeleton ***/
+		case 0x0a: iThing = 26; break; /*** sword ***/
+		case 0x0b: case 0x1d: case 0x21: case 0x22:
+			switch (iB4)
+			{
+				case 0x00: iThing = 48; break; /*** space ***/
+				case 0x01: iThing = 47; break; /*** floor ***/
+			}
+			break;
+		case 0x0c: iThing = 27; break; /*** chomper (mod 2=hf, 5=hl) ***/
+		case 0x0d: iThing = 29; break; /*** guillotine (mod 1=hl, 2=hf) ***/
+		case 0x0e: iThing = 28; break; /*** spike (mod 4=hf, 9=hl) ***/
+		/*** 0x0f = unused ***/
+		case 0x10: iThing = 30; break; /*** crusher (mod 1=hl, 3=hf) ***/
+		/*** 0x11 = unused ***/
+		case 0x12: iThing = 40; break; /*** heal potion ***/
+		case 0x13: iThing = 41; break; /*** life potion ***/
+		case 0x14: iThing = 42; break; /*** hurt potion ***/
+		case 0x15: iThing = 43; break; /*** flip potion ***/
+		case 0x16: iThing = 44; break; /*** float potion ***/
+		case 0x17: iThing = 6; break; /*** debris ***/
+		case 0x18: iThing = 19; break; /*** gate top ***/
+		case 0x19: iThing = 32; break; /*** fire ***/
+		case 0x1a: iThing = 45; break; /*** warp potion ***/
+		case 0x1b: /*** down only ***/
+			switch (iB4)
+			{
+				/*** Assumption: tile looks like a floor. ***/
+				case 0x00: iThing = 8; break; /*** space ***/
+			}
+			break;
+		case 0x1c: iThing = 46; break; /*** kill potion ***/
+		/*** 0x1d: see case 0x0b ***/
+		case 0x1e: iThing = 33; break; /*** spinning log (mod 1=hl, 3=hf) ***/
+		/*** 0x1f = unused ***/
+		case 0x20: iThing = 34; break; /*** stars ***/
+		/*** 0x21: see case 0x0b ***/
+		/*** 0x22: see case 0x0b ***/
+		case 0x23: iThing = 24; break; /*** teleport ***/
+		case 0x24: iThing = 20; break; /*** level door begin (single) ***/
+		/*** 0x25 = unused ***/
+		/*** 0x26 = unused ***/
+		case 0x27: iThing = 31; break; /*** lava ***/
+		case 0x28: iThing = 39; break; /*** skeleton continue ***/
+		/*** 0x29 = ? ***/
+		case 0x2a: iThing = 37; break; /*** >>> ***/
+		case 0x2b: iThing = 36; break; /*** <<< ***/
+	}
+
+	return (iThing);
 }
 /*****************************************************************************/
 int CompressedLevelSize (int iFd, int iLevel)
@@ -35195,7 +35938,7 @@ just one background?).
 	}
 }
 /*****************************************************************************/
-void UpdateStatusBar1 (void)
+void UpdateStatusBar_F2_1 (void)
 /*****************************************************************************/
 {
 	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
@@ -35290,7 +36033,7 @@ void UpdateStatusBar1 (void)
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE(); }
 }
 /*****************************************************************************/
-void UpdateStatusBar1_F3 (void)
+void UpdateStatusBar_F3_1 (void)
 /*****************************************************************************/
 {
 	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
@@ -35326,7 +36069,7 @@ void UpdateStatusBar1_F3 (void)
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F3(); }
 }
 /*****************************************************************************/
-void UpdateStatusBar1_F4 (void)
+void UpdateStatusBar_F4_1 (void)
 /*****************************************************************************/
 {
 	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
@@ -35343,7 +36086,19 @@ void UpdateStatusBar1_F4 (void)
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F4(); }
 }
 /*****************************************************************************/
-void UpdateStatusBar3 (void)
+void UpdateStatusBar_F5_1 (void)
+/*****************************************************************************/
+{
+	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+	if (InArea (608, 35, 656, 51) == 1) /*** CusPop ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s", URL_CUSPOP);
+	}
+	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F5(); }
+}
+/*****************************************************************************/
+void UpdateStatusBar_F2_3 (void)
 /*****************************************************************************/
 {
 	int iMusicSwitch;
@@ -35404,8 +36159,7 @@ void UpdateStatusBar3 (void)
 	}
 	if (InArea (614, 35, 655, 51) == 1) /*** thread ***/
 	{
-		snprintf (sStatus, MAX_STATUS, "%s",
-			"https://forum.princed.org/viewtopic.php?t=3099");
+		snprintf (sStatus, MAX_STATUS, "%s", URL_THREAD);
 	}
 	if (InArea (102, 246, 332, 262) == 1) /*** sword ***/
 	{
@@ -35441,7 +36195,7 @@ void UpdateStatusBar3 (void)
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE(); }
 }
 /*****************************************************************************/
-void UpdateStatusBar3T (void)
+void UpdateStatusBar_F3_3 (void)
 /*****************************************************************************/
 {
 	int iTextX, iTextY;
@@ -35500,7 +36254,19 @@ void UpdateStatusBar3T (void)
 	if (strcmp (sStatus, sStatusOld) != 0) { ShowText(); }
 }
 /*****************************************************************************/
-void UpdateStatusBar_F12 (void)
+void UpdateStatusBar_F5_3 (void)
+/*****************************************************************************/
+{
+	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
+	snprintf (sStatus, MAX_STATUS, "%s", "");
+	if (InArea (614, 35, 655, 51) == 1) /*** thread ***/
+	{
+		snprintf (sStatus, MAX_STATUS, "%s", URL_THREAD);
+	}
+	if (strcmp (sStatus, sStatusOld) != 0) { ShowEXE_F5(); }
+}
+/*****************************************************************************/
+void UpdateStatusBar_F12_All (void)
 /*****************************************************************************/
 {
 	snprintf (sStatusOld, MAX_STATUS, "%s", sStatus);
@@ -36461,6 +37227,7 @@ int MapEvents (SDL_Event event)
 /*****************************************************************************/
 {
 	int iIsMapEvent;
+	const Uint8 *keystate;
 
 	iIsMapEvent = 0;
 
@@ -36494,6 +37261,13 @@ int MapEvents (SDL_Event event)
 			if (event.key.windowID == iWindowMapID)
 			{
 				MapKeyDown (event);
+				iIsMapEvent = 1;
+			}
+			break;
+		case SDL_KEYUP:
+			if (event.key.windowID == iWindowMapID)
+			{
+				MapKeyUp (event);
 				iIsMapEvent = 1;
 			}
 			break;
@@ -36531,11 +37305,14 @@ int MapEvents (SDL_Event event)
 				switch (event.window.event)
 				{
 					case SDL_WINDOWEVENT_EXPOSED:
-						if (iEditPoP == 1) { ShowMap(); } break;
+						if (iEditPoP != 2) { ShowMap(); } break;
 					case SDL_WINDOWEVENT_CLOSE:
 						MapHide(); break;
 					case SDL_WINDOWEVENT_FOCUS_GAINED:
-						iActiveWindowID = iWindowMapID; break;
+						iActiveWindowID = iWindowMapID;
+						keystate = SDL_GetKeyboardState (NULL);
+						if (keystate[SDL_SCANCODE_TAB]) { iIgnoreTab = 1; }
+						break;
 				}
 				iIsMapEvent = 1;
 			}
@@ -36596,6 +37373,7 @@ void MapButtonDown (SDL_Event event)
 /*****************************************************************************/
 {
 	float fLowest;
+	int iTileNr;
 
 	if (event.button.button == 1)
 	{
@@ -36639,17 +37417,38 @@ void MapButtonDown (SDL_Event event)
 				iDownAtMap = 9;
 			}
 		}
-		if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
-			33 + MAP_BIG_AREA_H) == 1) /*** big area ***/
+		if (iMapEditPanel == 0)
 		{
-			/*** Start map movement. ***/
-			if (iMovingMap == 0)
+			if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
+				33 + MAP_BIG_AREA_H) == 1) /*** big area ***/
 			{
-				iXPosMapMoveStart = iXPosMap;
-				iYPosMapMoveStart = iYPosMap;
-				iMovingMap = 1;
+				/*** Start map movement. ***/
+				if (iMovingMap == 0)
+				{
+					iXPosMapMoveStart = iXPosMap;
+					iYPosMapMoveStart = iYPosMap;
+					iMovingMap = 1;
 
-				iMapMoved = 0;
+					iMapMoved = 0;
+				}
+			}
+		} else {
+			if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
+				33 + 477) == 1) /*** big area ABOVE PANEL ***/
+			{
+				if (iEditPoP == 1)
+				{
+					iDrawingOnMap = 1;
+					/***/
+					iTileNr = GetTileNr (iThingA[iMapHoverRoom][iMapHoverTile - 1],
+						iModifierA[iMapHoverRoom][iMapHoverTile - 1][1]);
+					if (iTileNr != iMapSelTile)
+					{
+						UseTile (iMapSelTile, iMapHoverTile, iMapHoverRoom, 0);
+						PlaySound ("wav/ok_close.wav");
+						iChanged++;
+					}
+				}
 			}
 		}
 	}
@@ -36660,6 +37459,9 @@ void MapButtonUp (SDL_Event event)
 /*****************************************************************************/
 {
 	iDownAtMap = 0;
+
+	/*** Used for looping. ***/
+	int iLoopTile;
 
 	/*** Stop map movement. ***/
 	if (iMovingMap == 1)
@@ -36707,14 +37509,26 @@ void MapButtonUp (SDL_Event event)
 			{ MapAction ("down"); }
 		if (InAreaMap (393, 809, 393 + 32, 809 + 32) == 1) /*** arrow right ***/
 			{ MapAction ("right"); }
-		if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
-			33 + MAP_BIG_AREA_H) == 1) /*** big area ***/
+		if (iMapEditPanel == 0)
 		{
-			if ((iMapHoverRoom != 0) && (iMapMoved == 0))
+			if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
+				33 + MAP_BIG_AREA_H) == 1) /*** big area ***/
 			{
-				iCurRoom = iMapHoverRoom;
-				SDL_RaiseWindow (window);
-				PlaySound ("wav/scroll.wav");
+				if ((iMapHoverRoom != 0) && (iMapMoved == 0))
+				{
+					iCurRoom = iMapHoverRoom;
+					SDL_RaiseWindow (window);
+					PlaySound ("wav/scroll.wav");
+				}
+			}
+		} else {
+			if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
+				33 + 477) == 1) /*** big area ABOVE PANEL ***/
+			{
+				if (iEditPoP == 1)
+				{
+					iDrawingOnMap = 0;
+				}
 			}
 		}
 		if (InAreaMap (636, 807, 636 + 14,
@@ -36724,6 +37538,39 @@ void MapButtonUp (SDL_Event event)
 				{ iMapShowNumbers = 1; }
 					else { iMapShowNumbers = 0; }
 			PlaySound ("wav/check_box.wav");
+		}
+		if (InAreaMap (636, 829, 636 + 14, 829 + 14) == 1) /*** edit panel ***/
+		{
+			if (iMapEditPanel == 0)
+				{ iMapEditPanel = 1; }
+					else { iMapEditPanel = 0; }
+			PlaySound ("wav/check_box.wav");
+		}
+		if (iMapEditPanel == 1)
+		{
+			if (iEditPoP == 1) { SetMapSelTile(); } /*** tiles ***/
+		}
+	}
+	if (event.button.button == 2)
+	{
+		if (iMapEditPanel == 1)
+		{
+			if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
+				33 + 477) == 1) /*** big area ABOVE PANEL ***/
+			{
+				if (iEditPoP == 1)
+				{
+					if (iMapHoverRoom != 0)
+					{
+						for (iLoopTile = 1; iLoopTile <= 30; iLoopTile++)
+						{
+							UseTile (iMapSelTile, iLoopTile, iMapHoverRoom, 0);
+						}
+						PlaySound ("wav/ok_close.wav");
+						iChanged++;
+					}
+				}
+			}
 		}
 	}
 	ShowMap();
@@ -36772,21 +37619,46 @@ void MapKeyDown (SDL_Event event)
 		case SDLK_c:
 			MapHide();
 			break;
-		case SDLK_s:
+		case SDLK_n:
 			if (iMapShowNumbers == 0)
 				{ iMapShowNumbers = 1; }
 					else { iMapShowNumbers = 0; }
 			PlaySound ("wav/check_box.wav");
+			break;
+		case SDLK_TAB:
+		case SDLK_KP_TAB:
+			if (iIgnoreTab == 1) { break; }
+			if ((!(event.key.keysym.mod & KMOD_LALT)) &&
+				(!(event.key.keysym.mod & KMOD_RALT)))
+			{
+				if (iMapEditPanel == 0)
+					{ iMapEditPanel = 1; }
+						else { iMapEditPanel = 0; }
+				PlaySound ("wav/check_box.wav");
+			}
 			break;
 		default: break;
 	}
 	ShowMap();
 }
 /*****************************************************************************/
+void MapKeyUp (SDL_Event event)
+/*****************************************************************************/
+{
+	switch (event.key.keysym.sym)
+	{
+		case SDLK_TAB:
+		case SDLK_KP_TAB:
+			iIgnoreTab = 0;
+			break;
+	}
+}
+/*****************************************************************************/
 void MapMouseMotion (SDL_Event event)
 /*****************************************************************************/
 {
 	int iOldXPos, iOldYPos;
+	int iTileNr;
 
 	iOldXPos = iXPosMap;
 	iOldYPos = iYPosMap;
@@ -36794,12 +37666,24 @@ void MapMouseMotion (SDL_Event event)
 	iYPosMap = event.motion.y;
 	if ((iOldXPos == iXPosMap) && (iOldYPos == iYPosMap)) { return; }
 
-	if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
-		33 + MAP_BIG_AREA_H) == 0) /*** (not) big area ***/
+	if (iMapEditPanel == 0)
 	{
-		/*** Stop map movement. ***/
-		iMovingMap = 0;
-		SDL_SetCursor (curArrow);
+		if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
+			33 + MAP_BIG_AREA_H) == 0) /*** (not) big area ***/
+		{
+			/*** Stop map movement. ***/
+			iMovingMap = 0;
+			SDL_SetCursor (curArrow);
+		}
+	} else {
+		if (InAreaMap (33, 33, 33 + MAP_BIG_AREA_W,
+			33 + 477) == 0) /*** (not) big area ABOVE PANEL ***/
+		{
+			if (iEditPoP == 1)
+			{
+				iDrawingOnMap = 0;
+			}
+		}
 	}
 
 	if (iMovingMap == 1)
@@ -36811,6 +37695,17 @@ void MapMouseMotion (SDL_Event event)
 
 		iMapMoved = 1;
 		SDL_SetCursor (curHand);
+	}
+	if (iDrawingOnMap == 1)
+	{
+		iTileNr = GetTileNr (iThingA[iMapHoverRoom][iMapHoverTile - 1],
+			iModifierA[iMapHoverRoom][iMapHoverTile - 1][1]);
+		if (iTileNr != iMapSelTile)
+		{
+			UseTile (iMapSelTile, iMapHoverTile, iMapHoverRoom, 0);
+			PlaySound ("wav/ok_close.wav");
+			iChanged++;
+		}
 	}
 	ShowMap();
 }
@@ -36852,6 +37747,7 @@ void MapHide (void)
 		iXPosMapMoveOffset = 0;
 		iYPosMapMoveOffset = 0;
 		iMovingMap = 0;
+		iDrawingOnMap = 0;
 		SDL_SetCursor (curArrow);
 
 		iMapOpen = 0;
@@ -37004,6 +37900,18 @@ void ShowMap (void)
 		ShowImageBasic (imgchkbmap, 636, 807, "imgchkbmap", mscreen, 1, 1);
 	}
 
+	/*** edit panel ***/
+	if (iMapEditPanel == 1)
+	{
+		ShowImageBasic (imgchkbmap, 636, 829, "imgchkbmap", mscreen, 1, 1);
+		ShowImageBasic (imgmappanel, 31, 31, "imgmappanel", mscreen, 1, 1);
+		if (iEditPoP == 1)
+		{
+			ShowImageBasic (imgmapseltile, GetMapSelTileXY (1),
+				GetMapSelTileXY (2), "imgmapseltile", mscreen, 1, 1);
+		}
+	}
+
 	/*** refresh screen ***/
 	SDL_RenderPresent (mscreen);
 }
@@ -37080,7 +37988,7 @@ void ZoomDecrease (void)
 	iZoom = fNew;
 }
 /*****************************************************************************/
-int RelatedToHover (int iRoom, int iTile)
+int RelatedToHover1 (int iRoom, int iTile)
 /*****************************************************************************/
 {
 	int iRelated;
@@ -37134,6 +38042,66 @@ int RelatedToHover (int iRoom, int iTile)
 	if (((iTileThing == 10) || (iTileThing == 42)) && (iTileModifier == 6))
 	{
 		if ((iMapHoverRoom == 8) && (iMapHoverTile == 1)) { iRelated = 1; }
+	}
+
+	return (iRelated);
+}
+/*****************************************************************************/
+int RelatedToHover3 (int iRoom, int iTile)
+/*****************************************************************************/
+{
+	int iRelated;
+	int iB1, iB2, iB3, iB4;
+	int iHoverThing, iTileThing;
+	int iHoverModifier, iTileModifier;
+	int iStartEvent;
+
+	iRelated = 0;
+
+	/*** If the hover is a button... ***/
+	iB1 = iBlock1A[iMapHoverRoom][iMapHoverTile - 1];
+	iB2 = iBlock2A[iMapHoverRoom][iMapHoverTile - 1];
+	iB3 = iBlock3A[iMapHoverRoom][iMapHoverTile - 1];
+	iB4 = iBlock4A[iMapHoverRoom][iMapHoverTile - 1];
+	iHoverModifier = iModifierA[iMapHoverRoom][iMapHoverTile - 1][1];
+	CurTypeBlocks(); /*** Maybe not necessary. ***/
+	iHoverThing = GetTileNrSNES (iB1, iB2, iB3, iB4, iHoverModifier);
+	if (iHoverThing == 0)
+		{ iHoverThing = GetTileNrSNESApprox (iB3, iB4, iHoverModifier); }
+	if ((iHoverThing == 14) || (iHoverThing == 15))
+	{
+		iStartEvent = iHoverModifier;
+		do {
+			iStartEvent++;
+			if ((EventInfo (iStartEvent - 1, 1) == iRoom) &&
+				(EventInfo (iStartEvent - 1, 2) == iTile))
+			{
+				iRelated = 1;
+			}
+		} while ((EventInfo (iStartEvent - 1, 3) == 1) && (iStartEvent != 256));
+	}
+
+	/*** If this tile is a button, check whether it triggers the hover. ***/
+	iB1 = iBlock1A[iRoom][iTile - 1];
+	iB2 = iBlock2A[iRoom][iTile - 1];
+	iB3 = iBlock3A[iRoom][iTile - 1];
+	iB4 = iBlock4A[iRoom][iTile - 1];
+	iTileModifier = iModifierA[iRoom][iTile - 1][1];
+	CurTypeBlocks(); /*** Maybe not necessary. ***/
+	iTileThing = GetTileNrSNES (iB1, iB2, iB3, iB4, iTileModifier);
+	if (iTileThing == 0)
+		{ iTileThing = GetTileNrSNESApprox (iB3, iB4, iTileModifier); }
+	if ((iTileThing == 14) || (iTileThing == 15))
+	{
+		iStartEvent = iTileModifier;
+		do {
+			iStartEvent++;
+			if ((EventInfo (iStartEvent - 1, 1) == iMapHoverRoom) &&
+				(EventInfo (iStartEvent - 1, 2) == iMapHoverTile))
+			{
+				iRelated = 1;
+			}
+		} while ((EventInfo (iStartEvent - 1, 3) == 1) && (iStartEvent != 256));
 	}
 
 	return (iRelated);
@@ -37974,7 +38942,7 @@ void Text (void)
 						SDL_StartTextInput();
 					}
 
-					UpdateStatusBar3T();
+					UpdateStatusBar_F3_3();
 					ShowText();
 					break;
 				case SDL_MOUSEBUTTONDOWN:
@@ -40469,7 +41437,7 @@ void HexEditor (char *sFileName)
 						SDL_SetCursor (curArrow);
 					}
 
-					UpdateStatusBar_F12();
+					UpdateStatusBar_F12_All();
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == 1)
@@ -40507,7 +41475,7 @@ void HexEditor (char *sFileName)
 								}
 							}
 
-							UpdateStatusBar_F12();
+							UpdateStatusBar_F12_All();
 						}
 
 						/*** Go to offset: ***/
@@ -40620,7 +41588,7 @@ void HexEditor (char *sFileName)
 			}
 		}
 		PreventCPUEating();
-		UpdateStatusBar_F12(); /*** For "Saved.", particularly its removal. ***/
+		UpdateStatusBar_F12_All(); /*** For "Saved.", partic. its removal. ***/
 	}
 
 	close (iFdEXE);
@@ -40635,7 +41603,7 @@ void ShowHexEditor (void)
 /*****************************************************************************/
 {
 	int iByteX, iByteY;
-	char arText[1 + 2][MAX_TEXT + 2];
+	char arText[9 + 2][MAX_TEXT + 2];
 
 	/*** Used for looping. ***/
 	int iLoopByte;
@@ -40755,5 +41723,90 @@ void HexEditorKey (char cAdd)
 		}
 		PlaySound ("wav/hum_adj.wav");
 	}
+}
+/*****************************************************************************/
+int GetMapSelTileXY (int iAxis)
+/*****************************************************************************/
+{
+	int iX, iY;
+
+	iX = 0; iY = 0; /*** Fallback. ***/
+	if ((iMapSelTile >= 1) && (iMapSelTile <= 13))
+	{
+		iX = 16 + ((iMapSelTile - 0) * 17);
+		iY = 484 + (1 * 32);
+	}
+	if ((iMapSelTile >= 14) && (iMapSelTile <= 26))
+	{
+		iX = 16 + ((iMapSelTile - 13) * 17);
+		iY = 484 + (2 * 32);
+	}
+	if ((iMapSelTile >= 27) && (iMapSelTile <= 39))
+	{
+		iX = 16 + ((iMapSelTile - 26) * 17);
+		iY = 484 + (3 * 32);
+	}
+	if ((iMapSelTile >= 40) && (iMapSelTile <= 52))
+	{
+		iX = 16 + ((iMapSelTile - 39) * 17);
+		iY = 484 + (4 * 32);
+	}
+	if ((iMapSelTile >= 53) && (iMapSelTile <= 65))
+	{
+		iX = 16 + ((iMapSelTile - 52) * 17);
+		iY = 484 + (5 * 32);
+	}
+	if ((iMapSelTile >= 66) && (iMapSelTile <= 72))
+	{
+		iX = 16 + ((iMapSelTile - 65) * 17);
+		iY = 484 + (6 * 32);
+	}
+
+	if (iAxis == 1) { return (iX); } else { return (iY); }
+}
+/*****************************************************************************/
+void SetMapSelTile (void)
+/*****************************************************************************/
+{
+	int iTileOld, iTile;
+
+	iTileOld = iMapSelTile;
+	for (iTile = 1; iTile <= 13; iTile++)
+	{
+		if (InAreaMap (18 + ((iTile - 0) * 17), 486 + (1 * 32),
+			18 + ((iTile - 0) * 17) + 15, 486 + (1 * 32) + 30) == 1)
+			{ iMapSelTile = iTile; }
+	}
+	for (iTile = 14; iTile <= 26; iTile++)
+	{
+		if (InAreaMap (18 + ((iTile - 13) * 17), 486 + (2 * 32),
+			18 + ((iTile - 13) * 17) + 15, 486 + (2 * 32) + 30) == 1)
+			{ iMapSelTile = iTile; }
+	}
+	for (iTile = 27; iTile <= 39; iTile++)
+	{
+		if (InAreaMap (18 + ((iTile - 26) * 17), 486 + (3 * 32),
+			18 + ((iTile - 26) * 17) + 15, 486 + (3 * 32) + 30) == 1)
+			{ iMapSelTile = iTile; }
+	}
+	for (iTile = 40; iTile <= 52; iTile++)
+	{
+		if (InAreaMap (18 + ((iTile - 39) * 17), 486 + (4 * 32),
+			18 + ((iTile - 39) * 17) + 15, 486 + (4 * 32) + 30) == 1)
+			{ iMapSelTile = iTile; }
+	}
+	for (iTile = 53; iTile <= 65; iTile++)
+	{
+		if (InAreaMap (18 + ((iTile - 52) * 17), 486 + (5 * 32),
+			18 + ((iTile - 52) * 17) + 15, 486 + (5 * 32) + 30) == 1)
+			{ iMapSelTile = iTile; }
+	}
+	for (iTile = 66; iTile <= 72; iTile++)
+	{
+		if (InAreaMap (18 + ((iTile - 65) * 17), 486 + (6 * 32),
+			18 + ((iTile - 65) * 17) + 15, 486 + (6 * 32) + 30) == 1)
+			{ iMapSelTile = iTile; }
+	}
+	if (iMapSelTile != iTileOld) { PlaySound ("wav/hum_adj.wav"); }
 }
 /*****************************************************************************/
