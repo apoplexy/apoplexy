@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* apoplexy v3.17 (January 2023)
+/* apoplexy v3.18 (May 2023)
  * Copyright (C) 2008-2023 The apoplexy Team (see credits.txt)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -56,9 +56,9 @@
 #define WINDOW_WIDTH 642 + 50
 #define WINDOW_HEIGHT 380 + 75
 #define EDITOR_NAME "apoplexy"
-#define EDITOR_VERSION "v3.17 (January 2023)" /*** Modify? Also _MINOR! ***/
+#define EDITOR_VERSION "v3.18 (May 2023)" /*** Modify? Also _MINOR! ***/
 #define EDITOR_VERSION_MAJOR 3
-#define EDITOR_VERSION_MINOR 17
+#define EDITOR_VERSION_MINOR 18
 #define EDITOR_VERSION_PATCH 0
 #define COPYRIGHT "Copyright (C) 2023 The apoplexy Team"
 #define COMPATIBLE_NATIVE "SDLPoP 1.23, MININIM 0.10"
@@ -190,162 +190,94 @@
 #endif
 
 #if defined WIN32 || _WIN32 || WIN64 || _WIN64
-#define DEVNULL "NUL"
-#define COPY "copy"
-#define PR_EXECUTABLE "pr\\pr.exe"
-#define POP1_EXECUTABLE "prince\\PRINCE.EXE"
-#define POP1_DIR "prince\\"
-#define BATCH_FILE_NATIVE "apoplexy.bat"
 #define SLASH "\\"
 #define HERE ""
-#define POP2_EXECUTABLE "prince2\\PRINCE.EXE"
-#define POP2_DIR "prince2\\"
-#define LEVELS_DAT "prince\\LEVELS.DAT"
-#define LEVELS_BAK "prince\\LEVELS.BAK"
-#define PRINCE_DAT "prince2\\PRINCE.DAT"
-#define PRINCE_BAK "prince2\\PRINCE.BAK"
-#define SNES_DIR "snes\\"
-#define SNES_BAK "snes\\PRINCE.BAK"
-#define PR_RESOURCES "pr\\resources.xml"
-#define PR_POP2 "pr\\pop2.xml"
-#define IN_DIR "levels\\"
-#define OUT_DIR "levels\\"
-#define IN_DIR_POP2 "levels2\\PRINCE\\"
-#define OUT_DIR_POP2 "levels2\\PRINCE\\"
-#define XML_DIR "xml\\"
-#define SDLPOP_DIR "SDLPoP\\"
-#define MININIM_DIR "MININIM\\"
-#define BATCH_FILE "prince\\apoplexy.bat"
-#define BATCH_FILE_POP2 "prince2\\apoplexy.bat"
-#define TEMPLATES_SNES "templates\\snes\\"
-#define PNG_DUNGEON "png\\dungeon\\"
-#define PNG_PALACE "png\\palace\\"
-#define PNG_OTH "png\\oth\\"
-#define PNG_CAVERNS "png\\caverns\\"
-#define PNG_CAVERNSD "png\\caverns_details\\"
-#define PNG_RUINS "png\\ruins\\"
-#define PNG_RUINSD "png\\ruins_details\\"
-#define PNG_RUINSB "png\\ruins_back\\"
-#define PNG_TEMPLE "png\\temple\\"
-#define PNG_TEMPLEB "png\\temple_back\\"
-#define PNG_BLUE "png\\blue\\"
-#define PNG_BLUEB "png\\blue_back\\"
-#define PNG_FAWN "png\\fawn\\"
-#define PNG_FAWNB "png\\fawn_back\\"
-#define PNG_SILVER "png\\silver\\"
-#define PNG_SILVERB "png\\silver_back\\"
-#define PNG_LAVA "png\\lava\\"
-#define PNG_LAVAB "png\\lava_back\\"
-#define PNG_GREEN "png\\green\\"
-#define PNG_GREENB "png\\green_back\\"
-#define PNG_UMBER "png\\umber\\"
-#define PNG_UMBERB "png\\umber_back\\"
-#define PNG_MARBLE "png\\marble\\"
-#define PNG_MARBLEB "png\\marble_back\\"
-#define PNG_HALLWAY "png\\hallway\\"
-#define PNG_HALLWAYB "png\\hallway_back\\"
-#define PNG_JAFFAR "png\\jaffar\\"
-#define PNG_JAFFARB "png\\jaffar_back\\"
-#define PNG_INTRO "png\\intro\\"
-#define PNG_INTROB "png\\intro_back\\"
-#define PNG_ROOMS "png\\rooms\\"
-#define PNG_EXTRAS "png\\extras\\"
-#define PNG_VARIOUS "png\\various\\"
-#define PNG_BACKSS "png\\backgrounds_snes\\"
-#define PNG_TEMPS "png\\templates_snes\\"
-#define PNG_LIVING1 "png\\living_pop1\\"
-#define PNG_LIVING2 "png\\living_pop2\\"
-#define PNG_LIVING3 "png\\living_pop1snes\\"
-#define PNG_BUTTONS "png\\buttons\\"
-#define PNG_BACK "png\\back\\"
-#define PNG_INCOMING "png\\incoming\\"
-#define PNG_MUSIC "png\\music\\"
-#define PNG_CONTROLLER "png\\controller\\"
-#define PNG_NATIVE "png\\native\\"
-#define PNG_PLAYTEST "png\\playtest\\"
-#define PNG_MINI1 "png\\mini_pop1\\"
-#define PNG_MINI3 "png\\mini_pop1snes\\"
-#define PNG_SIXBITRGB "png\\six_bit_rgb\\"
-#define PNG_AUTOMATIC "png\\automatic\\"
+#define DEVNULL "NUL"
+#define COPY "copy"
+#define PR_EXECUTABLE "pr" SLASH "pr.exe"
+#define BATCH_FILE_NATIVE "apoplexy.bat"
 #else
-#define DEVNULL "/dev/null"
-#define COPY "cp"
-#define PR_EXECUTABLE "pr/pr"
-#define POP1_EXECUTABLE "prince/PRINCE.EXE"
-#define POP1_DIR "prince/"
-#define BATCH_FILE_NATIVE "apoplexy.sh"
 #define SLASH "/"
 #define HERE "./"
-#define POP2_EXECUTABLE "prince2/PRINCE.EXE"
-#define POP2_DIR "prince2/"
-#define LEVELS_DAT "prince/LEVELS.DAT"
-#define LEVELS_BAK "prince/LEVELS.BAK"
-#define PRINCE_DAT "prince2/PRINCE.DAT"
-#define PRINCE_BAK "prince2/PRINCE.BAK"
-#define SNES_DIR "snes/"
-#define SNES_BAK "snes/PRINCE.BAK"
-#define PR_RESOURCES "pr/resources.xml"
-#define PR_POP2 "pr/pop2.xml"
-#define IN_DIR "levels/"
-#define OUT_DIR "levels/"
-#define IN_DIR_POP2 "levels2/PRINCE/"
-#define OUT_DIR_POP2 "levels2/PRINCE/"
-#define XML_DIR "xml/"
-#define SDLPOP_DIR "SDLPoP/"
-#define MININIM_DIR "MININIM/"
-#define BATCH_FILE "prince/apoplexy.bat"
-#define BATCH_FILE_POP2 "prince2/apoplexy.bat"
-#define TEMPLATES_SNES "templates/snes/"
-#define PNG_DUNGEON "png/dungeon/"
-#define PNG_PALACE "png/palace/"
-#define PNG_OTH "png/oth/"
-#define PNG_CAVERNS "png/caverns/"
-#define PNG_CAVERNSD "png/caverns_details/"
-#define PNG_RUINS "png/ruins/"
-#define PNG_RUINSD "png/ruins_details/"
-#define PNG_RUINSB "png/ruins_back/"
-#define PNG_TEMPLE "png/temple/"
-#define PNG_TEMPLEB "png/temple_back/"
-#define PNG_BLUE "png/blue/"
-#define PNG_BLUEB "png/blue_back/"
-#define PNG_FAWN "png/fawn/"
-#define PNG_FAWNB "png/fawn_back/"
-#define PNG_SILVER "png/silver/"
-#define PNG_SILVERB "png/silver_back/"
-#define PNG_LAVA "png/lava/"
-#define PNG_LAVAB "png/lava_back/"
-#define PNG_GREEN "png/green/"
-#define PNG_GREENB "png/green_back/"
-#define PNG_UMBER "png/umber/"
-#define PNG_UMBERB "png/umber_back/"
-#define PNG_MARBLE "png/marble/"
-#define PNG_MARBLEB "png/marble_back/"
-#define PNG_HALLWAY "png/hallway/"
-#define PNG_HALLWAYB "png/hallway_back/"
-#define PNG_JAFFAR "png/jaffar/"
-#define PNG_JAFFARB "png/jaffar_back/"
-#define PNG_INTRO "png/intro/"
-#define PNG_INTROB "png/intro_back/"
-#define PNG_ROOMS "png/rooms/"
-#define PNG_EXTRAS "png/extras/"
-#define PNG_VARIOUS "png/various/"
-#define PNG_BACKSS "png/backgrounds_snes/"
-#define PNG_TEMPS "png/templates_snes/"
-#define PNG_LIVING1 "png/living_pop1/"
-#define PNG_LIVING2 "png/living_pop2/"
-#define PNG_LIVING3 "png/living_pop1snes/"
-#define PNG_BUTTONS "png/buttons/"
-#define PNG_BACK "png/back/"
-#define PNG_INCOMING "png/incoming/"
-#define PNG_MUSIC "png/music/"
-#define PNG_CONTROLLER "png/controller/"
-#define PNG_NATIVE "png/native/"
-#define PNG_PLAYTEST "png/playtest/"
-#define PNG_MINI1 "png/mini_pop1/"
-#define PNG_MINI3 "png/mini_pop1snes/"
-#define PNG_SIXBITRGB "png/six_bit_rgb/"
-#define PNG_AUTOMATIC "png/automatic/"
+#define DEVNULL "/dev/null"
+#define COPY "cp"
+#define PR_EXECUTABLE "pr" SLASH "pr"
+#define BATCH_FILE_NATIVE "apoplexy.sh"
 #endif
+
+#define POP1_EXECUTABLE "prince" SLASH "PRINCE.EXE"
+#define POP1_DIR "prince" SLASH
+#define POP2_EXECUTABLE "prince2" SLASH "PRINCE.EXE"
+#define POP2_DIR "prince2" SLASH
+#define LEVELS_DAT "prince" SLASH "LEVELS.DAT"
+#define LEVELS_BAK "prince" SLASH "LEVELS.BAK"
+#define PRINCE_DAT "prince2" SLASH "PRINCE.DAT"
+#define PRINCE_BAK "prince2" SLASH "PRINCE.BAK"
+#define SNES_DIR "snes" SLASH
+#define SNES_BAK "snes" SLASH "PRINCE.BAK"
+#define PR_RESOURCES "pr" SLASH "resources.xml"
+#define PR_POP2 "pr" SLASH "pop2.xml"
+#define IN_DIR "levels" SLASH
+#define OUT_DIR "levels" SLASH
+#define IN_DIR_POP2 "levels2" SLASH "PRINCE" SLASH
+#define OUT_DIR_POP2 "levels2" SLASH "PRINCE" SLASH
+#define XML_DIR "xml" SLASH
+#define SDLPOP_DIR "SDLPoP" SLASH
+#define MININIM_DIR "MININIM" SLASH
+#define BATCH_FILE "prince" SLASH "apoplexy.bat"
+#define BATCH_FILE_POP2 "prince2" SLASH "apoplexy.bat"
+#define TEMPLATES_SNES "templates" SLASH "snes" SLASH
+/***/
+#define PNG_DUNGEON "png" SLASH "dungeon" SLASH
+#define PNG_PALACE "png" SLASH "palace" SLASH
+#define PNG_OTH "png" SLASH "oth" SLASH
+#define PNG_CAVERNS "png" SLASH "caverns" SLASH
+#define PNG_CAVERNSD "png" SLASH "caverns_details" SLASH
+#define PNG_RUINS "png" SLASH "ruins" SLASH
+#define PNG_RUINSD "png" SLASH "ruins_details" SLASH
+#define PNG_RUINSB "png" SLASH "ruins_back" SLASH
+#define PNG_TEMPLE "png" SLASH "temple" SLASH
+#define PNG_TEMPLEB "png" SLASH "temple_back" SLASH
+#define PNG_BLUE "png" SLASH "blue" SLASH
+#define PNG_BLUEB "png" SLASH "blue_back" SLASH
+#define PNG_FAWN "png" SLASH "fawn" SLASH
+#define PNG_FAWNB "png" SLASH "fawn_back" SLASH
+#define PNG_SILVER "png" SLASH "silver" SLASH
+#define PNG_SILVERB "png" SLASH "silver_back" SLASH
+#define PNG_LAVA "png" SLASH "lava" SLASH
+#define PNG_LAVAB "png" SLASH "lava_back" SLASH
+#define PNG_GREEN "png" SLASH "green" SLASH
+#define PNG_GREENB "png" SLASH "green_back" SLASH
+#define PNG_UMBER "png" SLASH "umber" SLASH
+#define PNG_UMBERB "png" SLASH "umber_back" SLASH
+#define PNG_MARBLE "png" SLASH "marble" SLASH
+#define PNG_MARBLEB "png" SLASH "marble_back" SLASH
+#define PNG_HALLWAY "png" SLASH "hallway" SLASH
+#define PNG_HALLWAYB "png" SLASH "hallway_back" SLASH
+#define PNG_JAFFAR "png" SLASH "jaffar" SLASH
+#define PNG_JAFFARB "png" SLASH "jaffar_back" SLASH
+#define PNG_INTRO "png" SLASH "intro" SLASH
+#define PNG_INTROB "png" SLASH "intro_back" SLASH
+#define PNG_ROOMS "png" SLASH "rooms" SLASH
+#define PNG_EXTRAS "png" SLASH "extras" SLASH
+#define PNG_VARIOUS "png" SLASH "various" SLASH
+#define PNG_BACKSS "png" SLASH "backgrounds_snes" SLASH
+#define PNG_TEMPS "png" SLASH "templates_snes" SLASH
+#define PNG_LIVING1 "png" SLASH "living_pop1" SLASH
+#define PNG_LIVING2 "png" SLASH "living_pop2" SLASH
+#define PNG_LIVING3 "png" SLASH "living_pop1snes" SLASH
+#define PNG_BUTTONS "png" SLASH "buttons" SLASH
+#define PNG_BACK "png" SLASH "back" SLASH
+#define PNG_INCOMING "png" SLASH "incoming" SLASH
+#define PNG_MUSIC "png" SLASH "music" SLASH
+#define PNG_CONTROLLER "png" SLASH "controller" SLASH
+#define PNG_NATIVE "png" SLASH "native" SLASH
+#define PNG_PLAYTEST "png" SLASH "playtest" SLASH
+#define PNG_MINI1 "png" SLASH "mini_pop1" SLASH
+#define PNG_MINI3 "png" SLASH "mini_pop1snes" SLASH
+#define PNG_MINIM "png" SLASH "mini_misc" SLASH
+#define PNG_SIXBITRGB "png" SLASH "six_bit_rgb" SLASH
+#define PNG_AUTOMATIC "png" SLASH "automatic" SLASH
 /*========== Defines ==========*/
 
 int iDX, iDY, iTTP1, iTTPO;
@@ -734,6 +666,7 @@ int arLiveX[8 + 2];
 int arLiveY[8 + 2];
 
 /*** hex editor ***/
+char sHexPathFile[MAX_FILE + 2];
 int iCloseHexEditorOn;
 int iHexOffset;
 int iHitOffset;
@@ -1540,10 +1473,18 @@ SDL_Texture *imgd0_52[2 + 2];
 SDL_Texture *imgp0_52[2 + 2];
 SDL_Texture *imgd0_53[2 + 2];
 SDL_Texture *imgp0_53[2 + 2];
+SDL_Texture *imgd1_4[2 + 2];
+SDL_Texture *imgp1_4[2 + 2];
 SDL_Texture *imgd1_5[2 + 2];
 SDL_Texture *imgp1_5[2 + 2];
 SDL_Texture *imgd1_6[2 + 2];
 SDL_Texture *imgp1_6[2 + 2];
+SDL_Texture *imgd1_7[2 + 2];
+SDL_Texture *imgp1_7[2 + 2];
+SDL_Texture *imgd1_8[2 + 2];
+SDL_Texture *imgp1_8[2 + 2];
+SDL_Texture *imgd1_9[2 + 2];
+SDL_Texture *imgp1_9[2 + 2];
 SDL_Texture *imgd1_13[2 + 2];
 SDL_Texture *imgp1_13[2 + 2];
 SDL_Texture *imgd1_14[2 + 2];
@@ -1572,6 +1513,8 @@ SDL_Texture *imgd24[2 + 2];
 SDL_Texture *imgp24[2 + 2];
 SDL_Texture *imgd30[2 + 2];
 SDL_Texture *imgp30[2 + 2];
+SDL_Texture *imgd31_0[2 + 2];
+SDL_Texture *imgp31_0[2 + 2];
 
 /*** locations; rooftops, desert, final ***/
 SDL_Texture *imgo0[2 + 2];
@@ -2038,7 +1981,7 @@ SDL_Texture *imgnativetab_0[12 + 2], *imgnativetab_1[12 + 2];
 SDL_Texture *imgnativetab_0a[12 + 2], *imgnative;
 SDL_Texture *imgnative_bb, *imgnative_bbl;
 SDL_Texture *imgnative_d[12 + 2], *imgnative_p[12 + 2];
-SDL_Texture *imgnative_s, *imgnative_m, *imgnative_b;
+SDL_Texture *imgnative_s, *imgnative_m, *imgnative_b, *imgnative_y;
 SDL_Texture *six_bit_rgb[0x3f + 2];
 
 /*** playtest ***/
@@ -2053,9 +1996,10 @@ SDL_Texture *imgptdosboxkey, *imgptsdlpopkey, *imgptmininimkey;
 SDL_Texture *imgmapon_0, *imgmapon_1, *imgmapoff;
 SDL_Texture *imggrid;
 SDL_Texture *imgmap, *imgmapgrid, *imgmapseltile, *imgmappanel;
-SDL_Texture *imgmini1[31 + 2][255 + 2]; /*** PoP1 for DOS ***/
+SDL_Texture *imgmini1[63 + 2][255 + 2]; /*** PoP1 for DOS ***/
 SDL_Texture *imgmini3[48 + 2][255 + 2]; /*** PoP1 for SNES ***/
 SDL_Texture *imgminiguard, *imgminiprince, *imgminihover, *imgminirelated;
+SDL_Texture *imgminiunknown;
 SDL_Texture *imgclosem[2 + 2];
 SDL_Texture *imgzoom1on_0, *imgzoom1on_1, *imgzoom1off;
 SDL_Texture *imgzoomfiton_0, *imgzoomfiton_1, *imgzoomfitoff;
@@ -2411,7 +2355,7 @@ void GetHorVer (int iLocation, int *iHor, int *iVer);
 int FixDir (int iDir);
 void RemoveSpaces (char *sString, int iToUpper);
 void HexEditorAction (char *sAction, int iFileSize, int iFdEXE);
-void HexEditor (char *sFileName);
+void HexEditor (void);
 void ShowHexEditor (void);
 void HexEditorKey (char cAdd);
 int GetMapSelTileXY (int iAxis);
@@ -9508,6 +9452,23 @@ void ShowImage (int iThingOrRoom, int iModifier[], SDL_Renderer *screen,
 					break;
 				case 10302:
 					ShowPos (loc, dest, iLocation, imgd24, imgp24, "SDLPoP"); break;
+
+				/*** native, tab 12/12 ***/
+				case 11201:
+					ShowPos (loc, dest, iLocation, imgd1_4, imgp1_4, "Puny Prince");
+					break;
+				case 11202:
+					ShowPos (loc, dest, iLocation, imgd1_7, imgp1_7, "Puny Prince");
+					break;
+				case 11203:
+					ShowPos (loc, dest, iLocation, imgd1_8, imgp1_8, "Puny Prince");
+					break;
+				case 11204:
+					ShowPos (loc, dest, iLocation, imgd1_9, imgp1_9, "Puny Prince");
+					break;
+				case 11205:
+					ShowPos (loc, dest, iLocation, imgd31_0, imgp31_0, "Puny Prince");
+					break;
 			}
 		}
 
@@ -11868,6 +11829,11 @@ void InitScreen (void)
 	char sSixBit[7 + 2];
 	char sEXELoc[MAX_FILE + 2];
 	int iYesNo;
+	/***/
+	DIR *dDir;
+	struct dirent *stDirent;
+	char sString[MAX_DATA + 2];
+	unsigned long luGroup, luVariant;
 
 	/*** Used for looping. ***/
 	int iSixBitLoop;
@@ -12090,9 +12056,9 @@ void InitScreen (void)
 	switch (iEditPoP)
 	{
 		/*** These values can be obtained via debug mode. ***/
-		case 1: iNrToPreLoad = 841; break;
-		case 2: iNrToPreLoad = 871; break;
-		case 3: iNrToPreLoad = 4960; break;
+		case 1: iNrToPreLoad = 925; break;
+		case 2: iNrToPreLoad = 872; break;
+		case 3: iNrToPreLoad = 4961; break;
 	}
 
 	/*** locations; dungeon ***/
@@ -12186,8 +12152,12 @@ void InitScreen (void)
 		PreLoadSet (PNG_DUNGEON, 'd', "0_51", imgd0_51);
 		PreLoadSet (PNG_DUNGEON, 'd', "0_52", imgd0_52);
 		PreLoadSet (PNG_DUNGEON, 'd', "0_53", imgd0_53);
+		PreLoadSet (PNG_DUNGEON, 'd', "1_4", imgd1_4);
 		PreLoadSet (PNG_DUNGEON, 'd', "1_5", imgd1_5);
 		PreLoadSet (PNG_DUNGEON, 'd', "1_6", imgd1_6);
+		PreLoadSet (PNG_DUNGEON, 'd', "1_7", imgd1_7);
+		PreLoadSet (PNG_DUNGEON, 'd', "1_8", imgd1_8);
+		PreLoadSet (PNG_DUNGEON, 'd', "1_9", imgd1_9);
 		PreLoadSet (PNG_DUNGEON, 'd', "1_13", imgd1_13);
 		PreLoadSet (PNG_DUNGEON, 'd', "1_14", imgd1_14);
 		PreLoadSet (PNG_DUNGEON, 'd', "1_50", imgd1_50);
@@ -12202,6 +12172,7 @@ void InitScreen (void)
 		PreLoadSet (PNG_DUNGEON, 'd', "23", imgd23);
 		PreLoadSet (PNG_DUNGEON, 'd', "24", imgd24);
 		PreLoadSet (PNG_DUNGEON, 'd', "30", imgd30);
+		PreLoadSet (PNG_DUNGEON, 'd', "31_0", imgd31_0);
 		PreLoad (PNG_DUNGEON, "d_19_sprite.png", &spriteflamed3);
 		PreLoad (PNG_DUNGEON, "d_30_sprite.png", &spriteflamed4);
 	}
@@ -12299,8 +12270,12 @@ void InitScreen (void)
 		PreLoadSet (PNG_PALACE, 'p', "0_51", imgp0_51);
 		PreLoadSet (PNG_PALACE, 'p', "0_52", imgp0_52);
 		PreLoadSet (PNG_PALACE, 'p', "0_53", imgp0_53);
+		PreLoadSet (PNG_PALACE, 'p', "1_4", imgp1_4);
 		PreLoadSet (PNG_PALACE, 'p', "1_5", imgp1_5);
 		PreLoadSet (PNG_PALACE, 'p', "1_6", imgp1_6);
+		PreLoadSet (PNG_PALACE, 'p', "1_7", imgp1_7);
+		PreLoadSet (PNG_PALACE, 'p', "1_8", imgp1_8);
+		PreLoadSet (PNG_PALACE, 'p', "1_9", imgp1_9);
 		PreLoadSet (PNG_PALACE, 'p', "1_13", imgp1_13);
 		PreLoadSet (PNG_PALACE, 'p', "1_14", imgp1_14);
 		PreLoadSet (PNG_PALACE, 'p', "1_50", imgp1_50);
@@ -12315,6 +12290,7 @@ void InitScreen (void)
 		PreLoadSet (PNG_PALACE, 'p', "23", imgp23);
 		PreLoadSet (PNG_PALACE, 'p', "24", imgp24);
 		PreLoadSet (PNG_PALACE, 'p', "30", imgp30);
+		PreLoadSet (PNG_PALACE, 'p', "31_0", imgp31_0);
 		PreLoad (PNG_PALACE, "p_19_sprite.png", &spriteflamep3);
 		PreLoad (PNG_PALACE, "p_30_sprite.png", &spriteflamep4);
 	}
@@ -13626,8 +13602,8 @@ void InitScreen (void)
 	if (iEditPoP != 2)
 	{
 		PreLoad (PNG_VARIOUS, "exe_tab.png", &imgexetab);
-		PreLoad (PNG_VARIOUS, "statusbar_sprite.png", &imgstatusbarsprite);
 	}
+	PreLoad (PNG_VARIOUS, "statusbar_sprite.png", &imgstatusbarsprite);
 	PreLoad (PNG_VARIOUS, "hexeditor.png", &imghexeditor);
 	PreLoad (PNG_VARIOUS, "sel_hex_black.png", &imgshb);
 	PreLoad (PNG_VARIOUS, "sel_hex_green.png", &imgshg);
@@ -13716,6 +13692,7 @@ void InitScreen (void)
 		PreLoad (PNG_NATIVE, "SDLPoP.png", &imgnative_s);
 		PreLoad (PNG_NATIVE, "MININIM.png", &imgnative_m);
 		PreLoad (PNG_NATIVE, "both.png", &imgnative_b);
+		PreLoad (PNG_NATIVE, "Puny_Prince.png", &imgnative_y);
 		for (iSixBitLoop = 0; iSixBitLoop <= 0x3f; iSixBitLoop++)
 		{
 			snprintf (sSixBit, 7, "%02x.png", iSixBitLoop);
@@ -13768,50 +13745,23 @@ void InitScreen (void)
 		{
 			PreLoadMap (PNG_VARIOUS, "map_panel_1.png", &imgmappanel);
 			/***/
-			PreLoadMap (PNG_MINI1, "0.png", &imgmini1[0][0]);
-			PreLoadMap (PNG_MINI1, "0_3.png", &imgmini1[0][3]);
-			PreLoadMap (PNG_MINI1, "1.png", &imgmini1[1][0]);
-			PreLoadMap (PNG_MINI1, "2.png", &imgmini1[2][0]);
-			PreLoadMap (PNG_MINI1, "3.png", &imgmini1[3][0]);
-			PreLoadMap (PNG_MINI1, "4_0.png", &imgmini1[4][0]);
-			PreLoadMap (PNG_MINI1, "4_1.png", &imgmini1[4][1]);
-			PreLoadMap (PNG_MINI1, "5.png", &imgmini1[5][0]);
-			PreLoadMap (PNG_MINI1, "6.png", &imgmini1[6][0]);
-			PreLoadMap (PNG_MINI1, "7.png", &imgmini1[7][0]);
-			PreLoadMap (PNG_MINI1, "8.png", &imgmini1[8][0]);
-			PreLoadMap (PNG_MINI1, "9.png", &imgmini1[9][0]);
-			PreLoadMap (PNG_MINI1, "10_0.png", &imgmini1[10][0]);
-			PreLoadMap (PNG_MINI1, "10_1.png", &imgmini1[10][1]);
-			PreLoadMap (PNG_MINI1, "10_2.png", &imgmini1[10][2]);
-			PreLoadMap (PNG_MINI1, "10_3.png", &imgmini1[10][3]);
-			PreLoadMap (PNG_MINI1, "10_4.png", &imgmini1[10][4]);
-			PreLoadMap (PNG_MINI1, "10_5.png", &imgmini1[10][5]);
-			PreLoadMap (PNG_MINI1, "10_6.png", &imgmini1[10][6]);
-			PreLoadMap (PNG_MINI1, "11.png", &imgmini1[11][0]);
-			PreLoadMap (PNG_MINI1, "12.png", &imgmini1[12][0]);
-			PreLoadMap (PNG_MINI1, "13.png", &imgmini1[13][0]);
-			PreLoadMap (PNG_MINI1, "14.png", &imgmini1[14][0]);
-			PreLoadMap (PNG_MINI1, "15.png", &imgmini1[15][0]);
-			PreLoadMap (PNG_MINI1, "16.png", &imgmini1[16][0]);
-			PreLoadMap (PNG_MINI1, "17.png", &imgmini1[17][0]);
-			PreLoadMap (PNG_MINI1, "18.png", &imgmini1[18][0]);
-			PreLoadMap (PNG_MINI1, "18_2.png", &imgmini1[18][2]);
-			PreLoadMap (PNG_MINI1, "19.png", &imgmini1[19][0]);
-			PreLoadMap (PNG_MINI1, "20.png", &imgmini1[20][0]);
-			PreLoadMap (PNG_MINI1, "21.png", &imgmini1[21][0]);
-			PreLoadMap (PNG_MINI1, "22.png", &imgmini1[22][0]);
-			PreLoadMap (PNG_MINI1, "23.png", &imgmini1[23][0]);
-			PreLoadMap (PNG_MINI1, "24.png", &imgmini1[24][0]);
-			PreLoadMap (PNG_MINI1, "25.png", &imgmini1[25][0]);
-			PreLoadMap (PNG_MINI1, "26.png", &imgmini1[26][0]);
-			PreLoadMap (PNG_MINI1, "27.png", &imgmini1[27][0]);
-			PreLoadMap (PNG_MINI1, "28.png", &imgmini1[28][0]);
-			PreLoadMap (PNG_MINI1, "29.png", &imgmini1[29][0]);
-			PreLoadMap (PNG_MINI1, "30.png", &imgmini1[30][0]);
-			PreLoadMap (PNG_MINI1, "guard.png", &imgminiguard);
-			PreLoadMap (PNG_MINI1, "prince.png", &imgminiprince);
-			PreLoadMap (PNG_MINI1, "hover.png", &imgminihover);
-			PreLoadMap (PNG_MINI1, "related.png", &imgminirelated);
+			dDir = opendir (PNG_MINI1);
+			while ((stDirent = readdir (dDir)) != NULL)
+			{
+				if ((strcmp (stDirent->d_name, ".") != 0) &&
+					(strcmp (stDirent->d_name, "..") != 0))
+				{
+					snprintf (sString, MAX_DATA, "0x%c%c",
+						stDirent->d_name[0], stDirent->d_name[1]);
+					luGroup = strtoul (sString, NULL, 16);
+					snprintf (sString, MAX_DATA, "0x%c%c",
+						stDirent->d_name[3], stDirent->d_name[4]);
+					luVariant = strtoul (sString, NULL, 16);
+					PreLoadMap (PNG_MINI1, stDirent->d_name,
+						&imgmini1[luGroup][luVariant]);
+				}
+			}
+			closedir (dDir);
 		}
 		if (iEditPoP == 3)
 		{
@@ -13882,11 +13832,13 @@ void InitScreen (void)
 			PreLoadMap (PNG_MINI3, "46.png", &imgmini3[46][0]); /*** kill potion ***/
 			PreLoadMap (PNG_MINI3, "47.png", &imgmini3[47][0]); /*** torch (fl) ***/
 			PreLoadMap (PNG_MINI3, "48.png", &imgmini3[48][0]); /*** torch (s) ***/
-			PreLoadMap (PNG_MINI3, "guard.png", &imgminiguard);
-			PreLoadMap (PNG_MINI3, "prince.png", &imgminiprince);
-			PreLoadMap (PNG_MINI3, "hover.png", &imgminihover);
-			PreLoadMap (PNG_MINI3, "related.png", &imgminirelated);
 		}
+		PreLoadMap (PNG_MINIM, "guard.png", &imgminiguard);
+		PreLoadMap (PNG_MINIM, "prince.png", &imgminiprince);
+		PreLoadMap (PNG_MINIM, "hover.png", &imgminihover);
+		PreLoadMap (PNG_MINIM, "related.png", &imgminirelated);
+		PreLoadMap (PNG_MINIM, "unknown.png", &imgminiunknown);
+		/***/
 		PreLoadMap (PNG_BUTTONS, "zoom-1_on_0.png", &imgzoom1on_0);
 		PreLoadMap (PNG_BUTTONS, "zoom-1_on_1.png", &imgzoom1on_1);
 		PreLoadMap (PNG_BUTTONS, "zoom-1_off.png", &imgzoom1off);
@@ -14372,13 +14324,19 @@ void InitScreen (void)
 								if ((strcmp (sEXEType, "missing") != 0) &&
 									(strcmp (sEXEType, "unknown") != 0))
 								{
-									if (iEditPoP != 2)
+									switch (iEditPoP)
 									{
-										snprintf (sEXELoc, MAX_FILE, "%s", POP1_EXECUTABLE);
-									} else {
-										snprintf (sEXELoc, MAX_FILE, "%s", POP2_EXECUTABLE);
+										case 1:
+											snprintf (sHexPathFile, MAX_FILE, "%s", POP1_EXECUTABLE);
+											break;
+										case 2:
+											snprintf (sHexPathFile, MAX_FILE, "%s", POP2_EXECUTABLE);
+											break;
+										case 3:
+											snprintf (sHexPathFile, MAX_FILE, "%s", sSNESFile);
+											break;
 									}
-									HexEditor (sEXELoc);
+									HexEditor();
 								} else {
 									printf ("[ INFO ] Missing or unknown executable.\n");
 								}
@@ -17468,47 +17426,35 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 		if (iEditPoP == 1)
 		{
 			iThing = iThingA[iRoom][iTileLoop - 1];
-			if (iThing > 31) { iThing = iThing % 32; }
+			if ((iThing > 31) && (iThing != 43)) { iThing = iThing % 32; }
 			iMod = iModifierA[iRoom][iTileLoop - 1][1];
 			switch (iThing)
 			{
-				case 0: if (iMod != 3) { iMod = 0; } break;
-				case 1: iMod = 0; break;
-				case 2: iMod = 0; break;
-				case 3: iMod = 0; break;
-				case 4: if ((iMod != 0) && (iMod != 1)) { iMod = 0; } break;
-				case 5: iMod = 0; break;
-				case 6: iMod = 0; break;
-				case 7: iMod = 0; break;
-				case 8: iMod = 0; break;
-				case 9: iMod = 0; break;
-				case 10: if (iMod > 6) { iMod = 0; } break;
-				case 11: iMod = 0; break;
-				case 12: iMod = 0; break;
-				case 13: iMod = 0; break;
-				case 14: iMod = 0; break;
-				case 15: iMod = 0; break;
-				case 16: iMod = 0; break;
-				case 17: iMod = 0; break;
-				case 18: if (iMod != 2) { iMod = 0; } break; /*** chomper ***/
-				case 19: iMod = 0; break;
-				case 20: iMod = 0; break;
-				case 21: iMod = 0; break;
-				case 22: iMod = 0; break;
-				case 23: iMod = 0; break;
-				case 24: iMod = 0; break;
-				case 25: iMod = 0; break;
-				case 26: iMod = 0; break;
-				case 27: iMod = 0; break;
-				case 28: iMod = 0; break;
-				case 29: iMod = 0; break;
-				case 30: iMod = 0; break;
+				case 6: iMod = 0; break; /*** drop ***/
+				case 15: iMod = 0; break; /*** raise ***/
+				case 19: if ((iMod > 0) && (iMod < 64)) /*** 6-bit RGB ***/
+					{ iMod = 1; } break;
+				case 23: if (iMod > 0) { iMod = 1; } break; /*** teleport ***/
+				case 30: if ((iMod > 0) && (iMod < 64)) /*** 6-bit RGB ***/
+					{ iMod = 1; } break;
 			}
-			snprintf (sInfo, MAX_INFO, "imgmini1[%i][%i]", iThing, iMod);
-			ShowImageBasic (imgmini1[iThing][iMod],
-				fRoomStartX + fOffsetX,
-				fRoomStartY + fOffsetY,
-				sInfo, mscreen, ZoomGet(), 0);
+			if (imgmini1[iThing][iMod] == NULL)
+			{
+				if (iDebug == 1)
+				{
+					printf ("[ WARN ] Strange tile (level %i, room %i,"
+						" tile %i): %i %i!\n",
+						(int)luLevelNr, iRoom, iTileLoop, iThing, iMod);
+				}
+				ShowImageBasic (imgminiunknown, fRoomStartX + fOffsetX,
+					fRoomStartY + fOffsetY, "imgminiunknown", mscreen, ZoomGet(), 0);
+			} else {
+				snprintf (sInfo, MAX_INFO, "imgmini1[%i][%i]", iThing, iMod);
+				ShowImageBasic (imgmini1[iThing][iMod],
+					fRoomStartX + fOffsetX,
+					fRoomStartY + fOffsetY,
+					sInfo, mscreen, ZoomGet(), 0);
+			}
 		}
 		if (iEditPoP == 3)
 		{
@@ -17536,13 +17482,15 @@ void ShowRoomsMap (int iRoom, int iX, int iY)
 						" tile %i): %i %i!\n",
 						(int)luLevelNr, iRoom, iTileLoop, iThing, iMod);
 				}
-				iThing = 0; iMod = 0; /*** Fallback. ***/
+				ShowImageBasic (imgminiunknown, fRoomStartX + fOffsetX,
+					fRoomStartY + fOffsetY, "imgminiunknown", mscreen, ZoomGet(), 0);
+			} else {
+				snprintf (sInfo, MAX_INFO, "imgmini3[%i][%i]", iThing, iMod);
+				ShowImageBasic (imgmini3[iThing][iMod],
+					fRoomStartX + fOffsetX,
+					fRoomStartY + fOffsetY,
+					sInfo, mscreen, ZoomGet(), 0);
 			}
-			snprintf (sInfo, MAX_INFO, "imgmini3[%i][%i]", iThing, iMod);
-			ShowImageBasic (imgmini3[iThing][iMod],
-				fRoomStartX + fOffsetX,
-				fRoomStartY + fOffsetY,
-				sInfo, mscreen, ZoomGet(), 0);
 		}
 
 		/*** guard ***/
@@ -18009,7 +17957,8 @@ void ShowPos (SDL_Rect loc, SDL_Rect dest, int iLocation,
 	}
 
 	if ((strcmp (sLbl, "") != 0) && (strcmp (sLbl, "SDLPoP") != 0) &&
-		(strcmp (sLbl, "MININIM") != 0) && (strcmp (sLbl, "both") != 0))
+		(strcmp (sLbl, "MININIM") != 0) && (strcmp (sLbl, "both") != 0) &&
+		(strcmp (sLbl, "Puny Prince") != 0))
 	{
 		DisplayTextLine (dest.x + 7, dest.y + 145 - FONT_SIZE_11,
 			sLbl, font2, color_bl, color_wh, 0);
@@ -18040,6 +17989,11 @@ void ShowPos (SDL_Rect loc, SDL_Rect dest, int iLocation,
 	if (strcmp (sLbl, "both") == 0)
 	{
 		ShowImageBasic (imgnative_b, dest.x + 22, dest.y + 32, "imgnative_b",
+			ascreen, iScale, 1);
+	}
+	if (strcmp (sLbl, "Puny Prince") == 0)
+	{
+		ShowImageBasic (imgnative_y, dest.x + 22, dest.y + 32, "imgnative_y",
 			ascreen, iScale, 1);
 	}
 
@@ -30596,19 +30550,19 @@ void CheckCodes (char *sHex, int iFdEXE)
 	int iTemp;
 	char sString[MAX_DATA + 2];
 	unsigned char sOne[1 + 2];
-	unsigned long lCheck;
-	unsigned long lEXE;
+	unsigned long ulCheck;
+	unsigned long ulEXE;
 
 	iTemp = 0;
 	do {
 		snprintf (sString, MAX_DATA, "0x%c%c", sHex[iTemp], sHex[iTemp + 1]);
-		lCheck = strtol (sString, NULL, 16);
+		ulCheck = strtol (sString, NULL, 16);
 		ReadFromFile (iFdEXE, "", 1, sOne);
 		snprintf (sString, MAX_DATA, "%02x", sOne[0]);
-		lEXE = strtol (sString, NULL, 16);
-		if ((sHex[iTemp] != '.') && (lCheck != lEXE))
+		ulEXE = strtol (sString, NULL, 16);
+		if ((sHex[iTemp] != '.') && (ulCheck != ulEXE))
 		{
-			printf ("[ WARN ] Check failed: %lu is not %lu!\n", lCheck, lEXE);
+			printf ("[ WARN ] Check failed: %lu is not %lu!\n", ulCheck, ulEXE);
 		}
 		iTemp = iTemp + 3; /*** 0x?? plus a space ***/
 	} while (iTemp < (int)strlen (sHex));
@@ -35214,6 +35168,13 @@ int GetTileNr (int iTileC, int iMod1)
 	if ((iTile == 23) && (iMod1 != 0)) { return (10301); }
 	if ((iTile == 24) && (iMod1 == 1)) { return (10302); }
 
+	/*** native, tab 12/12 ***/
+	if ((iTile == 1) && (iMod1 == 4)) { return (11201); }
+	if ((iTile == 1) && (iMod1 == 7)) { return (11202); }
+	if ((iTile == 1) && (iMod1 == 8)) { return (11203); }
+	if ((iTile == 1) && (iMod1 == 9)) { return (11204); }
+	if ((iTile == 31) && (iMod1 == 0)) { return (11205); }
+
 	return (0);
 }
 /*****************************************************************************/
@@ -36524,6 +36485,7 @@ void NativeOldTile (void)
 	iTile = iThingA[iCurRoom][iSelected - 1];
 	iMod1 = iModifierA[iCurRoom][iSelected - 1][1];
 
+	/*** native, tab 01/12 ***/
 	if ((iTile == 0) && (iMod1 == 4))
 		{ iNativeOldTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY1; }
 	if ((iTile == 0) && (iMod1 == 5))
@@ -36540,11 +36502,6 @@ void NativeOldTile (void)
 		{ iNativeOldTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY2; }
 	if ((iTile == 1) && (iMod1 == 14))
 		{ iNativeOldTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY2; }
-	if ((iTile == 19) && (iMod1 != 0))
-	{
-		iNativeOldTab = 2; iNativeOldX = TILESX1; iNativeOldY = TILESY1;
-		iNativeColor = (iMod1 & 0x3F);
-	}
 	if ((iTile == 20) && (iMod1 == 4))
 		{ iNativeOldTab = 1; iNativeOldX = TILESX4; iNativeOldY = TILESY3; }
 	if ((iTile == 20) && (iMod1 == 6))
@@ -36553,6 +36510,20 @@ void NativeOldTile (void)
 		{ iNativeOldTab = 1; iNativeOldX = TILESX3; iNativeOldY = TILESY3; }
 	if ((iTile == 20) && (iMod1 == 14))
 		{ iNativeOldTab = 1; iNativeOldX = TILESX2; iNativeOldY = TILESY3; }
+
+	/*** native, tab 02/12 ***/
+	if ((iTile == 19) && (iMod1 != 0))
+	{
+		iNativeOldTab = 2; iNativeOldX = TILESX1; iNativeOldY = TILESY1;
+		iNativeColor = (iMod1 & 0x3F);
+	}
+	if ((iTile == 30) && (iMod1 != 0))
+	{
+		iNativeOldTab = 2; iNativeOldX = TILESX2; iNativeOldY = TILESY1;
+		iNativeColor = (iMod1 & 0x3F);
+	}
+
+	/*** native, tab 03/12 ***/
 	if ((iTile == 23) && (iMod1 != 0))
 	{
 		iNativeOldTab = 3; iNativeOldX = TILESX1; iNativeOldY = TILESY1;
@@ -36563,11 +36534,18 @@ void NativeOldTile (void)
 		iNativeOldTab = 3; iNativeOldX = TILESX2; iNativeOldY = TILESY1;
 		/*** No need to set iNativeMod. ***/
 	}
-	if ((iTile == 30) && (iMod1 != 0))
-	{
-		iNativeOldTab = 2; iNativeOldX = TILESX2; iNativeOldY = TILESY1;
-		iNativeColor = (iMod1 & 0x3F);
-	}
+
+	/*** native, tab 12/12 ***/
+	if ((iTile == 1) && (iMod1 == 4))
+		{ iNativeOldTab = 12; iNativeOldX = TILESX1; iNativeOldY = TILESY1; }
+	if ((iTile == 1) && (iMod1 == 7))
+		{ iNativeOldTab = 12; iNativeOldX = TILESX2; iNativeOldY = TILESY1; }
+	if ((iTile == 1) && (iMod1 == 8))
+		{ iNativeOldTab = 12; iNativeOldX = TILESX3; iNativeOldY = TILESY1; }
+	if ((iTile == 1) && (iMod1 == 9))
+		{ iNativeOldTab = 12; iNativeOldX = TILESX4; iNativeOldY = TILESY1; }
+	if ((iTile == 31) && (iMod1 == 0))
+		{ iNativeOldTab = 12; iNativeOldX = TILESX5; iNativeOldY = TILESY1; }
 
 	if ((iNativeOldX == -1) || (iNativeOldY == -1)) { iIsCustom = 1; }
 		else { iNativeTab = iNativeOldTab; }
@@ -37050,6 +37028,17 @@ void ShowNative (SDL_Renderer *screen)
 				case 2: iThing = 24; iMod1 = 0x01; break;
 			}
 			break;
+		case 12:
+			switch (iOnTileNative)
+			{
+				/*** First row. ***/
+				case 1: iThing = 1; iMod1 = 4; break;
+				case 2: iThing = 1; iMod1 = 7; break;
+				case 3: iThing = 1; iMod1 = 8; break;
+				case 4: iThing = 1; iMod1 = 9; break;
+				case 5: iThing = 31; iMod1 = 0; break;
+			}
+			break;
 	}
 	if ((iThing != -1) && (iMod1 != -1))
 	{
@@ -37143,6 +37132,19 @@ int UseTileNative (int iTile, int iLocation, int iRoom)
 					23, iNativeMod, -1, -1, -1); break;
 				case 2: SetLocation (iRoom, iLocation,
 					24, 0x01, -1, -1, -1); break;
+				/***/
+				default: iUsed = 0; break;
+			}
+			break;
+		case 12:
+			switch (iTile)
+			{
+				/*** First row. ***/
+				case 1: SetLocation (iRoom, iLocation, 1, 4, -1, -1, -1); break;
+				case 2: SetLocation (iRoom, iLocation, 1, 7, -1, -1, -1); break;
+				case 3: SetLocation (iRoom, iLocation, 1, 8, -1, -1, -1); break;
+				case 4: SetLocation (iRoom, iLocation, 1, 9, -1, -1, -1); break;
+				case 5: SetLocation (iRoom, iLocation, 31, 0, -1, -1, -1); break;
 				/***/
 				default: iUsed = 0; break;
 			}
@@ -37581,35 +37583,85 @@ void MapKeyDown (SDL_Event event)
 {
 	switch (event.key.keysym.sym)
 	{
-		case SDLK_0:
+		case SDLK_0: /*** empty ***/
 		case SDLK_KP_0:
-			if (iZoom != 0)
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
 			{
-				iZoom = 0;
-				/*** Back to a centered map. ***/
-				iXPosMapMoveOffset = 0;
-				iYPosMapMoveOffset = 0;
-				PlaySound ("wav/screen2or3.wav");
+				iMapSelTile = 1;
+				PlaySound ("wav/hum_adj.wav");
 			}
 			break;
-		case SDLK_1:
+		case SDLK_1: /*** floor ***/
 		case SDLK_KP_1:
-			if (ZoomGet() != DEFAULT_ZOOM)
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
 			{
-				iZoom = DEFAULT_ZOOM;
-				/*** Back to a centered map. ***/
-				iXPosMapMoveOffset = 0;
-				iYPosMapMoveOffset = 0;
-				PlaySound ("wav/screen2or3.wav");
+				if (cCurType == 'd') { iMapSelTile = 6; } else { iMapSelTile = 7; }
+				PlaySound ("wav/hum_adj.wav");
 			}
 			break;
-		case SDLK_KP_PLUS:
-		case SDLK_EQUALS:
-			MapAction ("in");
+		case SDLK_2: /*** loose floor ***/
+		case SDLK_KP_2:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 39;
+				PlaySound ("wav/hum_adj.wav");
+			}
 			break;
-		case SDLK_MINUS:
-		case SDLK_KP_MINUS:
-			MapAction ("out");
+		case SDLK_3: /*** closed gate ***/
+		case SDLK_KP_3:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 22;
+				PlaySound ("wav/hum_adj.wav");
+			}
+			break;
+		case SDLK_4: /*** open gate ***/
+		case SDLK_KP_4:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 23;
+				PlaySound ("wav/hum_adj.wav");
+			}
+			break;
+		case SDLK_5: /*** flame ***/
+		case SDLK_KP_5:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 59;
+				PlaySound ("wav/hum_adj.wav");
+			}
+			break;
+		case SDLK_6: /*** spike ***/
+		case SDLK_KP_6:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 11;
+				PlaySound ("wav/hum_adj.wav");
+			}
+			break;
+		case SDLK_7: /*** small pillar ***/
+		case SDLK_KP_7:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 21;
+				PlaySound ("wav/hum_adj.wav");
+			}
+			break;
+		case SDLK_8: /*** chomper ***/
+		case SDLK_KP_8:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 53;
+				PlaySound ("wav/hum_adj.wav");
+			}
+			break;
+		case SDLK_9: /*** wall ***/
+		case SDLK_KP_9:
+			if ((iEditPoP == 1) && (iMapEditPanel == 1))
+			{
+				iMapSelTile = 61;
+				PlaySound ("wav/hum_adj.wav");
+			}
 			break;
 		case SDLK_LEFT: MapAction ("left"); break;
 		case SDLK_UP: MapAction ("up"); break;
@@ -41204,7 +41256,7 @@ void HexEditorAction (char *sAction, int iFileSize, int iFdEXE)
 	}
 }
 /*****************************************************************************/
-void HexEditor (char *sFileName)
+void HexEditor (void)
 /*****************************************************************************/
 {
 	SDL_Event event;
@@ -41220,13 +41272,13 @@ void HexEditor (char *sFileName)
 
 	iHexEditor = 1;
 
-	stat (sFileName, &stStatus);
+	stat (sHexPathFile, &stStatus);
 	iFileSize = (int)stStatus.st_size;
 	/***/
-	iFdEXE = open (sFileName, O_RDWR|O_BINARY);
+	iFdEXE = open (sHexPathFile, O_RDWR|O_BINARY);
 	if (iFdEXE == -1)
 	{
-		printf ("[FAILED] Error opening %s: %s!\n", sFileName,
+		printf ("[FAILED] Error opening %s: %s!\n", sHexPathFile,
 			strerror (errno));
 		exit (EXIT_ERROR);
 	}
@@ -41602,6 +41654,8 @@ void HexEditor (char *sFileName)
 void ShowHexEditor (void)
 /*****************************************************************************/
 {
+	/*** Before calling this function, make sure to set sHexPathFile. ***/
+
 	int iByteX, iByteY;
 	char arText[9 + 2][MAX_TEXT + 2];
 
@@ -41634,6 +41688,11 @@ void ShowHexEditor (void)
 	snprintf (arText[0], MAX_TEXT, "Executable type is: %s (%i)",
 		sEXEType, iEXEType);
 	DisplayText (33, 32, FONT_SIZE_15, arText, 1, font1);
+
+	/*** file text ***/
+	snprintf (arText[0], MAX_TEXT, "This basic hex editor modifies: %s",
+		sHexPathFile);
+	DisplayText (34, 91, FONT_SIZE_15, arText, 1, font1);
 
 	/*** Byte values. ***/
 	for (iLoopByte = 0; iLoopByte < 64; iLoopByte++)

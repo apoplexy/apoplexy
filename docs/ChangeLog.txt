@@ -5,6 +5,13 @@
 # - for upcoming: "Next release"
 # ====================
 
+v3.18 (May 14, 2023) - Norbert de Jonge
+--------------------
++ Added support for Puny Prince (its unique native tiles).
+* PoP1 for DOS: "0"-"9" set active tile on Map edit panel.
+* PoP1 for SNES: fixed a major hex editor bug.
+* Cleaned up the code a bit (#define's, Map tiles loading).
+
 v3.17 (January 3, 2023) - Norbert de Jonge
 --------------------
 + PoP1 for SNES: added a Map window ("m").

@@ -50,10 +50,10 @@ Ctrl + left mouse button             [PoP1 for DOS] Go to the native tiles.
 ---------------------------------------------------------------------------
 MAP WINDOW (somewhat consistent with the main screen)
 ---------------------------------------------------------------------------
-0, 1, + (and =), - (and _)           Zoom the map.
+0-9                                  [PoP1 for DOS] Shortcuts for tiles.
 c                                    Close the Map window.
 n                                    Toggle show room numbers.
-Arrows                               Reposition the map.
+Arrows*                              Reposition the map.
 Tab                                  Toggle edit panel.
 
 ---------------------------------------------------------------------------
